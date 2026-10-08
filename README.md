@@ -1,6 +1,6 @@
 # Pockle
 
-Unity source for the **first tactile prototype**: one original peach jelly companion, Pip, now with a Blender-authored first art pass based on the approved design. The project follows the [development brief](docs/PRODUCT_BRIEF.md).
+Unity source for the **first tactile prototype**: one original peach jelly companion, Pip, now with a Blender-authored art pass based on the approved design. The project follows the [development brief](docs/PRODUCT_BRIEF.md).
 
 Pip can be pressed, dragged upward to stretch, released to rebound, and rotated. A short procedural box reveal introduces the toy. Reset restores its pose. Sound, optional device vibration, and reduced motion are configurable; those settings persist locally.
 
@@ -19,9 +19,17 @@ Try Game view sizes for a tall phone, a small phone, a portrait tablet, and a la
 
 ## Try Pip's authored art
 
-After the first APK finishes, preserve it as your baseline and pull the latest repository changes. Unity imports `Pip.pocklemesh` into a native readable mesh and character asset automatically; Blender is not required to open or build the game. Choose **Pockle → Character → Use authored Pip**, then restart Play. The Console should report **Pip: authored mesh · 1228 vertices**. Choose **Use procedural baseline** before the next Play session to compare.
+After the first APK finishes, preserve it as your baseline and pull the latest repository changes. Unity imports `Pip.pocklemesh` into a native readable mesh and character asset automatically; Blender is not required to open or build the game. Choose **Pockle → Character → Use authored Pip**, then restart Play. The Console should report **Pip: authored mesh · 3158 vertices**. Choose **Use procedural baseline** before the next Play session to compare.
 
-The editable source is `ArtSource/Pip/Pip.blend`; the standard interchange export is `Assets/Pockle/Art/Pip/Pip.fbx`. The runtime uses the custom source's imported native mesh and face anchors so coordinates, scale, UV seams, and deformation remain explicit. The FBX includes the complete character for further art work. The [Blender model study](docs/concepts/pip-model-study-01.png) shows geometry and an offline material; it does not establish the Unity shader's appearance.
+The editable source is `ArtSource/Pip/Pip.blend`; the standard interchange export is `Assets/Pockle/Art/Pip/Pip.fbx`. The runtime uses the custom source's imported native mesh and face anchors so coordinates, scale, UV seams, and deformation remain explicit. The FBX includes the complete character for further art work. The [Blender model study](docs/concepts/pip-model-study-02.png) shows geometry and an offline material; it does not establish the Unity shader's appearance.
+
+## Update an existing checkout
+
+Close Unity and run `git pull --ff-only` from your local `pockle` directory. Reopen that same project and let Unity finish importing. Select **Pockle → Character → Use authored Pip**, then enter Play mode and check for **Pip: authored mesh · 3158 vertices** before rebuilding Android.
+
+The second art pass joins the crown and body into one closed deformable shell, broadens the flat foot, and shortens the crown. The Unity material adds broad studio reflections and glazed plum eyes; blush now has soft edges. Internal pearls render beneath the shell. The UI no longer labels the authored character a procedural placeholder. The screenshot confirmed the first authored import on the owner's computer; the revised shader and mesh still need local visual and Android performance checks. The approved concept is the visual target, rather than an exact render of the Unity material.
+
+If Git reports that local changes would be overwritten, inspect the listed files before restoring or stashing anything; preserve local Android settings and package changes. This art update changes neither `Packages/manifest.json` nor `ProjectSettings`.
 
 ## Controls
 
@@ -62,4 +70,4 @@ In Unity, open **Window → General → Test Runner → EditMode** and run `Pock
 - `Assets/Pockle/Scenes/PockleTactile.unity`: committed scene entry point.
 - `Assets/Pockle/Editor/`: setup menu and build checks.
 
-The authored body has 1,228 vertices and 2,240 triangles; the original baseline has 1,073 vertices and 2,016 triangles. Features reuse small meshes and materials. Deformation uses reused vertex/normal buffers, welds UV-seam normals, and skips idle updates; actual CPU cost, draw calls, frame rate, and transparency artifacts still need profiling on a midrange phone. See [architecture notes](docs/ARCHITECTURE.md).
+The authored body has 3,158 vertices and 5,814 triangles; the original baseline has 1,073 vertices and 2,016 triangles. Features reuse small meshes and materials. Deformation uses reused vertex/normal buffers, welds UV-seam normals, and skips idle updates; actual CPU cost, draw calls, frame rate, and transparency artifacts still need profiling on a midrange phone. See [architecture notes](docs/ARCHITECTURE.md).

@@ -9,7 +9,7 @@ bpy.ops.object.select_all(action='SELECT')
 bpy.ops.object.delete(use_global=False)
 bpy.ops.import_scene.fbx(filepath=str(root / 'Assets/Pockle/Art/Pip/Pip.fbx'))
 meshes = [obj for obj in bpy.context.scene.objects if obj.type == 'MESH']
-assert len(meshes) == 22, f'FBX lost character parts: {len(meshes)}'
+assert len(meshes) == 20, f'FBX lost character parts: {len(meshes)}'
 body = next(obj for obj in meshes if obj.name == 'PipBody')
 source = json.loads((root / 'Assets/Pockle/Resources/Pip/Pip.pocklemesh').read_text())
 expected = {}

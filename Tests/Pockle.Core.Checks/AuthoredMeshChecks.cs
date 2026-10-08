@@ -20,12 +20,14 @@ internal static class AuthoredMeshChecks
         using JsonDocument document = JsonDocument.Parse(File.ReadAllText(path));
         JsonElement source = document.RootElement;
         Check(source.GetProperty("schemaVersion").GetInt32() == 1, "Authored mesh schema mismatch.");
+        Check(source.GetProperty("integratedCrown").GetBoolean(), "Crown must share the deformable body surface.");
         float[] positions = Floats(source, "positions");
         float[] uv = Floats(source, "uv");
         int[] indices = Ints(source, "triangles");
         int[] groups = Ints(source, "normalGroups");
         Check(positions.Length % 3 == 0 && positions.Length >= 12, "Malformed mesh positions.");
         int count = positions.Length / 3;
+        Check(count <= 4000, "Authored body exceeds the mobile vertex budget.");
         Check(count < 65000 && groups.Length == count && uv.Length == count * 2, "Mesh buffer dimensions mismatch.");
         Check(indices.Length > 0 && indices.Length % 3 == 0, "Malformed mesh indices.");
         Point3[] rest = new Point3[count];
@@ -37,6 +39,8 @@ internal static class AuthoredMeshChecks
         }
         foreach (float coordinate in uv) Check(!float.IsNaN(coordinate) && coordinate >= 0 && coordinate <= 1, "UV outside 0..1.");
         Dictionary<(int, int), (int count, int direction)> edges = new Dictionary<(int, int), (int count, int direction)>();
+        int[] parents = new int[count];
+        for (int i = 0; i < count; i++) parents[i] = i;
         for (int face = 0; face < indices.Length; face += 3)
         {
             for (int corner = 0; corner < 3; corner++) Check(indices[face + corner] >= 0 && indices[face + corner] < count, "Invalid vertex index.");
@@ -46,6 +50,7 @@ internal static class AuthoredMeshChecks
             for (int corner = 0; corner < 3; corner++)
             {
                 int from = groups[indices[face + corner]], to = groups[indices[face + (corner + 1) % 3]];
+                parents[Root(parents, from)] = Root(parents, to);
                 Check(from != to, "Collapsed logical mesh edge.");
                 var key = (Math.Min(from, to), Math.Max(from, to));
                 edges.TryGetValue(key, out var edge);
@@ -53,6 +58,9 @@ internal static class AuthoredMeshChecks
             }
         }
         foreach (var edge in edges.Values) Check(edge.count == 2 && edge.direction == 0, "Body is not a consistently wound closed surface.");
+        int component = Root(parents, groups[0]);
+        foreach (int group in groups)
+            Check(Root(parents, group) == component, "Crown/body contains disconnected shells.");
         double restVolume = Volume(rest, indices);
         Check(restVolume > 1, "Body winding or volume incorrect.");
         Point3[] transformed = new Point3[count];
@@ -62,6 +70,7 @@ internal static class AuthoredMeshChecks
             {
                 transformed[i] = JellyShape.Deform(rest[i], pose.Item1, pose.Item2, .25f, -.25f, .4f, -.4f);
                 Check(Finite(transformed[i]), "Authored deformation became nonfinite.");
+                Check(1.15 + transformed[i].Y < 3.6, "Integrated body/crown exceeds viewer framing.");
                 if (rest[i].Y == -1)
                     Check(transformed[i].X == rest[i].X && transformed[i].Y == -1 && transformed[i].Z == rest[i].Z,
                         "Authored flat base moved.");
@@ -90,6 +99,15 @@ internal static class AuthoredMeshChecks
         float[] values = new float[array.GetArrayLength()];
         for (int i = 0; i < values.Length; i++) values[i] = array[i].GetSingle();
         return values;
+    }
+    private static int Root(int[] parents, int vertex)
+    {
+        while (parents[vertex] != vertex)
+        {
+            parents[vertex] = parents[parents[vertex]];
+            vertex = parents[vertex];
+        }
+        return vertex;
     }
     private static int[] Ints(JsonElement source, string key)
     {

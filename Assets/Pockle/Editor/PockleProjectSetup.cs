@@ -52,7 +52,7 @@ namespace Pockle.Editor
                 if (scene.enabled && scene.path == ScenePath) hasScene = true;
             if (!hasScene)
                 throw new BuildFailedException("Run Pockle > Prepare prototype settings to include the tactile scene.");
-            foreach (string name in new[] { "Pockle/Jelly Candy", "Pockle/Soft Accent", "Pockle/Reveal Box" })
+            foreach (string name in new[] { "Pockle/Jelly Candy", "Pockle/Soft Accent", "Pockle/Soft Blush", "Pockle/Reveal Box" })
                 if (Shader.Find(name) == null)
                     throw new BuildFailedException("Required shader is missing: " + name);
         }

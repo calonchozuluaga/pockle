@@ -11,7 +11,7 @@ namespace Pockle.Editor
     /// Imports Blender's explicit Unity-coordinate mesh and face anchors into native
     /// Unity assets. FBX is supplied for DCC interchange; runtime uses this native mesh.
     /// </summary>
-    [ScriptedImporter(1, "pocklemesh")]
+    [ScriptedImporter(2, "pocklemesh")]
     public sealed class PipCharacterImporter : ScriptedImporter
     {
         [Serializable]
@@ -19,6 +19,7 @@ namespace Pockle.Editor
         {
             public int schemaVersion;
             public string name;
+            public bool integratedCrown;
             public float[] positions;
             public int[] triangles;
             public float[] uv;
@@ -57,6 +58,7 @@ namespace Pockle.Editor
 
             PipCharacterAsset asset = ScriptableObject.CreateInstance<PipCharacterAsset>();
             asset.name = source.name;
+            asset.IntegratedCrown = source.integratedCrown;
             asset.NormalGroups = source.normalGroups;
             asset.Eyes = Triples(source.eyes, 2, "eyes");
             asset.EyeGlints = Triples(source.eyeGlints, 2, "eye glints");

@@ -33,6 +33,7 @@ namespace Pockle.Runtime
         private Transform visualRoot;
         private Material bodyMaterial;
         private Material eyeMaterial;
+        private Material smileMaterial;
         private Material highlightMaterial;
         private Material cheekMaterial;
         private Material bubbleMaterial;
@@ -84,9 +85,33 @@ namespace Pockle.Runtime
             visualRoot.SetParent(transform, false);
             bodyMaterial = CreateBodyMaterial();
             eyeMaterial = CreateFlatMaterial("Pip eyes", new Color(0.20f, 0.12f, 0.17f, 1f));
+            smileMaterial = eyeMaterial;
+            if (characterAsset != null)
+            {
+                eyeMaterial = CreateCandyMaterial("Pip glazed plum eyes", new Color(.15f, .025f, .075f, 1f), .85f);
+                if (eyeMaterial.HasProperty("_TopColor")) eyeMaterial.SetColor("_TopColor", new Color(.24f, .045f, .12f, 1f));
+                if (eyeMaterial.HasProperty("_BottomColor")) eyeMaterial.SetColor("_BottomColor", new Color(.075f, .008f, .035f, 1f));
+                if (eyeMaterial.HasProperty("_RimColor")) eyeMaterial.SetColor("_RimColor", new Color(.27f, .07f, .13f, 1f));
+                if (eyeMaterial.HasProperty("_ReflectionStrength")) eyeMaterial.SetFloat("_ReflectionStrength", .32f);
+                // Opaque eyes write depth before the translucent shell. They stay
+                // crisp in front and receive its peach tint when viewed from behind.
+                if (eyeMaterial.HasProperty("_ZWrite")) eyeMaterial.SetFloat("_ZWrite", 1f);
+                eyeMaterial.renderQueue = 2000;
+            }
             highlightMaterial = CreateFlatMaterial("Pip eye glints", new Color(1f, 0.95f, 0.86f, 1f));
             cheekMaterial = CreateFlatMaterial("Pip blush", new Color(1f, 0.42f, 0.40f, 1f));
+            if (characterAsset != null)
+            {
+                Shader blushShader = Shader.Find("Pockle/Soft Blush");
+                if (blushShader != null && blushShader.isSupported)
+                {
+                    cheekMaterial = new Material(blushShader) { name = "Pip diffused blush", color = new Color(1f, .30f, .26f, .62f) };
+                    ownedMaterials.Add(cheekMaterial);
+                }
+            }
             bubbleMaterial = CreateCandyMaterial("Suspended pearls", new Color(1f, 0.88f, 0.69f, 0.36f), 0.62f);
+            // Draw suspended pearls before the shell so its peach tint covers them.
+            bubbleMaterial.renderQueue = 2990;
             sparkleMaterial = CreateFlatMaterial("Apricot flecks", new Color(1f, 0.82f, 0.57f, 1f));
 
             if (characterAsset != null) BuildAuthoredBody();
@@ -331,12 +356,12 @@ namespace Pockle.Runtime
                 AddAccent("Cream eye glint", characterAsset != null ? characterAsset.EyeGlints[index] : eye + new Vector3(-0.016f, 0.034f, -0.037f),
                     characterAsset != null ? new Vector3(0.020f, 0.024f, 0.012f) : new Vector3(0.018f, 0.021f, 0.011f), highlightMaterial, accentMesh, true);
                 AddAccent("Warm cheek", characterAsset != null ? characterAsset.Cheeks[index] : SurfacePoint(side * 0.355f, 0.022f, 0.022f),
-                    characterAsset != null ? new Vector3(0.104f, 0.048f, 0.026f) : new Vector3(0.075f, 0.038f, 0.024f), cheekMaterial, accentMesh, true);
+                    characterAsset != null ? new Vector3(0.15f, 0.087f, 0.018f) : new Vector3(0.075f, 0.038f, 0.024f), cheekMaterial, accentMesh, true);
             }
             var smile = new GameObject("Tiny smile", typeof(LineRenderer));
             smile.transform.SetParent(visualRoot, false);
             mouth = smile.GetComponent<LineRenderer>();
-            mouth.sharedMaterial = eyeMaterial;
+            mouth.sharedMaterial = smileMaterial;
             mouth.useWorldSpace = false;
             mouth.widthMultiplier = 0.017f;
             mouth.numCapVertices = 4;
@@ -373,6 +398,7 @@ namespace Pockle.Runtime
 
         private void BuildCrown()
         {
+            if (characterAsset != null && characterAsset.IntegratedCrown) return;
             if (characterAsset != null)
             {
                 for (int i = 0; i < characterAsset.Crowns.Length; i++)

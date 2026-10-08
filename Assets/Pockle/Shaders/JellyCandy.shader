@@ -7,13 +7,15 @@ Shader "Pockle/Jelly Candy"
         _BottomColor ("Warm base", Color) = (0.89, 0.20, 0.23, 1)
         _Glossiness ("Soft glaze", Range(0,1)) = 0.48
         _RimColor ("Candy edge", Color) = (1, 0.86, 0.67, 1)
+        _ReflectionStrength ("Studio reflections", Range(0,1)) = 1
+        [Toggle] _ZWrite ("Write depth for opaque accents", Float) = 0
     }
     SubShader
     {
         Tags { "Queue"="Transparent" "RenderType"="Transparent" "IgnoreProjector"="True" }
         LOD 150
         Blend SrcAlpha OneMinusSrcAlpha
-        ZWrite Off
+        ZWrite [_ZWrite]
         Cull Back
         Pass
         {
@@ -29,6 +31,7 @@ Shader "Pockle/Jelly Candy"
             fixed4 _BottomColor;
             fixed4 _RimColor;
             half _Glossiness;
+            half _ReflectionStrength;
 
             struct appdata
             {
@@ -60,20 +63,32 @@ Shader "Pockle/Jelly Candy"
                 // A quiet studio key keeps the little toy welcoming under any scene light.
                 // This cheap transmitted-light approximation uses no scene color grab,
                 // cubemap, metallic reflection, or additional lighting passes.
-                half3 key = normalize(half3(-0.48h, 0.80h, -0.58h));
+                half3 key = normalize(half3(0.48h, 0.75h, -0.62h));
                 half3 fill = normalize(half3(0.60h, 0.18h, 0.70h));
-                half light = saturate(dot(normal, key)) * 0.24h + 0.76h;
+                half light = saturate(dot(normal, key)) * 0.18h + 0.82h;
                 half softFill = saturate(dot(normal, fill)) * 0.12h;
                 half facing = saturate(dot(normal, view));
                 half rim = 1.0h - facing;
                 rim = rim * rim;
-                half3 halfVector = normalize(key + view);
-                half sheen = pow(saturate(dot(normal, halfVector)), 24.0h + _Glossiness * 40.0h);
+                // Elliptical studio softbox reflections give a wet glaze instead
+                // of a tiny plastic hotspot. Directions are in world space, so
+                // the reflections move over the surface when Pip is rotated.
+                half3 reflection = reflect(-view, normal);
+                half3 across = normalize(cross(key, half3(0, 1, 0)));
+                half3 along = cross(across, key);
+                half rx = dot(reflection, across);
+                half ry = dot(reflection, along);
+                half gate = smoothstep(0.45h, 0.85h, dot(reflection, key));
+                half broad = exp2(-rx * rx * 18.0h - ry * ry * 5.0h) * gate;
+                half glaze = exp2(-rx * rx * 75.0h - ry * ry * 18.0h) * gate;
                 half3 candy = lerp(_BottomColor.rgb, _TopColor.rgb, input.height);
                 candy = lerp(candy, _Color.rgb, 0.20h);
                 candy *= light;
-                candy += _RimColor.rgb * (rim * 0.20h + softFill * 0.22h);
-                candy += half3(1.0h, 0.94h, 0.82h) * sheen * (0.21h + _Glossiness * 0.26h);
+                candy += _RimColor.rgb * (rim * 0.24h + softFill * 0.22h);
+                half shine = (broad * 0.20h + glaze * 0.68h) * _Glossiness * _ReflectionStrength;
+                candy = lerp(candy, half3(1.0h, 0.98h, 0.91h), saturate(shine));
+                // Keep the peach shell visible at grazing angles, with a soft
+                // transmitted center. One pass; no screen grab or extra lights.
                 half alpha = saturate(_Color.a + rim * (1.0h - _Color.a));
                 return fixed4(candy, alpha);
             }

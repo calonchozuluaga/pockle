@@ -26,7 +26,8 @@ namespace Pockle.Tests
             foreach (int group in asset.NormalGroups)
                 Assert.That(group, Is.InRange(0, asset.BodyMesh.vertexCount - 1));
             Assert.That(asset.BodyMesh.bounds.min.y, Is.EqualTo(-1f).Within(.00001f));
-            Assert.That(asset.BodyMesh.bounds.max.y, Is.EqualTo(.75f).Within(.00001f));
+            Assert.That(asset.IntegratedCrown, Is.True);
+            Assert.That(asset.BodyMesh.bounds.max.y, Is.InRange(.9f, 1f));
         }
 
         [Test]

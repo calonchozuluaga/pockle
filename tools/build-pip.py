@@ -1,4 +1,4 @@
-"""Rebuild Pip's first art pass with Blender 4.3+. Run via blender --background --python.
+"""Rebuild Pip's joined-crown art pass with Blender 4.3+. Run via blender --background --python.
 
 The Unity source has explicit Y-up / negative-Z-front coordinates. Blender uses
 Z-up. Export both a standard FBX and a small character source for our Unity importer.
@@ -17,7 +17,7 @@ UNITY_DIR = ROOT / "Assets" / "Pockle" / "Resources" / "Pip"
 PREVIEW_DIR = ROOT / "docs" / "concepts"
 RINGS = 28
 SIDES = 40
-BASE_COSINE = -.85
+BASE_COSINE = -.72
 THETA_END = math.acos(BASE_COSINE)
 
 
@@ -109,40 +109,17 @@ def main():
     if (b - a).cross(c - a).dot(Vector((a.x, 0, a.z))) < 0:
         faces = [(a, c, b) for a, b, c in faces]
 
-    # Split the UV seam while retaining logical vertex IDs for welded Unity normals.
-    export_positions, export_uv, groups, indices = [], [], [], []
-    keyed_vertices = {}
-    for face in faces:
-        us = [((i - 1) % SIDES) / SIDES if i not in [0, len(positions) - 1] else 0 for i in face]
-        if max(us) - min(us) > .5: us = [u + 1 if u < .5 else u for u in us]
-        for vertex, u in zip(face, us):
-            if vertex in [0, len(positions) - 1]:
-                u = sum(value for index, value in zip(face, us) if index != vertex) / 2
-            v = (positions[vertex][1] + 1) / 1.75
-            key = (vertex, round(u, 7), round(v, 7))
-            if key not in keyed_vertices:
-                keyed_vertices[key] = len(export_positions)
-                export_positions.append(positions[vertex]); export_uv.append((u, v)); groups.append(vertex)
-            indices.append(keyed_vertices[key])
-
     eyes = [front_surface(side * .29, .045, .034) for side in [-1, 1]]
     glints = [(x - .022, y + .038, z - .038) for x, y, z in eyes]
     cheeks = [front_surface(side * .435, -.10, .024) for side in [-1, 1]]
     mouth = [front_surface((i / 12 - .5) * .17, -.108 + .053 * ((i / 12 - .5) * 2) ** 2, .043)
              for i in range(13)]
-    crowns = [(-.26, .64, .015), (.095, .71, .015)]
-    crown_scales = [(.165, .215, .16), (.25, .40, .205)]
+    crowns = [(-.31, .61, .015), (.095, .66, .015)]
+    crown_scales = [(.185, .215, .18), (.25, .33, .22)]
     pearls = [(-.39, -.43, -.22), (.12, -.59, -.22), (.47, -.24, -.08),
               (-.11, .36, -.10), (.30, .18, -.14), (-.42, -.05, -.06)]
     flecks = [(-.25, .31, -.30), (.38, .23, -.26), (-.49, -.18, -.30),
               (.37, -.40, -.27), (-.20, -.64, -.24), (.16, -.34, -.36)]
-    data = dict(schemaVersion=1, name="Pip - Peach Jelly", positions=flat(export_positions),
-                triangles=indices, uv=flat(export_uv), normalGroups=groups,
-                eyes=flat(eyes), eyeGlints=flat(glints), cheeks=flat(cheeks), mouth=flat(mouth),
-                crowns=flat(crowns), crownScales=flat(crown_scales), pearls=flat(pearls), flecks=flat(flecks),
-                bodyColor=[1, .64, .40, .76], topColor=[1, .82, .60, 1], bottomColor=[1, .39, .28, 1])
-    (UNITY_DIR / "Pip.pocklemesh").write_text(json.dumps(data, separators=(',', ':')) + '\n')
-
     jelly = material("Pip peach jelly - Blender material study", (1, .64, .40), .55, .22)
     plum = material("Pip plum eyes", (.09, .025, .058), 0, .24)
     cream = material("Pip cream glints and pearls", (1, .92, .72), .05, .25)
@@ -154,17 +131,94 @@ def main():
     body = bpy.data.objects.new("PipBody", mesh); character.objects.link(body)
     body.data.materials.append(jelly)
     for face in mesh.polygons: face.use_smooth = True
-    uv_layer = mesh.uv_layers.new(name="PipUV")
-    for polygon in mesh.polygons:
-        face = [mesh.loops[i].vertex_index for i in polygon.loop_indices]
-        us = [((i - 1) % SIDES) / SIDES if i not in [0, len(positions) - 1] else 0 for i in face]
+    # Voxel union removes intersecting transparent shells. Smooth before reducing,
+    # keeping the crown in the SAME closed mesh and deformation as the body.
+    crown_objects = [sphere("Crown " + str(i), point, scale, jelly, character)
+                     for i, (point, scale) in enumerate(zip(crowns, crown_scales))]
+    bpy.ops.object.select_all(action='DESELECT')
+    for obj in [body, *crown_objects]: obj.select_set(True)
+    bpy.context.view_layer.objects.active = body
+    bpy.ops.object.join()
+    union = body.modifiers.new("Joined jelly shell", 'REMESH')
+    union.mode = 'VOXEL'; union.voxel_size = .032; union.use_smooth_shade = True
+    bpy.ops.object.modifier_apply(modifier=union.name)
+    smooth = body.modifiers.new("Soft crown transitions", 'SMOOTH')
+    smooth.factor = .8; smooth.iterations = 5
+    bpy.ops.object.modifier_apply(modifier=smooth.name)
+    reduce = body.modifiers.new("Mobile surface budget", 'DECIMATE')
+    reduce.ratio = .24
+    bpy.ops.object.modifier_apply(modifier=reduce.name)
+    # Cut a small flat foot rather than flattening vertices into degenerate faces.
+    import bmesh
+    bm = bmesh.new(); bm.from_mesh(body.data)
+    cut = bmesh.ops.bisect_plane(bm, geom=list(bm.verts) + list(bm.edges) + list(bm.faces),
+                                dist=.000001, plane_co=(0, 0, -.97), plane_no=(0, 0, 1), clear_inner=True)
+    boundary = [edge for edge in cut['geom_cut'] if isinstance(edge, bmesh.types.BMEdge) and edge.is_boundary]
+    bmesh.ops.holes_fill(bm, edges=boundary, sides=0)
+    bmesh.ops.triangulate(bm, faces=list(bm.faces))
+    # Cutting triangulated sides can leave nearly collinear slivers at the foot.
+    # Collapse them while maintaining a closed surface, then triangulate again.
+    bmesh.ops.dissolve_degenerate(bm, dist=.0005, edges=list(bm.edges))
+    bmesh.ops.triangulate(bm, faces=list(bm.faces))
+    for _ in range(20):
+        slivers = [face for face in bm.faces if face.calc_area() < .0000006]
+        if not slivers: break
+        edge = min(slivers[0].edges, key=lambda item: item.calc_length())
+        bmesh.ops.collapse(bm, edges=[edge])
+        bmesh.ops.triangulate(bm, faces=list(bm.faces))
+    if any(face.calc_area() < .0000006 for face in bm.faces):
+        raise RuntimeError('Flat-foot cleanup left degenerate triangles')
+    bmesh.ops.recalc_face_normals(bm, faces=list(bm.faces))
+    bm.to_mesh(body.data); bm.free()
+    # Move the cut foot back onto the unchanged platform contact plane.
+    for vertex in body.data.vertices: vertex.co.z -= .03
+    positions = [(float(v.co.x), float(v.co.z), float(-v.co.y)) for v in body.data.vertices]
+    positions = [(x, -1.0 if abs(y + 1) < .00001 else y, z) for x, y, z in positions]
+    for vertex, point in zip(body.data.vertices, positions): vertex.co = blender_point(point)
+    faces = [tuple(polygon.vertices) for polygon in body.data.polygons]
+    # Mesh UVs are cylindrical, with split seam IDs retained for runtime welding.
+    export_positions, export_uv, groups, indices = [], [], [], []
+    keyed_vertices = {}
+    per_face_uv = []
+    for face in faces:
+        us = [(math.atan2(positions[i][2], positions[i][0]) / (2 * math.pi)) % 1 for i in face]
         if max(us) - min(us) > .5: us = [u + 1 if u < .5 else u for u in us]
-        for loop, vertex, u in zip(polygon.loop_indices, face, us):
-            uv_layer.data[loop].uv = (u, (positions[vertex][1] + 1) / 1.75)
+        # This mesh has no textures: keep seam-crossing UVs in range with a local
+        # continuous chart. Logical IDs still weld the normals across chart edges.
+        if max(us) > 1: us = [u - min(us) for u in us]
+        uvs = [(u, (positions[i][1] + 1) / 2) for i, u in zip(face, us)]
+        per_face_uv.append(uvs)
+        for vertex, (u, v) in zip(face, uvs):
+            key = (vertex, round(u, 7), round(v, 7))
+            if key not in keyed_vertices:
+                keyed_vertices[key] = len(export_positions)
+                export_positions.append(positions[vertex]); export_uv.append((u, v)); groups.append(vertex)
+            indices.append(keyed_vertices[key])
+    mesh = body.data
+    for face in mesh.polygons: face.use_smooth = True
+    uv_layer = mesh.uv_layers.new(name="PipUV")
+    for polygon, uvs in zip(mesh.polygons, per_face_uv):
+        for loop, uv in zip(polygon.loop_indices, uvs): uv_layer.data[loop].uv = uv
+    # Ray-project facial marks onto the final smoothed shell, rather than keeping
+    # anchors calculated against the pre-union analytic pear.
+    def project(point, offset):
+        x, y, _ = point
+        hit, location, _, _ = body.ray_cast(Vector(blender_point((x, y, -2))), Vector((0, -1, 0)))
+        if not hit: raise RuntimeError('Face anchor missed joined body')
+        return (x, y, -float(location.y) - offset)
+    eyes = [project(point, .034) for point in eyes]
+    glints = [(x - .022, y + .038, z - .038) for x, y, z in eyes]
+    cheeks = [project(point, .025) for point in cheeks]
+    mouth = [project(point, .043) for point in mouth]
+    data = dict(schemaVersion=1, name="Pip - Peach Jelly", integratedCrown=True,
+                positions=flat(export_positions), triangles=indices, uv=flat(export_uv), normalGroups=groups,
+                eyes=flat(eyes), eyeGlints=flat(glints), cheeks=flat(cheeks), mouth=flat(mouth),
+                crowns=flat(crowns), crownScales=flat(crown_scales), pearls=flat(pearls), flecks=flat(flecks),
+                bodyColor=[1, .64, .36, .72], topColor=[1, .80, .52, 1], bottomColor=[1, .36, .16, 1])
+    (UNITY_DIR / "Pip.pocklemesh").write_text(json.dumps(data, separators=(',', ':')) + '\n')
     for i, eye in enumerate(eyes): sphere("Eye " + str(i), eye, (.092, .127, .042), plum, character)
     for i, point in enumerate(glints): sphere("Glint " + str(i), point, (.020, .024, .012), cream, character)
     for i, point in enumerate(cheeks): sphere("Blush " + str(i), point, (.104, .048, .026), blush, character)
-    for i, (point, scale) in enumerate(zip(crowns, crown_scales)): sphere("Crown " + str(i), point, scale, jelly, character)
     for i, point in enumerate(pearls):
         radius = .032 + (i % 3) * .011
         sphere("Pearl " + str(i), point, (radius,) * 3, cream, character)
@@ -210,7 +264,7 @@ def main():
     scene.render.resolution_x = 768; scene.render.resolution_y = 768; scene.render.resolution_percentage = 100
     scene.view_settings.view_transform = 'AgX'
     scene.render.image_settings.file_format = 'PNG'
-    scene.render.filepath = str(PREVIEW_DIR / "pip-model-study-01.png")
+    scene.render.filepath = str(PREVIEW_DIR / "pip-model-study-02.png")
     bpy.ops.wm.save_as_mainfile(filepath=str(SOURCE_DIR / "Pip.blend"))
     print('PIP_EXPORT ' + json.dumps(dict(logicalVertices=len(positions), unityVertices=len(export_positions),
                                        triangles=len(indices) // 3, characterObjects=len(character.objects))))

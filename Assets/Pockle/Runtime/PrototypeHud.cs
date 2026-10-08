@@ -139,7 +139,7 @@ namespace Pockle.Runtime
             var motionButton = CreateButton("Motion · full", preferenceRow, new Vector2(227f, 0f),
                 new Vector2(101f, 44f), Quiet, ChangeMotion, out motionBackground, 11);
             motionLabel = motionButton.GetComponentInChildren<Text>();
-            Label("PROCEDURAL PLACEHOLDER · TACTILE PROTOTYPE", card, 8, MutedInk, FontStyle.Normal,
+            Label("PEACH JELLY · TACTILE PROTOTYPE", card, 8, MutedInk, FontStyle.Normal,
                 TextAnchor.MiddleCenter, new Vector2(0f, -216f), new Vector2(328f, 15f));
 
             if (EventSystem.current == null)
