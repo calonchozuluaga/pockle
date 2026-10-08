@@ -20,6 +20,7 @@ internal static class Program
             AuthoredMeshChecks.Run();
             InteractionChecks.Run();
             ManipulationChecks.Run();
+            RevealChecks.Run();
             return 0;
         }
         catch (Exception exception)

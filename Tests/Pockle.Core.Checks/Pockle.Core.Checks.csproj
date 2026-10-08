@@ -12,5 +12,6 @@
     <Compile Include="AuthoredMeshChecks.cs" />
     <Compile Include="InteractionChecks.cs" />
     <Compile Include="ManipulationChecks.cs" />
+    <Compile Include="RevealChecks.cs" />
   </ItemGroup>
 </Project>

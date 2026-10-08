@@ -105,19 +105,20 @@ namespace Pockle.Runtime
         private void ApplyLift()
         {
             float previous = visibleLift;
-            float requested = reducedMotion ? lift.Target : lift.Value;
+            float requested = revealing ? revealLift : reducedMotion ? lift.Target : lift.Value;
             // Keep the top of a lifted, vertically stretched Pip inside the viewer.
-            float room = Mathf.Max(0f, 3.4f - (toyMount.position.y + toy.DeformedTop));
-            visibleLift = Mathf.Clamp(requested, 0f, Mathf.Min(.75f, room));
+            float scale = Mathf.Max(.01f, toyMount.lossyScale.y);
+            float room = Mathf.Max(0f, 3.4f - (toyMount.position.y + toy.DeformedTop * scale)) / scale;
+            visibleLift = Mathf.Clamp(requested, 0f, Mathf.Min(revealing ? 1.05f : .75f, room));
             toy.transform.localPosition = Vector3.up * visibleLift;
-            if (!reducedMotion && !gesture.IsActive && previous > .001f && visibleLift <= .001f && lift.Velocity < -.08f)
+            if (!reducedMotion && !revealing && !gesture.IsActive && previous > .001f && visibleLift <= .001f && lift.Velocity < -.08f)
             {
                 compression.Reset(Mathf.Clamp(-lift.Velocity * .06f, .025f, .12f));
                 compression.Target = 0f;
             }
             if (Mathf.Abs(visibleLift - lastShadowLift) < .001f) return;
             lastShadowLift = visibleLift;
-            float height = visibleLift / .75f;
+            float height = Mathf.Clamp01(visibleLift * scale / .75f);
             float spread = 1f + height * .3f;
             contactShadow.localScale = new Vector3(shadowRestScale.x * spread, shadowRestScale.y, shadowRestScale.z * spread);
             shadowMaterial.color = Color.Lerp(shadowRestColor, new Color(1f, .985f, .957f), height * .72f);

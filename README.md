@@ -2,11 +2,11 @@
 
 Unity source for the **first tactile prototype**: Pip, a Blender-authored jelly companion, with Peach Jelly and Moon Jelly variants for comparing color, filling, and finish. The project follows the [development brief](docs/PRODUCT_BRIEF.md).
 
-Pip can be pressed, lifted off the plate with an upward drag, stretched or compressed with two fingers, and rotated by dragging the plate. Phone movement drives a gentle jelly jiggle. A short procedural box reveal introduces the toy. Reset restores its pose. Sound, optional device vibration, reduced motion, and the selected variant persist locally.
+Pip can be pressed, lifted off the plate with an upward drag, stretched or compressed with two fingers, and rotated by dragging the plate. Phone movement drives a gentle jelly jiggle. A branded Jelly Garden box opens its lid/flaps, reveals Pip, and settles him onto the plate. Reset restores his pose. Sound, optional device vibration, reduced motion, and the selected variant persist locally.
 
 Tap **Store** to browse three closed collection boxes with prices underneath. **Back to Pip** returns to the same viewer. This is a store preview with proposed USD prices; it does not process payments or unlock toys. See [the store preview](docs/STORE_PREVIEW.md).
 
-The authored character is an initial art pass; its Unity material and Android appearance still need validation. The original procedural character remains available for comparison. Audio tones, reveal box, and UI are prototype content. There are no collection rewards, purchases, accounts, trades, walking mechanics, or AI calls during gameplay.
+The authored character is an initial art pass; its Unity material and Android appearance still need validation. The original procedural character remains available for comparison. Audio tones, the branded reveal, and UI are prototype content. There are no collection rewards, purchases, accounts, trades, walking mechanics, or AI calls during gameplay. Follow [the box-opening checklist](docs/BOX_REVEAL.md) to test the new reveal locally.
 
 For the next art step, follow the [character generation pipeline](docs/CHARACTER_PIPELINE.md): establish Pip's design reference, build a reusable Blender mesh, and validate its Unity deformation and materials on Android before expanding the roster.
 

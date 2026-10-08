@@ -41,9 +41,8 @@ namespace Pockle.Runtime
         private JellyToy toy;
         private PrototypeHud hud;
         private Transform boxRoot;
-        private Transform boxLid;
-        private Material boxMaterial;
-        private Material lidMaterial;
+        private MysteryBox discoveryBox;
+        private float revealLift;
         private AudioSource audioSource;
         private AudioClip pressClip;
         private AudioClip releaseClip;
@@ -241,6 +240,7 @@ namespace Pockle.Runtime
             turntable.localRotation = Quaternion.identity;
             compression.Reset(); stretch.Reset(); tiltX.Reset(); tiltZ.Reset();
             lift.Reset(); pinch.Reset(); ClearMotion();
+            revealLift = 0f;
             visibleLift = 0f;
             toy.transform.localPosition = Vector3.zero;
             contactX = contactZ = 0f;
@@ -259,36 +259,29 @@ namespace Pockle.Runtime
             toy.gameObject.SetActive(false);
             boxRoot.gameObject.SetActive(true);
             boxRoot.localScale = Vector3.one;
-            boxLid.localPosition = new Vector3(0f, 0.6f, 0f);
-            boxLid.localRotation = Quaternion.identity;
-            SetBoxAlpha(1f);
+            discoveryBox.ApplyPose(RevealSequence.Sample(0f, reducedMotion), reducedMotion);
             hud.SetRevealAvailable(false);
-            hud.SetStatus("A little wonder is waking up…");
+            hud.SetStatus("Jelly Garden… who's inside?");
         }
 
         private void UpdateReveal(float dt)
         {
             revealTime += Mathf.Min(dt, 0.1f);
-            float duration = reducedMotion ? 0.55f : 1.65f;
-            float progress = Mathf.Clamp01(revealTime / duration);
-            float opening = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.12f, 0.62f, progress));
-            boxLid.localPosition = new Vector3(0f, 0.6f + (reducedMotion ? 0.1f : opening * 1.1f), 0f);
-            boxLid.localRotation = reducedMotion ? Quaternion.identity : Quaternion.Euler(-opening * 18f, 0f, opening * -9f);
-            if (!reducedMotion)
-                boxRoot.localScale = Vector3.one * (1f + Mathf.Sin(progress * 22f) * 0.018f * (1f - opening));
-            float emergence = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.38f, 0.9f, progress));
-            if (progress >= 0.38f)
+            RevealPose pose = RevealSequence.Sample(revealTime, reducedMotion);
+            discoveryBox.ApplyPose(pose, reducedMotion);
+            boxRoot.gameObject.SetActive(pose.BoxAlpha > .001f);
+            revealLift = pose.ToyLift;
+            compression.Target = pose.Compression;
+            if (pose.ToyVisible)
             {
                 toy.gameObject.SetActive(true);
-                float scale = reducedMotion ? 1f : Mathf.Lerp(0.16f, 1f, emergence);
-                toyMount.localScale = Vector3.one * scale;
-                if (!reducedMotion) compression.Target = (1f - emergence) * 0.18f;
+                toyMount.localScale = Vector3.one * pose.ToyScale;
                 if (!revealChimePlayed) { Play(revealClip); Vibrate(); revealChimePlayed = true; }
             }
-            SetBoxAlpha(1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.43f, 0.78f, progress)));
-            if (progress >= 1f)
+            if (pose.Finished)
             {
                 revealing = false;
+                revealLift = 0f;
                 boxRoot.gameObject.SetActive(false);
                 toy.gameObject.SetActive(true);
                 toyMount.localScale = Vector3.one;
@@ -300,43 +293,12 @@ namespace Pockle.Runtime
 
         private void BuildRevealBox()
         {
-            boxRoot = new GameObject("Simple discovery reveal placeholder").transform;
-            boxRoot.position = new Vector3(0f, 0.65f, 0f);
-            boxMaterial = CreateBoxMaterial(new Color(0.68f, 0.40f, 0.40f, 1f));
-            lidMaterial = CreateBoxMaterial(new Color(0.9f, 0.68f, 0.54f, 1f));
-            AddBoxPart("Box", boxRoot, Vector3.zero, new Vector3(1.9f, 1f, 1.65f), boxMaterial);
-            boxLid = AddBoxPart("Lid", boxRoot, new Vector3(0f, 0.6f, 0f), new Vector3(2.02f, 0.18f, 1.77f), lidMaterial);
-            AddBoxPart("Ribbon", boxRoot, new Vector3(0f, 0f, -0.832f), new Vector3(0.13f, 0.94f, 0.008f), lidMaterial);
+            boxRoot = new GameObject("Jelly Garden mystery box").transform;
+            boxRoot.SetParent(turntable, false);
+            boxRoot.localPosition = new Vector3(0f, .15f, 0f);
+            discoveryBox = boxRoot.gameObject.AddComponent<MysteryBox>();
+            discoveryBox.Initialize();
             boxRoot.gameObject.SetActive(false);
-        }
-
-        private static Transform AddBoxPart(string name, Transform parent, Vector3 position, Vector3 scale, Material material)
-        {
-            GameObject part = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            part.name = name;
-            part.transform.SetParent(parent, false);
-            part.transform.localPosition = position;
-            part.transform.localScale = scale;
-            part.GetComponent<Renderer>().sharedMaterial = material;
-            Collider collider = part.GetComponent<Collider>();
-            collider.enabled = false;
-            Destroy(collider);
-            return part.transform;
-        }
-
-        private static Material CreateBoxMaterial(Color color)
-        {
-            Shader shader = Shader.Find("Pockle/Reveal Box");
-            if (shader == null || !shader.isSupported) shader = Shader.Find("Pockle/Soft Accent");
-            Material material = new Material(shader);
-            material.color = color;
-            return material;
-        }
-
-        private void SetBoxAlpha(float alpha)
-        {
-            Color body = boxMaterial.color; body.a = alpha; boxMaterial.color = body;
-            Color lid = lidMaterial.color; lid.a = alpha; lidMaterial.color = lid;
         }
 
         private void SetSound(bool enabled)
@@ -404,8 +366,7 @@ namespace Pockle.Runtime
             if (pressClip != null) Destroy(pressClip);
             if (releaseClip != null) Destroy(releaseClip);
             if (revealClip != null) Destroy(revealClip);
-            if (boxMaterial != null) Destroy(boxMaterial);
-            if (lidMaterial != null) Destroy(lidMaterial);
+            if (boxRoot != null) Destroy(boxRoot.gameObject);
         }
     }
 }

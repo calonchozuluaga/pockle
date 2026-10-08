@@ -1,6 +1,6 @@
 # Pockle collection-box studies
 
-Three original collection packaging concepts use the same illustrative reverse-tuck cube carton. The latest visual direction adds a soft, inflated Pockle wordmark, mystery silhouettes, question marks, and playful collection patterns so the packaging reads as a surprise toy box. Packaging identifies the collection; the exact color and model stay a surprise until opening. These concepts are artwork for the app's virtual box reveal. They do not add rewards, purchases, or finished box animations to Unity.
+Three original collection packaging concepts use the same illustrative reverse-tuck cube carton. The latest visual direction adds a soft, inflated Pockle wordmark, mystery silhouettes, question marks, and playful collection patterns so the packaging reads as a surprise toy box. Packaging identifies the collection; the exact color and model stay a surprise until opening. The Jelly Garden direction now has a runtime panel texture and a hinged Unity reveal; the other boxes remain store/concept artwork. No rewards or purchases are implemented.
 
 | Collection | Palette | Collection symbol | Suggested finish |
 | --- | --- | --- | --- |
@@ -12,7 +12,7 @@ Three original collection packaging concepts use the same illustrative reverse-t
 
 ![Squishy wordmark and surprise-box concepts](pockle-folded-box-concepts-02.png)
 
-This second mockup responds to the owner’s request for a squishy toy-like logo and a stronger surprise-box identity. It is a branding concept, not a finalized vector logo, texture atlas, or Unity-rendered opening. Jelly Garden is the intended first box to replace the reveal placeholder. Its lid should open, reveal Pip, and hand off to touch interaction after Pip settles; reduced motion uses a gentler, shorter opening. That reveal is planned for the next interaction pass.
+This second mockup responds to the owner’s request for a squishy toy-like logo and a stronger surprise-box identity. It is a branding concept rather than a finalized vector logo or complete texture atlas. The [Jelly Garden opening](../BOX_REVEAL.md) now replaces the plain placeholder in Unity with a printed carton, hinged lid/flaps, Pip emergence, and a settled handoff to touch. Reduced motion uses a gentler, shorter reveal. Its 3D appearance still needs local Unity/Android validation.
 
 ## Structural dielines
 

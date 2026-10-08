@@ -30,4 +30,4 @@ The existing portable suites passed, plus **114,325 manipulation assertions** ag
 
 Source checks passed **24 Unity C# files and 55 asset GUIDs**. Unity API compilation, input dispatch, local rendering, actual accelerometer delivery, Android builds, and performance remain unrun in cloud. The two existing PlayMode variant tests now include a pinched pose when checking that switching retains deformation; they still require the local editor.
 
-The shell and suspended filling deform together. Independent filling lag/drift, lights-off glow, and the redesigned mystery-box opening remain separate future work.
+The shell and suspended filling deform together. Independent filling lag/drift and lights-off glow remain separate future work. The redesigned mystery-box opening is now included; follow [the reveal checklist](BOX_REVEAL.md).
