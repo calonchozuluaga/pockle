@@ -58,6 +58,7 @@ namespace Pockle.Runtime
             hud.SetSettings(soundEnabled, hapticsEnabled, reducedMotion);
             hud.SetVariant(toy.Variant);
             hud.VariantChanged += SetVariant;
+            hud.StoreVisibilityChanged += StoreVisibilityChanged;
 
             BuildRevealBox();
             audioSource = gameObject.AddComponent<AudioSource>();
@@ -73,8 +74,9 @@ namespace Pockle.Runtime
         private void Update()
         {
             if (toy == null) return;
+            if (hud.StoreVisible && Input.GetKeyDown(KeyCode.Escape)) hud.SetStoreVisible(false);
             if (revealing) UpdateReveal(Time.unscaledDeltaTime);
-            else ReadInput();
+            else if (!hud.StoreVisible) ReadInput();
 
             float dt = Time.unscaledDeltaTime;
             compression.Step(dt);
@@ -129,7 +131,7 @@ namespace Pockle.Runtime
 
         private void BeginPointer(int id, Vector2 position)
         {
-            if (gesture.PointerId != NoPointer || revealing) return;
+            if (gesture.PointerId != NoPointer || revealing || hud.StoreVisible) return;
             if (!viewCamera.pixelRect.Contains(position)) return;
             if (EventSystem.current != null)
             {
@@ -318,6 +320,11 @@ namespace Pockle.Runtime
             hud.SetVariant(toy.Variant);
         }
 
+        private void StoreVisibilityChanged(bool visible)
+        {
+            if (visible) ReleasePointer(false);
+        }
+
         private void SetHaptics(bool enabled) { hapticsEnabled = enabled; SaveSetting("haptics", enabled); }
         private void SetReducedMotion(bool enabled) { reducedMotion = enabled; SaveSetting("reducedMotion", enabled); }
         private static void SaveSetting(string key, bool enabled)
@@ -354,6 +361,7 @@ namespace Pockle.Runtime
         private void OnDestroy()
         {
             if (hud != null) hud.VariantChanged -= SetVariant;
+            if (hud != null) hud.StoreVisibilityChanged -= StoreVisibilityChanged;
             if (pressClip != null) Destroy(pressClip);
             if (releaseClip != null) Destroy(releaseClip);
             if (revealClip != null) Destroy(revealClip);

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace Pockle.Runtime
 {
     /// <summary>Safe-area UI, generated locally without a scene or imported assets.</summary>
-    public sealed class PrototypeHud : MonoBehaviour
+    public sealed partial class PrototypeHud : MonoBehaviour
     {
         private static readonly Color Ink = new Color(0.29f, 0.21f, 0.29f);
         private static readonly Color MutedInk = new Color(0.48f, 0.41f, 0.43f);
@@ -123,11 +123,14 @@ namespace Pockle.Runtime
             actionRow = Rect("Toy actions", card);
             TopCentered(actionRow, new Vector2(0f, -112f), new Vector2(328f, 44f));
             Image revealBackground;
-            revealButton = CreateButton("Reveal again", actionRow, Vector2.zero, new Vector2(207f, 44f),
-                Peach, () => reveal?.Invoke(), out revealBackground);
+            revealButton = CreateButton("Reveal again", actionRow, Vector2.zero, new Vector2(101f, 44f),
+                Peach, () => reveal?.Invoke(), out revealBackground, 11);
             Image resetBackground;
-            CreateButton("Reset", actionRow, new Vector2(219f, 0f), new Vector2(109f, 44f),
+            CreateButton("Reset", actionRow, new Vector2(110f, 0f), new Vector2(101f, 44f),
                 Quiet, () => reset?.Invoke(), out resetBackground);
+            Image storeBackground;
+            CreateButton("Store", actionRow, new Vector2(220f, 0f), new Vector2(108f, 44f),
+                Quiet, () => SetStoreVisible(true), out storeBackground);
 
             preferenceRow = Rect("Comfort settings", card);
             TopCentered(preferenceRow, new Vector2(0f, -168f), new Vector2(328f, 44f));
@@ -150,6 +153,7 @@ namespace Pockle.Runtime
             }
             SetSettings(true, true, false);
             SetVariant(PipVariant.PeachJelly);
+            BuildStore(canvasObject.transform);
             ApplySafeArea();
             Canvas.ForceUpdateCanvases();
             AdaptLayout();
@@ -237,6 +241,12 @@ namespace Pockle.Runtime
             safeRoot.anchorMax = new Vector2(lastSafeArea.xMax / Screen.width, lastSafeArea.yMax / Screen.height);
             safeRoot.offsetMin = Vector2.zero;
             safeRoot.offsetMax = Vector2.zero;
+            if (storeSafeRoot != null)
+            {
+                storeSafeRoot.anchorMin = safeRoot.anchorMin;
+                storeSafeRoot.anchorMax = safeRoot.anchorMax;
+                storeSafeRoot.offsetMin = storeSafeRoot.offsetMax = Vector2.zero;
+            }
         }
 
         private void AdaptLayout()
@@ -251,7 +261,7 @@ namespace Pockle.Runtime
             // Very narrow phones keep 44-point buttons by scaling only horizontal dimensions.
             var contentWidth = Mathf.Max(1f, width - 32f);
             ResizeButtons(variantRow, contentWidth, 12f, false);
-            ResizeButtons(actionRow, contentWidth, 12f, true);
+            ResizeButtons(actionRow, contentWidth, 9f, false);
             ResizeButtons(preferenceRow, contentWidth, 9f, false);
             status.rectTransform.sizeDelta = new Vector2(contentWidth, 25f);
             guide.rectTransform.sizeDelta = new Vector2(contentWidth, 18f);
@@ -287,6 +297,7 @@ namespace Pockle.Runtime
             companionName.rectTransform.sizeDelta = new Vector2(companionWidth, 34f);
             companionKind.rectTransform.sizeDelta = new Vector2(companionWidth, 18f);
             companionCaption.rectTransform.sizeDelta = new Vector2(companionWidth, 16f);
+            AdaptStoreLayout(size);
         }
 
         private static void ResizeButtons(RectTransform row, float width, float gap, bool weighted)

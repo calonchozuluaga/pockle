@@ -4,6 +4,8 @@ Unity source for the **first tactile prototype**: Pip, a Blender-authored jelly 
 
 Pip can be pressed, dragged upward to stretch, released to rebound, and rotated. A short procedural box reveal introduces the toy. Reset restores its pose. Sound, optional device vibration, reduced motion, and the selected variant persist locally.
 
+Tap **Store** to browse three closed collection boxes with prices underneath. **Back to Pip** returns to the same viewer. This is a store preview with proposed USD prices; it does not process payments or unlock toys. See [the store preview](docs/STORE_PREVIEW.md).
+
 The authored character is an initial art pass; its Unity material and Android appearance still need validation. The original procedural character remains available for comparison. Audio tones, reveal box, and UI are prototype content. There are no collection rewards, purchases, accounts, trades, walking mechanics, or AI calls during gameplay.
 
 For the next art step, follow the [character generation pipeline](docs/CHARACTER_PIPELINE.md): establish Pip's design reference, build a reusable Blender mesh, and validate its Unity deformation and materials on Android before expanding the roster.
@@ -44,6 +46,7 @@ If Git reports that local changes would be overwritten, inspect the listed files
 | Rebound | Release |
 | Inspect | Drag the exposed plate sideways to rotate Pip and the plate |
 | Compare variants | Tap **Peach** or **Moon** |
+| Browse boxes | Tap **Store**; **Back to Pip** returns to the viewer |
 | Start over | **Reset**, or `R` in the editor |
 | Reveal | **Reveal again**, or `Space` in the editor |
 | Comfort | Toggle **Sound**, **Haptics**, and **Motion** |
@@ -71,7 +74,7 @@ In Unity, open **Window → General → Test Runner → EditMode** and run `Pock
 - `Assets/Pockle/Runtime/JellyToy.cs`: authored or procedural mesh, deformed facial features, and materials.
 - `Assets/Pockle/Runtime/PipCharacterAsset.cs`: native mesh and authored feature anchors.
 - `Assets/Pockle/Runtime/TactilePrototype.cs`: pointer capture, reveal, feedback, and preferences.
-- `Assets/Pockle/Runtime/PrototypeHud.cs` / `PrototypeStage.cs`: responsive controls and presentation.
+- `Assets/Pockle/Runtime/PrototypeHud.cs` / `PrototypeHud.Store.cs` / `PrototypeStage.cs`: responsive controls, the store preview, and presentation.
 - `Assets/Pockle/Shaders/`: simple Built-in candy, accent, and reveal shaders.
 - `Assets/Pockle/Resources/`: imported character source and material references that retain shaders in player builds.
 - `Assets/Pockle/Scenes/PockleTactile.unity`: committed scene entry point.
