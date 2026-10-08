@@ -25,6 +25,7 @@ namespace Pockle.Runtime
         private Vector3[] groupNormals;
         private Mesh accentMesh;
         private Mesh sparkleMesh;
+        private Mesh starMesh;
         private Cubemap studioReflection;
         private Vector3[] restVertices;
         private Vector3[] vertices;
@@ -39,6 +40,8 @@ namespace Pockle.Runtime
         private Material cheekMaterial;
         private Material bubbleMaterial;
         private Material sparkleMaterial;
+        private Material silverMaterial;
+        private PipVariant variant;
         private bool initialized;
         private bool haveDeformation;
         private float previousCompression;
@@ -51,6 +54,29 @@ namespace Pockle.Runtime
         public Transform VisualRoot { get { Initialize(); return visualRoot; } }
         public Renderer BodyRenderer { get; private set; }
         public bool UsesAuthoredMesh { get { return characterAsset != null; } }
+        public PipVariant Variant { get { Initialize(); return variant; } }
+
+        public void SetVariant(PipVariant choice)
+        {
+            Initialize();
+            choice = PipVariants.FromSaved((int)choice);
+            if (choice == variant) return;
+            variant = choice;
+            ApplyVariantMaterial();
+            // Remove only filling pieces. Mesh, face, pose and turntable survive.
+            for (int i = accents.Count - 1; i >= 0; i--)
+            {
+                if (accents[i].IsSurface) continue;
+                accents[i].Transform.gameObject.SetActive(false);
+                Destroy(accents[i].Transform.gameObject);
+                accents.RemoveAt(i);
+            }
+            BuildSuspendedAccents();
+            haveDeformation = false;
+            SetDeformation(previousCompression, previousStretch, previousTiltX, previousTiltZ, previousContactX, previousContactZ);
+            if (Application.isEditor || Debug.isDebugBuild)
+                Debug.Log("Pip variant: " + PipVariants.Label(variant), this);
+        }
 
         /// <summary>Pick the visible shell only at pointer-down, without recooking a collider.</summary>
         public bool RaycastBody(Ray worldRay, out Vector3 point)
@@ -95,6 +121,7 @@ namespace Pockle.Runtime
         {
             if (initialized) return;
             initialized = true;
+            variant = PipVariants.FromSaved(PlayerPrefs.GetInt(PipVariants.Preference, 0));
 
             if (PlayerPrefs.GetInt(PipCharacterAsset.BaselinePreference, 0) == 0)
             {
@@ -140,11 +167,16 @@ namespace Pockle.Runtime
             // Draw suspended pearls before the shell so its peach tint covers them.
             bubbleMaterial.renderQueue = 2990;
             sparkleMaterial = CreateFlatMaterial("Apricot flecks", new Color(1f, 0.82f, 0.57f, 1f));
+            silverMaterial = CreateCandyMaterial("Moon Jelly silver stars", new Color(.86f, .94f, 1f, 1f), .82f);
+            if (silverMaterial.HasProperty("_ZWrite")) silverMaterial.SetFloat("_ZWrite", 1f);
+            silverMaterial.renderQueue = 2000;
+            ApplyVariantMaterial();
 
             if (characterAsset != null) BuildAuthoredBody();
             else BuildBody();
             accentMesh = BuildSphere("Shared accent sphere", characterAsset != null ? 16 : 12, characterAsset != null ? 12 : 10);
             sparkleMesh = BuildSparkle();
+            starMesh = BuildStar();
             BuildFace();
             BuildCrown();
             BuildSuspendedAccents();
@@ -157,6 +189,8 @@ namespace Pockle.Runtime
             ResetToy();
             if (Application.isEditor || Debug.isDebugBuild)
                 Debug.Log("Pip: " + (characterAsset != null ? "authored mesh" : "procedural baseline") + " · " + bodyMesh.vertexCount + " vertices", this);
+            if (Application.isEditor || Debug.isDebugBuild)
+                Debug.Log("Pip variant: " + PipVariants.Label(variant), this);
         }
 
         public void ResetToy()
@@ -441,6 +475,24 @@ namespace Pockle.Runtime
 
         private void BuildSuspendedAccents()
         {
+            if (variant == PipVariant.MoonJelly)
+            {
+                Vector3[] moonPearls = { new Vector3(-.38f, -.43f, -.24f), new Vector3(.14f, -.59f, -.26f), new Vector3(.40f, -.29f, -.13f) };
+                for (int i = 0; i < moonPearls.Length; i++)
+                    AddAccent("Moon pearl " + (i + 1), moonPearls[i], Vector3.one * (.044f + i * .013f), bubbleMaterial, accentMesh, false);
+                Vector3[] stars = {
+                    new Vector3(-.36f, -.65f, -.26f), new Vector3(.28f, -.45f, -.30f),
+                    new Vector3(.49f, -.12f, -.21f), new Vector3(-.24f, .29f, -.22f),
+                    new Vector3(.32f, .24f, -.26f), new Vector3(-.46f, -.06f, -.22f),
+                    new Vector3(.05f, -.76f, -.24f), new Vector3(.08f, .39f, -.10f) };
+                for (int i = 0; i < stars.Length; i++)
+                {
+                    Transform star = AddAccent("Suspended silver star " + (i + 1), stars[i],
+                        Vector3.one * (.046f + (i % 3) * .009f), silverMaterial, starMesh, false);
+                    star.localRotation = Quaternion.Euler(10f * i, 17f * i, 31f * i);
+                }
+                return;
+            }
             Vector3[] pearls =
             {
                 new Vector3(-0.37f, 0.48f, -0.21f), new Vector3(0.43f, 0.35f, -0.12f),
@@ -501,6 +553,47 @@ namespace Pockle.Runtime
             if (material.HasProperty("_TopColor")) material.SetColor("_TopColor", new Color(1f, 0.71f, 0.49f, 1f));
             return material;
         }
+
+        private void ApplyVariantMaterial()
+        {
+            bool moon = variant == PipVariant.MoonJelly;
+            if (moon)
+            {
+                bodyMaterial.color = new Color(.46f, .78f, .96f, .54f);
+                SetColor(bodyMaterial, "_TopColor", new Color(.77f, .92f, 1f, 1f));
+                SetColor(bodyMaterial, "_BottomColor", new Color(.35f, .40f, .82f, 1f));
+                SetColor(bodyMaterial, "_RimColor", new Color(.85f, .92f, 1f, 1f));
+                SetFloat(bodyMaterial, "_Glossiness", .58f);
+                SetFloat(bodyMaterial, "_ReflectionStrength", .62f);
+                SetFloat(bodyMaterial, "_PearlSheen", .72f);
+                bubbleMaterial.color = new Color(.88f, .97f, 1f, .64f);
+                SetColor(bubbleMaterial, "_TopColor", new Color(.97f, .99f, 1f, 1f));
+                SetColor(bubbleMaterial, "_BottomColor", new Color(.62f, .81f, .95f, 1f));
+                cheekMaterial.color = new Color(.92f, .40f, .67f, .48f);
+            }
+            else
+            {
+                bodyMaterial.color = characterAsset != null
+                    ? new Color(characterAsset.BodyColor.r, characterAsset.BodyColor.g, characterAsset.BodyColor.b, .60f)
+                    : new Color(1f, .43f, .34f, .91f);
+                SetColor(bodyMaterial, "_TopColor", characterAsset != null ? characterAsset.TopColor : new Color(1f, .71f, .49f, 1f));
+                SetColor(bodyMaterial, "_BottomColor", characterAsset != null ? characterAsset.BottomColor : new Color(.89f, .20f, .23f, 1f));
+                SetColor(bodyMaterial, "_RimColor", new Color(1f, .86f, .67f, 1f));
+                SetFloat(bodyMaterial, "_Glossiness", characterAsset != null ? .92f : .48f);
+                SetFloat(bodyMaterial, "_ReflectionStrength", 1f);
+                SetFloat(bodyMaterial, "_PearlSheen", 0f);
+                bubbleMaterial.color = new Color(1f, .88f, .69f, .36f);
+                SetColor(bubbleMaterial, "_TopColor", Color.Lerp(bubbleMaterial.color, Color.white, .34f));
+                SetColor(bubbleMaterial, "_BottomColor", bubbleMaterial.color * new Color(.92f, .74f, .79f, 1f));
+                cheekMaterial.color = characterAsset != null ? new Color(1f, .30f, .26f, .62f) : new Color(1f, .42f, .40f, 1f);
+            }
+            if (visualRoot != null) visualRoot.name = "Pip · " + PipVariants.Label(variant);
+        }
+
+        private static void SetColor(Material material, string property, Color color)
+        { if (material.HasProperty(property)) material.SetColor(property, color); }
+        private static void SetFloat(Material material, string property, float value)
+        { if (material.HasProperty(property)) material.SetFloat(property, value); }
 
         private Material CreateCandyMaterial(string materialName, Color color, float gloss)
         {
@@ -577,6 +670,32 @@ namespace Pockle.Runtime
                 Vector3.right * 0.64f, Vector3.forward * 0.50f, Vector3.back * 0.50f };
             mesh.triangles = new[] { 0, 4, 3, 0, 3, 5, 0, 5, 2, 0, 2, 4,
                 1, 3, 4, 1, 5, 3, 1, 2, 5, 1, 4, 2 };
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+            ownedMeshes.Add(mesh);
+            return mesh;
+        }
+
+        private Mesh BuildStar()
+        {
+            var points = new Vector3[22];
+            var faces = new int[120];
+            points[20] = new Vector3(0f, 0f, -.18f);
+            points[21] = new Vector3(0f, 0f, .18f);
+            for (int i = 0; i < 10; i++)
+            {
+                float angle = i * Mathf.PI / 5f;
+                float radius = i % 2 == 0 ? 1f : .46f;
+                points[i] = new Vector3(Mathf.Sin(angle) * radius, Mathf.Cos(angle) * radius, -.18f);
+                points[i + 10] = new Vector3(points[i].x, points[i].y, .18f);
+                int next = (i + 1) % 10;
+                int t = i * 12;
+                faces[t] = 20; faces[t + 1] = i; faces[t + 2] = next;
+                faces[t + 3] = 21; faces[t + 4] = next + 10; faces[t + 5] = i + 10;
+                faces[t + 6] = i; faces[t + 7] = i + 10; faces[t + 8] = next + 10;
+                faces[t + 9] = i; faces[t + 10] = next + 10; faces[t + 11] = next;
+            }
+            var mesh = new Mesh { name = "Five-point suspended star", vertices = points, triangles = faces };
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
             ownedMeshes.Add(mesh);

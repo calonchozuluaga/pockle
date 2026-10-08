@@ -17,11 +17,13 @@ namespace Pockle.Runtime
         public event Action<bool> SoundChanged;
         public event Action<bool> HapticsChanged;
         public event Action<bool> ReducedMotionChanged;
+        public event Action<PipVariant> VariantChanged;
 
         private RectTransform safeRoot;
         private RectTransform header;
         private RectTransform companion;
         private RectTransform card;
+        private RectTransform variantRow;
         private RectTransform actionRow;
         private RectTransform preferenceRow;
         private Text status;
@@ -34,6 +36,9 @@ namespace Pockle.Runtime
         private Text companionKind;
         private Text companionName;
         private Text companionCaption;
+        private Text footer;
+        private Image peachBackground;
+        private Image moonBackground;
         private Image soundBackground;
         private Image hapticsBackground;
         private Image motionBackground;
@@ -51,6 +56,7 @@ namespace Pockle.Runtime
         private bool hapticsEnabled = true;
         private bool reducedMotionEnabled;
         private bool initialized;
+        private PipVariant variant;
         private Rect lastSafeArea;
         private Vector2 lastScreenSize;
         private Vector2 lastLayoutSize;
@@ -107,8 +113,15 @@ namespace Pockle.Runtime
             status.resizeTextMinSize = 12;
             status.resizeTextMaxSize = 15;
 
+            variantRow = Rect("Pip variants", card);
+            TopCentered(variantRow, new Vector2(0f, -58f), new Vector2(328f, 44f));
+            CreateButton("Peach", variantRow, Vector2.zero, new Vector2(158f, 44f), Peach,
+                () => ChangeVariant(PipVariant.PeachJelly), out peachBackground);
+            CreateButton("Moon", variantRow, new Vector2(170f, 0f), new Vector2(158f, 44f), Quiet,
+                () => ChangeVariant(PipVariant.MoonJelly), out moonBackground);
+
             actionRow = Rect("Toy actions", card);
-            TopCentered(actionRow, new Vector2(0f, -58f), new Vector2(328f, 44f));
+            TopCentered(actionRow, new Vector2(0f, -112f), new Vector2(328f, 44f));
             Image revealBackground;
             revealButton = CreateButton("Reveal again", actionRow, Vector2.zero, new Vector2(207f, 44f),
                 Peach, () => reveal?.Invoke(), out revealBackground);
@@ -117,7 +130,7 @@ namespace Pockle.Runtime
                 Quiet, () => reset?.Invoke(), out resetBackground);
 
             preferenceRow = Rect("Comfort settings", card);
-            TopCentered(preferenceRow, new Vector2(0f, -114f), new Vector2(328f, 44f));
+            TopCentered(preferenceRow, new Vector2(0f, -168f), new Vector2(328f, 44f));
             var soundButton = CreateButton("Sound · on", preferenceRow, Vector2.zero, new Vector2(101f, 44f),
                 Quiet, ChangeSound, out soundBackground, 11);
             soundLabel = soundButton.GetComponentInChildren<Text>();
@@ -127,8 +140,8 @@ namespace Pockle.Runtime
             var motionButton = CreateButton("Motion · full", preferenceRow, new Vector2(227f, 0f),
                 new Vector2(101f, 44f), Quiet, ChangeMotion, out motionBackground, 11);
             motionLabel = motionButton.GetComponentInChildren<Text>();
-            Label("PEACH JELLY · TACTILE PROTOTYPE", card, 8, MutedInk, FontStyle.Normal,
-                TextAnchor.MiddleCenter, new Vector2(0f, -162f), new Vector2(328f, 15f));
+            footer = Label("PEACH JELLY · TACTILE PROTOTYPE", card, 8, MutedInk, FontStyle.Normal,
+                TextAnchor.MiddleCenter, new Vector2(0f, -216f), new Vector2(328f, 15f));
 
             if (EventSystem.current == null)
             {
@@ -136,6 +149,7 @@ namespace Pockle.Runtime
                 ownedEventSystem.transform.SetParent(transform, false);
             }
             SetSettings(true, true, false);
+            SetVariant(PipVariant.PeachJelly);
             ApplySafeArea();
             Canvas.ForceUpdateCanvases();
             AdaptLayout();
@@ -144,6 +158,24 @@ namespace Pockle.Runtime
         public void SetStatus(string message)
         {
             if (status != null) status.text = string.IsNullOrEmpty(message) ? "Make yourself at home." : message;
+        }
+
+        public void SetVariant(PipVariant choice)
+        {
+            variant = PipVariants.FromSaved((int)choice);
+            bool moon = variant == PipVariant.MoonJelly;
+            companionKind.text = PipVariants.Label(variant);
+            companionCaption.text = moon ? "02 / VARIANT" : "01 / VARIANT";
+            footer.text = PipVariants.Label(variant) + " · TACTILE PROTOTYPE";
+            peachBackground.color = moon ? Quiet : Peach;
+            moonBackground.color = moon ? new Color(.69f, .82f, .94f) : Quiet;
+        }
+
+        private void ChangeVariant(PipVariant choice)
+        {
+            if (variant == choice) return;
+            SetVariant(choice);
+            VariantChanged?.Invoke(choice);
         }
 
         public void SetRevealAvailable(bool available)
@@ -218,6 +250,7 @@ namespace Pockle.Runtime
             var width = landscape ? Mathf.Min(360f, columnWidth - 20f) : Mathf.Min(360f, size.x - 24f);
             // Very narrow phones keep 44-point buttons by scaling only horizontal dimensions.
             var contentWidth = Mathf.Max(1f, width - 32f);
+            ResizeButtons(variantRow, contentWidth, 12f, false);
             ResizeButtons(actionRow, contentWidth, 12f, true);
             ResizeButtons(preferenceRow, contentWidth, 9f, false);
             status.rectTransform.sizeDelta = new Vector2(contentWidth, 25f);
@@ -236,7 +269,7 @@ namespace Pockle.Runtime
                 card.anchorMin = card.anchorMax = new Vector2(0.5f, 0f);
                 card.pivot = new Vector2(0.5f, 0f);
                 card.anchoredPosition = new Vector2(viewerWidth * 0.5f, 14f);
-                card.sizeDelta = new Vector2(width, 184f);
+                card.sizeDelta = new Vector2(width, 238f);
             }
             else
             {
@@ -248,7 +281,7 @@ namespace Pockle.Runtime
                 card.anchorMin = card.anchorMax = new Vector2(0.5f, 0f);
                 card.pivot = new Vector2(0.5f, 0f);
                 card.anchoredPosition = new Vector2(0f, 14f);
-                card.sizeDelta = new Vector2(width, 184f);
+                card.sizeDelta = new Vector2(width, 238f);
             }
             var companionWidth = companion.sizeDelta.x;
             companionName.rectTransform.sizeDelta = new Vector2(companionWidth, 34f);

@@ -56,6 +56,8 @@ namespace Pockle.Runtime
             hud = new GameObject("Pockle prototype HUD").AddComponent<PrototypeHud>();
             hud.Initialize(Reveal, ResetToy, SetSound, SetHaptics, SetReducedMotion);
             hud.SetSettings(soundEnabled, hapticsEnabled, reducedMotion);
+            hud.SetVariant(toy.Variant);
+            hud.VariantChanged += SetVariant;
 
             BuildRevealBox();
             audioSource = gameObject.AddComponent<AudioSource>();
@@ -208,7 +210,7 @@ namespace Pockle.Runtime
             contactX = contactZ = 0f;
             toy.ResetToy();
             hud.SetRevealAvailable(true);
-            hud.SetStatus("Fresh as a peach. Say hello to Pip.");
+            hud.SetStatus("Say hello to Pip. Squish or turn.");
         }
 
         public void Reveal()
@@ -308,6 +310,14 @@ namespace Pockle.Runtime
             if (!enabled && audioSource != null) audioSource.Stop();
         }
 
+        private void SetVariant(PipVariant choice)
+        {
+            toy.SetVariant(choice);
+            PlayerPrefs.SetInt(PipVariants.Preference, (int)toy.Variant);
+            PlayerPrefs.Save();
+            hud.SetVariant(toy.Variant);
+        }
+
         private void SetHaptics(bool enabled) { hapticsEnabled = enabled; SaveSetting("haptics", enabled); }
         private void SetReducedMotion(bool enabled) { reducedMotion = enabled; SaveSetting("reducedMotion", enabled); }
         private static void SaveSetting(string key, bool enabled)
@@ -343,6 +353,7 @@ namespace Pockle.Runtime
         private void OnDisable() { ReleasePointer(false); }
         private void OnDestroy()
         {
+            if (hud != null) hud.VariantChanged -= SetVariant;
             if (pressClip != null) Destroy(pressClip);
             if (releaseClip != null) Destroy(releaseClip);
             if (revealClip != null) Destroy(revealClip);

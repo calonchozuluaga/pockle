@@ -1,8 +1,8 @@
 # Pockle
 
-Unity source for the **first tactile prototype**: one original peach jelly companion, Pip, now with a Blender-authored art pass based on the approved design. The project follows the [development brief](docs/PRODUCT_BRIEF.md).
+Unity source for the **first tactile prototype**: Pip, a Blender-authored jelly companion, with Peach Jelly and Moon Jelly variants for comparing color, filling, and finish. The project follows the [development brief](docs/PRODUCT_BRIEF.md).
 
-Pip can be pressed, dragged upward to stretch, released to rebound, and rotated. A short procedural box reveal introduces the toy. Reset restores its pose. Sound, optional device vibration, and reduced motion are configurable; those settings persist locally.
+Pip can be pressed, dragged upward to stretch, released to rebound, and rotated. A short procedural box reveal introduces the toy. Reset restores its pose. Sound, optional device vibration, reduced motion, and the selected variant persist locally.
 
 The authored character is an initial art pass; its Unity material and Android appearance still need validation. The original procedural character remains available for comparison. Audio tones, reveal box, and UI are prototype content. There are no collection rewards, purchases, accounts, trades, walking mechanics, or AI calls during gameplay.
 
@@ -23,6 +23,8 @@ After the first APK finishes, preserve it as your baseline and pull the latest r
 
 The editable source is `ArtSource/Pip/Pip.blend`; the standard interchange export is `Assets/Pockle/Art/Pip/Pip.fbx`. The runtime uses the custom source's imported native mesh and face anchors so coordinates, scale, UV seams, and deformation remain explicit. The FBX includes the complete character for further art work. The [Blender model study](docs/concepts/pip-model-study-02.png) shows geometry and an offline material; it does not establish the Unity shader's appearance.
 
+In Play mode or the Android build, tap **Peach** or **Moon** to compare variants without resetting the pose or plate angle. Peach keeps the glossy warm shell, small cream pearls, and apricot flecks. Moon uses a blue-to-lavender shell, a softer pearlescent finish, three larger icy pearls, and eight silver stars. See [variant comparison](docs/PIP_VARIANTS.md) for the local test steps. The Moon material has not yet been visually validated in Unity or on Android.
+
 ## Update an existing checkout
 
 Close Unity and run `git pull --ff-only` from your local `pockle` directory. Reopen that same project and let Unity finish importing. Select **Pockle → Character → Use authored Pip**, then enter Play mode and check for **Pip: authored mesh · 3158 vertices** before rebuilding Android.
@@ -41,6 +43,7 @@ If Git reports that local changes would be overwritten, inspect the listed files
 | Stretch / lean | Keep holding; drag up / sideways |
 | Rebound | Release |
 | Inspect | Drag the exposed plate sideways to rotate Pip and the plate |
+| Compare variants | Tap **Peach** or **Moon** |
 | Start over | **Reset**, or `R` in the editor |
 | Reveal | **Reveal again**, or `Space` in the editor |
 | Comfort | Toggle **Sound**, **Haptics**, and **Motion** |
@@ -60,7 +63,7 @@ dotnet run --project tools/Pockle.SourceChecks/Pockle.SourceChecks.csproj -- .
 
 In the prepared cloud workspace, the verified SDK is at `/workspace/.tools/dotnet/dotnet`. These commands test the actual engine-independent deformation/spring code and check C# syntax and asset GUID references. **They do not compile Unity APIs, render shaders, import the Unity scene, or validate touch on a device.**
 
-In Unity, open **Window → General → Test Runner → EditMode** and run `Pockle.Core.EditMode.Tests`. Then follow [the manual device checklist](docs/VALIDATION.md).
+In Unity, open **Window → General → Test Runner → EditMode** and run `Pockle.Core.EditMode.Tests`. Under **PlayMode**, run `Pockle.Variants.PlayMode.Tests` to check repeated variant switching, preserved deformation, cleanup, and saved selection. Both Unity suites remain unrun in cloud. Then follow [the manual device checklist](docs/VALIDATION.md).
 
 ## Source map
 

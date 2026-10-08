@@ -135,5 +135,19 @@ namespace Pockle.Editor
             PlayerPrefs.Save();
             Debug.Log("Procedural Pip baseline selected for the next Play session.");
         }
+
+        [MenuItem("Pockle/Character/Peach Jelly")]
+        private static void UsePeach() { SelectVariant(PipVariant.PeachJelly); }
+
+        [MenuItem("Pockle/Character/Moon Jelly")]
+        private static void UseMoon() { SelectVariant(PipVariant.MoonJelly); }
+
+        private static void SelectVariant(PipVariant choice)
+        {
+            PlayerPrefs.SetInt(PipCharacterAsset.BaselinePreference, 0);
+            PlayerPrefs.SetInt(PipVariants.Preference, (int)choice);
+            PlayerPrefs.Save();
+            Debug.Log(PipVariants.Label(choice) + " selected for the next Play session. Use Peach/Moon in the viewer to compare live.");
+        }
     }
 }

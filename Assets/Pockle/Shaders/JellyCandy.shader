@@ -11,6 +11,7 @@ Shader "Pockle/Jelly Candy"
         [Toggle] _ZWrite ("Write depth for opaque accents", Float) = 0
         _StudioCube ("Studio reflection", Cube) = "" {}
         _StudioStrength ("Studio reflection strength", Range(0,1)) = 0
+        _PearlSheen ("Pearlescent finish", Range(0,1)) = 0
     }
     SubShader
     {
@@ -36,6 +37,7 @@ Shader "Pockle/Jelly Candy"
             half _ReflectionStrength;
             samplerCUBE _StudioCube;
             half _StudioStrength;
+            half _PearlSheen;
 
             struct appdata
             {
@@ -66,7 +68,7 @@ Shader "Pockle/Jelly Candy"
                 half3 view = normalize(_WorldSpaceCameraPos.xyz - input.worldPosition);
                 // A quiet studio key keeps the little toy welcoming under any scene light.
                 // This cheap transmitted-light approximation uses no scene color grab,
-                // cubemap, metallic reflection, or additional lighting passes.
+                // live scene capture or additional lighting passes.
                 half3 key = normalize(half3(0.48h, 0.75h, -0.62h));
                 half3 fill = normalize(half3(0.60h, 0.18h, 0.70h));
                 half light = saturate(dot(normal, key)) * 0.18h + 0.82h;
@@ -94,6 +96,9 @@ Shader "Pockle/Jelly Candy"
                 half3 studio = texCUBE(_StudioCube, reflection).rgb * _StudioStrength;
                 half coat = _Glossiness * _ReflectionStrength;
                 candy += studio * coat;
+                half pearl = _PearlSheen * (1.0h - facing) * (1.0h - facing);
+                half3 pearlColor = lerp(half3(.64h, .86h, 1.0h), half3(.91h, .73h, 1.0h), saturate(normal.y * .5h + .5h));
+                candy = lerp(candy, pearlColor, pearl * .38h);
                 // Thin highlights at the silhouette read as a clear outer shell.
                 candy += _RimColor.rgb * pow(1.0h - facing, 5.0h) * 0.16h * _StudioStrength;
                 // Keep the peach shell visible at grazing angles, with a soft
