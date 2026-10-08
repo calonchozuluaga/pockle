@@ -10,6 +10,8 @@ Buy actions currently explain that checkout is unavailable; they cannot charge o
 
 The project uses the Built-in Render Pipeline and Unity **6000.6.5f1**. Cloud checks verify portable logic, C# syntax/assets, and Android Java compilation; Unity rendering, plugin packaging, and device behavior need your local editor and phone.
 
+The [UI/UX task tracker](docs/UI_UX_TASKS.md) tracks Home, Settings, profiles, friends, visited shelves, rewards, badges, and milestones, with stable IDs and acceptance criteria. It distinguishes the current beta from planned finished-game work.
+
 ## Open locally
 
 1. Use your installed **Unity 6.6, version `6000.6.5f1`**. That exact version is recorded in `ProjectSettings/ProjectVersion.txt`. Before building for a phone, install that editor's Android or iOS build-support modules and check its [platform requirements](https://docs.unity3d.com/6000.6/Documentation/Manual/system-requirements.html), including Xcode for iOS.

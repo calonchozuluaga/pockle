@@ -10,7 +10,7 @@ namespace Pockle.Core
 
         public SuspendedShape(float sag, Point3 grip, float clearance)
         {
-            this.sag = Numeric.Clamp(Numeric.FiniteOr(sag, 0), 0, .24f);
+            this.sag = Numeric.Clamp(Numeric.FiniteOr(sag, 0), 0, ToyFeel.MaximumSag);
             this.grip = new Point3(Numeric.Clamp(Numeric.FiniteOr(grip.X, 0), -1.5f, 1.5f),
                 Numeric.Clamp(Numeric.FiniteOr(grip.Y, 0), -1.5f, 2f), Numeric.Clamp(Numeric.FiniteOr(grip.Z, 0), -1.5f, 1.5f));
             floor = -1f - Numeric.Clamp(Numeric.FiniteOr(clearance, 0), 0, 1.05f);

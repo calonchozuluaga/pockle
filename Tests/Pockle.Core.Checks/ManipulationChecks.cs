@@ -51,7 +51,7 @@ internal static class ManipulationChecks
         foreach (int fps in new[] { 15, 30, 60, 120 })
         {
             var filter = new MotionJiggle();
-            var spring = new Spring1D(5.2f, .44f);
+            var spring = new Spring1D(ToyFeel.ShakeFrequency, ToyFeel.ShakeDamping);
             Point3 drive = filter.Step(new Point3(0f, -1f, 0f), 1f / fps);
             Check(Length(drive) == 0d, "Initial gravity caused a shake.");
             for (int i = 0; i < fps * 2; i++)
@@ -64,10 +64,10 @@ internal static class ManipulationChecks
             for (int i = 0; i < fps * 2; i++)
             {
                 drive = filter.Step(new Point3(i % 2 == 0 ? float.MaxValue : -float.MaxValue, -1f, 0f), 1f / fps);
-                Check(Length(drive) <= .200001d, "Sensor spike escaped the drive bound.");
+                Check(Length(drive) <= ToyFeel.ShakeLimit + .000001d, "Sensor spike escaped the drive bound.");
                 spring.Target = drive.X;
                 spring.Step(1f / fps);
-                Check(Math.Abs(spring.Value) < .35f, "Sustained shaking grew spring motion without bound.");
+                Check(Math.Abs(spring.Value) < .6f, "Sustained shaking grew spring motion without bound.");
             }
             for (int i = 0; i < fps * 4; i++)
             {
@@ -84,6 +84,10 @@ internal static class ManipulationChecks
             Check(Length(filter.Step(new Point3(0f, 1f, 0f), 1f / fps)) == 0d,
                 "Reset/orientation change caused an initial shake.");
         }
+        var gentle = new MotionJiggle();
+        gentle.Step(new Point3(0, -1, 0), 1f / 60);
+        Point3 response = gentle.Step(new Point3(.5f, -1, 0), 1f / 60);
+        Check(response.X > .06f && response.X < .09f, "A small deliberate shake lost its more pronounced response.");
     }
 
     private static void CheckDirectionalMesh()

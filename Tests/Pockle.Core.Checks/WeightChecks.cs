@@ -53,6 +53,31 @@ internal static class WeightChecks
         var small = new WeightedLift(); small.Reset(.1f); small.Step(10, false, false);
         var large = new WeightedLift(); large.Reset(.7f); large.Step(10, false, false);
         Assert(large.LandingSpeed > small.LandingSpeed * 2, "Higher drops did not carry greater landing weight.");
+        Assert(ToyFeel.LandingCompression(large.LandingSpeed) > .28f, "A high drop lost its exaggerated squash.");
+        Assert(ToyFeel.LandingCompression(large.LandingSpeed) > ToyFeel.LandingCompression(small.LandingSpeed), "Impact squash did not reflect drop height.");
+        Assert(ToyFeel.LandingJiggle(large.LandingSpeed) < -.13f, "A high drop lost its settling jiggle.");
+        Assert(ToyFeel.LandingVolume(large.LandingSpeed) > ToyFeel.LandingVolume(small.LandingSpeed), "Impact sound did not reflect drop height.");
+        foreach (float speed in new[] { -1f, 0, .5f, 2, 999, float.NaN, float.PositiveInfinity })
+        {
+            Assert(ToyFeel.LandingCompression(speed) >= 0 && ToyFeel.LandingCompression(speed) <= .32f,
+                "Landing squash escaped the safe deformation range.");
+            Assert(ToyFeel.LandingJiggle(speed) >= -.18f && ToyFeel.LandingJiggle(speed) <= 0,
+                "Landing pulse escaped its bounded response.");
+            Assert(Math.Abs(ToyFeel.LandingLean(speed, 100)) <= .13f, "Off-center impact escaped its lean limit.");
+        }
+        foreach (int fps in new[] { 15, 30, 60, 120 })
+        {
+            var rebound = new Spring1D(3.8f, .45f, ToyFeel.LandingCompression(large.LandingSpeed));
+            rebound.Target = 0;
+            bool bounced = false;
+            for (int i = 0; i < fps * 3; i++)
+            {
+                rebound.Step(1f / fps);
+                bounced |= rebound.Value < -.01f;
+                Assert(Math.Abs(rebound.Value) <= .321f, "An exaggerated landing grew without bound.");
+            }
+            Assert(bounced && Math.Abs(rebound.Value) < .0001f, "Landing failed to rebound visibly and then settle.");
+        }
 
         var grip = new Point3(.25f, .3f, -.5f);
         var suspended = new SuspendedShape(.18f, grip, .6f);
@@ -62,6 +87,8 @@ internal static class WeightChecks
         Assert(suspended.Apply(bottom).Y < -1.1f, "Suspended gel did not sag beneath its grip.");
         Assert(new SuspendedShape(.18f, grip, 0).Apply(bottom).Y >= -1, "Sag penetrated the plate.");
         Assert(new SuspendedShape(0, grip, .6f).Apply(bottom).Y == -1, "Disabling sag changed the original mesh.");
+        Assert(new SuspendedShape(ToyFeel.HangingSag, grip, .6f).Apply(bottom).Y < -1.25f,
+            "Held jelly did not show the more dramatic sag.");
         Point3 invalid = new SuspendedShape(float.NaN, new Point3(float.NaN, 0, 0), float.NaN).Apply(new Point3(float.NaN, 0, 0));
         Assert(Finite(invalid.X) && Finite(invalid.Y) && Finite(invalid.Z), "Malformed sag produced nonfinite geometry.");
 
@@ -72,7 +99,7 @@ internal static class WeightChecks
         foreach (float pinch in new[] { -.35f, 0, .55f })
         foreach (float compression in new[] { 0f, .42f })
         {
-            var sag = new SuspendedShape(.24f, grip, clearance);
+            var sag = new SuspendedShape(ToyFeel.MaximumSag, grip, clearance);
             var direction = new DirectionalStretch(pinch, new Point3(1, 1, .2f));
             for (int i = 0; i < positions.GetArrayLength(); i += 3)
             {

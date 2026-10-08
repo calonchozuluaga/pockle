@@ -1,3 +1,7 @@
+## More expressive toy tuning
+
+Executed the portable suite: 114,326 manipulation checks and 152,809 weight/sag checks, including stronger deliberate shakes, bounded sustained motion, high/low impact scaling, visible rebound followed by settling, and maximum sag clearance on the authored mesh. Source checks passed for 37 C# files across default, Editor, and Android profiles, with 79 asset GUIDs and no failures. Unity/device validation of the new sound and exaggerated feel is pending the owner's return; calm mode retains its existing behavior. The previous APK build failure succeeded on the owner's second attempt; no unverified Gradle fix was applied.
+
 ## Weighted lift update
 
 Executed the complete portable suite with 152,104 new weight/sag assertions, plus C# syntax/assets across default, Editor, and Android branches. The Unity variant pose test now includes sag and remains unrun in cloud. Follow [the weight/device checklist](WEIGHT_AND_GRAVITY.md) for grip support, higher drops, regrab, handoffs, clearance, and calm mode.

@@ -223,7 +223,7 @@ namespace Pockle.Runtime
             contactX = SafeClamp(contactX, -1.2f, 1.2f);
             contactZ = SafeClamp(contactZ, -1.2f, 1.2f);
             pinch = SafeClamp(pinch, -.35f, .55f);
-            sag = SafeClamp(sag, 0f, .24f);
+            sag = SafeClamp(sag, 0f, ToyFeel.MaximumSag);
             clearance = SafeClamp(clearance, 0f, 1.05f);
             grip = new Vector3(SafeClamp(grip.x, -1.5f, 1.5f), SafeClamp(grip.y, -1.5f, 2f), SafeClamp(grip.z, -1.5f, 1.5f));
             if (!float.IsNaN(pinchAxis.sqrMagnitude) && !float.IsInfinity(pinchAxis.sqrMagnitude) && pinchAxis.sqrMagnitude > .000001f)

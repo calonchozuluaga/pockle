@@ -10,17 +10,17 @@ namespace Pockle.Runtime
         private const int NoPointer = PointerGesture.NoPointer;
         private readonly PointerGesture gesture = new PointerGesture();
         private const string PrefPrefix = "pockle.prototype.";
-        private readonly Spring1D compression = new Spring1D(4.2f, 0.57f);
+        private readonly Spring1D compression = new Spring1D(3.8f, .45f);
         private readonly Spring1D stretch = new Spring1D(3.6f, 0.59f);
         private readonly Spring1D tiltX = new Spring1D(3.3f, 0.63f);
         private readonly Spring1D tiltZ = new Spring1D(3.3f, 0.63f);
         private readonly WeightedLift lift = new WeightedLift();
-        private readonly Spring1D sag = new Spring1D(3.3f, .78f);
+        private readonly Spring1D sag = new Spring1D(2.9f, .62f);
         private Vector3 gripPoint, gripTarget;
         private readonly Spring1D pinch = new Spring1D(4f, .64f);
-        private readonly Spring1D jiggleX = new Spring1D(5.2f, .44f);
-        private readonly Spring1D jiggleY = new Spring1D(5.2f, .44f);
-        private readonly Spring1D jiggleZ = new Spring1D(5.2f, .44f);
+        private readonly Spring1D jiggleX = new Spring1D(ToyFeel.ShakeFrequency, ToyFeel.ShakeDamping);
+        private readonly Spring1D jiggleY = new Spring1D(ToyFeel.ShakeFrequency, ToyFeel.ShakeDamping);
+        private readonly Spring1D jiggleZ = new Spring1D(ToyFeel.ShakeFrequency, ToyFeel.ShakeDamping);
         private readonly MotionJiggle motion = new MotionJiggle();
         private Camera viewCamera;
         private Transform toyMount;
@@ -49,6 +49,7 @@ namespace Pockle.Runtime
         private AudioSource audioSource;
         private AudioClip pressClip;
         private AudioClip releaseClip;
+        private AudioClip landingClip;
         private AudioClip revealClip;
         private Vector2 pointerStart;
         private Vector2 pointerPrevious;
@@ -99,6 +100,7 @@ namespace Pockle.Runtime
             audioSource.volume = 0.28f;
             pressClip = CreateTone("Soft jelly press", 160f, 0.09f, false);
             releaseClip = CreateTone("Jelly rebound", 390f, 0.18f, false);
+            landingClip = CreateTone("Pip soft landing", 95f, .24f, false);
             revealClip = CreateTone("Pip reveal", 620f, 0.45f, true);
             ResetToy();
             StoreVisibilityChanged(true);
@@ -129,16 +131,20 @@ namespace Pockle.Runtime
             tiltZ.Step(dt);
             bool held = gesture.IsActive && gesture.Target == PointerTarget.Toy && !revealing && !hud.StoreVisible;
             lift.Step(dt, held, reducedMotion || revealing || hud.StoreVisible);
-            sag.Target = !reducedMotion && held ? .18f * Mathf.Clamp01(lift.Value / .25f) : 0f;
+            sag.Target = !reducedMotion && held ? ToyFeel.HangingSag * Mathf.Clamp01(lift.Value / .25f) : 0f;
             sag.Step(dt);
             gripPoint = Vector3.Lerp(gripPoint, gripTarget, 1f - Mathf.Exp(-18f * dt));
             if (lift.LandingSpeed > .08f && !revealing && !hud.StoreVisible && !reducedMotion)
             {
-                compression.Reset(Mathf.Clamp(lift.LandingSpeed * .075f, .025f, .24f));
+                compression.Reset(ToyFeel.LandingCompression(lift.LandingSpeed));
                 compression.Target = 0f;
-                jiggleY.Reset(-Mathf.Min(.1f, lift.LandingSpeed * .025f));
-                tiltX.Reset(Mathf.Clamp(gripPoint.x * lift.LandingSpeed * .035f, -.08f, .08f)); tiltX.Target = 0;
-                if (dropFeedback) { Play(releaseClip); Vibrate(); }
+                jiggleY.Reset(ToyFeel.LandingJiggle(lift.LandingSpeed));
+                tiltX.Reset(ToyFeel.LandingLean(lift.LandingSpeed, gripPoint.x)); tiltX.Target = 0;
+                if (dropFeedback)
+                {
+                    if (soundEnabled) audioSource.PlayOneShot(landingClip, ToyFeel.LandingVolume(lift.LandingSpeed));
+                    Vibrate();
+                }
                 dropFeedback = false;
             }
             pinch.Step(dt);
@@ -419,6 +425,7 @@ namespace Pockle.Runtime
             if (hud != null) Destroy(hud.gameObject);
             if (pressClip != null) Destroy(pressClip);
             if (releaseClip != null) Destroy(releaseClip);
+            if (landingClip != null) Destroy(landingClip);
             if (revealClip != null) Destroy(revealClip);
             if (boxRoot != null) Destroy(boxRoot.gameObject);
             if (viewCamera != null) Destroy(viewCamera.transform.parent.gameObject);

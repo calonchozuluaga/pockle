@@ -149,7 +149,7 @@ namespace Pockle.Runtime
 #if UNITY_EDITOR
             if (Input.GetKeyDown(KeyCode.J))
             {
-                jiggleX.Reset(.18f); jiggleY.Reset(.12f); jiggleZ.Reset(-.1f);
+                jiggleX.Reset(.30f); jiggleY.Reset(.20f); jiggleZ.Reset(-.16f);
                 jiggleX.Target = jiggleY.Target = jiggleZ.Target = 0f;
             }
 #endif

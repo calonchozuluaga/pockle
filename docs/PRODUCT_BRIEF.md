@@ -47,17 +47,23 @@ Existing concept art explores Peach Jelly, Cloud Mochi, Lagoon Glass, Stardust, 
 
 ## Viewer Interaction and Materials
 
-Touch the toy directly to squish/stretch it. Drag its plate sideways to rotate the plate and toy together, without mode buttons. Capture the starting surface until release. The next gesture experiment is a two-finger pull on the toy that stretches along the fingers’ separation axis, with pinching inward to compress; it must not zoom the camera or take over a plate gesture. This is planned, not part of the current one-finger viewer build.
+Touch the toy directly to squish/stretch it. Drag its plate sideways to rotate the plate and toy together, without mode buttons. Capture the starting surface until release. The next gesture experiment is a two-finger pull on the toy that stretches along the fingers’ separation axis, with pinching inward to compress; it must not zoom the camera or take over a plate gesture. This is implemented in the current viewer, with grip handoffs preserving position.
 
 Jelly should look wet, clear, and glossy around the whole shell, as close as practical to the approved reference. Favor mobile-friendly studio reflections and simulated filling before expensive scene refraction.
 
-The next physical-interaction pass should also let a one-finger upward drag lift the toy off its plate, while two fingers stretch it. Releasing a lifted toy should settle it back with a small bounce and a height-sensitive contact shadow. Shaking the phone can cause a bounded jelly wobble using accelerometer motion; gyroscope input can add tilt reactions. Preserve reduced-motion behavior. These ideas are not implemented in the current viewer.
+The viewer lets a one-finger upward drag lift the toy off its plate while two fingers stretch it. Gel sags around the grip, falls under gravity when released, and squashes/jiggles on landing, with a height-sensitive contact shadow. Bounded accelerometer motion shakes the jelly. The owner requested more dramatic sag, shakes, and landings; full-motion tuning is now more expressive while calm mode keeps direct control. Gyroscope tilt remains future work. Device feedback remains part of tuning.
 
 Add a lights-off environment for glowing editions. Internal gold stars, pearls, and other inclusions should mostly react to squeezing/stretching, lag slightly, and drift briefly after release before settling.
 
+## Expanded UI/UX planning direction
+
+On October 8, 2026, the owner requested a tracked plan for a finished mobile game: home menus, full Settings, a user/profile area, friends, visits to other users' shelves, rewards, badges, and milestones. This adds social and achievement planning to the earlier simpler release direction. See [the UI/UX task tracker](UI_UX_TASKS.md) for priorities, acceptance criteria, dependencies, and provisional navigation choices. These screens/services are not yet implemented merely because they are listed here.
+
+Keep the collecting economy centered on walking-earned boxes and optional purchases. Badge and milestone rules/rewards need definition. Home layout and private friends versus public discovery are under discussion; guest access and a playable first toy remain part of the experience.
+
 ## Initial Release Scope
 
-Keep the collecting loop to walking-unlocked daily boxes and optional paid boxes. Packaging identifies the collection; color and variant are revealed on opening. Do not add trading, evolution, memberships, edition registries, or extra progression loops to the initial release.
+Keep the collecting loop to walking-unlocked daily boxes and optional paid boxes. Packaging identifies the collection; color and variant are revealed on opening. Trading, evolution, memberships, and edition registries remain outside the initial release. Badges and milestones are now requested planning scope; define their rules before implementing rewards.
 
 Keep tactile interaction available without a purchase, and do not require endless tapping or excessive screen time. Store billing, box contents/probabilities, reward validation, and applicable store requirements must be specified before release implementation.
 
@@ -115,6 +121,6 @@ Add the minimum online systems needed for purchase validation and authoritative 
 
 Start by inspecting the project and available development tools. Explain which parts can be built and verified in your environment and which require the local Unity editor or a physical device.
 
-Then implement the first tactile prototype with organized source files and clear setup instructions. Use procedural placeholder geometry if necessary, but distinguish placeholders from final art.
+Continue the current collecting/UI milestone with organized source files and clear test instructions, using `UI_UX_TASKS.md` to track finished-game work. Distinguish shipped beta behavior, provisional designs, and online integrations still required.
 
-Do not silently replace the Unity app with a website. Keep the first milestone focused on proving that a Pockle feels satisfying to touch.
+Do not silently replace the Unity app with a website. Keep tactile play satisfying as the mobile menus, collection, rewards, and social plans expand.

@@ -24,7 +24,7 @@ namespace Pockle.Core
             float x = sample.X - gravity.X, y = sample.Y - gravity.Y, z = sample.Z - gravity.Z;
             float magnitude = (float)Math.Sqrt(x * x + y * y + z * z);
             if (magnitude <= .12f) return new Point3(0f, 0f, 0f);
-            float drive = Math.Min(.20f, (magnitude - .12f) * .12f) / magnitude;
+            float drive = Math.Min(ToyFeel.ShakeLimit, (magnitude - .12f) * ToyFeel.ShakeGain) / magnitude;
             return new Point3(x * drive, y * drive, z * drive);
         }
     }
