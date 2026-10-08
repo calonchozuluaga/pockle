@@ -57,9 +57,9 @@ Add a lights-off environment for glowing editions. Internal gold stars, pearls, 
 
 ## Expanded UI/UX planning direction
 
-On October 8, 2026, the owner requested a tracked plan for a finished mobile game: home menus, full Settings, a user/profile area, friends, visits to other users' shelves, rewards, badges, and milestones. This adds social and achievement planning to the earlier simpler release direction. See [the UI/UX task tracker](UI_UX_TASKS.md) for priorities, acceptance criteria, dependencies, and provisional navigation choices. These screens/services are not yet implemented merely because they are listed here.
+On October 8, 2026, the owner requested a tracked plan for a finished mobile game: home menus, full Settings, a user/profile area, friends, visits to other users' shelves, rewards, badges, and milestones. This adds social and achievement planning to the earlier simpler release direction. See [the UI/UX task tracker](UI_UX_TASKS.md) for priorities, acceptance criteria, dependencies, and the confirmed home/social direction. These screens/services are not yet implemented merely because they are listed here.
 
-Keep the collecting economy centered on walking-earned boxes and optional purchases. Badge and milestone rules/rewards need definition. Home layout and private friends versus public discovery are under discussion; guest access and a playable first toy remain part of the experience.
+Keep the collecting economy centered on walking-earned boxes and optional purchases. Badge and milestone rules/rewards need definition. The owner chose a separate home hub with Collection, Rewards, and Friends tiles, plus public profiles and shelf discovery. Public shelf visits do not require friendship; friend connections remain a separate feature. Exact navigation layout and online services remain implementation work. Guest access and a playable first toy remain part of the experience.
 
 ## Initial Release Scope
 

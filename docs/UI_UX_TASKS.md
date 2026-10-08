@@ -17,17 +17,19 @@ The collecting loop remains **walk → earn a collection box → reveal a toy �
 | Accounts and social | No account, cloud save, profile, friends, or visited-shelf service implemented. |
 | Achievements | No badges, milestone rewards, or lifetime validated stats implemented. |
 
-## Navigation proposal
+## Confirmed direction
 
-Working default, pending the owner's preference: **Home** is your shelf, with the daily walking box/progress within reach. Bottom navigation has **Home**, **Boxes**, and **You**. Tap a toy for immersive play; back returns to the same shelf position. **You** leads to the profile, badges, milestones, friends, and Settings. Friend shelves are clearly labeled with their owner and have a direct route back home.
+The owner selected a **separate home hub**, with **Collection**, **Rewards**, and **Friends** tiles. Home shows a personal greeting, today's walking progress, and a ready-box cue; the collection shelf is its own destination. Tap a shelf toy for immersive play, then return to the same shelf position.
 
-A separate home hub is the alternative under discussion. Private friends/invites are the working social default; public discovery is an alternative, not an assumed feature. These choices are recorded here so we can revise the layout without treating a default as an approved final design.
+The owner also selected **public profiles and shelf discovery**. Browsing a published profile or shelf does not require becoming friends first. Friends remains a distinct relationship with requests and a friends list; discovery is the route to finding people and visiting their published shelves. Public-profile, visibility, and shelf services still need implementation.
+
+Proposed navigation within those confirmed choices: bottom tabs **Home**, **Boxes**, and **You**. Home's tiles open the collection shelf, rewards inbox/milestones, and a social screen with **Discover** and **Friends** sections. You contains the profile, badge cabinet, and Settings. Visited shelves identify their owner and provide a clear return route. Exact tab labels and layout remain design work under UX-001; the hub and public-discovery choices are settled.
 
 ## First: mobile game foundation
 
-- [ ] **UX-001 — Finalize the screen map and navigation.** Choose shelf-home or a hub; define tab destinations, back behavior, and routes between play, reveal, boxes, and visited shelves. Acceptance: every primary destination is reachable without losing the current shelf/scroll context.
+- [ ] **UX-001 — Finalize the screen map and navigation.** Use the confirmed home hub with Collection, Rewards, and Friends tiles; define tab destinations, back behavior, and routes between play, reveal, boxes, discovery, and visited shelves. Acceptance: every primary destination is reachable without losing the current shelf/scroll context.
 - [ ] **UX-002 — Establish the visual system.** Squishy Pockle logo, typography, color tokens, spacing, button states, icons, and surfaces. Acceptance: home, boxes, profile, and settings look like the same game, with readable text and generous touch targets on a small phone.
-- [ ] **UX-003 — Build the finished Home screen.** A personal greeting, collection display, today's walking progress, and one clear daily-box action. Acceptance: opening the app makes the next useful action obvious; there is no prototype control card or debugging information.
+- [ ] **UX-003 — Build the finished Home screen.** A personal greeting, Collection/Rewards/Friends tiles, today's walking progress, and one clear daily-box action. Acceptance: opening the app makes the next useful action obvious; there is no prototype control card or debugging information.
 - [ ] **UX-004 — Polish the shelf.** Consistent shelves/shadows, toy names, counts, selection feedback, empty spaces, and room to grow beyond four entries. Add favorite/reorder options after the core layout works. Acceptance: each collectible reads as its own toy; a larger collection stays smooth to browse.
 - [ ] **UX-005 — Finish toy details and play transitions.** Name, collection, finish, acquisition details, favorite action, and a quiet route into play. Acceptance: transitions preserve context, gestures stay direct, and decorative UI does not obstruct the toy or plate.
 - [ ] **UX-006 — Build full Settings.** Sound level, haptics, motion, walking permissions/status, support/about, and account controls when accounts exist. Acceptance: choices persist; calm mode remains comfortable; denial and unavailable sensors have understandable recovery paths.
@@ -47,10 +49,10 @@ A separate home hub is the alternative under discussion. Private friends/invites
 
 - [ ] **UX-015 — Design the profile.** Display name, original avatar choices, favorite toy, collection summary, badge display, and profile visibility. Acceptance: a guest profile works locally and clearly distinguishes personal details from anything shared.
 - [ ] **UX-016 — Add account linking and cloud save.** Define sign-in, guest-to-account migration, returning users, device changes, conflicts, and sign-out. Acceptance: existing earned ownership is preserved and reconciled; the UI explains sync status. Depends on authentication and inventory services.
-- [ ] **UX-017 — Build friend invitations and the friends list.** Friend code/link, pending requests, acceptance, removal, and empty/offline states. Acceptance: a user can establish a connection and manage it without an unsolicited contacts upload. Depends on social visibility choice and accounts.
-- [ ] **UX-018 — Build another user's shelf view.** Owner identity, showcased toys, collection arrangement, loading/private/unavailable states, and back navigation. Acceptance: visiting is read-only and never treats the owner's toys as the visitor's inventory. Depends on server-approved shelf visibility.
-- [ ] **UX-019 — Add social controls.** Visibility choices, block/report where appropriate, invitation limits, and hidden-profile behavior. Acceptance: the chosen private/public model is enforced consistently by the UI and service, including after a connection is removed.
-- [ ] **UX-020 — Decide whether public discovery belongs in the first release.** If selected, design browsing/search and visibility rules before implementing it. Acceptance: discovery has a defined audience and scope; it does not accidentally expose private shelves. Pending owner direction.
+- [ ] **UX-017 — Build friend invitations and the friends list.** Friend code/link, pending requests, acceptance, removal, and empty/offline states. Acceptance: a user can establish a connection and manage it without an unsolicited contacts upload. Public discovery is confirmed; friend requests and relationship management depend on accounts and the social service.
+- [ ] **UX-018 — Build another user's shelf view.** Owner identity, showcased toys, collection arrangement, loading/private/unavailable states, and back navigation. Acceptance: visiting is read-only and never treats the owner's toys as the visitor's inventory. Depends on the public-profile/shelf service and server-enforced visibility; public visits do not require friendship.
+- [ ] **UX-019 — Add social controls.** Visibility choices, block/report where appropriate, invitation limits, and hidden-profile behavior. Acceptance: the confirmed public-discovery model respects each shelf's publication/visibility state consistently in the UI and service, including after a connection is removed.
+- [ ] **UX-020 — Build public profile and shelf discovery.** A Discover section, profile previews, public shelf browsing, search/browse behavior, and loading/empty/error states. Acceptance: published profiles lead to their shelves without requiring friendship; hidden shelves are excluded, and prototype data is clearly distinguished from live users. Public discovery is approved; implementation depends on profile/shelf services.
 
 ## Progression: badges and milestones
 
@@ -69,7 +71,7 @@ A separate home hub is the alternative under discussion. Private friends/invites
 ## Suggested work order
 
 1. Review the stronger toy feel when the owner is back; it does not block UI planning.
-2. Decide the screen map, then finish Home, shelf, Settings, and first-session onboarding (UX-001–008).
+2. Apply the confirmed hub direction to the screen map, then finish Home, shelf, Settings, and first-session onboarding (UX-001–008).
 3. Finish reward delivery and dependable walking, alongside the backend/billing decisions (UX-009–014).
 4. Add profile and cloud save before friends and visited shelves (UX-015–020).
 5. Define badge rules early; implement grants once validated events exist (UX-021–024).
