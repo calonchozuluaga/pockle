@@ -12,6 +12,8 @@ Keep a neutral rest pose and a simple silhouette. Small screens must preserve th
 
 This generated draft establishes the peach color, rounded silhouette, and face. Its side view is slightly turned, so refine true orthographic proportions during modeling. Rendered transparency and reflections are visual targets; their mobile shader implementation still needs device validation.
 
+The expanded [Pip character sheet](concepts/PIP_CHARACTER_SHEET.md) adds Peach/Moon turnarounds, expressions, squish/stretch studies, and material details. It is a concept guide for the shared character; compare its geometry to the Blender source and its finishes to the live Unity variants.
+
 ## 2. Reusable Blender base
 
 Build one clean, closed jelly mesh centered around the prototype's coordinate convention: local Y up, front negative Z, base at Y=-1. Keep transforms applied and facial anchors identified. Begin near the current geometry cost rather than spending triangles on detail that can live in materials. The procedural baseline has 1,073 vertices / 2,016 triangles; that is a reference budget, not a measured performance guarantee.
