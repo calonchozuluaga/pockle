@@ -9,6 +9,8 @@ Shader "Pockle/Jelly Candy"
         _RimColor ("Candy edge", Color) = (1, 0.86, 0.67, 1)
         _ReflectionStrength ("Studio reflections", Range(0,1)) = 1
         [Toggle] _ZWrite ("Write depth for opaque accents", Float) = 0
+        _StudioCube ("Studio reflection", Cube) = "" {}
+        _StudioStrength ("Studio reflection strength", Range(0,1)) = 0
     }
     SubShader
     {
@@ -32,6 +34,8 @@ Shader "Pockle/Jelly Candy"
             fixed4 _RimColor;
             half _Glossiness;
             half _ReflectionStrength;
+            samplerCUBE _StudioCube;
+            half _StudioStrength;
 
             struct appdata
             {
@@ -87,9 +91,16 @@ Shader "Pockle/Jelly Candy"
                 candy += _RimColor.rgb * (rim * 0.24h + softFill * 0.22h);
                 half shine = (broad * 0.20h + glaze * 0.68h) * _Glossiness * _ReflectionStrength;
                 candy = lerp(candy, half3(1.0h, 0.98h, 0.91h), saturate(shine));
+                half3 studio = texCUBE(_StudioCube, reflection).rgb * _StudioStrength;
+                half coat = _Glossiness * _ReflectionStrength;
+                candy += studio * coat;
+                // Thin highlights at the silhouette read as a clear outer shell.
+                candy += _RimColor.rgb * pow(1.0h - facing, 5.0h) * 0.16h * _StudioStrength;
                 // Keep the peach shell visible at grazing angles, with a soft
                 // transmitted center. One pass; no screen grab or extra lights.
-                half alpha = saturate(_Color.a + rim * (1.0h - _Color.a));
+                half reflected = max(studio.r, max(studio.g, studio.b)) * coat;
+                // Reflections are opaque even where the peach gel is translucent.
+                half alpha = saturate(_Color.a + rim * (1.0h - _Color.a) + reflected * 0.55h);
                 return fixed4(candy, alpha);
             }
             ENDCG

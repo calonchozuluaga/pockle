@@ -12,7 +12,7 @@ The experience combines the anticipation of unboxing, the pleasure of handling a
 
 ## Product Direction
 
-The app should be enjoyable at home, on a couch, or on a tablet. **Walking is optional**, potentially added later as another way to earn rewards.
+The current direction, clarified by the owner on October 8, 2026, is a simple collecting app: receive daily collection-themed boxes, unlock them by walking, or buy a box outright. Walking is the free earning path. The toy viewer remains enjoyable at home, on a couch, or on a tablet.
 
 The core experience must feel polished: convincing materials, responsive touch interactions, expressive animations, good sound design, and optional haptics. Avoid intrusive ads.
 
@@ -20,13 +20,16 @@ All characters, names, and designs must be original. Physical collectible toys a
 
 ## Core Loop
 
-1. Earn a discovery box through clear gameplay progression.
-2. Open it through a satisfying reveal animation.
-3. Discover a Pockle, inspect it, and optionally name it.
-4. Interact with it and add it to a personal display shelf.
-5. Work toward another discovery, complete collections, and eventually trade duplicates.
+1. Receive daily boxes themed around recognizable original collections.
+2. Unlock earned boxes by walking, or purchase a box directly.
+3. Open the box, discover its color/variant, and add it to the collection.
+4. Squish, stretch, inspect, and enjoy the toy.
 
-Provide a first companion immediately and a clear path toward the next discovery. Exact reward thresholds remain open for testing.
+The box design identifies its collection; the specific color/model is a surprise. Proposed price points are $0.99 per standard box and $2.99 for special collections, subject to store pricing tiers. Walking thresholds, daily availability, and collection probabilities still need specification before reward/store implementation.
+
+Use step counting alongside movement/location checks to distinguish walking from phone shaking. GPS alone does not prevent cheating or distinguish walking from vehicle travel; continuous tracking is not a requirement. Validate rewards and store purchases authoritatively before granting inventory.
+
+Provide a first companion immediately. This direction is recorded for the collecting milestone; the current Unity project is still a local tactile viewer, with no walking rewards or payments implemented.
 
 ## Toy Families
 
@@ -40,50 +43,19 @@ Materials should change how a toy responds, not just its color. Keep shapes simp
 
 Existing concept art explores Peach Jelly, Cloud Mochi, Lagoon Glass, Stardust, Pearl Swirl, and Liquid Gold. Treat these as visual references, not a finalized roster.
 
-## Collection, Rarity, and Evolution
+## Viewer Interaction and Materials
 
-Separate three concepts:
+Touch the toy directly to squish/stretch it. Drag its plate sideways to rotate the plate and toy together, without mode buttons. Capture the starting surface until release.
 
-- **Identity:** the character and material variant.
-- **Rarity:** its discovery tier and, where applicable, fixed edition size.
-- **Progression:** the relationship or evolution earned through play.
+Jelly should look wet, clear, and glossy around the whole shell, as close as practical to the approved reference. Favor mobile-friendly studio reflections and simulated filling before expensive scene refraction.
 
-A common Pockle should remain desirable. Leveling it must not automatically turn it into a scarce edition.
+Add a lights-off environment for glowing editions. Internal gold stars, pearls, and other inclusions should mostly react to squeezing/stretching, lag slightly, and drift briefly after release before settling.
 
-Explore four evolution stages per character family later. Evolution should preserve the collectible’s identity and edition number. Start by proving one evolution path before producing a full roster of stages.
+## Initial Release Scope
 
-For limited editions, support a registry showing maximum edition size, issued quantity, and remaining unissued quantity. Each issued collectible receives a persistent serial number. Do not publish owner identities in the registry.
+Keep the collecting loop to walking-unlocked daily boxes and optional paid boxes. Packaging identifies the collection; color and variant are revealed on opening. Do not add trading, evolution, memberships, edition registries, or extra progression loops to the initial release.
 
-Scarcity must be enforced by the backend. No blockchain is required.
-
-## Trading — Later Phase
-
-Support item-for-item trades, including offers containing multiple collectibles.
-
-The intended model is:
-
-- Anonymous public listings and structured offers.
-- Free-text messages only between mutually accepted friends.
-- Persistent serial numbers and edition metadata when ownership changes.
-- Atomic exchanges that prevent duplicated items or partial transfers.
-- Reporting, blocking, and moderation controls.
-
-Do not include cash sales, cash-out, or promises of resale value in the first release.
-
-## Monetization Direction
-
-Keep the core collection and interaction experience free.
-
-Potential revenue sources:
-
-- Known, specific character purchases.
-- Display shelves, rooms, backgrounds, and decorations.
-- Membership with clearly defined benefits.
-- Later artist collaborations or sponsored collections.
-
-For the initial version, earn randomized discovery boxes through gameplay. Avoid selling random boxes or paid boosts to random rewards until platform and legal requirements have been reviewed.
-
-Do not tie rewards to endless tapping or require excessive screen time.
+Keep tactile interaction available without a purchase, and do not require endless tapping or excessive screen time. Store billing, box contents/probabilities, reward validation, and applicable store requirements must be specified before release implementation.
 
 ## Technology
 
@@ -108,12 +80,12 @@ Include:
 - First companion onboarding.
 - Interactive toy viewer.
 - One polished box-opening sequence.
-- Earned discoveries and visible progression.
+- Daily walking-unlocked boxes and clearly priced optional box purchases.
 - Collection shelf and character details.
 - Local save data.
 - Sound, haptic, and motion settings.
 
-Defer maps, AR, walking integration, trading, real purchases, and a full evolution system.
+Defer maps, AR, trading, edition registries, and evolution. Walking and purchases belong to the collecting milestone; do not add them to the current tactile viewer experiment.
 
 ## Development Sequence
 
@@ -129,11 +101,11 @@ Add one plush and one vinyl Pockle with distinct interactions. Establish the reu
 
 **Third milestone: collecting beta**
 
-Expand the roster, implement discovery progression, and build the shelf. Test whether people enjoy repeated interactions and return to collect more.
+Expand the roster, implement daily walking-unlocked boxes, store purchases, and the collection shelf. Test whether people enjoy repeated interactions and return to collect more.
 
 **Fourth milestone: online systems**
 
-Add accounts, authoritative inventories, edition issuance, and trading after the core experience is validated.
+Add the minimum online systems needed for purchase validation and authoritative inventories. Trading and edition issuance are outside the current release scope.
 
 ## Instructions for Codex
 

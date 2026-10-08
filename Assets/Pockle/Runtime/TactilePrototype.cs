@@ -7,7 +7,8 @@ namespace Pockle.Runtime
     /// <summary>Local tactile sandbox. No rewards, backend calls, or collectible ownership are simulated.</summary>
     public sealed class TactilePrototype : MonoBehaviour
     {
-        private const int NoPointer = -999;
+        private const int NoPointer = PointerGesture.NoPointer;
+        private readonly PointerGesture gesture = new PointerGesture();
         private const string PrefPrefix = "pockle.prototype.";
         private readonly Spring1D compression = new Spring1D(4.2f, 0.57f);
         private readonly Spring1D stretch = new Spring1D(3.6f, 0.59f);
@@ -15,6 +16,8 @@ namespace Pockle.Runtime
         private readonly Spring1D tiltZ = new Spring1D(3.3f, 0.63f);
         private Camera viewCamera;
         private Transform toyMount;
+        private Transform turntable;
+        private Collider plateCollider;
         private JellyToy toy;
         private PrototypeHud hud;
         private Transform boxRoot;
@@ -25,12 +28,10 @@ namespace Pockle.Runtime
         private AudioClip pressClip;
         private AudioClip releaseClip;
         private AudioClip revealClip;
-        private int pointerId = NoPointer;
         private Vector2 pointerStart;
         private Vector2 pointerPrevious;
         private float contactX;
         private float contactZ;
-        private bool rotateMode;
         private bool soundEnabled;
         private bool hapticsEnabled;
         private bool reducedMotion;
@@ -46,7 +47,7 @@ namespace Pockle.Runtime
             hapticsEnabled = PlayerPrefs.GetInt(PrefPrefix + "haptics", 0) == 1;
             reducedMotion = PlayerPrefs.GetInt(PrefPrefix + "reducedMotion", 0) == 1;
 
-            PrototypeStage.Create(out viewCamera, out toyMount);
+            PrototypeStage.Create(out viewCamera, out toyMount, out turntable, out plateCollider);
             GameObject toyObject = new GameObject("Pip - tactile companion");
             toyObject.transform.SetParent(toyMount, false);
             toy = toyObject.AddComponent<JellyToy>();
@@ -55,8 +56,6 @@ namespace Pockle.Runtime
             hud = new GameObject("Pockle prototype HUD").AddComponent<PrototypeHud>();
             hud.Initialize(Reveal, ResetToy, SetSound, SetHaptics, SetReducedMotion);
             hud.SetSettings(soundEnabled, hapticsEnabled, reducedMotion);
-            hud.RotationChanged += SetRotateMode;
-            hud.SetMode(false);
 
             BuildRevealBox();
             audioSource = gameObject.AddComponent<AudioSource>();
@@ -90,7 +89,6 @@ namespace Pockle.Runtime
             float squash = Mathf.Max(0f, c) + Mathf.Max(0f, -s) * 0.35f;
             float elongation = Mathf.Max(0f, s) + Mathf.Max(0f, -c) * 0.65f;
             toy.SetDeformation(squash, elongation, tx, tz, contactX, contactZ);
-            hud.UpdateFeedback(Mathf.Clamp01(c / 0.42f), Mathf.Clamp01(s / 0.6f));
         }
 
         private void ReadInput()
@@ -99,27 +97,27 @@ namespace Pockle.Runtime
             if (Input.GetKeyDown(KeyCode.Space)) { Reveal(); return; }
 
             // Track one finger by ID so a second finger never takes over an active gesture.
-            if (Input.touchCount > 0 || pointerId >= 0)
+            if (Input.touchCount > 0 || gesture.PointerId >= 0)
             {
                 bool found = false;
                 for (int i = 0; i < Input.touchCount; i++)
                 {
                     Touch touch = Input.GetTouch(i);
-                    if (pointerId == NoPointer && touch.phase == TouchPhase.Began)
+                    if (gesture.PointerId == NoPointer && touch.phase == TouchPhase.Began)
                         BeginPointer(touch.fingerId, touch.position);
-                    if (touch.fingerId != pointerId) continue;
+                    if (touch.fingerId != gesture.PointerId) continue;
                     found = true;
                     if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
                         ReleasePointer(touch.phase == TouchPhase.Ended);
                     else MovePointer(touch.position);
                     break;
                 }
-                if (pointerId >= 0 && !found) ReleasePointer(false);
+                if (gesture.PointerId >= 0 && !found) ReleasePointer(false);
                 return;
             }
 
             if (Input.GetMouseButtonDown(0)) BeginPointer(-1, Input.mousePosition);
-            if (pointerId == -1)
+            if (gesture.PointerId == -1)
             {
                 if (Input.GetMouseButtonUp(0)) ReleasePointer(true);
                 else if (Input.GetMouseButton(0)) MovePointer(Input.mousePosition);
@@ -129,7 +127,7 @@ namespace Pockle.Runtime
 
         private void BeginPointer(int id, Vector2 position)
         {
-            if (pointerId != NoPointer || revealing) return;
+            if (gesture.PointerId != NoPointer || revealing) return;
             if (!viewCamera.pixelRect.Contains(position)) return;
             if (EventSystem.current != null)
             {
@@ -137,31 +135,34 @@ namespace Pockle.Runtime
                                       : EventSystem.current.IsPointerOverGameObject();
                 if (overUi) return;
             }
-            RaycastHit hit;
             Ray ray = viewCamera.ScreenPointToRay(position);
-            if (!Physics.Raycast(ray, out hit, 30f) || hit.collider.GetComponentInParent<JellyToy>() != toy)
-                return;
-
-            pointerId = id;
+            Vector3 toyPoint;
+            RaycastHit plateHit;
+            bool hitToy = toy.RaycastBody(ray, out toyPoint);
+            bool hitPlate = plateCollider.Raycast(ray, out plateHit, 30f);
+            if (!hitToy && !hitPlate) return;
+            var target = hitToy && (!hitPlate || Vector3.Distance(ray.origin, toyPoint) <= plateHit.distance)
+                ? PointerTarget.Toy : PointerTarget.Plate;
+            if (!gesture.TryBegin(id, target)) return;
             pointerStart = pointerPrevious = position;
-            Vector3 localContact = toy.transform.InverseTransformPoint(hit.point);
-            contactX = Mathf.Clamp(localContact.x, -0.9f, 0.9f);
-            contactZ = Mathf.Clamp(localContact.z, -0.8f, 0.8f);
-            if (!rotateMode)
+            if (target == PointerTarget.Toy)
             {
+                Vector3 localContact = toy.transform.InverseTransformPoint(toyPoint);
+                contactX = Mathf.Clamp(localContact.x, -0.9f, 0.9f);
+                contactZ = Mathf.Clamp(localContact.z, -0.8f, 0.8f);
                 compression.Target = 0.23f;
                 Play(pressClip);
                 hud.SetStatus("Hold to squish. Drag up to stretch.");
             }
-            else hud.SetStatus("Drag sideways to turn Pip around.");
+            else hud.SetStatus("Drag the plate sideways to turn Pip.");
         }
 
         private void MovePointer(Vector2 position)
         {
-            if (rotateMode)
+            if (gesture.Target == PointerTarget.Plate)
             {
                 float yaw = (position.x - pointerPrevious.x) / Mathf.Max(viewCamera.pixelWidth, 1) * 260f;
-                toy.transform.Rotate(0f, -yaw, 0f, Space.Self);
+                turntable.Rotate(0f, -yaw, 0f, Space.Self);
             }
             else
             {
@@ -181,8 +182,8 @@ namespace Pockle.Runtime
 
         private void ReleasePointer(bool feedback)
         {
-            bool wasPressed = pointerId != NoPointer && !rotateMode;
-            pointerId = NoPointer;
+            bool wasPressed = gesture.Target == PointerTarget.Toy;
+            gesture.Cancel();
             compression.Target = stretch.Target = tiltX.Target = tiltZ.Target = 0f;
             if (feedback && wasPressed)
             {
@@ -190,15 +191,7 @@ namespace Pockle.Runtime
                 Vibrate();
             }
             if (hud != null && !revealing)
-                hud.SetStatus(rotateMode ? "Rotate mode · drag Pip sideways." : "Press Pip, drag up, then let go.");
-        }
-
-        private void SetRotateMode(bool rotate)
-        {
-            ReleasePointer(false);
-            rotateMode = rotate;
-            hud.SetMode(rotate);
-            hud.SetStatus(rotate ? "Rotate mode · drag Pip sideways." : "Press Pip, drag up, then let go.");
+                hud.SetStatus("Squish Pip. Drag the plate to turn.");
         }
 
         public void ResetToy()
@@ -210,8 +203,7 @@ namespace Pockle.Runtime
             toyMount.localScale = Vector3.one;
             toy.gameObject.SetActive(true);
             toy.transform.localRotation = Quaternion.identity;
-            rotateMode = false;
-            hud.SetMode(false);
+            turntable.localRotation = Quaternion.identity;
             compression.Reset(); stretch.Reset(); tiltX.Reset(); tiltZ.Reset();
             contactX = contactZ = 0f;
             toy.ResetToy();
@@ -264,7 +256,7 @@ namespace Pockle.Runtime
                 toyMount.localScale = Vector3.one;
                 compression.Target = 0f;
                 hud.SetRevealAvailable(true);
-                hud.SetStatus("Meet Pip. Press, stretch, and let go.");
+                hud.SetStatus("Squish Pip. Drag the plate to turn.");
             }
         }
 
@@ -351,7 +343,6 @@ namespace Pockle.Runtime
         private void OnDisable() { ReleasePointer(false); }
         private void OnDestroy()
         {
-            if (hud != null) hud.RotationChanged -= SetRotateMode;
             if (pressClip != null) Destroy(pressClip);
             if (releaseClip != null) Destroy(releaseClip);
             if (revealClip != null) Destroy(revealClip);

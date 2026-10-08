@@ -25,6 +25,7 @@ namespace Pockle.Runtime
         private Vector3[] groupNormals;
         private Mesh accentMesh;
         private Mesh sparkleMesh;
+        private Cubemap studioReflection;
         private Vector3[] restVertices;
         private Vector3[] vertices;
         private Vector3[] normals;
@@ -50,6 +51,31 @@ namespace Pockle.Runtime
         public Transform VisualRoot { get { Initialize(); return visualRoot; } }
         public Renderer BodyRenderer { get; private set; }
         public bool UsesAuthoredMesh { get { return characterAsset != null; } }
+
+        /// <summary>Pick the visible shell only at pointer-down, without recooking a collider.</summary>
+        public bool RaycastBody(Ray worldRay, out Vector3 point)
+        {
+            Initialize();
+            point = Vector3.zero;
+            if (!gameObject.activeInHierarchy) return false;
+            Matrix4x4 inverse = visualRoot.worldToLocalMatrix;
+            var ray = new Ray(inverse.MultiplyPoint3x4(worldRay.origin), inverse.MultiplyVector(worldRay.direction));
+            if (!bodyMesh.bounds.IntersectRay(ray)) return false;
+            var origin = new Point3(ray.origin.x, ray.origin.y, ray.origin.z);
+            var direction = new Point3(ray.direction.x, ray.direction.y, ray.direction.z);
+            float nearest = float.PositiveInfinity;
+            for (int i = 0; i < triangles.Length; i += 3)
+            {
+                Vector3 a = vertices[triangles[i]], b = vertices[triangles[i + 1]], c = vertices[triangles[i + 2]];
+                float distance;
+                if (SurfaceRaycast.TryTriangle(origin, direction, new Point3(a.x, a.y, a.z),
+                    new Point3(b.x, b.y, b.z), new Point3(c.x, c.y, c.z), out distance) && distance < nearest)
+                    nearest = distance;
+            }
+            if (float.IsInfinity(nearest)) return false;
+            point = visualRoot.TransformPoint(ray.GetPoint(nearest));
+            return true;
+        }
 
         private sealed class SurfaceAccent
         {
@@ -83,6 +109,7 @@ namespace Pockle.Runtime
             }
             visualRoot = new GameObject(characterAsset != null ? "Pip • authored peach jelly" : "Pip • procedural baseline").transform;
             visualRoot.SetParent(transform, false);
+            if (characterAsset != null) studioReflection = StudioReflection.Create();
             bodyMaterial = CreateBodyMaterial();
             eyeMaterial = CreateFlatMaterial("Pip eyes", new Color(0.20f, 0.12f, 0.17f, 1f));
             smileMaterial = eyeMaterial;
@@ -462,7 +489,9 @@ namespace Pockle.Runtime
         {
             if (characterAsset != null)
             {
-                Material authored = CreateCandyMaterial("Pip peach jelly art pass", characterAsset.BodyColor, 0.66f);
+                Color shell = characterAsset.BodyColor;
+                shell.a = .60f;
+                Material authored = CreateCandyMaterial("Pip clear peach jelly shell", shell, .92f);
                 if (authored.HasProperty("_BottomColor")) authored.SetColor("_BottomColor", characterAsset.BottomColor);
                 if (authored.HasProperty("_TopColor")) authored.SetColor("_TopColor", characterAsset.TopColor);
                 return authored;
@@ -482,6 +511,11 @@ namespace Pockle.Runtime
             material.color = color;
             if (material.HasProperty("_Glossiness")) material.SetFloat("_Glossiness", gloss);
             if (material.HasProperty("_Metallic")) material.SetFloat("_Metallic", 0f);
+            if (studioReflection != null && material.HasProperty("_StudioCube"))
+            {
+                material.SetTexture("_StudioCube", studioReflection);
+                material.SetFloat("_StudioStrength", 1f);
+            }
             if (material.HasProperty("_BottomColor")) material.SetColor("_BottomColor", color * new Color(0.92f, 0.74f, 0.79f, 1f));
             if (material.HasProperty("_TopColor")) material.SetColor("_TopColor", Color.Lerp(color, Color.white, 0.34f));
             ownedMaterials.Add(material);
@@ -556,6 +590,7 @@ namespace Pockle.Runtime
                 if (ownedMeshes[i] != null) Destroy(ownedMeshes[i]);
             for (int i = 0; i < ownedMaterials.Count; i++)
                 if (ownedMaterials[i] != null) Destroy(ownedMaterials[i]);
+            if (studioReflection != null) Destroy(studioReflection);
             ownedMeshes.Clear();
             ownedMaterials.Clear();
         }

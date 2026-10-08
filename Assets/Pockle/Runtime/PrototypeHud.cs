@@ -14,7 +14,6 @@ namespace Pockle.Runtime
         private static readonly Color Quiet = new Color(0.947f, 0.922f, 0.89f);
         private static readonly Color Paper = new Color(1f, 0.99f, 0.971f);
 
-        public event Action<bool> RotationChanged;
         public event Action<bool> SoundChanged;
         public event Action<bool> HapticsChanged;
         public event Action<bool> ReducedMotionChanged;
@@ -23,7 +22,6 @@ namespace Pockle.Runtime
         private RectTransform header;
         private RectTransform companion;
         private RectTransform card;
-        private RectTransform modeRow;
         private RectTransform actionRow;
         private RectTransform preferenceRow;
         private Text status;
@@ -36,8 +34,6 @@ namespace Pockle.Runtime
         private Text companionKind;
         private Text companionName;
         private Text companionCaption;
-        private Image touchBackground;
-        private Image rotateBackground;
         private Image soundBackground;
         private Image hapticsBackground;
         private Image motionBackground;
@@ -54,7 +50,6 @@ namespace Pockle.Runtime
         private bool soundEnabled = true;
         private bool hapticsEnabled = true;
         private bool reducedMotionEnabled;
-        private bool rotationEnabled;
         private bool initialized;
         private Rect lastSafeArea;
         private Vector2 lastScreenSize;
@@ -103,7 +98,7 @@ namespace Pockle.Runtime
             Surface(card, Paper);
             status = Label("Make yourself at home.", card, 15, Ink, FontStyle.Bold,
                 TextAnchor.MiddleCenter, new Vector2(0f, -12f), new Vector2(328f, 25f));
-            guide = Label("Press to squish. Drag to stretch. Release to settle.", card, 11, MutedInk,
+            guide = Label("Touch Pip to squish. Drag the plate to turn.", card, 11, MutedInk,
                 FontStyle.Normal, TextAnchor.MiddleCenter, new Vector2(0f, -37f), new Vector2(328f, 18f));
             guide.resizeTextForBestFit = true;
             guide.resizeTextMinSize = 9;
@@ -112,15 +107,8 @@ namespace Pockle.Runtime
             status.resizeTextMinSize = 12;
             status.resizeTextMaxSize = 15;
 
-            modeRow = Rect("Interaction mode", card);
-            TopCentered(modeRow, new Vector2(0f, -58f), new Vector2(328f, 44f));
-            CreateButton("Touch", modeRow, new Vector2(0f, 0f), new Vector2(158f, 44f), Peach,
-                () => ChangeRotation(false), out touchBackground);
-            CreateButton("Rotate", modeRow, new Vector2(170f, 0f), new Vector2(158f, 44f), Quiet,
-                () => ChangeRotation(true), out rotateBackground);
-
             actionRow = Rect("Toy actions", card);
-            TopCentered(actionRow, new Vector2(0f, -112f), new Vector2(328f, 44f));
+            TopCentered(actionRow, new Vector2(0f, -58f), new Vector2(328f, 44f));
             Image revealBackground;
             revealButton = CreateButton("Reveal again", actionRow, Vector2.zero, new Vector2(207f, 44f),
                 Peach, () => reveal?.Invoke(), out revealBackground);
@@ -129,7 +117,7 @@ namespace Pockle.Runtime
                 Quiet, () => reset?.Invoke(), out resetBackground);
 
             preferenceRow = Rect("Comfort settings", card);
-            TopCentered(preferenceRow, new Vector2(0f, -168f), new Vector2(328f, 44f));
+            TopCentered(preferenceRow, new Vector2(0f, -114f), new Vector2(328f, 44f));
             var soundButton = CreateButton("Sound · on", preferenceRow, Vector2.zero, new Vector2(101f, 44f),
                 Quiet, ChangeSound, out soundBackground, 11);
             soundLabel = soundButton.GetComponentInChildren<Text>();
@@ -140,14 +128,13 @@ namespace Pockle.Runtime
                 new Vector2(101f, 44f), Quiet, ChangeMotion, out motionBackground, 11);
             motionLabel = motionButton.GetComponentInChildren<Text>();
             Label("PEACH JELLY · TACTILE PROTOTYPE", card, 8, MutedInk, FontStyle.Normal,
-                TextAnchor.MiddleCenter, new Vector2(0f, -216f), new Vector2(328f, 15f));
+                TextAnchor.MiddleCenter, new Vector2(0f, -162f), new Vector2(328f, 15f));
 
             if (EventSystem.current == null)
             {
                 ownedEventSystem = new GameObject("Pockle event system", typeof(EventSystem), typeof(StandaloneInputModule));
                 ownedEventSystem.transform.SetParent(transform, false);
             }
-            SetMode(false);
             SetSettings(true, true, false);
             ApplySafeArea();
             Canvas.ForceUpdateCanvases();
@@ -159,26 +146,9 @@ namespace Pockle.Runtime
             if (status != null) status.text = string.IsNullOrEmpty(message) ? "Make yourself at home." : message;
         }
 
-        public void SetMode(bool rotate)
-        {
-            rotationEnabled = rotate;
-            if (touchBackground != null) touchBackground.color = rotate ? Quiet : Peach;
-            if (rotateBackground != null) rotateBackground.color = rotate ? Peach : Quiet;
-            if (guide != null) guide.text = rotate
-                ? "Drag Pip sideways to see every little angle."
-                : "Press to squish. Drag to stretch. Release to settle.";
-        }
-
         public void SetRevealAvailable(bool available)
         {
             if (revealButton != null) revealButton.interactable = available;
-        }
-
-        public void UpdateFeedback(float compression, float stretch)
-        {
-            if (touchBackground == null || rotationEnabled) return;
-            var amount = Mathf.Max(Mathf.Clamp01(compression), Mathf.Clamp01(stretch));
-            touchBackground.color = Color.Lerp(Peach, new Color(0.92f, 0.57f, 0.49f), amount * 0.35f);
         }
 
         /// <summary>Synchronize persisted preferences without invoking user callbacks.</summary>
@@ -193,13 +163,6 @@ namespace Pockle.Runtime
             if (soundBackground != null) soundBackground.color = sound ? new Color(0.97f, 0.87f, 0.8f) : Quiet;
             if (hapticsBackground != null) hapticsBackground.color = haptics ? new Color(0.97f, 0.87f, 0.8f) : Quiet;
             if (motionBackground != null) motionBackground.color = reducedMotion ? new Color(0.97f, 0.87f, 0.8f) : Quiet;
-        }
-
-        private void ChangeRotation(bool rotate)
-        {
-            if (rotationEnabled == rotate) return;
-            SetMode(rotate);
-            RotationChanged?.Invoke(rotate);
         }
 
         private void ChangeSound()
@@ -255,7 +218,6 @@ namespace Pockle.Runtime
             var width = landscape ? Mathf.Min(360f, columnWidth - 20f) : Mathf.Min(360f, size.x - 24f);
             // Very narrow phones keep 44-point buttons by scaling only horizontal dimensions.
             var contentWidth = Mathf.Max(1f, width - 32f);
-            ResizeButtons(modeRow, contentWidth, 12f, false);
             ResizeButtons(actionRow, contentWidth, 12f, true);
             ResizeButtons(preferenceRow, contentWidth, 9f, false);
             status.rectTransform.sizeDelta = new Vector2(contentWidth, 25f);
@@ -274,7 +236,7 @@ namespace Pockle.Runtime
                 card.anchorMin = card.anchorMax = new Vector2(0.5f, 0f);
                 card.pivot = new Vector2(0.5f, 0f);
                 card.anchoredPosition = new Vector2(viewerWidth * 0.5f, 14f);
-                card.sizeDelta = new Vector2(width, 238f);
+                card.sizeDelta = new Vector2(width, 184f);
             }
             else
             {
@@ -286,7 +248,7 @@ namespace Pockle.Runtime
                 card.anchorMin = card.anchorMax = new Vector2(0.5f, 0f);
                 card.pivot = new Vector2(0.5f, 0f);
                 card.anchoredPosition = new Vector2(0f, 14f);
-                card.sizeDelta = new Vector2(width, 238f);
+                card.sizeDelta = new Vector2(width, 184f);
             }
             var companionWidth = companion.sizeDelta.x;
             companionName.rectTransform.sizeDelta = new Vector2(companionWidth, 34f);

@@ -10,5 +10,6 @@
     <Compile Include="../../Assets/Pockle/Runtime/Core/*.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="AuthoredMeshChecks.cs" />
+    <Compile Include="InteractionChecks.cs" />
   </ItemGroup>
 </Project>

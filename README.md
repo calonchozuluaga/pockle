@@ -29,19 +29,23 @@ Close Unity and run `git pull --ff-only` from your local `pockle` directory. Reo
 
 The second art pass joins the crown and body into one closed deformable shell, broadens the flat foot, and shortens the crown. The Unity material adds broad studio reflections and glazed plum eyes; blush now has soft edges. Internal pearls render beneath the shell. The UI no longer labels the authored character a procedural placeholder. The screenshot confirmed the first authored import on the owner's computer; the revised shader and mesh still need local visual and Android performance checks. The approved concept is the visual target, rather than an exact render of the Unity material.
 
+The latest viewer update uses a small static studio cubemap for bright softbox reflections across the jelly shell. Reflections become opaque while the peach tint stays translucent; this approximates clear gel without scene refraction. A thin plate collider and pointer-down checks against the visible deformed shell keep turning and squishing separate. Local Unity/Android testing is still required.
+
 If Git reports that local changes would be overwritten, inspect the listed files before restoring or stashing anything; preserve local Android settings and package changes. This art update changes neither `Packages/manifest.json` nor `ProjectSettings`.
 
 ## Controls
 
 | Action | Touch / mouse |
 | --- | --- |
-| Squish | Press and hold Pip in **Touch** mode |
+| Squish | Press and hold Pip directly |
 | Stretch / lean | Keep holding; drag up / sideways |
 | Rebound | Release |
-| Inspect | Choose **Rotate**, then drag Pip sideways |
+| Inspect | Drag the exposed plate sideways to rotate Pip and the plate |
 | Start over | **Reset**, or `R` in the editor |
 | Reveal | **Reveal again**, or `Space` in the editor |
 | Comfort | Toggle **Sound**, **Haptics**, and **Motion** |
+
+The starting surface selects the gesture: Pip squishes; the plate turns. A gesture stays assigned until release, even when dragged across the other surface. Rotation stops immediately on release. Small rim marks show the plate turning. The Touch/Rotate mode buttons have been removed.
 
 Reduced motion preserves direct manipulation but removes the spring rebound and large reveal movements. Sound is local synthesized placeholder audio. Haptics default off and use Unity's basic device vibration; finely tuned native haptics are future work. UI touches do not manipulate the toy, and only one finger controls an active gesture.
 
@@ -71,3 +75,7 @@ In Unity, open **Window → General → Test Runner → EditMode** and run `Pock
 - `Assets/Pockle/Editor/`: setup menu and build checks.
 
 The authored body has 3,158 vertices and 5,814 triangles; the original baseline has 1,073 vertices and 2,016 triangles. Features reuse small meshes and materials. Deformation uses reused vertex/normal buffers, welds UV-seam normals, and skips idle updates; actual CPU cost, draw calls, frame rate, and transparency artifacts still need profiling on a midrange phone. See [architecture notes](docs/ARCHITECTURE.md).
+
+## Current collecting direction
+
+The owner has simplified the collecting loop to daily collection-themed boxes unlocked by walking, plus optional paid boxes (proposed price points: $0.99 standard and $2.99 special). Packaging identifies the collection while color/variant remains a surprise. These are product decisions recorded in [the brief](docs/PRODUCT_BRIEF.md), not implemented rewards, location tracking, or purchases. Lights-off glow and squeeze-reactive internal stars/pearls are also planned after the current viewer test.

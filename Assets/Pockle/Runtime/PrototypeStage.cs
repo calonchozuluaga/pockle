@@ -8,7 +8,7 @@ namespace Pockle.Runtime
     {
         public static readonly Color Background = new Color(0.973f, 0.957f, 0.933f, 1f);
 
-        public static void Create(out Camera camera, out Transform toyMount)
+        public static void Create(out Camera camera, out Transform toyMount, out Transform turntable, out Collider plateCollider)
         {
             var stage = new GameObject("Pockle · presentation stage");
             var resources = stage.AddComponent<StageResources>();
@@ -43,8 +43,10 @@ namespace Pockle.Runtime
             var framing = cameraObject.AddComponent<StageFraming>();
             framing.Initialize(camera, background);
 
+            turntable = new GameObject("Pip and plate · turntable").transform;
+            turntable.SetParent(stage.transform, false);
             var mount = new GameObject("Pip mount");
-            mount.transform.SetParent(stage.transform, false);
+            mount.transform.SetParent(turntable, false);
             mount.transform.position = new Vector3(0f, 1.15f, 0f);
             toyMount = mount.transform;
 
@@ -52,12 +54,28 @@ namespace Pockle.Runtime
             var topMaterial = MakeMaterial("Ceramic · warm ivory", new Color(1f, 0.985f, 0.957f), 0.24f);
             var shadowMaterial = MakeMaterial("Soft contact shadow", new Color(0.91f, 0.835f, 0.762f), 0f);
             resources.Materials = new[] { baseMaterial, topMaterial, shadowMaterial };
-            MakeDisk(stage.transform, "Pedestal · lower rim", new Vector3(0f, 0.045f, 0f),
+            Transform lower = MakeDisk(turntable, "Pedestal · lower rim", new Vector3(0f, 0.045f, 0f),
                 new Vector3(2.68f, 0.035f, 2.68f), baseMaterial);
-            MakeDisk(stage.transform, "Pedestal · ceramic top", new Vector3(0f, 0.1f, 0f),
+            MakeDisk(turntable, "Pedestal · ceramic top", new Vector3(0f, 0.1f, 0f),
                 new Vector3(2.46f, 0.05f, 2.46f), topMaterial);
-            MakeDisk(stage.transform, "Pip · contact shadow", new Vector3(0f, 0.151f, 0.04f),
+            MakeDisk(turntable, "Pip · contact shadow", new Vector3(0f, 0.151f, 0.04f),
                 new Vector3(1.36f, 0.0005f, 1.22f), shadowMaterial);
+            // A thin cylinder covers the exposed plate. CapsuleCollider cannot
+            // represent this nonuniform scale: its radius would swallow the toy.
+            var touchSurface = new GameObject("Plate touch surface", typeof(MeshCollider));
+            touchSurface.transform.SetParent(turntable, false);
+            touchSurface.transform.localPosition = new Vector3(0f, .075f, 0f);
+            touchSurface.transform.localScale = new Vector3(2.68f, .075f, 2.68f);
+            var meshCollider = touchSurface.GetComponent<MeshCollider>();
+            meshCollider.sharedMesh = lower.GetComponent<MeshFilter>().sharedMesh;
+            plateCollider = meshCollider;
+            // Small inset marks make the circular plate's rotation visible.
+            for (int i = -1; i <= 1; i++)
+            {
+                var radians = (i * 14f + 180f) * Mathf.Deg2Rad;
+                MakeDisk(turntable, "Turntable rim mark", new Vector3(Mathf.Sin(radians) * 1.13f, .151f, Mathf.Cos(radians) * 1.13f),
+                    new Vector3(.055f, .0005f, .055f), baseMaterial);
+            }
 
             var keyObject = new GameObject("Soft studio key", typeof(Light));
             keyObject.transform.SetParent(stage.transform, false);
@@ -93,7 +111,7 @@ namespace Pockle.Runtime
             return material;
         }
 
-        private static void MakeDisk(Transform parent, string name, Vector3 position, Vector3 scale, Material material)
+        private static Transform MakeDisk(Transform parent, string name, Vector3 position, Vector3 scale, Material material)
         {
             var disk = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
             disk.name = name;
@@ -101,11 +119,12 @@ namespace Pockle.Runtime
             disk.transform.localPosition = position;
             disk.transform.localScale = scale;
             var collider = disk.GetComponent<Collider>();
-            if (collider != null) Object.Destroy(collider);
+            if (collider != null) { collider.enabled = false; Object.Destroy(collider); }
             var renderer = disk.GetComponent<MeshRenderer>();
             renderer.sharedMaterial = material;
             renderer.shadowCastingMode = ShadowCastingMode.Off;
             renderer.receiveShadows = false;
+            return disk.transform;
         }
     }
 
@@ -150,7 +169,7 @@ namespace Pockle.Runtime
             // than just the resting silhouette. In landscape all controls are right.
             var pixelsPerUnit = height / (landscape ? 390f : 844f);
             var top = (landscape ? 104f : 112f) * pixelsPerUnit;
-            var bottom = (landscape ? 12f : 264f) * pixelsPerUnit;
+            var bottom = (landscape ? 12f : 210f) * pixelsPerUnit;
             var viewportHeight = Mathf.Max(1f, safeArea.height - top - bottom);
             var columnWidth = Mathf.Max(280f * pixelsPerUnit, safeArea.width * 0.35f);
             var viewportWidth = landscape ? Mathf.Max(1f, safeArea.width - columnWidth) : safeArea.width;
