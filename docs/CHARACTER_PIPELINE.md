@@ -8,6 +8,10 @@ Generate and review a front/side/back concept sheet with consistent proportions.
 
 Keep a neutral rest pose and a simple silhouette. Small screens must preserve the face and identity. Establish the final material and expression before producing additional characters. All character designs should be original.
 
+![Pip Peach Jelly concept 01](concepts/pip-peach-jelly-concept-01.png)
+
+This generated draft establishes the peach color, rounded silhouette, and face. Its side view is slightly turned, so refine true orthographic proportions during modeling. Rendered transparency and reflections are visual targets; their mobile shader implementation still needs device validation.
+
 ## 2. Reusable Blender base
 
 Build one clean, closed jelly mesh centered around the prototype's coordinate convention: local Y up, front negative Z, base at Y=-1. Keep transforms applied and facial anchors identified. Begin near the current geometry cost rather than spending triangles on detail that can live in materials. The current body has 1,073 vertices / 2,016 triangles; that is a reference budget, not a measured performance guarantee.
