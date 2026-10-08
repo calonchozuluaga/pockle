@@ -48,10 +48,13 @@ namespace Pockle.Tests
             Material material = toy.BodyRenderer.sharedMaterial;
             var ray = new Ray(new Vector3(0f, -.4f, -3f), Vector3.forward);
             Assert.That(toy.RaycastBody(ray, out Vector3 before), Is.True);
-            for (int i = 0; i < 12; i++)
+            for (int i = 0; i < 16; i++)
             {
-                bool moon = i % 2 == 0;
-                toy.SetVariant(moon ? PipVariant.MoonJelly : PipVariant.PeachJelly);
+                PipVariant choice = (PipVariant)((i + 1) % PipVariants.Count);
+                bool moon = choice == PipVariant.MoonJelly;
+                bool peach = choice == PipVariant.PeachJelly;
+                bool soft = choice == PipVariant.MintSoft;
+                toy.SetVariant(choice);
                 yield return null; // Old pieces are destroyed at the frame boundary.
                 Assert.That(toy.BodyRenderer.GetComponent<MeshFilter>().sharedMesh, Is.SameAs(mesh));
                 Assert.That(toy.BodyRenderer.sharedMaterial, Is.SameAs(material));
@@ -66,7 +69,12 @@ namespace Pockle.Tests
                 }
                 Assert.That(stars, Is.EqualTo(moon ? 8 : 0));
                 Assert.That(moonPearls, Is.EqualTo(moon ? 3 : 0));
-                Assert.That(peachPearls, Is.EqualTo(moon ? 0 : 6));
+                Assert.That(peachPearls, Is.EqualTo(peach ? 6 : 0));
+                Assert.That(material.GetFloat("_GlitterStrength") > 0f, Is.EqualTo(choice == PipVariant.GoldGlitter));
+                Assert.That(material.GetFloat("_Softness"), Is.EqualTo(soft ? 1f : 0f));
+                Assert.That(material.GetFloat("_ZWrite"), Is.EqualTo(soft ? 1f : 0f));
+                Assert.That(material.renderQueue, Is.EqualTo(soft ? 2001 : 3000));
+                Assert.That(material.GetFloat("_StudioStrength") > 0f, Is.EqualTo(!soft));
             }
             Object.Destroy(root);
             yield return null;
@@ -78,11 +86,17 @@ namespace Pockle.Tests
         [UnityTest]
         public IEnumerator StartupUsesTheSavedVariant()
         {
-            PlayerPrefs.SetInt(PipVariants.Preference, 1);
-            root = new GameObject("Saved variant test Pip");
-            JellyToy toy = root.AddComponent<JellyToy>();
-            Assert.That(toy.Variant, Is.EqualTo(PipVariant.MoonJelly));
-            yield return null;
+            for (int i = 0; i <= PipVariants.Count; i++)
+            {
+                int saved = i == PipVariants.Count ? 99 : i;
+                PlayerPrefs.SetInt(PipVariants.Preference, saved);
+                root = new GameObject("Saved variant test Pip");
+                JellyToy toy = root.AddComponent<JellyToy>();
+                Assert.That(toy.Variant, Is.EqualTo(saved == 99 ? PipVariant.PeachJelly : (PipVariant)saved));
+                Object.Destroy(root);
+                yield return null;
+                yield return null;
+            }
         }
     }
 }

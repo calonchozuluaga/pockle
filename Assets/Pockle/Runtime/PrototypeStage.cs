@@ -169,7 +169,8 @@ namespace Pockle.Runtime
             // than just the resting silhouette. In landscape all controls are right.
             var pixelsPerUnit = height / (landscape ? 390f : 844f);
             var top = (landscape ? 104f : 112f) * pixelsPerUnit;
-            var bottom = (landscape ? 12f : 264f) * pixelsPerUnit;
+            float portraitContentWidth = Mathf.Min(360f, safeArea.width / pixelsPerUnit - 24f) - 32f;
+            var bottom = (landscape ? 12f : 264f + (portraitContentWidth < 220f ? 52f : 0f)) * pixelsPerUnit;
             var viewportHeight = Mathf.Max(1f, safeArea.height - top - bottom);
             var columnWidth = Mathf.Max(280f * pixelsPerUnit, safeArea.width * 0.35f);
             var viewportWidth = landscape ? Mathf.Max(1f, safeArea.width - columnWidth) : safeArea.width;

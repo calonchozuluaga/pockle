@@ -1,6 +1,6 @@
 # Pockle
 
-Unity source for the **first tactile prototype**: Pip, a Blender-authored jelly companion, with Peach Jelly and Moon Jelly variants for comparing color, filling, and finish. The project follows the [development brief](docs/PRODUCT_BRIEF.md).
+Unity source for the **first tactile prototype**: Pip, a Blender-authored companion, with Peach Jelly, Moon Jelly, Gold Glitter, and Mint Soft presets for comparing color, filling, and finish. The project follows the [development brief](docs/PRODUCT_BRIEF.md).
 
 Pip can be pressed, lifted off the plate with an upward drag, stretched or compressed with two fingers, and rotated by dragging the plate. Phone movement drives a gentle jelly jiggle. A branded Jelly Garden box opens its lid/flaps, reveals Pip, and settles him onto the plate. Reset restores his pose. Sound, optional device vibration, reduced motion, and the selected variant persist locally.
 
@@ -25,7 +25,7 @@ After the first APK finishes, preserve it as your baseline and pull the latest r
 
 The editable source is `ArtSource/Pip/Pip.blend`; the standard interchange export is `Assets/Pockle/Art/Pip/Pip.fbx`. The runtime uses the custom source's imported native mesh and face anchors so coordinates, scale, UV seams, and deformation remain explicit. The FBX includes the complete character for further art work. The [Blender model study](docs/concepts/pip-model-study-02.png) shows geometry and an offline material; it does not establish the Unity shader's appearance.
 
-In Play mode or the Android build, tap **Peach** or **Moon** to compare variants without resetting the pose or plate angle. Peach keeps the glossy warm shell, small cream pearls, and apricot flecks. Moon uses a blue-to-lavender shell, a softer pearlescent finish, three larger icy pearls, and eight silver stars. See [variant comparison](docs/PIP_VARIANTS.md) for the local test steps. The Moon material has not yet been visually validated in Unity or on Android.
+In Play mode or the Android build, tap **Peach**, **Moon**, **Glitter**, or **Soft** to compare without resetting the pose or plate angle. Peach keeps the glossy warm shell and small pearls/flecks. Moon uses blue/lavender pearl sheen, larger icy pearls, and silver stars. Gold Glitter adds dense shaded gold microflakes. Mint Soft uses an opaque pastel shell with subdued highlights. See [variant comparison](docs/PIP_VARIANTS.md) for local tests; the new finishes still need Unity/Android visual validation.
 
 ## Update an existing checkout
 
@@ -47,7 +47,7 @@ If Git reports that local changes would be overwritten, inspect the listed files
 | Jiggle | Gently move or shake the phone with **Motion · full**; `J` previews a pulse in the editor |
 | Rebound | Release |
 | Inspect | Drag the exposed plate sideways to rotate Pip and the plate |
-| Compare variants | Tap **Peach** or **Moon** |
+| Compare finishes | Tap **Peach**, **Moon**, **Glitter**, or **Soft** |
 | Browse boxes | Tap **Store**; **Back to Pip** returns to the viewer |
 | Start over | **Reset**, or `R` in the editor |
 | Reveal | **Reveal again**, or `Space` in the editor |

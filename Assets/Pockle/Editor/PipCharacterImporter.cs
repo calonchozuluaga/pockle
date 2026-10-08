@@ -142,6 +142,12 @@ namespace Pockle.Editor
         [MenuItem("Pockle/Character/Moon Jelly")]
         private static void UseMoon() { SelectVariant(PipVariant.MoonJelly); }
 
+        [MenuItem("Pockle/Character/Gold Glitter")]
+        private static void UseGlitter() { SelectVariant(PipVariant.GoldGlitter); }
+
+        [MenuItem("Pockle/Character/Mint Soft")]
+        private static void UseSoft() { SelectVariant(PipVariant.MintSoft); }
+
         private static void SelectVariant(PipVariant choice)
         {
             PlayerPrefs.SetInt(PipCharacterAsset.BaselinePreference, 0);

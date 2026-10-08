@@ -2,9 +2,9 @@ Shader "Pockle/Jelly Candy"
 {
     Properties
     {
-        _Color ("Coral tint / opacity", Color) = (1, 0.43, 0.34, 0.91)
-        _TopColor ("Peach light", Color) = (1, 0.71, 0.49, 1)
-        _BottomColor ("Warm base", Color) = (0.89, 0.20, 0.23, 1)
+        _Color ("Tint / opacity", Color) = (1, 0.43, 0.34, 0.91)
+        _TopColor ("Top tint", Color) = (1, 0.71, 0.49, 1)
+        _BottomColor ("Base tint", Color) = (0.89, 0.20, 0.23, 1)
         _Glossiness ("Soft glaze", Range(0,1)) = 0.48
         _RimColor ("Candy edge", Color) = (1, 0.86, 0.67, 1)
         _ReflectionStrength ("Studio reflections", Range(0,1)) = 1
@@ -12,6 +12,10 @@ Shader "Pockle/Jelly Candy"
         _StudioCube ("Studio reflection", Cube) = "" {}
         _StudioStrength ("Studio reflection strength", Range(0,1)) = 0
         _PearlSheen ("Pearlescent finish", Range(0,1)) = 0
+        _Softness ("Soft opaque finish", Range(0,1)) = 0
+        _GlitterStrength ("Microflake glitter", Range(0,1)) = 0
+        _GlitterDensity ("Glitter density", Range(24,160)) = 96
+        _GlitterColor ("Glitter tint", Color) = (1, .87, .44, 1)
     }
     SubShader
     {
@@ -38,11 +42,16 @@ Shader "Pockle/Jelly Candy"
             samplerCUBE _StudioCube;
             half _StudioStrength;
             half _PearlSheen;
+            half _Softness;
+            half _GlitterStrength;
+            float _GlitterDensity;
+            fixed4 _GlitterColor;
 
             struct appdata
             {
                 float4 vertex : POSITION;
                 float3 normal : NORMAL;
+                float2 uv : TEXCOORD0;
             };
             struct v2f
             {
@@ -50,6 +59,7 @@ Shader "Pockle/Jelly Candy"
                 float3 worldPosition : TEXCOORD0;
                 half3 normal : TEXCOORD1;
                 half height : TEXCOORD2;
+                float2 uv : TEXCOORD3;
             };
 
             v2f vert(appdata input)
@@ -59,6 +69,7 @@ Shader "Pockle/Jelly Candy"
                 output.worldPosition = mul(unity_ObjectToWorld, input.vertex).xyz;
                 output.normal = UnityObjectToWorldNormal(input.normal);
                 output.height = saturate(input.vertex.y * 0.42h + 0.50h);
+                output.uv = input.uv;
                 return output;
             }
 
@@ -72,6 +83,7 @@ Shader "Pockle/Jelly Candy"
                 half3 key = normalize(half3(0.48h, 0.75h, -0.62h));
                 half3 fill = normalize(half3(0.60h, 0.18h, 0.70h));
                 half light = saturate(dot(normal, key)) * 0.18h + 0.82h;
+                light = lerp(light, .64h + .36h * saturate(dot(normal, key)), _Softness);
                 half softFill = saturate(dot(normal, fill)) * 0.12h;
                 half facing = saturate(dot(normal, view));
                 half rim = 1.0h - facing;
@@ -85,13 +97,13 @@ Shader "Pockle/Jelly Candy"
                 half rx = dot(reflection, across);
                 half ry = dot(reflection, along);
                 half gate = smoothstep(0.45h, 0.85h, dot(reflection, key));
-                half broad = exp2(-rx * rx * 18.0h - ry * ry * 5.0h) * gate;
+                half broad = exp2(-rx * rx * lerp(18.0h, 6.0h, _Softness) - ry * ry * lerp(5.0h, 2.0h, _Softness)) * gate;
                 half glaze = exp2(-rx * rx * 75.0h - ry * ry * 18.0h) * gate;
                 half3 candy = lerp(_BottomColor.rgb, _TopColor.rgb, input.height);
                 candy = lerp(candy, _Color.rgb, 0.20h);
                 candy *= light;
                 candy += _RimColor.rgb * (rim * 0.24h + softFill * 0.22h);
-                half shine = (broad * 0.20h + glaze * 0.68h) * _Glossiness * _ReflectionStrength;
+                half shine = (broad * 0.20h + glaze * 0.68h * (1.0h - _Softness)) * _Glossiness * _ReflectionStrength;
                 candy = lerp(candy, half3(1.0h, 0.98h, 0.91h), saturate(shine));
                 half3 studio = texCUBE(_StudioCube, reflection).rgb * _StudioStrength;
                 half coat = _Glossiness * _ReflectionStrength;
@@ -99,6 +111,24 @@ Shader "Pockle/Jelly Candy"
                 half pearl = _PearlSheen * (1.0h - facing) * (1.0h - facing);
                 half3 pearlColor = lerp(half3(.64h, .86h, 1.0h), half3(.91h, .73h, 1.0h), saturate(normal.y * .5h + .5h));
                 candy = lerp(candy, pearlColor, pearl * .38h);
+                if (_GlitterStrength > .001h)
+                {
+                    // Rest UVs attach the microflakes to the deforming gel. A cheap
+                    // cell hash replaces hundreds of meshes; view direction lights them.
+                    float2 grid = input.uv * _GlitterDensity;
+                    float2 cell = floor(grid);
+                    float3 hash = frac(float3(cell.x, cell.y, cell.x) * .1031);
+                    hash += dot(hash, hash.yzx + 33.33);
+                    float seed = frac((hash.x + hash.y) * hash.z);
+                    float seed2 = frac(seed * 13.71);
+                    float2 spot = abs(frac(grid) - .5 - (float2(seed, seed2) - .5) * .35);
+                    half flake = (1.0h - smoothstep(.035, .14, spot.x)) * (1.0h - smoothstep(.06, .23, spot.y));
+                    flake *= step(.18, seed) * _GlitterStrength;
+                    half3 facet = normalize(half3(seed - .5, .9, seed2 - .5));
+                    half catchLight = pow(saturate(dot(reflection, facet)), 8.0h);
+                    candy = lerp(candy, _GlitterColor.rgb * (.65h + catchLight * .65h), flake * .75h);
+                    candy += half3(1.0h, .98h, .83h) * flake * catchLight * .65h;
+                }
                 // Thin highlights at the silhouette read as a clear outer shell.
                 candy += _RimColor.rgb * pow(1.0h - facing, 5.0h) * 0.16h * _StudioStrength;
                 // Keep the peach shell visible at grazing angles, with a soft

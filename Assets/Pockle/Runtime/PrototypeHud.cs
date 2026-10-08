@@ -37,8 +37,7 @@ namespace Pockle.Runtime
         private Text companionName;
         private Text companionCaption;
         private Text footer;
-        private Image peachBackground;
-        private Image moonBackground;
+        private readonly Image[] variantBackgrounds = new Image[PipVariants.Count];
         private Image soundBackground;
         private Image hapticsBackground;
         private Image motionBackground;
@@ -115,10 +114,12 @@ namespace Pockle.Runtime
 
             variantRow = Rect("Pip variants", card);
             TopCentered(variantRow, new Vector2(0f, -58f), new Vector2(328f, 44f));
-            CreateButton("Peach", variantRow, Vector2.zero, new Vector2(158f, 44f), Peach,
-                () => ChangeVariant(PipVariant.PeachJelly), out peachBackground);
-            CreateButton("Moon", variantRow, new Vector2(170f, 0f), new Vector2(158f, 44f), Quiet,
-                () => ChangeVariant(PipVariant.MoonJelly), out moonBackground);
+            for (int i = 0; i < PipVariants.Count; i++)
+            {
+                PipVariant choice = (PipVariant)i;
+                CreateButton(PipVariants.ButtonLabel(choice), variantRow, new Vector2(i * 84f, 0f),
+                    new Vector2(76f, 44f), Quiet, () => ChangeVariant(choice), out variantBackgrounds[i], 11);
+            }
 
             actionRow = Rect("Toy actions", card);
             TopCentered(actionRow, new Vector2(0f, -112f), new Vector2(328f, 44f));
@@ -167,12 +168,14 @@ namespace Pockle.Runtime
         public void SetVariant(PipVariant choice)
         {
             variant = PipVariants.FromSaved((int)choice);
-            bool moon = variant == PipVariant.MoonJelly;
             companionKind.text = PipVariants.Label(variant);
-            companionCaption.text = moon ? "02 / VARIANT" : "01 / VARIANT";
+            companionCaption.text = ((int)variant + 1).ToString("00") + " / VARIANT";
             footer.text = PipVariants.Label(variant) + " · TACTILE PROTOTYPE";
-            peachBackground.color = moon ? Quiet : Peach;
-            moonBackground.color = moon ? new Color(.69f, .82f, .94f) : Quiet;
+            Color selected = variant == PipVariant.MoonJelly ? new Color(.69f, .82f, .94f)
+                : variant == PipVariant.GoldGlitter ? new Color(.97f, .84f, .48f)
+                : variant == PipVariant.MintSoft ? new Color(.69f, .86f, .73f) : Peach;
+            for (int i = 0; i < variantBackgrounds.Length; i++)
+                variantBackgrounds[i].color = i == (int)variant ? selected : Quiet;
         }
 
         private void ChangeVariant(PipVariant choice)
@@ -260,7 +263,10 @@ namespace Pockle.Runtime
             var width = landscape ? Mathf.Min(360f, columnWidth - 20f) : Mathf.Min(360f, size.x - 24f);
             // Very narrow phones keep 44-point buttons by scaling only horizontal dimensions.
             var contentWidth = Mathf.Max(1f, width - 32f);
-            ResizeButtons(variantRow, contentWidth, 12f, false);
+            float extra = ResizeVariantButtons(contentWidth);
+            actionRow.anchoredPosition = new Vector2(0f, -112f - extra);
+            preferenceRow.anchoredPosition = new Vector2(0f, -168f - extra);
+            footer.rectTransform.anchoredPosition = new Vector2(0f, -216f - extra);
             ResizeButtons(actionRow, contentWidth, 9f, false);
             ResizeButtons(preferenceRow, contentWidth, 9f, false);
             status.rectTransform.sizeDelta = new Vector2(contentWidth, 25f);
@@ -279,7 +285,7 @@ namespace Pockle.Runtime
                 card.anchorMin = card.anchorMax = new Vector2(0.5f, 0f);
                 card.pivot = new Vector2(0.5f, 0f);
                 card.anchoredPosition = new Vector2(viewerWidth * 0.5f, 14f);
-                card.sizeDelta = new Vector2(width, 238f);
+                card.sizeDelta = new Vector2(width, 238f + extra);
             }
             else
             {
@@ -291,7 +297,7 @@ namespace Pockle.Runtime
                 card.anchorMin = card.anchorMax = new Vector2(0.5f, 0f);
                 card.pivot = new Vector2(0.5f, 0f);
                 card.anchoredPosition = new Vector2(0f, 14f);
-                card.sizeDelta = new Vector2(width, 238f);
+                card.sizeDelta = new Vector2(width, 238f + extra);
             }
             var companionWidth = companion.sizeDelta.x;
             companionName.rectTransform.sizeDelta = new Vector2(companionWidth, 34f);
@@ -315,6 +321,21 @@ namespace Pockle.Runtime
                 button.sizeDelta = new Vector2(buttonWidth, button.sizeDelta.y);
                 x += buttonWidth + gap;
             }
+        }
+
+        private float ResizeVariantButtons(float width)
+        {
+            int columns = width < 220f ? 2 : PipVariants.Count;
+            float extra = columns == 2 ? 52f : 0f;
+            float buttonWidth = (width - 12f * (columns - 1)) / columns;
+            variantRow.sizeDelta = new Vector2(width, 44f + extra);
+            for (int i = 0; i < variantBackgrounds.Length; i++)
+            {
+                RectTransform button = variantBackgrounds[i].rectTransform;
+                button.anchoredPosition = new Vector2((i % columns) * (buttonWidth + 12f), -(i / columns) * 52f);
+                button.sizeDelta = new Vector2(buttonWidth, 44f);
+            }
+            return extra;
         }
 
         private static void LeftLabel(RectTransform rect, Vector2 position, Vector2 size)

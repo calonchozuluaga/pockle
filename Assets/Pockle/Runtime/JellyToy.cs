@@ -494,6 +494,9 @@ namespace Pockle.Runtime
 
         private void BuildSuspendedAccents()
         {
+            // Glitter is shaded as dense microflakes; opaque soft gel hides filling.
+            // Neither needs extra interior objects or per-flake draw calls.
+            if (variant == PipVariant.GoldGlitter || variant == PipVariant.MintSoft) return;
             if (variant == PipVariant.MoonJelly)
             {
                 Vector3[] moonPearls = { new Vector3(-.38f, -.43f, -.24f), new Vector3(.14f, -.59f, -.26f), new Vector3(.40f, -.29f, -.13f) };
@@ -575,8 +578,38 @@ namespace Pockle.Runtime
 
         private void ApplyVariantMaterial()
         {
+            // Restore every finish-specific property before applying another preset.
+            bool soft = variant == PipVariant.MintSoft;
+            SetFloat(bodyMaterial, "_Softness", soft ? 1f : 0f);
+            SetFloat(bodyMaterial, "_GlitterStrength", variant == PipVariant.GoldGlitter ? .9f : 0f);
+            SetFloat(bodyMaterial, "_GlitterDensity", 96f);
+            SetColor(bodyMaterial, "_GlitterColor", new Color(1f, .87f, .44f));
+            SetFloat(bodyMaterial, "_StudioStrength", !soft && studioReflection != null ? 1f : 0f);
+            SetFloat(bodyMaterial, "_ZWrite", soft ? 1f : 0f);
+            SetFloat(bodyMaterial, "_PearlSheen", 0f);
+            bodyMaterial.renderQueue = soft ? 2001 : 3000;
             bool moon = variant == PipVariant.MoonJelly;
-            if (moon)
+            if (variant == PipVariant.GoldGlitter)
+            {
+                bodyMaterial.color = new Color(.96f, .72f, .19f, .58f);
+                SetColor(bodyMaterial, "_TopColor", new Color(1f, .94f, .58f));
+                SetColor(bodyMaterial, "_BottomColor", new Color(.82f, .46f, .08f));
+                SetColor(bodyMaterial, "_RimColor", new Color(1f, .93f, .65f));
+                SetFloat(bodyMaterial, "_Glossiness", .88f);
+                SetFloat(bodyMaterial, "_ReflectionStrength", .85f);
+                cheekMaterial.color = new Color(1f, .35f, .30f, .55f);
+            }
+            else if (soft)
+            {
+                bodyMaterial.color = new Color(.52f, .82f, .64f, 1f);
+                SetColor(bodyMaterial, "_TopColor", new Color(.75f, .93f, .77f));
+                SetColor(bodyMaterial, "_BottomColor", new Color(.35f, .64f, .48f));
+                SetColor(bodyMaterial, "_RimColor", new Color(.67f, .89f, .73f));
+                SetFloat(bodyMaterial, "_Glossiness", .15f);
+                SetFloat(bodyMaterial, "_ReflectionStrength", .16f);
+                cheekMaterial.color = new Color(.95f, .43f, .57f, .48f);
+            }
+            else if (moon)
             {
                 bodyMaterial.color = new Color(.46f, .78f, .96f, .54f);
                 SetColor(bodyMaterial, "_TopColor", new Color(.77f, .92f, 1f, 1f));
@@ -607,6 +640,7 @@ namespace Pockle.Runtime
                 cheekMaterial.color = characterAsset != null ? new Color(1f, .30f, .26f, .62f) : new Color(1f, .42f, .40f, 1f);
             }
             if (visualRoot != null) visualRoot.name = "Pip · " + PipVariants.Label(variant);
+            bodyMaterial.name = "Pip · " + PipVariants.Label(variant) + " shell";
         }
 
         private static void SetColor(Material material, string property, Color color)

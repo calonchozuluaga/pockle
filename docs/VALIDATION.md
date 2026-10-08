@@ -22,6 +22,8 @@ The lift/pinch/shake update additionally passed **114,325 manipulation assertion
 
 The branded Jelly Garden opening additionally passed **6,031 reveal assertions** against its production sequence: closed start, opening order, finite bounds, emergence, settled handoff, replay, delayed/invalid elapsed time, and a shorter calm sequence without rise/scale/bounce. The existing suites passed again. The printed carton geometry, texture import, modified reveal shader, fade sorting, and controller handoff still require [the local box checklist](BOX_REVEAL.md).
 
+The finish-variety update adds Gold Glitter and Mint Soft without changing the portable interaction code. Source/GUID checks passed (26 files / 58 GUIDs). The two PlayMode variant tests now cycle all four finishes and check material/depth restoration, filling cleanup, pose preservation, and saved startup. They remain unrun in cloud. Follow [the finish comparison checklist](PIP_VARIANTS.md) for opaque face occlusion, restored transparency/reflections, glitter aliasing/seams, and Android shader performance.
+
 ## Local editor
 
 1. Use the installed Unity 6.6 editor version `6000.6.5f1`, matching the project pin, and open the project using the README steps. Confirm platform requirements before native phone builds.
