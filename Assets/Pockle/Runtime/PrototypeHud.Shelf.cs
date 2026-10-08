@@ -60,6 +60,7 @@ namespace Pockle.Runtime
                 toyButtons[i].interactable = saved.Counts[i] > 0;
                 toyCounts[i].text = saved.Counts[i] > 1 ? saved.Counts[i] + " in your collection" : saved.Counts[i] == 1 ? "Yours to play with" : "Yet to discover";
             }
+            RefreshHome(); RefreshProfile(); RefreshSettings();
             bool currentDay = saved.Day == CollectionSession.Today;
             walkProgress.text = saved.Steps.ToString("N0") + " / 1,000 steps";
             walkFill.fillAmount = saved.Steps / 1000f;

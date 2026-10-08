@@ -23,6 +23,7 @@ internal static class Program
             RevealChecks.Run();
             CollectionChecks.Run();
             WeightChecks.Run();
+            MenuChecks.Run();
             return 0;
         }
         catch (Exception exception)

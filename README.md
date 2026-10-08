@@ -1,6 +1,6 @@
 # Pockle
 
-Unity source for Pockle's **collection UI beta**. Peach Jelly, Moon Jelly, Gold Glitter, and Mint Soft each have their own toy on the shelf. Tap one to play; direct squish, lift, two-finger stretch, plate rotation, and phone-motion jiggle remain. The prototype control card is gone; comfort preferences live in Settings.
+Unity source for Pockle's **Home hub UI beta**. Home opens with Collection, Rewards, and Friends tiles; the bottom tabs are Home, Boxes, and You. Peach Jelly, Moon Jelly, Gold Glitter, and Mint Soft each have their own toy on the shelf. Tap one to play; direct squish, lift, two-finger stretch, plate rotation, and phone-motion jiggle remain. The prototype control card is gone. Full Settings includes volume and comfort preferences; You has an editable local name, Pip avatar, favorite toy, and collection summary. See [the Home hub guide](docs/HOME_UI.md).
 
 Lifting now has [weight and gravity](docs/WEIGHT_AND_GRAVITY.md): Pip sags below the grip and follows the hand with slight lag. Release makes him fall, squash, jiggle, and settle, with stronger feedback for higher drops. Motion calm keeps direct control without those extra movements.
 
@@ -49,11 +49,13 @@ If Git reports that local changes would be overwritten, inspect the listed files
 | Jiggle | Gently move or shake the phone with **Motion · full**; `J` previews a pulse in the editor |
 | Rebound | Release |
 | Inspect | Drag the exposed plate sideways to rotate Pip and the plate |
-| Pick a toy | Tap its entry on the **Shelf** |
-| Browse / earn boxes | Tap **Boxes** from the shelf |
+| Pick a toy | **Home → Collection**, then tap its shelf entry |
+| Browse / earn boxes | Tap **Boxes**, or **Home → Rewards** |
 | Start over | `R` in the editor only |
 | Reveal | Open an earned box; `Space` previews in the editor |
-| Comfort | Open **Settings** for sound, haptics, and motion |
+| Comfort | Open **Settings** for mute/volume, haptics, motion, and walking status |
+| Profile | Tap **You** to set a local name, avatar, and owned favorite |
+| Friends | **Home → Friends** previews the Discover/Friends routes; online services are pending |
 
 The starting surface selects the gesture: Pip squishes/lifts; the plate turns. A second touch that starts on Pip can join a toy gesture; it cannot change a plate gesture into a pinch. Removing either finger hands control to the survivor with a rebased drag. Rotation stops immediately on release. Small rim marks show the plate turning. The Touch/Rotate mode buttons have been removed.
 
@@ -70,7 +72,7 @@ dotnet run --project tools/Pockle.SourceChecks/Pockle.SourceChecks.csproj -- .
 
 In the prepared cloud workspace, the verified SDK is at `/workspace/.tools/dotnet/dotnet`. These commands test the actual engine-independent collection/reward and deformation/spring code and check C# syntax and asset GUID references. **They do not compile Unity APIs, render shaders, import the Unity scene, or validate touch on a device.**
 
-In Unity, open **Window → General → Test Runner → EditMode** and run `Pockle.Core.EditMode.Tests`. Under **PlayMode**, run `Pockle.Variants.PlayMode.Tests` to check variants and the collection UI: separate shelf portraits, toy selection, unavailable checkout, daily unlocks, and repeated claim protection. Both Unity suites remain unrun in cloud. Then follow [the manual device checklist](docs/VALIDATION.md).
+In Unity, open **Window → General → Test Runner → EditMode** and run `Pockle.Core.EditMode.Tests`. Under **PlayMode**, run `Pockle.Variants.PlayMode.Tests` to check variants and the collection UI: separate shelf portraits, toy selection, menu/play Back and scroll, profile persistence, sound volume, unavailable checkout, daily unlocks, and repeated claim protection. Both Unity suites remain unrun in cloud. Then follow [the manual device checklist](docs/VALIDATION.md).
 
 ## Source map
 
@@ -88,6 +90,6 @@ The authored body has 3,158 vertices and 5,814 triangles; the original baseline 
 
 ## Current collecting direction
 
-The owner has simplified the collecting loop to daily collection-themed boxes unlocked by walking, plus optional paid boxes (proposed price points: $0.99 standard and $2.99 special). Packaging identifies the collection while color/variant remains a surprise. The [local collection beta](docs/COLLECTION_UI.md) implements the shelf and walking reward; location checks, server authority, and real purchases remain to be connected. Lights-off glow and squeeze-reactive internal stars/pearls are also planned after the current viewer test.
+The owner has simplified the collecting loop to daily collection-themed boxes unlocked by walking, plus optional paid boxes (proposed price points: $0.99 standard and $2.99 special). Packaging identifies the collection while color/variant remains a surprise. The [local collection beta](docs/COLLECTION_UI.md) implements Home, shelf, local profile, Settings, and walking reward; location checks, server authority, and real purchases remain to be connected. Lights-off glow and squeeze-reactive internal stars/pearls are also planned after the current viewer test.
 
 See the [collection box studies](docs/packaging/README.md) for three editable concept dielines and the [viewer direction](docs/INTERACTION_DIRECTION.md) for the planned two-finger, glow, and reactive-filling experiments.

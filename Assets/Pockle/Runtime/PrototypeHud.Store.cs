@@ -31,7 +31,7 @@ namespace Pockle.Runtime
                 new Vector2(0, -76), new Vector2(250, 32));
             var track = Rect("Step progress", walkCard); TopCentered(track, new Vector2(0, -119), new Vector2(250, 8)); Surface(track, Quiet);
             var fill = Rect("Earned steps", track); Stretch(fill); walkFill = fill.gameObject.AddComponent<Image>();
-            walkFill.color = Peach; walkFill.type = Image.Type.Filled; walkFill.fillMethod = Image.FillMethod.Horizontal;
+            walkFill.sprite = roundedSprite; walkFill.color = Peach; walkFill.type = Image.Type.Filled; walkFill.fillMethod = Image.FillMethod.Horizontal;
             walkFill.fillOrigin = 0; walkFill.raycastTarget = false; walkFill.fillAmount = 0;
             walkStatus = Label("Enable walking to get started.", walkCard, 11, MutedInk, FontStyle.Normal,
                 TextAnchor.MiddleCenter, new Vector2(0, -140), new Vector2(280, 42));
@@ -76,12 +76,17 @@ namespace Pockle.Runtime
             checkout.Begin(offer);
         }
 
-        private float LayoutStore(float width)
+        private void LayoutWalkingCard(float width)
         {
             TopCentered(walkCard, Vector2.zero, new Vector2(Mathf.Min(width, 480), 284));
             float buttonWidth = Mathf.Min(width - 24, 290);
             walkButtons.sizeDelta = new Vector2(buttonWidth, 48);
             for (int i = 0; i < 2; i++) LeftLabel((RectTransform)walkButtons.GetChild(i), new Vector2(i * (buttonWidth + 10) / 2, 0), new Vector2((buttonWidth - 10) / 2, 48));
+        }
+
+        private float LayoutStore(float width)
+        {
+            LayoutWalkingCard(width);
             TopCentered(shopHeading, new Vector2(0, -308), new Vector2(width, 30));
             const float gap = 14;
             int columns = width >= 620 ? 3 : width >= 280 ? 2 : 1;

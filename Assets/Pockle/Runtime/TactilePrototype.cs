@@ -56,6 +56,7 @@ namespace Pockle.Runtime
         private float contactX;
         private float contactZ;
         private bool soundEnabled;
+        private float soundVolume;
         private bool hapticsEnabled;
         private bool reducedMotion;
         private bool revealing;
@@ -68,6 +69,8 @@ namespace Pockle.Runtime
             Application.targetFrameRate = 60;
             QualitySettings.vSyncCount = 0;
             soundEnabled = PlayerPrefs.GetInt(PrefPrefix + "sound", 1) == 1;
+            float savedVolume = PlayerPrefs.GetFloat(PrefPrefix + "soundVolume", 1);
+            soundVolume = float.IsNaN(savedVolume) || float.IsInfinity(savedVolume) ? 1 : Mathf.Clamp01(savedVolume);
             hapticsEnabled = PlayerPrefs.GetInt(PrefPrefix + "haptics", 0) == 1;
             reducedMotion = PlayerPrefs.GetInt(PrefPrefix + "reducedMotion", 0) == 1;
 
@@ -85,7 +88,8 @@ namespace Pockle.Runtime
             collection = gameObject.AddComponent<CollectionSession>();
             collection.Initialize();
             hud = new GameObject("Pockle game UI").AddComponent<PrototypeHud>();
-            hud.Initialize(SetSound, SetHaptics, SetReducedMotion);
+            hud.Initialize(SetSound, SetHaptics, SetReducedMotion, SetVolume);
+            hud.SetSoundVolume(soundVolume);
             hud.SetSettings(soundEnabled, hapticsEnabled, reducedMotion);
             hud.SetVariant(toy.Variant);
             hud.VariantChanged += SetVariant;
@@ -97,7 +101,7 @@ namespace Pockle.Runtime
             audioSource = gameObject.AddComponent<AudioSource>();
             audioSource.playOnAwake = false;
             audioSource.spatialBlend = 0f;
-            audioSource.volume = 0.28f;
+            audioSource.volume = 0.28f * soundVolume;
             pressClip = CreateTone("Soft jelly press", 160f, 0.09f, false);
             releaseClip = CreateTone("Jelly rebound", 390f, 0.18f, false);
             landingClip = CreateTone("Pip soft landing", 95f, .24f, false);
@@ -119,7 +123,7 @@ namespace Pockle.Runtime
             var screenSize = new Vector2(Screen.width, Screen.height);
             if (screenSize != interactionScreenSize && gesture.IsActive) ReleasePointer(false);
             interactionScreenSize = screenSize;
-            if (Input.GetKeyDown(KeyCode.Escape)) hud.GoBack();
+            if (Input.GetKeyDown(KeyCode.Escape) && !hud.GoBack() && Application.platform == RuntimePlatform.Android) Application.Quit();
             if (revealing) UpdateReveal(Time.unscaledDeltaTime);
             else if (!hud.StoreVisible) ReadInput();
 
@@ -346,6 +350,12 @@ namespace Pockle.Runtime
             discoveryBox = boxRoot.gameObject.AddComponent<MysteryBox>();
             discoveryBox.Initialize();
             boxRoot.gameObject.SetActive(false);
+        }
+
+        private void SetVolume(float value)
+        {
+            soundVolume = Mathf.Clamp01(value);
+            if (audioSource != null) audioSource.volume = .28f * soundVolume;
         }
 
         private void SetSound(bool enabled)

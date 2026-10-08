@@ -1,11 +1,12 @@
 using System;
+using Pockle.Core;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Pockle.Runtime
 {
-    /// <summary>Collection-first UI. Toy manipulation stays on the toy and its plate.</summary>
+    /// <summary>Home hub and collection UI. Toy manipulation stays on the toy and its plate.</summary>
     public sealed partial class PrototypeHud : MonoBehaviour
     {
         private static readonly Color Ink = new Color(.29f, .21f, .29f);
@@ -13,17 +14,19 @@ namespace Pockle.Runtime
         private static readonly Color Peach = new Color(.965f, .72f, .61f);
         private static readonly Color Quiet = new Color(.947f, .922f, .89f);
         private static readonly Color Paper = new Color(1f, .99f, .971f);
-        private enum Page { Shelf, Boxes, Play }
-        private Page page = Page.Shelf;
-        public bool StoreVisible => page != Page.Play || modal != null && modal.gameObject.activeSelf;
+        private readonly MenuNavigation navigator = new MenuNavigation();
+        private AppPage page => navigator.Current;
+        public AppPage CurrentPage => page;
+        private GuestProfile profile;
+        public bool StoreVisible => page != AppPage.Play || modal != null && modal.gameObject.activeSelf;
         public event Action<PipVariant> VariantChanged;
         public event Action<bool> StoreVisibilityChanged;
         public event Action DailyBoxRequested;
         private RectTransform safeRoot, browsing, content, navigation, modal, modalSafeRoot, modalCard;
-        private Text heading, subtitle, playHint, modalTitle, modalText;
+        private Text brand, heading, subtitle, playHint, modalTitle, modalText;
         private Button settingsButton, backButton;
-        private Image shelfTab, boxesTab;
-        private RectTransform shelfRoot, boxesRoot;
+        private Image homeTab, boxesTab, youTab;
+        private RectTransform shelfRoot, boxesRoot, homeRoot, rewardsRoot, socialRoot, profileRoot, settingsRoot;
         private Font font;
         private Sprite roundedSprite;
         private Texture2D roundedTexture;
@@ -43,15 +46,15 @@ namespace Pockle.Runtime
         private readonly RectTransform[] toyPlanks = new RectTransform[4];
         private readonly RectTransform[] toyPictures = new RectTransform[4];
         private readonly RectTransform[] toyNames = new RectTransform[4];
-        private RectTransform preferenceRow;
         private Text soundLabel, hapticsLabel, motionLabel;
         private bool initialized;
 
-        public void Initialize(Action<bool> sound, Action<bool> haptics, Action<bool> reducedMotion)
+        public void Initialize(Action<bool> sound, Action<bool> haptics, Action<bool> reducedMotion, Action<float> volume = null)
         {
             if (initialized) return;
             initialized = true;
-            soundCallback = sound; hapticsCallback = haptics; motionCallback = reducedMotion;
+            profile = new GuestProfile();
+            soundCallback = sound; hapticsCallback = haptics; motionCallback = reducedMotion; volumeCallback = volume;
             font = LoadFont(); roundedSprite = CreateRoundedSprite();
             var root = new GameObject("Pockle · game UI", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
             root.transform.SetParent(transform, false);
@@ -59,12 +62,13 @@ namespace Pockle.Runtime
             scaler = root.GetComponent<CanvasScaler>(); scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(390, 844); scaler.matchWidthOrHeight = 1;
             safeRoot = Rect("Safe area", root.transform); Stretch(safeRoot);
-            var brand = Label("Pockle", safeRoot, 32, Ink, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, new Vector2(180, 44));
+            brand = Label("Pockle", safeRoot, 32, Ink, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, new Vector2(180, 44));
             LeftLabel(brand.rectTransform, new Vector2(22, -14), new Vector2(180, 44));
             settingsButton = CreateButton("Settings", safeRoot, Vector2.zero, new Vector2(88, 44), Quiet, ShowSettings, out _, 12);
-            backButton = CreateButton("Shelf", safeRoot, new Vector2(22, 66), new Vector2(74, 44), Paper, () => SetPage(Page.Shelf), out _, 12);
+            backButton = CreateButton("Shelf", safeRoot, new Vector2(22, 14), new Vector2(74, 44), Paper, () => GoBack(), out _, 12);
             heading = Label("Your little collection", safeRoot, 23, Ink, FontStyle.Bold, TextAnchor.MiddleCenter,
                 new Vector2(0, -70), new Vector2(340, 34));
+            heading.resizeTextForBestFit = true; heading.resizeTextMinSize = 12; heading.resizeTextMaxSize = 23;
             subtitle = Label("Four Pips. Four little personalities.", safeRoot, 12, MutedInk, FontStyle.Normal,
                 TextAnchor.MiddleCenter, new Vector2(0, -108), new Vector2(350, 26));
             browsing = Rect("Collection browsing", safeRoot);
@@ -74,10 +78,14 @@ namespace Pockle.Runtime
             content = Rect("Collection content", viewport); content.anchorMin = new Vector2(0, 1); content.anchorMax = new Vector2(1, 1); content.pivot = new Vector2(.5f, 1);
             scroll.content = content; scroll.viewport = viewport;
             shelfRoot = Rect("Your shelf", content); boxesRoot = Rect("Walking and shop", content);
-            BuildShelf(); BuildStore();
+            homeRoot = Rect("Home hub", content); rewardsRoot = Rect("Rewards", content);
+            socialRoot = Rect("Friends and discovery", content); profileRoot = Rect("Local profile", content);
+            settingsRoot = Rect("Settings page", content);
+            BuildShelf(); BuildStore(); BuildHome(); BuildRewards(); BuildProfile(); BuildSocial(); BuildSettings();
             navigation = Rect("Navigation", safeRoot); Surface(navigation, Paper);
-            CreateButton("Shelf", navigation, Vector2.zero, new Vector2(150, 48), Peach, () => SetPage(Page.Shelf), out shelfTab);
-            CreateButton("Boxes", navigation, new Vector2(158, 0), new Vector2(150, 48), Quiet, () => SetPage(Page.Boxes), out boxesTab);
+            CreateButton("Home", navigation, Vector2.zero, new Vector2(100, 48), Peach, () => SelectTab(AppPage.Home), out homeTab);
+            CreateButton("Boxes", navigation, Vector2.zero, new Vector2(100, 48), Quiet, () => SelectTab(AppPage.Boxes), out boxesTab);
+            CreateButton("You", navigation, Vector2.zero, new Vector2(100, 48), Quiet, () => SelectTab(AppPage.Profile), out youTab);
             playHint = Label("Make yourself at home.", safeRoot, 12, MutedInk, FontStyle.Normal, TextAnchor.MiddleCenter,
                 Vector2.zero, new Vector2(350, 40));
             playHint.rectTransform.anchorMin = playHint.rectTransform.anchorMax = new Vector2(.5f, 0);
@@ -88,7 +96,7 @@ namespace Pockle.Runtime
                 ownedEventSystem = new GameObject("Pockle event system", typeof(EventSystem), typeof(StandaloneInputModule));
                 ownedEventSystem.transform.SetParent(transform, false);
             }
-            ApplySafeArea(); Canvas.ForceUpdateCanvases(); AdaptLayout(); SetPage(Page.Shelf);
+            ApplySafeArea(); Canvas.ForceUpdateCanvases(); AdaptLayout(); ApplyPage(true);
         }
 
         public void Bind(CollectionSession collection)
@@ -101,34 +109,83 @@ namespace Pockle.Runtime
         public void SetVariant(PipVariant choice)
         {
             variant = PipVariants.FromSaved((int)choice);
-            if (page == Page.Play) { heading.text = "Pip"; subtitle.text = PipVariants.Label(variant); }
+            if (page == AppPage.Play) { heading.text = "Pip"; subtitle.text = PipVariants.Label(variant); }
         }
         public void ShowToy(PipVariant choice)
         {
             choice = PipVariants.FromSaved((int)choice);
             if (session != null && session.Progress.Save.Counts[(int)choice] <= 0) return;
-            SetVariant(choice); SetPage(Page.Play); VariantChanged?.Invoke(choice);
+            SetVariant(choice);
+            if (page != AppPage.Shelf && page != AppPage.Play) Navigate(AppPage.Shelf);
+            Navigate(AppPage.Play); VariantChanged?.Invoke(choice);
         }
-        public void GoBack()
+        public bool GoBack()
         {
-            if (modal.gameObject.activeSelf) CloseModal();
-            else if (backButton.interactable) SetPage(Page.Shelf);
-        }
-        private void SetPage(Page next)
-        {
+            if (modal.gameObject.activeSelf) { CloseModal(); return true; }
+            if (!backButton.interactable) return true;
+            var selected = EventSystem.current != null ? EventSystem.current.currentSelectedGameObject : null;
+            var editing = selected != null ? selected.GetComponent<InputField>() : null;
+            if (TouchScreenKeyboard.visible || editing != null && editing.isFocused)
+            {
+                CommitProfile();
+                if (editing != null) editing.DeactivateInputField();
+                if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);
+                return true;
+            }
             bool blocked = StoreVisible;
-            page = next;
-            browsing.gameObject.SetActive(page != Page.Play);
-            navigation.gameObject.SetActive(page != Page.Play);
-            playHint.gameObject.SetActive(page == Page.Play);
-            backButton.gameObject.SetActive(page == Page.Play);
-            shelfRoot.gameObject.SetActive(page == Page.Shelf); boxesRoot.gameObject.SetActive(page == Page.Boxes);
-            heading.text = page == Page.Shelf ? "Your little collection" : page == Page.Boxes ? "A little surprise awaits" : "Pip";
-            subtitle.text = page == Page.Shelf ? "Tap a toy. Make yourself at home." : page == Page.Boxes ? "Walk for a box, or pick one to buy." : PipVariants.Label(variant);
-            shelfTab.color = page == Page.Shelf ? Peach : Quiet; boxesTab.color = page == Page.Boxes ? Peach : Quiet;
-            content.anchoredPosition = Vector2.zero;
+            SavePage();
+            if (!navigator.Back()) return false;
+            ApplyPage(blocked); return true;
+        }
+        private void Navigate(AppPage next)
+        {
+            bool blocked = StoreVisible; SavePage();
+            if (navigator.Push(next)) ApplyPage(blocked);
+        }
+        private void SelectTab(AppPage next)
+        {
+            if (page == next) return;
+            bool blocked = StoreVisible; SavePage(); navigator.SelectTab(next); ApplyPage(blocked);
+        }
+        private void SavePage()
+        {
+            navigator.SaveScroll(content.anchoredPosition.y);
+            browsing.GetComponent<ScrollRect>().StopMovement();
+            CommitProfile(); PlayerPrefs.Save();
+            if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);
+        }
+        private void ApplyPage(bool wasBlocked)
+        {
+            browsing.gameObject.SetActive(page != AppPage.Play);
+            navigation.gameObject.SetActive(page != AppPage.Play);
+            playHint.gameObject.SetActive(page == AppPage.Play);
+            brand.gameObject.SetActive(page == AppPage.Home);
+            backButton.gameObject.SetActive(page != AppPage.Home);
+            backButton.GetComponentInChildren<Text>().text = page == AppPage.Play ? "Shelf" : "Back";
+            shelfRoot.gameObject.SetActive(page == AppPage.Shelf); boxesRoot.gameObject.SetActive(page == AppPage.Boxes);
+            homeRoot.gameObject.SetActive(page == AppPage.Home); rewardsRoot.gameObject.SetActive(page == AppPage.Rewards);
+            socialRoot.gameObject.SetActive(page == AppPage.Social); profileRoot.gameObject.SetActive(page == AppPage.Profile);
+            settingsRoot.gameObject.SetActive(page == AppPage.Settings);
+            // The daily card is shared, so both destinations always show the same claim state.
+            walkCard.SetParent(page == AppPage.Rewards ? rewardsRoot : boxesRoot, false);
+            switch (page)
+            {
+                case AppPage.Home: heading.text = "Hey, " + profile.Name; subtitle.text = "A little wonder, waiting for you."; break;
+                case AppPage.Shelf: heading.text = "Your little collection"; subtitle.text = "Tap a toy. Make yourself at home."; break;
+                case AppPage.Rewards: heading.text = "Little walks, little rewards"; subtitle.text = "One daily Jelly Garden box. 1,000 steps."; break;
+                case AppPage.Social: heading.text = "More shelves to explore"; subtitle.text = "Discover collectors and connect with friends."; break;
+                case AppPage.Profile: heading.text = "Your corner of Pockle"; subtitle.text = "Make your local profile feel like you."; break;
+                case AppPage.Settings: heading.text = "Make it yours"; subtitle.text = "Small comforts for your little companion."; break;
+                case AppPage.Boxes: heading.text = "A little surprise awaits"; subtitle.text = "Walk for a box, or pick one to buy."; break;
+                default: heading.text = "Pip"; subtitle.text = PipVariants.Label(variant); break;
+            }
+            homeTab.color = page == AppPage.Home || page == AppPage.Shelf || page == AppPage.Rewards || page == AppPage.Social ? Peach : Quiet;
+            boxesTab.color = page == AppPage.Boxes ? Peach : Quiet;
+            youTab.color = page == AppPage.Profile || page == AppPage.Settings ? Peach : Quiet;
+            RefreshProfile(); RefreshSettings();
+            content.anchoredPosition = new Vector2(0, navigator.Scroll);
             if (lastLayoutSize.x > 0) AdaptLayout();
-            if (blocked != StoreVisible) StoreVisibilityChanged?.Invoke(StoreVisible);
+            if (wasBlocked != StoreVisible) StoreVisibilityChanged?.Invoke(StoreVisible);
         }
         public void SetSettings(bool sound, bool haptics, bool reducedMotion)
         {
@@ -136,6 +193,7 @@ namespace Pockle.Runtime
             if (soundLabel != null) soundLabel.text = sound ? "Sound on" : "Sound off";
             if (hapticsLabel != null) hapticsLabel.text = haptics ? "Haptics on" : "Haptics off";
             if (motionLabel != null) motionLabel.text = reducedMotion ? "Motion calm" : "Motion full";
+            RefreshSettings();
         }
         private void BuildModal()
         {
@@ -146,34 +204,24 @@ namespace Pockle.Runtime
             modalCard.pivot = new Vector2(.5f, .5f); Surface(modalCard, Paper);
             modalTitle = Label("", modalCard, 22, Ink, FontStyle.Bold, TextAnchor.MiddleCenter, new Vector2(0, -24), new Vector2(290, 36));
             modalText = Label("", modalCard, 14, MutedInk, FontStyle.Normal, TextAnchor.UpperCenter, new Vector2(0, -76), new Vector2(290, 132));
-            preferenceRow = Rect("Comfort preferences", modalCard); TopCentered(preferenceRow, new Vector2(0, -204), new Vector2(284, 50));
-            var b = CreateButton("", preferenceRow, Vector2.zero, new Vector2(88, 48), Quiet,
-                () => { SetSettings(!soundEnabled, hapticsEnabled, reducedMotionEnabled); soundCallback?.Invoke(soundEnabled); }, out _, 11);
-            soundLabel = b.GetComponentInChildren<Text>();
-            b = CreateButton("", preferenceRow, new Vector2(98, 0), new Vector2(88, 48), Quiet,
-                () => { SetSettings(soundEnabled, !hapticsEnabled, reducedMotionEnabled); hapticsCallback?.Invoke(hapticsEnabled); }, out _, 11);
-            hapticsLabel = b.GetComponentInChildren<Text>();
-            b = CreateButton("", preferenceRow, new Vector2(196, 0), new Vector2(88, 48), Quiet,
-                () => { SetSettings(soundEnabled, hapticsEnabled, !reducedMotionEnabled); motionCallback?.Invoke(reducedMotionEnabled); }, out _, 11);
-            motionLabel = b.GetComponentInChildren<Text>();
-            b = CreateButton("Done", modalCard, Vector2.zero, new Vector2(140, 48), Peach, CloseModal, out _);
+            var b = CreateButton("Done", modalCard, Vector2.zero, new Vector2(140, 48), Peach, CloseModal, out _);
             var close = b.GetComponent<RectTransform>(); close.anchorMin = close.anchorMax = new Vector2(.5f, 0);
             close.pivot = new Vector2(.5f, 0); close.anchoredPosition = new Vector2(0, 22);
             modal.gameObject.SetActive(false);
         }
-        private void ShowSettings() { ShowDialog("Make it yours", "Set the sound, haptics, and motion to whatever feels comfortable.", true); }
-        private void ShowDialog(string title, string message, bool settings = false)
+        private void ShowSettings() { Navigate(AppPage.Settings); }
+        private void ShowDialog(string title, string message)
         {
             bool wasBlocked = StoreVisible;
-            modalTitle.text = title; modalText.text = message; preferenceRow.gameObject.SetActive(settings);
-            LayoutModal(settings);
+            modalTitle.text = title; modalText.text = message;
+            LayoutModal();
             modal.gameObject.SetActive(true); modal.SetAsLastSibling();
             if (!wasBlocked) StoreVisibilityChanged?.Invoke(true);
         }
         private void CloseModal()
         {
             modal.gameObject.SetActive(false);
-            if (page == Page.Play) StoreVisibilityChanged?.Invoke(false);
+            if (page == AppPage.Play) StoreVisibilityChanged?.Invoke(false);
         }
         private void Update()
         {
@@ -198,34 +246,41 @@ namespace Pockle.Runtime
             var settings = settingsButton.GetComponent<RectTransform>(); settings.anchorMin = settings.anchorMax = new Vector2(1, 1);
             settings.pivot = new Vector2(1, 1); settings.anchoredPosition = new Vector2(-22, -14);
             float width = Mathf.Max(1, Mathf.Min(820, size.x - 32));
-            heading.rectTransform.sizeDelta = new Vector2(Mathf.Max(1, width - (page == Page.Play ? 152 : 0)), 34);
+            heading.rectTransform.sizeDelta = new Vector2(width, 34);
             subtitle.rectTransform.sizeDelta = new Vector2(width, 26);
             float viewportHeight = Mathf.Max(30, size.y - 230);
             TopCentered(browsing, new Vector2(0, -148), new Vector2(width, viewportHeight));
             navigation.anchorMin = navigation.anchorMax = new Vector2(.5f, 0); navigation.pivot = new Vector2(.5f, 0);
             navigation.anchoredPosition = new Vector2(0, 20); navigation.sizeDelta = new Vector2(Mathf.Min(340, width), 52);
             float navWidth = navigation.sizeDelta.x;
-            LeftLabel(shelfTab.rectTransform, Vector2.zero, new Vector2((navWidth - 8) / 2, 52));
-            LeftLabel(boxesTab.rectTransform, new Vector2((navWidth + 8) / 2, 0), new Vector2((navWidth - 8) / 2, 52));
+            float tabWidth = (navWidth - 16) / 3;
+            LeftLabel(homeTab.rectTransform, Vector2.zero, new Vector2(tabWidth, 52));
+            LeftLabel(boxesTab.rectTransform, new Vector2(tabWidth + 8, 0), new Vector2(tabWidth, 52));
+            LeftLabel(youTab.rectTransform, new Vector2((tabWidth + 8) * 2, 0), new Vector2(tabWidth, 52));
             playHint.rectTransform.sizeDelta = new Vector2(width, 40);
-            float height = page == Page.Boxes ? LayoutStore(width) : LayoutShelf(width);
+            float height;
+            switch (page)
+            {
+                case AppPage.Home: height = LayoutHome(width); break;
+                case AppPage.Boxes: height = LayoutStore(width); break;
+                case AppPage.Rewards: height = LayoutRewards(width); break;
+                case AppPage.Profile: height = LayoutProfile(width); break;
+                case AppPage.Settings: height = LayoutSettings(width); break;
+                case AppPage.Social: height = LayoutSocial(width); break;
+                default: height = LayoutShelf(width); break;
+            }
             content.sizeDelta = new Vector2(0, Mathf.Max(viewportHeight, height));
             content.anchoredPosition = new Vector2(0, Mathf.Clamp(content.anchoredPosition.y, 0, Mathf.Max(0, height - viewportHeight)));
-            if (modal.gameObject.activeSelf) LayoutModal(preferenceRow.gameObject.activeSelf);
+            if (modal.gameObject.activeSelf) LayoutModal();
         }
 
-        private void LayoutModal(bool settings)
+        private void LayoutModal()
         {
             float width = Mathf.Max(1, Mathf.Min(340, lastLayoutSize.x - 24));
-            float height = Mathf.Min(settings ? 340 : 280, lastLayoutSize.y - 16);
+            float height = Mathf.Min(280, lastLayoutSize.y - 16);
             modalCard.sizeDelta = new Vector2(width, height);
             modalTitle.rectTransform.sizeDelta = new Vector2(width - 24, 36);
-            modalText.rectTransform.sizeDelta = new Vector2(width - 32, settings ? Mathf.Max(44, height - 240) : Mathf.Max(44, height - 150));
-            preferenceRow.anchoredPosition = new Vector2(0, -height + 136);
-            float rowWidth = Mathf.Min(284, width - 24);
-            preferenceRow.sizeDelta = new Vector2(rowWidth, 48);
-            for (int i = 0; i < 3; i++)
-                LeftLabel((RectTransform)preferenceRow.GetChild(i), new Vector2(i * (rowWidth + 10) / 3, 0), new Vector2((rowWidth - 20) / 3, 48));
+            modalText.rectTransform.sizeDelta = new Vector2(width - 32, Mathf.Max(44, height - 150));
         }
         private static void LeftLabel(RectTransform rect, Vector2 position, Vector2 size)
         {
@@ -279,6 +334,7 @@ namespace Pockle.Runtime
             text.horizontalOverflow = HorizontalWrapMode.Wrap;
             text.verticalOverflow = VerticalWrapMode.Truncate;
             text.raycastTarget = false;
+            text.supportRichText = false;
             return text;
         }
 
@@ -349,8 +405,13 @@ namespace Pockle.Runtime
                 100f, 0, SpriteMeshType.FullRect, new Vector4(16f, 16f, 16f, 16f));
         }
 
+        private void OnApplicationPause(bool paused)
+        { if (paused) { CommitProfile(); PlayerPrefs.Save(); } }
+        private void OnApplicationFocus(bool focused)
+        { if (!focused) { CommitProfile(); PlayerPrefs.Save(); } }
         private void OnDestroy()
         {
+            CommitProfile();
             if (session != null) session.Changed -= RefreshCollection;
             foreach (var preview in previews) if (preview != null) { preview.Release(); Destroy(preview); }
             if (roundedSprite != null) Destroy(roundedSprite);

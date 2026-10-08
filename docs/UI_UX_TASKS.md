@@ -12,9 +12,10 @@ The collecting loop remains **walk → earn a collection box → reveal a toy �
 | Collection | Separate shelf entries and local duplicate counts implemented; the beta gifts all four variants for testing. Layout and art remain a first UI pass. |
 | Boxes | Collection art, proposed prices, provisional contents/odds, and branded Jelly Garden opening implemented. |
 | Walking | Local 1,000-step daily box and Android hardware counter implemented. Full background tracking and authoritative validation are pending. |
-| Settings | Sound, haptics, and full/calm motion persist. A complete settings screen is pending. |
+| Home and navigation | First Home hub with Collection/Rewards/Friends tiles and Home/Boxes/You tabs implemented. Back history and per-page scroll preserved; phone review pending. |
+| Settings | Full local screen with mute/volume, haptics, motion, walking access/status, help, and About implemented. Device review pending. |
 | Purchases | Catalog and unavailable-checkout messaging implemented. No charge or paid inventory grant is possible yet. |
-| Accounts and social | No account, cloud save, profile, friends, or visited-shelf service implemented. |
+| Profile and social | Editable local display name, Pip avatar, owned favorite, and collection summary implemented. Discover/Friends entry screens have explicit unavailable states. Accounts, cloud save, public publishing, and live shelf services remain pending. |
 | Achievements | No badges, milestone rewards, or lifetime validated stats implemented. |
 
 ## Confirmed direction
@@ -24,6 +25,19 @@ The owner selected a **separate home hub**, with **Collection**, **Rewards**, an
 The owner also selected **public profiles and shelf discovery**. Browsing a published profile or shelf does not require becoming friends first. Friends remains a distinct relationship with requests and a friends list; discovery is the route to finding people and visiting their published shelves. Public-profile, visibility, and shelf services still need implementation.
 
 Proposed navigation within those confirmed choices: bottom tabs **Home**, **Boxes**, and **You**. Home's tiles open the collection shelf, rewards inbox/milestones, and a social screen with **Discover** and **Friends** sections. You contains the profile, badge cabinet, and Settings. Visited shelves identify their owner and provide a clear return route. Exact tab labels and layout remain design work under UX-001; the hub and public-discovery choices are settled.
+
+## Implementation progress — Home hub 01
+
+| Task | Implemented in this pass | Remaining acceptance work |
+| --- | --- | --- |
+| UX-001 | Home/Boxes/You tabs, contextual Back, shelf/play/settings history, session scroll restoration | Device input review; visited shelves depend on services |
+| UX-003 | Personal greeting, three hub tiles, actual walking/collection state, ready daily-box action | Visual/art polish and phone review |
+| UX-006 | Full local Settings, persistent volume/mute and existing comfort choices, activity status/help/About | Permission/device review; account controls after accounts exist |
+| UX-009 | Home remaining steps and ready/claimed states, UTC reset countdown, shared Rewards/Boxes claim card | Confirm production day policy; dependable tracking remains UX-010 |
+| UX-015 | Saved local name/avatar, owned favorite/play action, actual collection summary | Device/keyboard review, badges and public visibility after services exist |
+| UX-017/020 | Discover/Friends sections and clear empty states | Real requests, discovery, publishing and shelf visits remain unimplemented |
+
+See [Home hub review](HOME_UI.md) for routes, limitations, and phone checks. Checkboxes below stay open until each task's full acceptance criteria pass. No achievement or social service is represented as completed by this UI pass.
 
 ## First: mobile game foundation
 
@@ -70,8 +84,8 @@ Proposed navigation within those confirmed choices: bottom tabs **Home**, **Boxe
 
 ## Suggested work order
 
-1. Review the stronger toy feel when the owner is back; it does not block UI planning.
-2. Apply the confirmed hub direction to the screen map, then finish Home, shelf, Settings, and first-session onboarding (UX-001–008).
+1. Review **Home hub 01** and the stronger toy feel when the owner is back; both are available for the next phone build.
+2. Refine the implemented Home/Settings/profile navigation after that review, then polish the shelf and first-session onboarding (UX-001–008, UX-015).
 3. Finish reward delivery and dependable walking, alongside the backend/billing decisions (UX-009–014).
 4. Add profile and cloud save before friends and visited shelves (UX-015–020).
 5. Define badge rules early; implement grants once validated events exist (UX-021–024).

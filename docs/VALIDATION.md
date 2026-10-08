@@ -1,3 +1,11 @@
+## Home hub 01: navigation, Settings, and local profile
+
+Executed the portable suite, including **35 new menu/profile assertions** covering Home cold start, contextual Back, Settings → Play → Shelf, independent scroll restoration, tab history, repeated taps, reward/social routes, invalid scroll, Unicode name normalization, and emoji-safe truncation. All existing spring, authored geometry, pointer, manipulation, reveal, collection, and weight checks still pass.
+
+C# source checks pass for **44 files across default, Editor, and Android symbol profiles**, with **86 asset GUIDs** and no syntax/metadata failures. `git diff --check` passes. The daily progress fill now has a sprite, which is required for UGUI's Filled image path rather than an unfilled plain quad.
+
+The Unity PlayMode UI suite now starts from Home and adds profile persistence/restart, inventory preservation on social/profile routes, volume/mute preservation, play/settings Back, shelf scroll, and root exit behavior. These tests are **authored but unrun**: the cloud does not have a licensed Unity editor. No Unity API compilation, UI rendering, native keyboard/Back dispatch, or Android APK validation is claimed for this pass. Follow [Home hub device review](HOME_UI.md). About shows **Home hub 01** to distinguish the rebuilt UI from older installed APKs.
+
 ## More expressive toy tuning
 
 Executed the portable suite: 114,326 manipulation checks and 152,809 weight/sag checks, including stronger deliberate shakes, bounded sustained motion, high/low impact scaling, visible rebound followed by settling, and maximum sag clearance on the authored mesh. Source checks passed for 37 C# files across default, Editor, and Android profiles, with 79 asset GUIDs and no failures. Unity/device validation of the new sound and exaggerated feel is pending the owner's return; calm mode retains its existing behavior. The previous APK build failure succeeded on the owner's second attempt; no unverified Gradle fix was applied.
