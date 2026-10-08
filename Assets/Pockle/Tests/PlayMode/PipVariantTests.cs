@@ -43,7 +43,7 @@ namespace Pockle.Tests
             root = new GameObject("Variant test Pip");
             JellyToy toy = root.AddComponent<JellyToy>();
             Assert.That(toy.UsesAuthoredMesh, Is.True);
-            toy.SetDeformation(.18f, .24f, .1f, -.1f, .1f, -.1f);
+            toy.SetDeformation(.18f, .24f, .1f, -.1f, .1f, -.1f, .25f, new Vector3(1f, 1f, .1f));
             Mesh mesh = toy.BodyRenderer.GetComponent<MeshFilter>().sharedMesh;
             Material material = toy.BodyRenderer.sharedMaterial;
             var ray = new Ray(new Vector3(0f, -.4f, -3f), Vector3.forward);

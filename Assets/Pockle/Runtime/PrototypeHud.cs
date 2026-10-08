@@ -104,7 +104,7 @@ namespace Pockle.Runtime
             Surface(card, Paper);
             status = Label("Make yourself at home.", card, 15, Ink, FontStyle.Bold,
                 TextAnchor.MiddleCenter, new Vector2(0f, -12f), new Vector2(328f, 25f));
-            guide = Label("Touch Pip to squish. Drag the plate to turn.", card, 11, MutedInk,
+            guide = Label("Drag Pip to lift. Two fingers to squish/stretch.", card, 11, MutedInk,
                 FontStyle.Normal, TextAnchor.MiddleCenter, new Vector2(0f, -37f), new Vector2(328f, 18f));
             guide.resizeTextForBestFit = true;
             guide.resizeTextMinSize = 9;

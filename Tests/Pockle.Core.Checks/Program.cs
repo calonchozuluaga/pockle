@@ -19,6 +19,7 @@ internal static class Program
             Console.WriteLine("PASS: " + checks + " core assertions (spring stability, timing, and jelly geometry).");
             AuthoredMeshChecks.Run();
             InteractionChecks.Run();
+            ManipulationChecks.Run();
             return 0;
         }
         catch (Exception exception)

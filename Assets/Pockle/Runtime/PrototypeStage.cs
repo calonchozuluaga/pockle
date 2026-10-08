@@ -8,7 +8,7 @@ namespace Pockle.Runtime
     {
         public static readonly Color Background = new Color(0.973f, 0.957f, 0.933f, 1f);
 
-        public static void Create(out Camera camera, out Transform toyMount, out Transform turntable, out Collider plateCollider)
+        public static void Create(out Camera camera, out Transform toyMount, out Transform turntable, out Collider plateCollider, out Transform contactShadow)
         {
             var stage = new GameObject("Pockle · presentation stage");
             var resources = stage.AddComponent<StageResources>();
@@ -58,7 +58,7 @@ namespace Pockle.Runtime
                 new Vector3(2.68f, 0.035f, 2.68f), baseMaterial);
             MakeDisk(turntable, "Pedestal · ceramic top", new Vector3(0f, 0.1f, 0f),
                 new Vector3(2.46f, 0.05f, 2.46f), topMaterial);
-            MakeDisk(turntable, "Pip · contact shadow", new Vector3(0f, 0.151f, 0.04f),
+            contactShadow = MakeDisk(turntable, "Pip · contact shadow", new Vector3(0f, 0.151f, 0.04f),
                 new Vector3(1.36f, 0.0005f, 1.22f), shadowMaterial);
             // A thin cylinder covers the exposed plate. CapsuleCollider cannot
             // represent this nonuniform scale: its radius would swallow the toy.

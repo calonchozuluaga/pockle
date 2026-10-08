@@ -2,7 +2,7 @@
 
 Unity source for the **first tactile prototype**: Pip, a Blender-authored jelly companion, with Peach Jelly and Moon Jelly variants for comparing color, filling, and finish. The project follows the [development brief](docs/PRODUCT_BRIEF.md).
 
-Pip can be pressed, dragged upward to stretch, released to rebound, and rotated. A short procedural box reveal introduces the toy. Reset restores its pose. Sound, optional device vibration, reduced motion, and the selected variant persist locally.
+Pip can be pressed, lifted off the plate with an upward drag, stretched or compressed with two fingers, and rotated by dragging the plate. Phone movement drives a gentle jelly jiggle. A short procedural box reveal introduces the toy. Reset restores its pose. Sound, optional device vibration, reduced motion, and the selected variant persist locally.
 
 Tap **Store** to browse three closed collection boxes with prices underneath. **Back to Pip** returns to the same viewer. This is a store preview with proposed USD prices; it does not process payments or unlock toys. See [the store preview](docs/STORE_PREVIEW.md).
 
@@ -42,7 +42,9 @@ If Git reports that local changes would be overwritten, inspect the listed files
 | Action | Touch / mouse |
 | --- | --- |
 | Squish | Press and hold Pip directly |
-| Stretch / lean | Keep holding; drag up / sideways |
+| Lift / lean | Hold Pip; drag up / sideways |
+| Stretch / compress | Start both touches on Pip; pull apart / pinch together |
+| Jiggle | Gently move or shake the phone with **Motion · full**; `J` previews a pulse in the editor |
 | Rebound | Release |
 | Inspect | Drag the exposed plate sideways to rotate Pip and the plate |
 | Compare variants | Tap **Peach** or **Moon** |
@@ -51,9 +53,9 @@ If Git reports that local changes would be overwritten, inspect the listed files
 | Reveal | **Reveal again**, or `Space` in the editor |
 | Comfort | Toggle **Sound**, **Haptics**, and **Motion** |
 
-The starting surface selects the gesture: Pip squishes; the plate turns. A gesture stays assigned until release, even when dragged across the other surface. Rotation stops immediately on release. Small rim marks show the plate turning. The Touch/Rotate mode buttons have been removed.
+The starting surface selects the gesture: Pip squishes/lifts; the plate turns. A second touch that starts on Pip can join a toy gesture; it cannot change a plate gesture into a pinch. Removing either finger hands control to the survivor with a rebased drag. Rotation stops immediately on release. Small rim marks show the plate turning. The Touch/Rotate mode buttons have been removed.
 
-Reduced motion preserves direct manipulation but removes the spring rebound and large reveal movements. Sound is local synthesized placeholder audio. Haptics default off and use Unity's basic device vibration; finely tuned native haptics are future work. UI touches do not manipulate the toy, and only one finger controls an active gesture.
+Reduced motion preserves direct lifting and two-finger deformation but removes spring rebound, phone-motion jiggle, and large reveal movements. Sound is local synthesized placeholder audio. Haptics default off and use Unity's basic device vibration; finely tuned native haptics are future work. UI touches do not manipulate the toy. See [the new interaction checklist](docs/MANIPULATION_TEST.md) for Android testing.
 
 ## Checks available without Unity
 
