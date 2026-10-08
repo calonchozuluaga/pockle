@@ -28,7 +28,7 @@ foreach (string meta in Directory.GetFiles(assets, "*.meta", SearchOption.AllDir
     string guid = Regex.Match(File.ReadAllText(meta), @"(?m)^guid: ([a-f0-9]{32})$").Groups[1].Value;
     if (guid.Length == 0 || !guids.Add(guid)) { Console.Error.WriteLine("Invalid or duplicate GUID: " + meta); failures++; }
 }
-foreach (string file in Directory.GetFiles(assets, "*", SearchOption.AllDirectories).Where(p => p.EndsWith(".unity") || p.EndsWith(".mat")))
+foreach (string file in Directory.GetFiles(assets, "*", SearchOption.AllDirectories).Where(p => p.EndsWith(".unity") || p.EndsWith(".mat") || p.EndsWith(".pocklemesh.meta")))
 {
     foreach (Match match in Regex.Matches(File.ReadAllText(file), @"guid: ([a-f0-9]{32})"))
         if (!guids.Contains(match.Groups[1].Value)) { Console.Error.WriteLine("Unresolved asset GUID in " + file); failures++; }

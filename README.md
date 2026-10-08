@@ -1,10 +1,10 @@
 # Pockle
 
-Unity source for the **first tactile prototype**: one original peach jelly companion, Pip. The project follows the [development brief](docs/PRODUCT_BRIEF.md).
+Unity source for the **first tactile prototype**: one original peach jelly companion, Pip, now with a Blender-authored first art pass based on the approved design. The project follows the [development brief](docs/PRODUCT_BRIEF.md).
 
 Pip can be pressed, dragged upward to stretch, released to rebound, and rotated. A short procedural box reveal introduces the toy. Reset restores its pose. Sound, optional device vibration, and reduced motion are configurable; those settings persist locally.
 
-The character mesh, materials, audio tones, reveal box, and UI are **procedural placeholders**, not final production art or sound. There are no collection rewards, purchases, accounts, trades, walking mechanics, or AI calls in this milestone.
+The authored character is an initial art pass; its Unity material and Android appearance still need validation. The original procedural character remains available for comparison. Audio tones, reveal box, and UI are prototype content. There are no collection rewards, purchases, accounts, trades, walking mechanics, or AI calls during gameplay.
 
 For the next art step, follow the [character generation pipeline](docs/CHARACTER_PIPELINE.md): establish Pip's design reference, build a reusable Blender mesh, and validate its Unity deformation and materials on Android before expanding the roster.
 
@@ -16,6 +16,12 @@ For the next art step, follow the [character generation pipeline](docs/CHARACTER
 4. Choose **Pockle → Prepare prototype settings**, then **Pockle → Open tactile prototype**, and press **Play**. The scene generates its character, presentation, and UI at runtime. Use the Built-in pipeline and **Input Manager (Old)** input handling. Both are the supplied defaults.
 
 Try Game view sizes for a tall phone, a small phone, a portrait tablet, and a landscape tablet. Menu controls use safe-area layout. See [device validation](docs/VALIDATION.md) before calling the milestone playable on a phone.
+
+## Try Pip's authored art
+
+After the first APK finishes, preserve it as your baseline and pull the latest repository changes. Unity imports `Pip.pocklemesh` into a native readable mesh and character asset automatically; Blender is not required to open or build the game. Choose **Pockle → Character → Use authored Pip**, then restart Play. The Console should report **Pip: authored mesh · 1228 vertices**. Choose **Use procedural baseline** before the next Play session to compare.
+
+The editable source is `ArtSource/Pip/Pip.blend`; the standard interchange export is `Assets/Pockle/Art/Pip/Pip.fbx`. The runtime uses the custom source's imported native mesh and face anchors so coordinates, scale, UV seams, and deformation remain explicit. The FBX includes the complete character for further art work. The [Blender model study](docs/concepts/pip-model-study-01.png) shows geometry and an offline material; it does not establish the Unity shader's appearance.
 
 ## Controls
 
@@ -47,12 +53,13 @@ In Unity, open **Window → General → Test Runner → EditMode** and run `Pock
 ## Source map
 
 - `Assets/Pockle/Runtime/Core/`: portable analytic springs and volume-conscious deformation.
-- `Assets/Pockle/Runtime/JellyToy.cs`: procedural mesh, deformed facial features, and materials.
+- `Assets/Pockle/Runtime/JellyToy.cs`: authored or procedural mesh, deformed facial features, and materials.
+- `Assets/Pockle/Runtime/PipCharacterAsset.cs`: native mesh and authored feature anchors.
 - `Assets/Pockle/Runtime/TactilePrototype.cs`: pointer capture, reveal, feedback, and preferences.
 - `Assets/Pockle/Runtime/PrototypeHud.cs` / `PrototypeStage.cs`: responsive controls and presentation.
 - `Assets/Pockle/Shaders/`: simple Built-in candy, accent, and reveal shaders.
-- `Assets/Pockle/Resources/`: small material references that retain runtime-resolved shaders in player builds.
+- `Assets/Pockle/Resources/`: imported character source and material references that retain shaders in player builds.
 - `Assets/Pockle/Scenes/PockleTactile.unity`: committed scene entry point.
 - `Assets/Pockle/Editor/`: setup menu and build checks.
 
-The body has 1,073 vertices and 2,016 triangles. Features reuse small meshes and materials. Deformation uses reused vertex/normal buffers and skips idle updates; actual CPU cost, draw calls, frame rate, and transparency artifacts still need profiling on a midrange phone. See [architecture notes](docs/ARCHITECTURE.md).
+The authored body has 1,228 vertices and 2,240 triangles; the original baseline has 1,073 vertices and 2,016 triangles. Features reuse small meshes and materials. Deformation uses reused vertex/normal buffers, welds UV-seam normals, and skips idle updates; actual CPU cost, draw calls, frame rate, and transparency artifacts still need profiling on a midrange phone. See [architecture notes](docs/ARCHITECTURE.md).

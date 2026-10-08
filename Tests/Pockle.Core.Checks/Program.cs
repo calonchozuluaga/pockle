@@ -17,6 +17,7 @@ internal static class Program
             CheckContactAndVolume();
             CheckFiniteDeformation();
             Console.WriteLine("PASS: " + checks + " core assertions (spring stability, timing, and jelly geometry).");
+            AuthoredMeshChecks.Run();
             return 0;
         }
         catch (Exception exception)

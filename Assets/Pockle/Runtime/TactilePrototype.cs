@@ -47,7 +47,7 @@ namespace Pockle.Runtime
             reducedMotion = PlayerPrefs.GetInt(PrefPrefix + "reducedMotion", 0) == 1;
 
             PrototypeStage.Create(out viewCamera, out toyMount);
-            GameObject toyObject = new GameObject("Pip - procedural jelly placeholder");
+            GameObject toyObject = new GameObject("Pip - tactile companion");
             toyObject.transform.SetParent(toyMount, false);
             toy = toyObject.AddComponent<JellyToy>();
             toy.Initialize();

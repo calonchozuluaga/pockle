@@ -1,7 +1,7 @@
 {
   "name": "Pockle.Core.EditMode.Tests",
   "rootNamespace": "Pockle.Tests",
-  "references": ["Pockle.Core"],
+  "references": ["Pockle.Core", "Pockle.Runtime"],
   "includePlatforms": ["Editor"],
   "excludePlatforms": [],
   "allowUnsafeCode": false,

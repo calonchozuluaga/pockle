@@ -4,7 +4,7 @@ Start with **Pip**, the original peach jelly companion, while the first Android 
 
 ## 1. Design reference
 
-Generate and review a front/side/back concept sheet with consistent proportions. Keep Pip recognizable: a rounded, slightly bottom-heavy seed body, two small unequal crown lobes, plum oval eyes, a tiny smile, peach-coral jelly, and restrained suspended pearls/flecks. The current procedural mesh is a placeholder; the concept sheet is visual guidance, not a game-ready mesh.
+The owner approved concept 01. Keep Pip recognizable: a rounded, slightly bottom-heavy seed body, two small unequal crown lobes, plum oval eyes, a tiny smile, peach-coral jelly, and restrained suspended pearls/flecks. The concept sheet establishes visual direction; the first Blender art pass now supplies editable geometry.
 
 Keep a neutral rest pose and a simple silhouette. Small screens must preserve the face and identity. Establish the final material and expression before producing additional characters. All character designs should be original.
 
@@ -20,9 +20,31 @@ Use evenly distributed deformation-friendly topology with outward normals. Check
 
 ## 3. Unity integration
 
-Import into Unity 6000.6.5f1 using the Built-in Render Pipeline. The current `JellyToy` constructs geometry in code; importing an FBX does **not** automatically replace it. Add a renderer path that caches the imported mesh's rest vertices and facial anchors, uses the portable deformation function, updates normals without recurring managed allocations, and retains its shaders in player builds. Keep the procedural renderer available as a comparison until the imported asset passes validation.
+Import into Unity 6000.6.5f1 using the Built-in Render Pipeline. `PipCharacterImporter` converts `Resources/Pip/Pip.pocklemesh` into a native readable mesh and `PipCharacterAsset`. This source contains Blender-authored positions, triangles, UVs, logical normal-weld groups, face/crown anchors, suspended accents, and color defaults, in explicit Unity coordinates. `JellyToy` copies that native mesh into its owned deformation buffers and uses the same interaction core as the baseline. `Pip.fbx` is also supplied for standard 3D interchange; it does not drive the renderer directly.
+
+Choose **Pockle → Character → Use authored Pip**, then restart Play. Use **Use procedural baseline** to compare the first prototype. The authored model is the default on a fresh installation; missing or unreadable authored assets fall back to the baseline with a Console warning. Inspect the Console after first import: it should report **Pip: authored mesh · 1228 vertices**. Player builds use the native imported asset and need neither Blender nor runtime JSON parsing.
 
 Use a material instance for Pip's peach jelly. Tune translucency and internal accents on Android, including release builds. Prefer shared base geometry and material variants to unique high-cost meshes for every collectible. Character generation happens during asset production; touching a toy should remain entirely local.
+
+## Rebuild the current art pass
+
+The editable scene is `ArtSource/Pip/Pip.blend` (Blender 4.3.2). To regenerate it, the FBX, and the character source from the deterministic recipe:
+
+```sh
+blender --background --factory-startup --python-exit-code 1 --python tools/build-pip.py
+```
+
+Add `-- --render` to produce the optional offline model study (CPU Cycles, 256 samples, four threads). The recipe creates a complete character with a closed, flat-based body, UVs, plum eyes, smile, asymmetric crown lobes, pearls, and flecks. Standard FBX round-trip validation runs with:
+
+```sh
+blender --background --factory-startup --python-exit-code 1 --python tools/check-pip-fbx.py
+```
+
+Manual edits to `.blend` do not automatically update the `.pocklemesh` source. Keep topology/anchor edits in the recipe for repeatable export, or extend its exporter before adopting manually sculpted changes. Keep the `.blend` outside `Assets` so Unity does not require a local Blender installation to import the project.
+
+![Pip Blender model study](concepts/pip-model-study-01.png)
+
+This is an offline Blender material study of the actual geometry. Unity uses its lightweight jelly shader; parity with the approved concept and mobile transparency still require visual testing. Crown lobes remain separate meshes in this first art pass.
 
 ## 4. Acceptance gate
 

@@ -5,9 +5,8 @@ using UnityEngine;
 namespace Pockle.Runtime
 {
     /// <summary>
-    /// Original procedural prototype character, Pip. This is a visual placeholder for
-    /// the project's commissioned character art, not a reproduction of licensed art.
-    /// All geometry and materials are generated locally; no external assets are used.
+    /// Pip's authored art pass, with the procedural baseline retained for comparison.
+    /// Blender supplies the rest mesh and anchors; interaction remains entirely local.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class JellyToy : MonoBehaviour
@@ -22,6 +21,8 @@ namespace Pockle.Runtime
         private readonly Vector3[] mouthRest = new Vector3[13];
         private readonly Vector3[] mouthPositions = new Vector3[13];
         private Mesh bodyMesh;
+        private PipCharacterAsset characterAsset;
+        private Vector3[] groupNormals;
         private Mesh accentMesh;
         private Mesh sparkleMesh;
         private Vector3[] restVertices;
@@ -47,6 +48,7 @@ namespace Pockle.Runtime
 
         public Transform VisualRoot { get { Initialize(); return visualRoot; } }
         public Renderer BodyRenderer { get; private set; }
+        public bool UsesAuthoredMesh { get { return characterAsset != null; } }
 
         private sealed class SurfaceAccent
         {
@@ -67,7 +69,18 @@ namespace Pockle.Runtime
             if (initialized) return;
             initialized = true;
 
-            visualRoot = new GameObject("Pip • procedural jelly").transform;
+            if (PlayerPrefs.GetInt(PipCharacterAsset.BaselinePreference, 0) == 0)
+            {
+                characterAsset = Resources.Load<PipCharacterAsset>(PipCharacterAsset.ResourcePath);
+                if (characterAsset != null && (characterAsset.BodyMesh == null || !characterAsset.BodyMesh.isReadable))
+                {
+                    Debug.LogWarning("Pip's authored mesh is unreadable; using procedural baseline.", this);
+                    characterAsset = null;
+                }
+                if (characterAsset == null)
+                    Debug.LogWarning("Authored Pip is unavailable. Check the .pocklemesh import errors; using the baseline.", this);
+            }
+            visualRoot = new GameObject(characterAsset != null ? "Pip • authored peach jelly" : "Pip • procedural baseline").transform;
             visualRoot.SetParent(transform, false);
             bodyMaterial = CreateBodyMaterial();
             eyeMaterial = CreateFlatMaterial("Pip eyes", new Color(0.20f, 0.12f, 0.17f, 1f));
@@ -76,8 +89,9 @@ namespace Pockle.Runtime
             bubbleMaterial = CreateCandyMaterial("Suspended pearls", new Color(1f, 0.88f, 0.69f, 0.36f), 0.62f);
             sparkleMaterial = CreateFlatMaterial("Apricot flecks", new Color(1f, 0.82f, 0.57f, 1f));
 
-            BuildBody();
-            accentMesh = BuildSphere("Shared accent sphere", 12, 10);
+            if (characterAsset != null) BuildAuthoredBody();
+            else BuildBody();
+            accentMesh = BuildSphere("Shared accent sphere", characterAsset != null ? 16 : 12, characterAsset != null ? 12 : 10);
             sparkleMesh = BuildSparkle();
             BuildFace();
             BuildCrown();
@@ -89,6 +103,8 @@ namespace Pockle.Runtime
             touchCollider.radius = 1.03f;
             touchCollider.isTrigger = false;
             ResetToy();
+            if (Application.isEditor || Debug.isDebugBuild)
+                Debug.Log("Pip: " + (characterAsset != null ? "authored mesh" : "procedural baseline") + " · " + bodyMesh.vertexCount + " vertices", this);
         }
 
         public void ResetToy()
@@ -226,6 +242,27 @@ namespace Pockle.Runtime
             bodyMesh.triangles = triangles;
             bodyMesh.uv = uv;
             ownedMeshes.Add(bodyMesh);
+            AttachBodyRenderer();
+        }
+
+        private void BuildAuthoredBody()
+        {
+            bodyMesh = Instantiate(characterAsset.BodyMesh);
+            bodyMesh.name = "Pip authored deformation instance";
+            bodyMesh.MarkDynamic();
+            ownedMeshes.Add(bodyMesh);
+            restVertices = bodyMesh.vertices;
+            vertices = new Vector3[restVertices.Length];
+            normals = new Vector3[restVertices.Length];
+            triangles = bodyMesh.triangles;
+            int groupCount = 0;
+            foreach (int group in characterAsset.NormalGroups) groupCount = Mathf.Max(groupCount, group + 1);
+            groupNormals = new Vector3[groupCount];
+            AttachBodyRenderer();
+        }
+
+        private void AttachBodyRenderer()
+        {
             var body = new GameObject("Jelly body", typeof(MeshFilter), typeof(MeshRenderer));
             body.transform.SetParent(visualRoot, false);
             body.GetComponent<MeshFilter>().sharedMesh = bodyMesh;
@@ -247,6 +284,17 @@ namespace Pockle.Runtime
                 normals[a] += normal;
                 normals[b] += normal;
                 normals[c] += normal;
+            }
+            if (characterAsset != null)
+            {
+                System.Array.Clear(groupNormals, 0, groupNormals.Length);
+                for (int i = 0; i < normals.Length; i++) groupNormals[characterAsset.NormalGroups[i]] += normals[i];
+                for (int i = 0; i < normals.Length; i++)
+                {
+                    Vector3 normal = groupNormals[characterAsset.NormalGroups[i]];
+                    normals[i] = normal.sqrMagnitude > 0.000001f ? normal.normalized : Vector3.up;
+                }
+                return;
             }
             int row = LongitudeSegments + 1;
             for (int latitude = 0; latitude <= LatitudeSegments; latitude++)
@@ -276,13 +324,14 @@ namespace Pockle.Runtime
             // Face is deliberately on negative Z, facing the default portrait camera.
             for (int side = -1; side <= 1; side += 2)
             {
-                Vector3 eye = SurfacePoint(side * 0.225f, 0.18f, 0.034f);
+                int index = side < 0 ? 0 : 1;
+                Vector3 eye = characterAsset != null ? characterAsset.Eyes[index] : SurfacePoint(side * 0.225f, 0.18f, 0.034f);
                 AddAccent(side < 0 ? "Left soft eye" : "Right soft eye", eye,
-                    new Vector3(0.068f, 0.103f, 0.041f), eyeMaterial, accentMesh, true);
-                AddAccent("Cream eye glint", eye + new Vector3(-0.016f, 0.034f, -0.037f),
-                    new Vector3(0.018f, 0.021f, 0.011f), highlightMaterial, accentMesh, true);
-                AddAccent("Warm cheek", SurfacePoint(side * 0.355f, 0.022f, 0.022f),
-                    new Vector3(0.075f, 0.038f, 0.024f), cheekMaterial, accentMesh, true);
+                    characterAsset != null ? new Vector3(0.092f, 0.127f, 0.042f) : new Vector3(0.068f, 0.103f, 0.041f), eyeMaterial, accentMesh, true);
+                AddAccent("Cream eye glint", characterAsset != null ? characterAsset.EyeGlints[index] : eye + new Vector3(-0.016f, 0.034f, -0.037f),
+                    characterAsset != null ? new Vector3(0.020f, 0.024f, 0.012f) : new Vector3(0.018f, 0.021f, 0.011f), highlightMaterial, accentMesh, true);
+                AddAccent("Warm cheek", characterAsset != null ? characterAsset.Cheeks[index] : SurfacePoint(side * 0.355f, 0.022f, 0.022f),
+                    characterAsset != null ? new Vector3(0.104f, 0.048f, 0.026f) : new Vector3(0.075f, 0.038f, 0.024f), cheekMaterial, accentMesh, true);
             }
             var smile = new GameObject("Tiny smile", typeof(LineRenderer));
             smile.transform.SetParent(visualRoot, false);
@@ -299,7 +348,7 @@ namespace Pockle.Runtime
             {
                 float x = (i / (float)(mouthRest.Length - 1) - 0.5f) * 0.16f;
                 float y = -0.04f + 0.055f * Mathf.Pow(x / 0.08f, 2f);
-                mouthRest[i] = SurfacePoint(x, y, 0.052f);
+                mouthRest[i] = characterAsset != null ? characterAsset.Mouth[i] : SurfacePoint(x, y, 0.052f);
             }
         }
 
@@ -324,6 +373,12 @@ namespace Pockle.Runtime
 
         private void BuildCrown()
         {
+            if (characterAsset != null)
+            {
+                for (int i = 0; i < characterAsset.Crowns.Length; i++)
+                    AddAccent("Authored crown lobe " + i, characterAsset.Crowns[i], characterAsset.CrownScales[i], bodyMaterial, accentMesh, true);
+                return;
+            }
             // Two small rounded seed lobes give the placeholder an original silhouette.
             AddAccent("Left crown lobe", new Vector3(-0.14f, 0.91f, 0.015f),
                 new Vector3(0.20f, 0.235f, 0.17f), bodyMaterial, accentMesh, true);
@@ -339,9 +394,10 @@ namespace Pockle.Runtime
                 new Vector3(-0.45f, -0.28f, -0.17f), new Vector3(0.36f, -0.40f, -0.12f),
                 new Vector3(0.10f, 0.65f, -0.11f), new Vector3(-0.13f, -0.58f, -0.22f)
             };
+            if (characterAsset != null) pearls = characterAsset.Pearls;
             for (int i = 0; i < pearls.Length; i++)
             {
-                float radius = 0.026f + (i % 3) * 0.011f;
+                float radius = (characterAsset != null ? 0.032f : 0.026f) + (i % 3) * 0.011f;
                 AddAccent("Suspended pearl " + (i + 1), pearls[i], Vector3.one * radius,
                     bubbleMaterial, accentMesh, false);
             }
@@ -351,6 +407,7 @@ namespace Pockle.Runtime
                 new Vector3(-0.54f, 0.03f, -0.27f), new Vector3(0.48f, -0.15f, -0.32f),
                 new Vector3(-0.25f, -0.47f, -0.34f), new Vector3(0.19f, -0.62f, -0.21f)
             };
+            if (characterAsset != null) flecks = characterAsset.Flecks;
             for (int i = 0; i < flecks.Length; i++)
             {
                 var fleck = AddAccent("Apricot fleck " + (i + 1), flecks[i],
@@ -377,6 +434,13 @@ namespace Pockle.Runtime
 
         private Material CreateBodyMaterial()
         {
+            if (characterAsset != null)
+            {
+                Material authored = CreateCandyMaterial("Pip peach jelly art pass", characterAsset.BodyColor, 0.66f);
+                if (authored.HasProperty("_BottomColor")) authored.SetColor("_BottomColor", characterAsset.BottomColor);
+                if (authored.HasProperty("_TopColor")) authored.SetColor("_TopColor", characterAsset.TopColor);
+                return authored;
+            }
             var material = CreateCandyMaterial("Pip coral jelly", new Color(1f, 0.43f, 0.34f, 0.91f), 0.48f);
             if (material.HasProperty("_BottomColor")) material.SetColor("_BottomColor", new Color(0.89f, 0.20f, 0.23f, 1f));
             if (material.HasProperty("_TopColor")) material.SetColor("_TopColor", new Color(1f, 0.71f, 0.49f, 1f));
