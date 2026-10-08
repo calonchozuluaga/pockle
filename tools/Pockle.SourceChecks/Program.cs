@@ -8,13 +8,21 @@ string assets = Path.Combine(root, "Assets");
 if (!Directory.Exists(assets)) throw new DirectoryNotFoundException("Pass the Unity project root.");
 int failures = 0;
 string[] sources = Directory.GetFiles(assets, "*.cs", SearchOption.AllDirectories);
+var profiles = new[] {
+    new CSharpParseOptions(LanguageVersion.CSharp9),
+    new CSharpParseOptions(LanguageVersion.CSharp9, preprocessorSymbols: new[] { "UNITY_EDITOR", "UNITY_2022_2_OR_NEWER", "UNITY_INCLUDE_TESTS" }),
+    new CSharpParseOptions(LanguageVersion.CSharp9, preprocessorSymbols: new[] { "UNITY_ANDROID", "UNITY_2022_2_OR_NEWER", "UNITY_INCLUDE_TESTS" })
+};
 foreach (string file in sources)
 {
-    var tree = CSharpSyntaxTree.ParseText(File.ReadAllText(file), new CSharpParseOptions(LanguageVersion.CSharp9), file);
-    foreach (var diagnostic in tree.GetDiagnostics().Where(d => d.Severity == DiagnosticSeverity.Error))
+    foreach (var profile in profiles)
     {
-        Console.Error.WriteLine(diagnostic);
-        failures++;
+        var tree = CSharpSyntaxTree.ParseText(File.ReadAllText(file), profile, file);
+        foreach (var diagnostic in tree.GetDiagnostics().Where(d => d.Severity == DiagnosticSeverity.Error))
+        {
+            Console.Error.WriteLine(diagnostic);
+            failures++;
+        }
     }
 }
 var guids = new HashSet<string>();
@@ -34,6 +42,6 @@ foreach (string file in Directory.GetFiles(assets, "*", SearchOption.AllDirector
         if (!guids.Contains(match.Groups[1].Value)) { Console.Error.WriteLine("Unresolved asset GUID in " + file); failures++; }
 }
 using (JsonDocument.Parse(File.ReadAllText(Path.Combine(root, "Packages", "manifest.json")))) { }
-Console.WriteLine($"C# syntax checked: {sources.Length} files. Asset GUIDs checked: {guids.Count}. Failures: {failures}.");
+Console.WriteLine($"C# syntax checked: {sources.Length} files across {profiles.Length} symbol profiles (default, Editor, Android). Asset GUIDs checked: {guids.Count}. Failures: {failures}.");
 Console.WriteLine("This validates syntax and asset references, not Unity API compilation, shader rendering, scene import, or device behavior.");
 return failures == 0 ? 0 : 1;

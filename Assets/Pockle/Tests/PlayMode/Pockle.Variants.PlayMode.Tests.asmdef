@@ -1,7 +1,7 @@
 {
   "name": "Pockle.Variants.PlayMode.Tests",
   "rootNamespace": "Pockle.Tests",
-  "references": ["Pockle.Runtime", "Pockle.Core"],
+  "references": ["Pockle.Runtime", "Pockle.Core", "UnityEngine.UI"],
   "includePlatforms": [],
   "excludePlatforms": [],
   "allowUnsafeCode": false,

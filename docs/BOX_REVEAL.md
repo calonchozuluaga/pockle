@@ -1,3 +1,5 @@
+> Collection UI update: select a toy on **Shelf** to play. Comfort controls are in **Settings**. Open an earned daily box from **Boxes**; `Space` previews the opening in the editor. Former variant, Reset, and Reveal again buttons are gone. See [current UI tests](COLLECTION_UI.md).
+
 # Jelly Garden box opening
 
 The plain ribbon box has been replaced by a branded Jelly Garden mystery carton. It uses the squishy Pockle wordmark, collection name, mystery silhouette, and peach/rose pattern developed in the packaging studies.

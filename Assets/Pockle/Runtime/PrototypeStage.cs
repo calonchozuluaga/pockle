@@ -164,21 +164,17 @@ namespace Pockle.Runtime
             var landscape = (float)width / height > 1.15f;
             background.enabled = true;
             viewer.clearFlags = CameraClearFlags.Depth;
-            // Share the HUD's safe-area and orientation-specific design units.
-            // The portrait middle region leaves room for the FULL stretch, rather
-            // than just the resting silhouette. In landscape all controls are right.
+            // The play screen reserves only its identity header and a short gesture hint.
             var pixelsPerUnit = height / (landscape ? 390f : 844f);
-            var top = (landscape ? 104f : 112f) * pixelsPerUnit;
-            float portraitContentWidth = Mathf.Min(360f, safeArea.width / pixelsPerUnit - 24f) - 32f;
-            var bottom = (landscape ? 12f : 264f + (portraitContentWidth < 220f ? 52f : 0f)) * pixelsPerUnit;
+            var top = 144f * pixelsPerUnit;
+            var bottom = 72f * pixelsPerUnit;
             var viewportHeight = Mathf.Max(1f, safeArea.height - top - bottom);
-            var columnWidth = Mathf.Max(280f * pixelsPerUnit, safeArea.width * 0.35f);
-            var viewportWidth = landscape ? Mathf.Max(1f, safeArea.width - columnWidth) : safeArea.width;
+            var viewportWidth = safeArea.width;
             viewer.rect = new Rect(safeArea.xMin / width, (safeArea.yMin + bottom) / height,
                 viewportWidth / width, viewportHeight / height);
-            // All motion stays in a fixed 3.9-world-unit window. At maximum stretch
-            // Pip's crown reaches about y=3.5, with the pedestal at y=0.
-            viewer.orthographicSize = 1.95f;
+            // Reserve at least 3.9 world units vertically and 3 horizontally, so
+            // tall screens keep the full plate and stretched crown in view.
+            viewer.orthographicSize = Mathf.Max(1.95f, 1.5f * viewportHeight / viewportWidth);
             viewer.transform.LookAt(new Vector3(0f, 1.72f, 0f));
         }
     }

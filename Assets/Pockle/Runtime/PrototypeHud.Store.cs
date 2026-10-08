@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,140 +5,103 @@ namespace Pockle.Runtime
 {
     public sealed partial class PrototypeHud
     {
-        public event Action<bool> StoreVisibilityChanged;
-        public bool StoreVisible { get; private set; }
-
-        private RectTransform storeRoot;
-        private RectTransform storeSafeRoot;
-        private RectTransform storeBrand;
-        private RectTransform storeScrollRoot;
-        private RectTransform storeContent;
+        private RectTransform walkCard;
+        private Text walkProgress, walkStatus;
+        private Image walkFill;
+        private Button openDaily;
         private readonly RectTransform[] storeCards = new RectTransform[3];
         private readonly RectTransform[] storePictures = new RectTransform[3];
         private readonly RectTransform[] storeNames = new RectTransform[3];
         private readonly RectTransform[] storePrices = new RectTransform[3];
+        private readonly RectTransform[] storeBuy = new RectTransform[3];
+        private readonly RectTransform[] storeOdds = new RectTransform[3];
+        private RectTransform shopHeading;
+        private RectTransform catalogNote;
+        private RectTransform walkButtons;
+        private readonly IBoxCheckout checkout = new UnconfiguredBoxCheckout();
 
-        public void SetStoreVisible(bool visible)
+        private void BuildStore()
         {
-            if (storeRoot == null || StoreVisible == visible) return;
-            StoreVisible = visible;
-            storeRoot.gameObject.SetActive(visible);
-            // Keep the same viewer behind the store, including its variant and angle.
-            if (visible) storeRoot.SetAsLastSibling();
-            StoreVisibilityChanged?.Invoke(visible);
-        }
-
-        private void BuildStore(Transform parent)
-        {
-            storeRoot = Rect("Pockle store", parent);
-            Stretch(storeRoot);
-            var backdrop = storeRoot.gameObject.AddComponent<Image>();
-            backdrop.color = new Color(.972f, .956f, .928f);
-            backdrop.raycastTarget = true; // Background touches cannot reach the viewer.
-            storeSafeRoot = Rect("Store safe area", storeRoot);
-            Stretch(storeSafeRoot);
-
-            Image backBackground;
-            CreateButton("Back to Pip", storeSafeRoot, new Vector2(18f, 18f),
-                new Vector2(110f, 44f), Paper, () => SetStoreVisible(false), out backBackground, 12);
-            storeBrand = Label("Pockle", storeSafeRoot, 30, Ink, FontStyle.Bold,
-                TextAnchor.MiddleRight, Vector2.zero, new Vector2(180f, 44f)).rectTransform;
-            Label("Surprise boxes", storeSafeRoot, 24, Ink, FontStyle.Bold,
-                TextAnchor.MiddleCenter, new Vector2(0f, -80f), new Vector2(260f, 32f));
-            Label("Little boxes. Big surprises.", storeSafeRoot, 12, MutedInk, FontStyle.Normal,
-                TextAnchor.MiddleCenter, new Vector2(0f, -116f), new Vector2(260f, 22f));
-
-            storeScrollRoot = Rect("Box browsing", storeSafeRoot);
-            var scroll = storeScrollRoot.gameObject.AddComponent<ScrollRect>();
-            scroll.horizontal = false;
-            scroll.vertical = true;
-            scroll.movementType = ScrollRect.MovementType.Clamped;
-            scroll.inertia = true;
-            var viewport = Rect("Box viewport", storeScrollRoot);
-            Stretch(viewport);
-            viewport.gameObject.AddComponent<RectMask2D>();
-            // A transparent graphic provides a reliable drag target over gaps.
-            var scrollTarget = viewport.gameObject.AddComponent<Image>();
-            scrollTarget.color = Color.clear;
-            scrollTarget.raycastTarget = true;
-            storeContent = Rect("Closed collection boxes", viewport);
-            storeContent.anchorMin = new Vector2(0f, 1f);
-            storeContent.anchorMax = new Vector2(1f, 1f);
-            storeContent.pivot = new Vector2(.5f, 1f);
-            scroll.viewport = viewport;
-            scroll.content = storeContent;
-
-            // Sample the existing folded concept artwork as a shared UI atlas.
-            // UV rectangles omit the presentation's heading and captions.
-            Texture2D artwork = Resources.Load<Texture2D>("Store/CollectionBoxes");
-            if (artwork == null) Debug.LogWarning("Store box artwork is missing; showing mystery silhouettes.", this);
-            string[] names = { "Jelly Garden", "Midnight Glow", "Gold Confetti" };
-            string[] prices = { "$0.99", "$2.99", "$2.99" };
-            Rect[] crops = {
-                new Rect(.04f, .09f, .30f, .74f),
-                new Rect(.35f, .06f, .29f, .73f),
-                new Rect(.655f, .09f, .325f, .74f) };
-            for (int i = 0; i < storeCards.Length; i++)
+            walkCard = Rect("Daily walking box", boxesRoot); Surface(walkCard, Paper);
+            Label("YOUR DAILY BOX", walkCard, 10, MutedInk, FontStyle.Bold, TextAnchor.MiddleCenter,
+                new Vector2(0, -16), new Vector2(250, 20));
+            Label("A little walk. A little wonder.", walkCard, 18, Ink, FontStyle.Bold, TextAnchor.MiddleCenter,
+                new Vector2(0, -40), new Vector2(290, 28));
+            walkProgress = Label("0 / 1,000 steps", walkCard, 24, Ink, FontStyle.Bold, TextAnchor.MiddleCenter,
+                new Vector2(0, -76), new Vector2(250, 32));
+            var track = Rect("Step progress", walkCard); TopCentered(track, new Vector2(0, -119), new Vector2(250, 8)); Surface(track, Quiet);
+            var fill = Rect("Earned steps", track); Stretch(fill); walkFill = fill.gameObject.AddComponent<Image>();
+            walkFill.color = Peach; walkFill.type = Image.Type.Filled; walkFill.fillMethod = Image.FillMethod.Horizontal;
+            walkFill.fillOrigin = 0; walkFill.raycastTarget = false; walkFill.fillAmount = 0;
+            walkStatus = Label("Enable walking to get started.", walkCard, 11, MutedInk, FontStyle.Normal,
+                TextAnchor.MiddleCenter, new Vector2(0, -140), new Vector2(280, 42));
+            walkButtons = Rect("Walking actions", walkCard); TopCentered(walkButtons, new Vector2(0, -194), new Vector2(290, 48));
+            CreateButton("Enable walking", walkButtons, Vector2.zero, new Vector2(140, 48), Quiet, () => session?.EnableWalking(), out _, 12);
+            openDaily = CreateButton("Walk to unlock", walkButtons, new Vector2(150, 0), new Vector2(140, 48), Peach, () => DailyBoxRequested?.Invoke(), out _, 12);
+            Label("Jelly Garden: Peach or Mint, equal chance.", walkCard, 10, MutedInk, FontStyle.Normal,
+                TextAnchor.MiddleCenter, new Vector2(0, -250), new Vector2(290, 22));
+            shopHeading = Label("Or pick a surprise box", boxesRoot, 20, Ink, FontStyle.Bold, TextAnchor.MiddleCenter,
+                Vector2.zero, new Vector2(300, 30)).rectTransform;
+            var artwork = Resources.Load<Texture2D>("Store/CollectionBoxes");
+            Rect[] crops = { new Rect(.04f, .09f, .30f, .74f), new Rect(.35f, .06f, .29f, .73f), new Rect(.655f, .09f, .325f, .74f) };
+            for (int i = 0; i < 3; i++)
             {
-                storeCards[i] = Rect(names[i] + " · closed box", storeContent);
-                storePictures[i] = Rect("Closed mystery box", storeCards[i]);
+                int index = i;
+                BoxOffer offer = BoxCatalog.Offers[i];
+                storeCards[i] = Rect(offer.Name + " · shop", boxesRoot); Surface(storeCards[i], Paper);
+                storePictures[i] = Rect("Closed collection box", storeCards[i]);
                 if (artwork != null)
                 {
-                    var picture = storePictures[i].gameObject.AddComponent<RawImage>();
-                    picture.texture = artwork;
-                    picture.uvRect = crops[i];
-                    picture.raycastTarget = false;
+                    var image = storePictures[i].gameObject.AddComponent<RawImage>(); image.texture = artwork;
+                    image.uvRect = crops[i]; image.raycastTarget = false;
                 }
-                else
-                {
-                    Surface(storePictures[i], Quiet);
-                    var mystery = Label("?", storePictures[i], 50, Ink, FontStyle.Bold,
-                        TextAnchor.MiddleCenter, Vector2.zero, Vector2.one * 120f);
-                    Stretch(mystery.rectTransform);
-                }
-                storeNames[i] = Label(names[i], storeCards[i], 13, Ink, FontStyle.Bold,
-                    TextAnchor.MiddleCenter, Vector2.zero, new Vector2(160f, 24f)).rectTransform;
-                storePrices[i] = Label(prices[i], storeCards[i], 20, Ink, FontStyle.Bold,
-                    TextAnchor.MiddleCenter, Vector2.zero, new Vector2(160f, 30f)).rectTransform;
+                else Surface(storePictures[i], Quiet);
+                storeNames[i] = Label(offer.Name, storeCards[i], 14, Ink, FontStyle.Bold, TextAnchor.MiddleCenter,
+                    Vector2.zero, new Vector2(160, 26)).rectTransform;
+                storePrices[i] = Label(offer.ProposedPrice, storeCards[i], 21, Ink, FontStyle.Bold, TextAnchor.MiddleCenter,
+                    Vector2.zero, new Vector2(160, 30)).rectTransform;
+                storeOdds[i] = Label(offer.Contents, storeCards[i], 10, MutedInk, FontStyle.Normal, TextAnchor.MiddleCenter,
+                    Vector2.zero, new Vector2(160, 32)).rectTransform;
+                var buy = CreateButton("Buy box", storeCards[i], Vector2.zero, new Vector2(150, 48), Peach,
+                    () => BuyBox(BoxCatalog.Offers[index]), out _, 12);
+                storeBuy[i] = buy.GetComponent<RectTransform>();
             }
-
-            var note = Label("STORE PREVIEW · USD", storeSafeRoot, 9, MutedInk, FontStyle.Normal,
-                TextAnchor.MiddleCenter, Vector2.zero, new Vector2(260f, 22f)).rectTransform;
-            note.anchorMin = note.anchorMax = new Vector2(.5f, 0f);
-            note.pivot = new Vector2(.5f, 0f);
-            note.anchoredPosition = new Vector2(0f, 8f);
-            storeRoot.gameObject.SetActive(false);
+            catalogNote = Label("Test catalog · proposed USD prices. Checkout coming next.", boxesRoot, 10, MutedInk,
+                FontStyle.Normal, TextAnchor.MiddleCenter, Vector2.zero, new Vector2(330, 30)).rectTransform;
         }
 
-        private void AdaptStoreLayout(Vector2 safeSize)
+        private void BuyBox(BoxOffer offer)
         {
-            if (storeRoot == null) return;
-            storeBrand.anchorMin = storeBrand.anchorMax = new Vector2(1f, 1f);
-            storeBrand.pivot = new Vector2(1f, 1f);
-            storeBrand.anchoredPosition = new Vector2(-18f, -18f);
-            storeBrand.sizeDelta = new Vector2(Mathf.Max(1f, Mathf.Min(260f, safeSize.x - 164f)), 44f);
+            if (!checkout.Available) { ShowDialog(offer.Name, checkout.UnavailableReason); return; }
+            checkout.Begin(offer);
+        }
 
-            float width = Mathf.Max(1f, Mathf.Min(900f, safeSize.x - 36f));
-            float viewportHeight = Mathf.Max(40f, safeSize.y - 194f);
-            TopCentered(storeScrollRoot, new Vector2(0f, -154f), new Vector2(width, viewportHeight));
-            int columns = width >= 620f ? 3 : width >= 280f ? 2 : 1;
-            const float gap = 14f;
+        private float LayoutStore(float width)
+        {
+            TopCentered(walkCard, Vector2.zero, new Vector2(Mathf.Min(width, 480), 284));
+            float buttonWidth = Mathf.Min(width - 24, 290);
+            walkButtons.sizeDelta = new Vector2(buttonWidth, 48);
+            for (int i = 0; i < 2; i++) LeftLabel((RectTransform)walkButtons.GetChild(i), new Vector2(i * (buttonWidth + 10) / 2, 0), new Vector2((buttonWidth - 10) / 2, 48));
+            TopCentered(shopHeading, new Vector2(0, -308), new Vector2(width, 30));
+            const float gap = 14;
+            int columns = width >= 620 ? 3 : width >= 280 ? 2 : 1;
             float cellWidth = (width - gap * (columns - 1)) / columns;
-            float imageHeight = Mathf.Min(170f, cellWidth * .84f);
-            float cellHeight = imageHeight + 82f;
-            int rows = (storeCards.Length + columns - 1) / columns;
-            float height = rows * cellHeight + (rows - 1) * gap;
-            storeContent.sizeDelta = new Vector2(0f, Mathf.Max(viewportHeight, height));
-            storeContent.anchoredPosition = new Vector2(0f,
-                Mathf.Clamp(storeContent.anchoredPosition.y, 0f, Mathf.Max(0f, height - viewportHeight)));
-            for (int i = 0; i < storeCards.Length; i++)
+            float imageHeight = Mathf.Min(170, cellWidth * .84f);
+            float cellHeight = imageHeight + 166;
+            int rows = (3 + columns - 1) / columns;
+            float height = 358 + rows * (cellHeight + gap);
+            TopCentered(boxesRoot, Vector2.zero, new Vector2(width, height + 42));
+            for (int i = 0; i < 3; i++)
             {
-                LeftLabel(storeCards[i], new Vector2((i % columns) * (cellWidth + gap),
-                    -(i / columns) * (cellHeight + gap)), new Vector2(cellWidth, cellHeight));
-                TopCentered(storePictures[i], new Vector2(0f, -4f), new Vector2(cellWidth, imageHeight));
-                TopCentered(storeNames[i], new Vector2(0f, -imageHeight - 12f), new Vector2(cellWidth, 26f));
-                TopCentered(storePrices[i], new Vector2(0f, -imageHeight - 42f), new Vector2(cellWidth, 30f));
+                LeftLabel(storeCards[i], new Vector2((i % columns) * (cellWidth + gap), -358 - (i / columns) * (cellHeight + gap)), new Vector2(cellWidth, cellHeight));
+                TopCentered(storePictures[i], new Vector2(0, -4), new Vector2(cellWidth - 8, imageHeight));
+                TopCentered(storeNames[i], new Vector2(0, -imageHeight - 10), new Vector2(cellWidth - 10, 26));
+                TopCentered(storePrices[i], new Vector2(0, -imageHeight - 38), new Vector2(cellWidth - 10, 30));
+                TopCentered(storeOdds[i], new Vector2(0, -imageHeight - 72), new Vector2(cellWidth - 10, 32));
+                TopCentered(storeBuy[i], new Vector2(0, -imageHeight - 111), new Vector2(cellWidth - 20, 48));
             }
+            TopCentered(catalogNote, new Vector2(0, -height), new Vector2(width, 32));
+            return height + 42;
         }
     }
 }

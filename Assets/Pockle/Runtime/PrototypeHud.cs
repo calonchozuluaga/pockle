@@ -5,339 +5,228 @@ using UnityEngine.UI;
 
 namespace Pockle.Runtime
 {
-    /// <summary>Safe-area UI, generated locally without a scene or imported assets.</summary>
+    /// <summary>Collection-first UI. Toy manipulation stays on the toy and its plate.</summary>
     public sealed partial class PrototypeHud : MonoBehaviour
     {
-        private static readonly Color Ink = new Color(0.29f, 0.21f, 0.29f);
-        private static readonly Color MutedInk = new Color(0.48f, 0.41f, 0.43f);
-        private static readonly Color Peach = new Color(0.965f, 0.72f, 0.61f);
-        private static readonly Color Quiet = new Color(0.947f, 0.922f, 0.89f);
-        private static readonly Color Paper = new Color(1f, 0.99f, 0.971f);
-
-        public event Action<bool> SoundChanged;
-        public event Action<bool> HapticsChanged;
-        public event Action<bool> ReducedMotionChanged;
+        private static readonly Color Ink = new Color(.29f, .21f, .29f);
+        private static readonly Color MutedInk = new Color(.48f, .41f, .43f);
+        private static readonly Color Peach = new Color(.965f, .72f, .61f);
+        private static readonly Color Quiet = new Color(.947f, .922f, .89f);
+        private static readonly Color Paper = new Color(1f, .99f, .971f);
+        private enum Page { Shelf, Boxes, Play }
+        private Page page = Page.Shelf;
+        public bool StoreVisible => page != Page.Play || modal != null && modal.gameObject.activeSelf;
         public event Action<PipVariant> VariantChanged;
-
-        private RectTransform safeRoot;
-        private RectTransform header;
-        private RectTransform companion;
-        private RectTransform card;
-        private RectTransform variantRow;
-        private RectTransform actionRow;
-        private RectTransform preferenceRow;
-        private Text status;
-        private Text guide;
-        private Text soundLabel;
-        private Text hapticsLabel;
-        private Text motionLabel;
-        private Text brandLabel;
-        private Text taglineLabel;
-        private Text companionKind;
-        private Text companionName;
-        private Text companionCaption;
-        private Text footer;
-        private readonly Image[] variantBackgrounds = new Image[PipVariants.Count];
-        private Image soundBackground;
-        private Image hapticsBackground;
-        private Image motionBackground;
-        private Button revealButton;
+        public event Action<bool> StoreVisibilityChanged;
+        public event Action DailyBoxRequested;
+        private RectTransform safeRoot, browsing, content, navigation, modal, modalSafeRoot, modalCard;
+        private Text heading, subtitle, playHint, modalTitle, modalText;
+        private Button settingsButton, backButton;
+        private Image shelfTab, boxesTab;
+        private RectTransform shelfRoot, boxesRoot;
         private Font font;
         private Sprite roundedSprite;
         private Texture2D roundedTexture;
         private Canvas canvas;
         private CanvasScaler scaler;
         private GameObject ownedEventSystem;
-        private Action<bool> soundCallback;
-        private Action<bool> hapticsCallback;
-        private Action<bool> motionCallback;
-        private bool soundEnabled = true;
-        private bool hapticsEnabled = true;
-        private bool reducedMotionEnabled;
-        private bool initialized;
-        private PipVariant variant;
+        private Action<bool> soundCallback, hapticsCallback, motionCallback;
+        private bool soundEnabled, hapticsEnabled, reducedMotionEnabled;
         private Rect lastSafeArea;
-        private Vector2 lastScreenSize;
-        private Vector2 lastLayoutSize;
+        private Vector2 lastScreenSize, lastLayoutSize;
+        private PipVariant variant;
+        private CollectionSession session;
+        private readonly RenderTexture[] previews = new RenderTexture[4];
+        private readonly Button[] toyButtons = new Button[4];
+        private readonly Text[] toyCounts = new Text[4];
+        private readonly RectTransform[] toyTiles = new RectTransform[4];
+        private readonly RectTransform[] toyPlanks = new RectTransform[4];
+        private readonly RectTransform[] toyPictures = new RectTransform[4];
+        private readonly RectTransform[] toyNames = new RectTransform[4];
+        private RectTransform preferenceRow;
+        private Text soundLabel, hapticsLabel, motionLabel;
+        private bool initialized;
 
-        public void Initialize(Action reveal, Action reset, Action<bool> sound,
-            Action<bool> haptics, Action<bool> reducedMotion)
+        public void Initialize(Action<bool> sound, Action<bool> haptics, Action<bool> reducedMotion)
         {
             if (initialized) return;
             initialized = true;
-            soundCallback = sound;
-            hapticsCallback = haptics;
-            motionCallback = reducedMotion;
-            font = LoadFont();
-            roundedSprite = CreateRoundedSprite();
-
-            var canvasObject = new GameObject("Pockle · interface", typeof(RectTransform), typeof(Canvas),
-                typeof(CanvasScaler), typeof(GraphicRaycaster));
-            canvasObject.transform.SetParent(transform, false);
-            canvas = canvasObject.GetComponent<Canvas>();
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.sortingOrder = 20;
-            scaler = canvasObject.GetComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(390f, 844f);
-            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-            scaler.matchWidthOrHeight = 1f;
-            safeRoot = Rect("Safe area", canvasObject.transform);
-            Stretch(safeRoot);
-
-            header = Rect("Brand", safeRoot);
-            brandLabel = Label("Pockle", header, 34, Ink, FontStyle.Bold, TextAnchor.MiddleLeft,
-                new Vector2(0f, 0f), new Vector2(360f, 44f));
-            taglineLabel = Label("A little wonder, in your hands.", header, 13, MutedInk, FontStyle.Normal,
-                TextAnchor.UpperLeft, new Vector2(0f, -45f), new Vector2(360f, 34f));
-
-            companion = Rect("Companion identity", safeRoot);
-            companionKind = Label("PEACH JELLY", companion, 10, MutedInk, FontStyle.Bold,
-                TextAnchor.MiddleRight, new Vector2(0f, -35f), new Vector2(120f, 18f));
-            companionName = Label("Pip", companion, 27, Ink, FontStyle.Bold, TextAnchor.MiddleRight,
-                Vector2.zero, new Vector2(120f, 34f));
-            companionCaption = Label("01 / COMPANION", companion, 9, MutedInk, FontStyle.Normal,
-                TextAnchor.MiddleRight, new Vector2(0f, -53f), new Vector2(120f, 16f));
-
-            card = Rect("Interaction card", safeRoot);
-            Surface(card, Paper);
-            status = Label("Make yourself at home.", card, 15, Ink, FontStyle.Bold,
-                TextAnchor.MiddleCenter, new Vector2(0f, -12f), new Vector2(328f, 25f));
-            guide = Label("Drag Pip to lift. Two fingers to squish/stretch.", card, 11, MutedInk,
-                FontStyle.Normal, TextAnchor.MiddleCenter, new Vector2(0f, -37f), new Vector2(328f, 18f));
-            guide.resizeTextForBestFit = true;
-            guide.resizeTextMinSize = 9;
-            guide.resizeTextMaxSize = 11;
-            status.resizeTextForBestFit = true;
-            status.resizeTextMinSize = 12;
-            status.resizeTextMaxSize = 15;
-
-            variantRow = Rect("Pip variants", card);
-            TopCentered(variantRow, new Vector2(0f, -58f), new Vector2(328f, 44f));
-            for (int i = 0; i < PipVariants.Count; i++)
-            {
-                PipVariant choice = (PipVariant)i;
-                CreateButton(PipVariants.ButtonLabel(choice), variantRow, new Vector2(i * 84f, 0f),
-                    new Vector2(76f, 44f), Quiet, () => ChangeVariant(choice), out variantBackgrounds[i], 11);
-            }
-
-            actionRow = Rect("Toy actions", card);
-            TopCentered(actionRow, new Vector2(0f, -112f), new Vector2(328f, 44f));
-            Image revealBackground;
-            revealButton = CreateButton("Reveal again", actionRow, Vector2.zero, new Vector2(101f, 44f),
-                Peach, () => reveal?.Invoke(), out revealBackground, 11);
-            Image resetBackground;
-            CreateButton("Reset", actionRow, new Vector2(110f, 0f), new Vector2(101f, 44f),
-                Quiet, () => reset?.Invoke(), out resetBackground);
-            Image storeBackground;
-            CreateButton("Store", actionRow, new Vector2(220f, 0f), new Vector2(108f, 44f),
-                Quiet, () => SetStoreVisible(true), out storeBackground);
-
-            preferenceRow = Rect("Comfort settings", card);
-            TopCentered(preferenceRow, new Vector2(0f, -168f), new Vector2(328f, 44f));
-            var soundButton = CreateButton("Sound · on", preferenceRow, Vector2.zero, new Vector2(101f, 44f),
-                Quiet, ChangeSound, out soundBackground, 11);
-            soundLabel = soundButton.GetComponentInChildren<Text>();
-            var hapticsButton = CreateButton("Haptics · on", preferenceRow, new Vector2(110f, 0f),
-                new Vector2(108f, 44f), Quiet, ChangeHaptics, out hapticsBackground, 11);
-            hapticsLabel = hapticsButton.GetComponentInChildren<Text>();
-            var motionButton = CreateButton("Motion · full", preferenceRow, new Vector2(227f, 0f),
-                new Vector2(101f, 44f), Quiet, ChangeMotion, out motionBackground, 11);
-            motionLabel = motionButton.GetComponentInChildren<Text>();
-            footer = Label("PEACH JELLY · TACTILE PROTOTYPE", card, 8, MutedInk, FontStyle.Normal,
-                TextAnchor.MiddleCenter, new Vector2(0f, -216f), new Vector2(328f, 15f));
-
+            soundCallback = sound; hapticsCallback = haptics; motionCallback = reducedMotion;
+            font = LoadFont(); roundedSprite = CreateRoundedSprite();
+            var root = new GameObject("Pockle · game UI", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
+            root.transform.SetParent(transform, false);
+            canvas = root.GetComponent<Canvas>(); canvas.renderMode = RenderMode.ScreenSpaceOverlay; canvas.sortingOrder = 20;
+            scaler = root.GetComponent<CanvasScaler>(); scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = new Vector2(390, 844); scaler.matchWidthOrHeight = 1;
+            safeRoot = Rect("Safe area", root.transform); Stretch(safeRoot);
+            var brand = Label("Pockle", safeRoot, 32, Ink, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, new Vector2(180, 44));
+            LeftLabel(brand.rectTransform, new Vector2(22, -14), new Vector2(180, 44));
+            settingsButton = CreateButton("Settings", safeRoot, Vector2.zero, new Vector2(88, 44), Quiet, ShowSettings, out _, 12);
+            backButton = CreateButton("Shelf", safeRoot, new Vector2(22, 66), new Vector2(74, 44), Paper, () => SetPage(Page.Shelf), out _, 12);
+            heading = Label("Your little collection", safeRoot, 23, Ink, FontStyle.Bold, TextAnchor.MiddleCenter,
+                new Vector2(0, -70), new Vector2(340, 34));
+            subtitle = Label("Four Pips. Four little personalities.", safeRoot, 12, MutedInk, FontStyle.Normal,
+                TextAnchor.MiddleCenter, new Vector2(0, -108), new Vector2(350, 26));
+            browsing = Rect("Collection browsing", safeRoot);
+            var scroll = browsing.gameObject.AddComponent<ScrollRect>(); scroll.horizontal = false; scroll.movementType = ScrollRect.MovementType.Clamped;
+            var viewport = Rect("Viewport", browsing); Stretch(viewport); viewport.gameObject.AddComponent<RectMask2D>();
+            var dragTarget = viewport.gameObject.AddComponent<Image>(); dragTarget.color = Color.clear;
+            content = Rect("Collection content", viewport); content.anchorMin = new Vector2(0, 1); content.anchorMax = new Vector2(1, 1); content.pivot = new Vector2(.5f, 1);
+            scroll.content = content; scroll.viewport = viewport;
+            shelfRoot = Rect("Your shelf", content); boxesRoot = Rect("Walking and shop", content);
+            BuildShelf(); BuildStore();
+            navigation = Rect("Navigation", safeRoot); Surface(navigation, Paper);
+            CreateButton("Shelf", navigation, Vector2.zero, new Vector2(150, 48), Peach, () => SetPage(Page.Shelf), out shelfTab);
+            CreateButton("Boxes", navigation, new Vector2(158, 0), new Vector2(150, 48), Quiet, () => SetPage(Page.Boxes), out boxesTab);
+            playHint = Label("Make yourself at home.", safeRoot, 12, MutedInk, FontStyle.Normal, TextAnchor.MiddleCenter,
+                Vector2.zero, new Vector2(350, 40));
+            playHint.rectTransform.anchorMin = playHint.rectTransform.anchorMax = new Vector2(.5f, 0);
+            playHint.rectTransform.pivot = new Vector2(.5f, 0); playHint.rectTransform.anchoredPosition = new Vector2(0, 20);
+            BuildModal();
             if (EventSystem.current == null)
             {
                 ownedEventSystem = new GameObject("Pockle event system", typeof(EventSystem), typeof(StandaloneInputModule));
                 ownedEventSystem.transform.SetParent(transform, false);
             }
-            SetSettings(true, true, false);
-            SetVariant(PipVariant.PeachJelly);
-            BuildStore(canvasObject.transform);
-            ApplySafeArea();
-            Canvas.ForceUpdateCanvases();
-            AdaptLayout();
+            ApplySafeArea(); Canvas.ForceUpdateCanvases(); AdaptLayout(); SetPage(Page.Shelf);
         }
 
-        public void SetStatus(string message)
+        public void Bind(CollectionSession collection)
         {
-            if (status != null) status.text = string.IsNullOrEmpty(message) ? "Make yourself at home." : message;
+            session = collection; session.Changed += RefreshCollection; RefreshCollection();
         }
-
+        public void SetStatus(string message) { if (playHint != null) playHint.text = message; }
+        public void SetRevealAvailable(bool available)
+        { backButton.interactable = available; settingsButton.interactable = available; }
         public void SetVariant(PipVariant choice)
         {
             variant = PipVariants.FromSaved((int)choice);
-            companionKind.text = PipVariants.Label(variant);
-            companionCaption.text = ((int)variant + 1).ToString("00") + " / VARIANT";
-            footer.text = PipVariants.Label(variant) + " · TACTILE PROTOTYPE";
-            Color selected = variant == PipVariant.MoonJelly ? new Color(.69f, .82f, .94f)
-                : variant == PipVariant.GoldGlitter ? new Color(.97f, .84f, .48f)
-                : variant == PipVariant.MintSoft ? new Color(.69f, .86f, .73f) : Peach;
-            for (int i = 0; i < variantBackgrounds.Length; i++)
-                variantBackgrounds[i].color = i == (int)variant ? selected : Quiet;
+            if (page == Page.Play) { heading.text = "Pip"; subtitle.text = PipVariants.Label(variant); }
         }
-
-        private void ChangeVariant(PipVariant choice)
+        public void ShowToy(PipVariant choice)
         {
-            if (variant == choice) return;
-            SetVariant(choice);
-            VariantChanged?.Invoke(choice);
+            choice = PipVariants.FromSaved((int)choice);
+            if (session != null && session.Progress.Save.Counts[(int)choice] <= 0) return;
+            SetVariant(choice); SetPage(Page.Play); VariantChanged?.Invoke(choice);
         }
-
-        public void SetRevealAvailable(bool available)
+        public void GoBack()
         {
-            if (revealButton != null) revealButton.interactable = available;
+            if (modal.gameObject.activeSelf) CloseModal();
+            else if (backButton.interactable) SetPage(Page.Shelf);
         }
-
-        /// <summary>Synchronize persisted preferences without invoking user callbacks.</summary>
+        private void SetPage(Page next)
+        {
+            bool blocked = StoreVisible;
+            page = next;
+            browsing.gameObject.SetActive(page != Page.Play);
+            navigation.gameObject.SetActive(page != Page.Play);
+            playHint.gameObject.SetActive(page == Page.Play);
+            backButton.gameObject.SetActive(page == Page.Play);
+            shelfRoot.gameObject.SetActive(page == Page.Shelf); boxesRoot.gameObject.SetActive(page == Page.Boxes);
+            heading.text = page == Page.Shelf ? "Your little collection" : page == Page.Boxes ? "A little surprise awaits" : "Pip";
+            subtitle.text = page == Page.Shelf ? "Tap a toy. Make yourself at home." : page == Page.Boxes ? "Walk for a box, or pick one to buy." : PipVariants.Label(variant);
+            shelfTab.color = page == Page.Shelf ? Peach : Quiet; boxesTab.color = page == Page.Boxes ? Peach : Quiet;
+            content.anchoredPosition = Vector2.zero;
+            if (lastLayoutSize.x > 0) AdaptLayout();
+            if (blocked != StoreVisible) StoreVisibilityChanged?.Invoke(StoreVisible);
+        }
         public void SetSettings(bool sound, bool haptics, bool reducedMotion)
         {
-            soundEnabled = sound;
-            hapticsEnabled = haptics;
-            reducedMotionEnabled = reducedMotion;
-            if (soundLabel != null) soundLabel.text = sound ? "Sound · on" : "Sound · off";
-            if (hapticsLabel != null) hapticsLabel.text = haptics ? "Haptics · on" : "Haptics · off";
-            if (motionLabel != null) motionLabel.text = reducedMotion ? "Motion · calm" : "Motion · full";
-            if (soundBackground != null) soundBackground.color = sound ? new Color(0.97f, 0.87f, 0.8f) : Quiet;
-            if (hapticsBackground != null) hapticsBackground.color = haptics ? new Color(0.97f, 0.87f, 0.8f) : Quiet;
-            if (motionBackground != null) motionBackground.color = reducedMotion ? new Color(0.97f, 0.87f, 0.8f) : Quiet;
+            soundEnabled = sound; hapticsEnabled = haptics; reducedMotionEnabled = reducedMotion;
+            if (soundLabel != null) soundLabel.text = sound ? "Sound on" : "Sound off";
+            if (hapticsLabel != null) hapticsLabel.text = haptics ? "Haptics on" : "Haptics off";
+            if (motionLabel != null) motionLabel.text = reducedMotion ? "Motion calm" : "Motion full";
         }
-
-        private void ChangeSound()
+        private void BuildModal()
         {
-            SetSettings(!soundEnabled, hapticsEnabled, reducedMotionEnabled);
-            soundCallback?.Invoke(soundEnabled);
-            SoundChanged?.Invoke(soundEnabled);
+            modal = Rect("Dialog backdrop", canvas.transform); Stretch(modal);
+            var backdrop = modal.gameObject.AddComponent<Image>(); backdrop.color = new Color(.23f, .17f, .22f, .35f);
+            modalSafeRoot = Rect("Dialog safe area", modal); Stretch(modalSafeRoot);
+            modalCard = Rect("Dialog", modalSafeRoot); modalCard.anchorMin = modalCard.anchorMax = new Vector2(.5f, .5f);
+            modalCard.pivot = new Vector2(.5f, .5f); Surface(modalCard, Paper);
+            modalTitle = Label("", modalCard, 22, Ink, FontStyle.Bold, TextAnchor.MiddleCenter, new Vector2(0, -24), new Vector2(290, 36));
+            modalText = Label("", modalCard, 14, MutedInk, FontStyle.Normal, TextAnchor.UpperCenter, new Vector2(0, -76), new Vector2(290, 132));
+            preferenceRow = Rect("Comfort preferences", modalCard); TopCentered(preferenceRow, new Vector2(0, -204), new Vector2(284, 50));
+            var b = CreateButton("", preferenceRow, Vector2.zero, new Vector2(88, 48), Quiet,
+                () => { SetSettings(!soundEnabled, hapticsEnabled, reducedMotionEnabled); soundCallback?.Invoke(soundEnabled); }, out _, 11);
+            soundLabel = b.GetComponentInChildren<Text>();
+            b = CreateButton("", preferenceRow, new Vector2(98, 0), new Vector2(88, 48), Quiet,
+                () => { SetSettings(soundEnabled, !hapticsEnabled, reducedMotionEnabled); hapticsCallback?.Invoke(hapticsEnabled); }, out _, 11);
+            hapticsLabel = b.GetComponentInChildren<Text>();
+            b = CreateButton("", preferenceRow, new Vector2(196, 0), new Vector2(88, 48), Quiet,
+                () => { SetSettings(soundEnabled, hapticsEnabled, !reducedMotionEnabled); motionCallback?.Invoke(reducedMotionEnabled); }, out _, 11);
+            motionLabel = b.GetComponentInChildren<Text>();
+            b = CreateButton("Done", modalCard, Vector2.zero, new Vector2(140, 48), Peach, CloseModal, out _);
+            var close = b.GetComponent<RectTransform>(); close.anchorMin = close.anchorMax = new Vector2(.5f, 0);
+            close.pivot = new Vector2(.5f, 0); close.anchoredPosition = new Vector2(0, 22);
+            modal.gameObject.SetActive(false);
         }
-
-        private void ChangeHaptics()
+        private void ShowSettings() { ShowDialog("Make it yours", "Set the sound, haptics, and motion to whatever feels comfortable.", true); }
+        private void ShowDialog(string title, string message, bool settings = false)
         {
-            SetSettings(soundEnabled, !hapticsEnabled, reducedMotionEnabled);
-            hapticsCallback?.Invoke(hapticsEnabled);
-            HapticsChanged?.Invoke(hapticsEnabled);
+            bool wasBlocked = StoreVisible;
+            modalTitle.text = title; modalText.text = message; preferenceRow.gameObject.SetActive(settings);
+            LayoutModal(settings);
+            modal.gameObject.SetActive(true); modal.SetAsLastSibling();
+            if (!wasBlocked) StoreVisibilityChanged?.Invoke(true);
         }
-
-        private void ChangeMotion()
+        private void CloseModal()
         {
-            SetSettings(soundEnabled, hapticsEnabled, !reducedMotionEnabled);
-            motionCallback?.Invoke(reducedMotionEnabled);
-            ReducedMotionChanged?.Invoke(reducedMotionEnabled);
+            modal.gameObject.SetActive(false);
+            if (page == Page.Play) StoreVisibilityChanged?.Invoke(false);
         }
-
         private void Update()
         {
             if (!initialized) return;
-            if (lastScreenSize.x != Screen.width || lastScreenSize.y != Screen.height || lastSafeArea != Screen.safeArea)
-                ApplySafeArea();
-            if (safeRoot != null && lastLayoutSize != safeRoot.rect.size) AdaptLayout();
+            if (lastScreenSize.x != Screen.width || lastScreenSize.y != Screen.height || lastSafeArea != Screen.safeArea) ApplySafeArea();
+            if (lastLayoutSize != safeRoot.rect.size) AdaptLayout();
         }
-
         private void ApplySafeArea()
         {
-            if (safeRoot == null || Screen.width < 1 || Screen.height < 1) return;
-            lastSafeArea = Screen.safeArea;
-            lastScreenSize = new Vector2(Screen.width, Screen.height);
-            scaler.referenceResolution = (float)Screen.width / Screen.height > 1.15f
-                ? new Vector2(844f, 390f) : new Vector2(390f, 844f);
+            if (Screen.width < 1 || Screen.height < 1) return;
+            lastScreenSize = new Vector2(Screen.width, Screen.height); lastSafeArea = Screen.safeArea;
+            scaler.referenceResolution = (float)Screen.width / Screen.height > 1.15f ? new Vector2(844, 390) : new Vector2(390, 844);
             safeRoot.anchorMin = new Vector2(lastSafeArea.xMin / Screen.width, lastSafeArea.yMin / Screen.height);
             safeRoot.anchorMax = new Vector2(lastSafeArea.xMax / Screen.width, lastSafeArea.yMax / Screen.height);
-            safeRoot.offsetMin = Vector2.zero;
-            safeRoot.offsetMax = Vector2.zero;
-            if (storeSafeRoot != null)
-            {
-                storeSafeRoot.anchorMin = safeRoot.anchorMin;
-                storeSafeRoot.anchorMax = safeRoot.anchorMax;
-                storeSafeRoot.offsetMin = storeSafeRoot.offsetMax = Vector2.zero;
-            }
+            safeRoot.offsetMin = safeRoot.offsetMax = Vector2.zero;
+            modalSafeRoot.anchorMin = safeRoot.anchorMin; modalSafeRoot.anchorMax = safeRoot.anchorMax;
+            modalSafeRoot.offsetMin = modalSafeRoot.offsetMax = Vector2.zero;
         }
-
         private void AdaptLayout()
         {
-            if (safeRoot == null) return;
-            var size = safeRoot.rect.size;
-            if (size.x < 1f || size.y < 1f) return;
-            lastLayoutSize = size;
-            var landscape = (float)Screen.width / Mathf.Max(1, Screen.height) > 1.15f;
-            var columnWidth = Mathf.Max(280f, size.x * 0.35f);
-            var width = landscape ? Mathf.Min(360f, columnWidth - 20f) : Mathf.Min(360f, size.x - 24f);
-            // Very narrow phones keep 44-point buttons by scaling only horizontal dimensions.
-            var contentWidth = Mathf.Max(1f, width - 32f);
-            float extra = ResizeVariantButtons(contentWidth);
-            actionRow.anchoredPosition = new Vector2(0f, -112f - extra);
-            preferenceRow.anchoredPosition = new Vector2(0f, -168f - extra);
-            footer.rectTransform.anchoredPosition = new Vector2(0f, -216f - extra);
-            ResizeButtons(actionRow, contentWidth, 9f, false);
-            ResizeButtons(preferenceRow, contentWidth, 9f, false);
-            status.rectTransform.sizeDelta = new Vector2(contentWidth, 25f);
-            guide.rectTransform.sizeDelta = new Vector2(contentWidth, 18f);
-            if (landscape)
-            {
-                // Match StageFraming; wide phones use 35%, tablets reserve enough
-                // actual width for readable labels and 44-point control targets.
-                var viewerWidth = size.x - columnWidth;
-                var headerWidth = Mathf.Min(360f, viewerWidth - 28f);
-                TopCentered(header, new Vector2(-columnWidth * 0.5f, -14f), new Vector2(headerWidth, 78f));
-                LeftLabel(brandLabel.rectTransform, Vector2.zero, new Vector2(headerWidth, 44f));
-                LeftLabel(taglineLabel.rectTransform, new Vector2(0f, -45f), new Vector2(headerWidth, 34f));
-                TopCentered(companion, new Vector2(viewerWidth * 0.5f, -14f), new Vector2(width, 70f));
-                companionName.alignment = companionKind.alignment = companionCaption.alignment = TextAnchor.MiddleCenter;
-                card.anchorMin = card.anchorMax = new Vector2(0.5f, 0f);
-                card.pivot = new Vector2(0.5f, 0f);
-                card.anchoredPosition = new Vector2(viewerWidth * 0.5f, 14f);
-                card.sizeDelta = new Vector2(width, 238f + extra);
-            }
-            else
-            {
-                TopCentered(header, new Vector2(0f, -24f), new Vector2(width, 78f));
-                LeftLabel(brandLabel.rectTransform, Vector2.zero, new Vector2(width * 0.66f, 44f));
-                LeftLabel(taglineLabel.rectTransform, new Vector2(0f, -45f), new Vector2(width * 0.66f, 34f));
-                TopCentered(companion, new Vector2(width * 0.34f, -24f), new Vector2(width * 0.32f, 70f));
-                companionName.alignment = companionKind.alignment = companionCaption.alignment = TextAnchor.MiddleRight;
-                card.anchorMin = card.anchorMax = new Vector2(0.5f, 0f);
-                card.pivot = new Vector2(0.5f, 0f);
-                card.anchoredPosition = new Vector2(0f, 14f);
-                card.sizeDelta = new Vector2(width, 238f + extra);
-            }
-            var companionWidth = companion.sizeDelta.x;
-            companionName.rectTransform.sizeDelta = new Vector2(companionWidth, 34f);
-            companionKind.rectTransform.sizeDelta = new Vector2(companionWidth, 18f);
-            companionCaption.rectTransform.sizeDelta = new Vector2(companionWidth, 16f);
-            AdaptStoreLayout(size);
+            var size = safeRoot.rect.size; if (size.x < 1 || size.y < 1) return; lastLayoutSize = size;
+            var settings = settingsButton.GetComponent<RectTransform>(); settings.anchorMin = settings.anchorMax = new Vector2(1, 1);
+            settings.pivot = new Vector2(1, 1); settings.anchoredPosition = new Vector2(-22, -14);
+            float width = Mathf.Max(1, Mathf.Min(820, size.x - 32));
+            heading.rectTransform.sizeDelta = new Vector2(Mathf.Max(1, width - (page == Page.Play ? 152 : 0)), 34);
+            subtitle.rectTransform.sizeDelta = new Vector2(width, 26);
+            float viewportHeight = Mathf.Max(30, size.y - 230);
+            TopCentered(browsing, new Vector2(0, -148), new Vector2(width, viewportHeight));
+            navigation.anchorMin = navigation.anchorMax = new Vector2(.5f, 0); navigation.pivot = new Vector2(.5f, 0);
+            navigation.anchoredPosition = new Vector2(0, 20); navigation.sizeDelta = new Vector2(Mathf.Min(340, width), 52);
+            float navWidth = navigation.sizeDelta.x;
+            LeftLabel(shelfTab.rectTransform, Vector2.zero, new Vector2((navWidth - 8) / 2, 52));
+            LeftLabel(boxesTab.rectTransform, new Vector2((navWidth + 8) / 2, 0), new Vector2((navWidth - 8) / 2, 52));
+            playHint.rectTransform.sizeDelta = new Vector2(width, 40);
+            float height = page == Page.Boxes ? LayoutStore(width) : LayoutShelf(width);
+            content.sizeDelta = new Vector2(0, Mathf.Max(viewportHeight, height));
+            content.anchoredPosition = new Vector2(0, Mathf.Clamp(content.anchoredPosition.y, 0, Mathf.Max(0, height - viewportHeight)));
+            if (modal.gameObject.activeSelf) LayoutModal(preferenceRow.gameObject.activeSelf);
         }
 
-        private static void ResizeButtons(RectTransform row, float width, float gap, bool weighted)
+        private void LayoutModal(bool settings)
         {
-            row.sizeDelta = new Vector2(width, row.sizeDelta.y);
-            var count = row.childCount;
-            var available = width - gap * (count - 1);
-            var x = 0f;
-            for (var i = 0; i < count; i++)
-            {
-                var button = row.GetChild(i) as RectTransform;
-                if (button == null) continue;
-                var buttonWidth = weighted ? available * (i == 0 ? 0.65f : 0.35f) : available / count;
-                button.anchoredPosition = new Vector2(x, 0f);
-                button.sizeDelta = new Vector2(buttonWidth, button.sizeDelta.y);
-                x += buttonWidth + gap;
-            }
+            float width = Mathf.Max(1, Mathf.Min(340, lastLayoutSize.x - 24));
+            float height = Mathf.Min(settings ? 340 : 280, lastLayoutSize.y - 16);
+            modalCard.sizeDelta = new Vector2(width, height);
+            modalTitle.rectTransform.sizeDelta = new Vector2(width - 24, 36);
+            modalText.rectTransform.sizeDelta = new Vector2(width - 32, settings ? Mathf.Max(44, height - 240) : Mathf.Max(44, height - 150));
+            preferenceRow.anchoredPosition = new Vector2(0, -height + 136);
+            float rowWidth = Mathf.Min(284, width - 24);
+            preferenceRow.sizeDelta = new Vector2(rowWidth, 48);
+            for (int i = 0; i < 3; i++)
+                LeftLabel((RectTransform)preferenceRow.GetChild(i), new Vector2(i * (rowWidth + 10) / 3, 0), new Vector2((rowWidth - 20) / 3, 48));
         }
-
-        private float ResizeVariantButtons(float width)
-        {
-            int columns = width < 220f ? 2 : PipVariants.Count;
-            float extra = columns == 2 ? 52f : 0f;
-            float buttonWidth = (width - 12f * (columns - 1)) / columns;
-            variantRow.sizeDelta = new Vector2(width, 44f + extra);
-            for (int i = 0; i < variantBackgrounds.Length; i++)
-            {
-                RectTransform button = variantBackgrounds[i].rectTransform;
-                button.anchoredPosition = new Vector2((i % columns) * (buttonWidth + 12f), -(i / columns) * 52f);
-                button.sizeDelta = new Vector2(buttonWidth, 44f);
-            }
-            return extra;
-        }
-
         private static void LeftLabel(RectTransform rect, Vector2 position, Vector2 size)
         {
             rect.anchorMin = rect.anchorMax = new Vector2(0f, 1f);
@@ -462,6 +351,8 @@ namespace Pockle.Runtime
 
         private void OnDestroy()
         {
+            if (session != null) session.Changed -= RefreshCollection;
+            foreach (var preview in previews) if (preview != null) { preview.Release(); Destroy(preview); }
             if (roundedSprite != null) Destroy(roundedSprite);
             if (roundedTexture != null) Destroy(roundedTexture);
             if (canvas != null) Destroy(canvas.gameObject);

@@ -1,3 +1,5 @@
+> UI update: variants are now separate toys on **Shelf**. Tap a shelf toy rather than using the former four-button selector. The material profiles below remain applicable.
+
 # Compare Pip variants
 
 All four presets use the same authored shape, face, deformation, camera, and controls. Switching replaces the filling and updates the existing materials while keeping Pip's current pose and plate angle. The selection is saved on that device; existing Peach/Moon saves retain their original meaning.

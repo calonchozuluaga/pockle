@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 namespace Pockle.Runtime
 {
-    /// <summary>Local tactile sandbox. No rewards, backend calls, or collectible ownership are simulated.</summary>
+    /// <summary>Collection entry point and tactile viewer. Rewards are local beta saves.</summary>
     public sealed partial class TactilePrototype : MonoBehaviour
     {
         private const int NoPointer = PointerGesture.NoPointer;
@@ -40,6 +40,7 @@ namespace Pockle.Runtime
         private ScreenOrientation sensorOrientation;
         private JellyToy toy;
         private PrototypeHud hud;
+        private CollectionSession collection;
         private Transform boxRoot;
         private MysteryBox discoveryBox;
         private float revealLift;
@@ -77,12 +78,16 @@ namespace Pockle.Runtime
             toy = toyObject.AddComponent<JellyToy>();
             toy.Initialize();
 
-            hud = new GameObject("Pockle prototype HUD").AddComponent<PrototypeHud>();
-            hud.Initialize(Reveal, ResetToy, SetSound, SetHaptics, SetReducedMotion);
+            collection = gameObject.AddComponent<CollectionSession>();
+            collection.Initialize();
+            hud = new GameObject("Pockle game UI").AddComponent<PrototypeHud>();
+            hud.Initialize(SetSound, SetHaptics, SetReducedMotion);
             hud.SetSettings(soundEnabled, hapticsEnabled, reducedMotion);
             hud.SetVariant(toy.Variant);
             hud.VariantChanged += SetVariant;
             hud.StoreVisibilityChanged += StoreVisibilityChanged;
+            hud.DailyBoxRequested += OpenDailyBox;
+            hud.Bind(collection);
 
             BuildRevealBox();
             audioSource = gameObject.AddComponent<AudioSource>();
@@ -92,7 +97,13 @@ namespace Pockle.Runtime
             pressClip = CreateTone("Soft jelly press", 160f, 0.09f, false);
             releaseClip = CreateTone("Jelly rebound", 390f, 0.18f, false);
             revealClip = CreateTone("Pip reveal", 620f, 0.45f, true);
-            Reveal();
+            ResetToy();
+            StoreVisibilityChanged(true);
+            if (collection.Progress.Save.PendingReveal >= 0)
+            {
+                hud.ShowToy((PipVariant)collection.Progress.Save.PendingReveal);
+                Reveal();
+            }
             if (Application.isEditor || Debug.isDebugBuild)
                 Debug.Log("Pockle controls: lift · two-finger squish/stretch · phone-motion jiggle", this);
         }
@@ -103,7 +114,7 @@ namespace Pockle.Runtime
             var screenSize = new Vector2(Screen.width, Screen.height);
             if (screenSize != interactionScreenSize && gesture.IsActive) ReleasePointer(false);
             interactionScreenSize = screenSize;
-            if (hud.StoreVisible && Input.GetKeyDown(KeyCode.Escape)) hud.SetStoreVisible(false);
+            if (Input.GetKeyDown(KeyCode.Escape)) hud.GoBack();
             if (revealing) UpdateReveal(Time.unscaledDeltaTime);
             else if (!hud.StoreVisible) ReadInput();
 
@@ -136,8 +147,10 @@ namespace Pockle.Runtime
 
         private void ReadInput()
         {
+#if UNITY_EDITOR
             if (Input.GetKeyDown(KeyCode.R)) ResetToy();
             if (Input.GetKeyDown(KeyCode.Space)) { Reveal(); return; }
+#endif
 
             if (Input.touchCount > 0 || gesture.PointerId >= 0)
             {
@@ -288,6 +301,7 @@ namespace Pockle.Runtime
                 compression.Target = 0f;
                 hud.SetRevealAvailable(true);
                 hud.SetStatus("Lift Pip. Pinch to stretch. Turn the plate.");
+                if (collection.Progress.Save.PendingReveal >= 0) collection.FinishReveal();
             }
         }
 
@@ -310,6 +324,7 @@ namespace Pockle.Runtime
 
         private void SetVariant(PipVariant choice)
         {
+            ResetToy();
             toy.SetVariant(choice);
             PlayerPrefs.SetInt(PipVariants.Preference, (int)toy.Variant);
             PlayerPrefs.Save();
@@ -319,6 +334,16 @@ namespace Pockle.Runtime
         private void StoreVisibilityChanged(bool visible)
         {
             if (visible) { ReleasePointer(false); ClearMotion(); }
+            // Browsing uses cached portraits; no toy cameras render behind the collection UI.
+            viewCamera.enabled = !visible;
+            turntable.gameObject.SetActive(!visible);
+        }
+
+        private void OpenDailyBox()
+        {
+            if (!collection.ClaimDaily(out PipVariant choice)) return;
+            hud.ShowToy(choice);
+            Reveal();
         }
 
         private void SetHaptics(bool enabled) { hapticsEnabled = enabled; SaveSetting("haptics", enabled); }
@@ -363,10 +388,13 @@ namespace Pockle.Runtime
         {
             if (hud != null) hud.VariantChanged -= SetVariant;
             if (hud != null) hud.StoreVisibilityChanged -= StoreVisibilityChanged;
+            if (hud != null) hud.DailyBoxRequested -= OpenDailyBox;
+            if (hud != null) Destroy(hud.gameObject);
             if (pressClip != null) Destroy(pressClip);
             if (releaseClip != null) Destroy(releaseClip);
             if (revealClip != null) Destroy(revealClip);
             if (boxRoot != null) Destroy(boxRoot.gameObject);
+            if (viewCamera != null) Destroy(viewCamera.transform.parent.gameObject);
         }
     }
 }

@@ -21,6 +21,7 @@ internal static class Program
             InteractionChecks.Run();
             ManipulationChecks.Run();
             RevealChecks.Run();
+            CollectionChecks.Run();
             return 0;
         }
         catch (Exception exception)

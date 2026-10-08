@@ -27,11 +27,11 @@ All characters, names, and designs must be original. Physical collectible toys a
 
 Use a custom soft, rounded, squishy Pockle wordmark and surprise-toy packaging with collection motifs and mystery silhouettes. The next reveal pass should use the redesigned Jelly Garden box: the lid opens, Pip emerges and settles onto the plate, then touch becomes available. Preserve replay and reduced-motion support.
 
-The box design identifies its collection; the specific color/model is a surprise. Proposed price points are $0.99 per standard box and $2.99 for special collections, subject to store pricing tiers. Walking thresholds, daily availability, and collection probabilities still need specification before reward/store implementation.
+The box design identifies its collection; the specific color/model is a surprise. Proposed price points are $0.99 per standard box and $2.99 for special collections, subject to store pricing tiers. The first local beta uses one Jelly Garden box per UTC day, unlocked by 1,000 steps. Provisional pools and release requirements are recorded in `COLLECTION_UI.md`.
 
 Use step counting alongside movement/location checks to distinguish walking from phone shaking. GPS alone does not prevent cheating or distinguish walking from vehicle travel; continuous tracking is not a requirement. Validate rewards and store purchases authoritatively before granting inventory.
 
-Provide a first companion immediately. This direction is recorded for the collecting milestone; the current Unity project is still a local tactile viewer, with no walking rewards or payments implemented.
+Provide a first companion immediately. The current Unity project now has a shelf, local saved ownership, and a hardware-step-based daily reward. Payments and authoritative online validation remain unconnected.
 
 ## Toy Families
 
@@ -89,7 +89,7 @@ Include:
 - Local save data.
 - Sound, haptic, and motion settings.
 
-Defer maps, AR, trading, edition registries, and evolution. Walking and purchases belong to the collecting milestone; do not add them to the current tactile viewer experiment.
+Defer maps, AR, trading, edition registries, and evolution. The owner has approved beginning the collection UI, walking, and purchase milestone after the tactile/material prototype.
 
 ## Development Sequence
 

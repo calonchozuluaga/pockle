@@ -1,14 +1,12 @@
 # Pockle
 
-Unity source for the **first tactile prototype**: Pip, a Blender-authored companion, with Peach Jelly, Moon Jelly, Gold Glitter, and Mint Soft presets for comparing color, filling, and finish. The project follows the [development brief](docs/PRODUCT_BRIEF.md).
+Unity source for Pockle's **collection UI beta**. Peach Jelly, Moon Jelly, Gold Glitter, and Mint Soft each have their own toy on the shelf. Tap one to play; direct squish, lift, two-finger stretch, plate rotation, and phone-motion jiggle remain. The prototype control card is gone; comfort preferences live in Settings.
 
-Pip can be pressed, lifted off the plate with an upward drag, stretched or compressed with two fingers, and rotated by dragging the plate. Phone movement drives a gentle jelly jiggle. A branded Jelly Garden box opens its lid/flaps, reveals Pip, and settles him onto the plate. Reset restores his pose. Sound, optional device vibration, reduced motion, and the selected variant persist locally.
+**Boxes** offers a daily Jelly Garden box earned by **1,000 steps**, plus three proposed paid offers. Supported Android phones use the hardware step counter with Physical activity permission. Daily progress, local ownership, and interrupted box reveals persist. This beta starts with all four toys so each finish remains testable.
 
-Tap **Store** to browse three closed collection boxes with prices underneath. **Back to Pip** returns to the same viewer. This is a store preview with proposed USD prices; it does not process payments or unlock toys. See [the store preview](docs/STORE_PREVIEW.md).
+Buy actions currently explain that checkout is unavailable; they cannot charge or grant toys. Real billing, authoritative reward/inventory validation, location checks, and guaranteed background walking are not connected. See [the collection UI and test guide](docs/COLLECTION_UI.md) for the exact behavior and next integration steps.
 
-The authored character is an initial art pass; its Unity material and Android appearance still need validation. The original procedural character remains available for comparison. Audio tones, the branded reveal, and UI are prototype content. There are no collection rewards, purchases, accounts, trades, walking mechanics, or AI calls during gameplay. Follow [the box-opening checklist](docs/BOX_REVEAL.md) to test the new reveal locally.
-
-For the next art step, follow the [character generation pipeline](docs/CHARACTER_PIPELINE.md): establish Pip's design reference, build a reusable Blender mesh, and validate its Unity deformation and materials on Android before expanding the roster.
+The project uses the Built-in Render Pipeline and Unity **6000.6.5f1**. Cloud checks verify portable logic, C# syntax/assets, and Android Java compilation; Unity rendering, plugin packaging, and device behavior need your local editor and phone.
 
 ## Open locally
 
@@ -25,7 +23,7 @@ After the first APK finishes, preserve it as your baseline and pull the latest r
 
 The editable source is `ArtSource/Pip/Pip.blend`; the standard interchange export is `Assets/Pockle/Art/Pip/Pip.fbx`. The runtime uses the custom source's imported native mesh and face anchors so coordinates, scale, UV seams, and deformation remain explicit. The FBX includes the complete character for further art work. The [Blender model study](docs/concepts/pip-model-study-02.png) shows geometry and an offline material; it does not establish the Unity shader's appearance.
 
-In Play mode or the Android build, tap **Peach**, **Moon**, **Glitter**, or **Soft** to compare without resetting the pose or plate angle. Peach keeps the glossy warm shell and small pearls/flecks. Moon uses blue/lavender pearl sheen, larger icy pearls, and silver stars. Gold Glitter adds dense shaded gold microflakes. Mint Soft uses an opaque pastel shell with subdued highlights. See [variant comparison](docs/PIP_VARIANTS.md) for local tests; the new finishes still need Unity/Android visual validation.
+On the shelf, tap **Peach Jelly**, **Moon Jelly**, **Gold Glitter**, or **Mint Soft** to play with that toy. Peach keeps the glossy warm shell and small pearls/flecks. Moon uses blue/lavender pearl sheen, larger icy pearls, and silver stars. Gold Glitter adds dense shaded gold microflakes. Mint Soft uses an opaque pastel shell with subdued highlights. See [variant comparison](docs/PIP_VARIANTS.md) for local tests; the new finishes still need Unity/Android visual validation.
 
 ## Update an existing checkout
 
@@ -35,7 +33,7 @@ The second art pass joins the crown and body into one closed deformable shell, b
 
 The latest viewer update uses a small static studio cubemap for bright softbox reflections across the jelly shell. Reflections become opaque while the peach tint stays translucent; this approximates clear gel without scene refraction. A thin plate collider and pointer-down checks against the visible deformed shell keep turning and squishing separate. Local Unity/Android testing is still required.
 
-If Git reports that local changes would be overwritten, inspect the listed files before restoring or stashing anything; preserve local Android settings and package changes. This art update changes neither `Packages/manifest.json` nor `ProjectSettings`.
+If Git reports that local changes would be overwritten, inspect the listed files before restoring or stashing anything; preserve local Android settings and package changes. The collection update adds Unity's built-in Android JNI module in `Packages/manifest.json`; it leaves `ProjectSettings` unchanged. See the [collection guide](docs/COLLECTION_UI.md) for preserving local package changes if Git blocks the pull.
 
 ## Controls
 
@@ -47,11 +45,11 @@ If Git reports that local changes would be overwritten, inspect the listed files
 | Jiggle | Gently move or shake the phone with **Motion · full**; `J` previews a pulse in the editor |
 | Rebound | Release |
 | Inspect | Drag the exposed plate sideways to rotate Pip and the plate |
-| Compare finishes | Tap **Peach**, **Moon**, **Glitter**, or **Soft** |
-| Browse boxes | Tap **Store**; **Back to Pip** returns to the viewer |
-| Start over | **Reset**, or `R` in the editor |
-| Reveal | **Reveal again**, or `Space` in the editor |
-| Comfort | Toggle **Sound**, **Haptics**, and **Motion** |
+| Pick a toy | Tap its entry on the **Shelf** |
+| Browse / earn boxes | Tap **Boxes** from the shelf |
+| Start over | `R` in the editor only |
+| Reveal | Open an earned box; `Space` previews in the editor |
+| Comfort | Open **Settings** for sound, haptics, and motion |
 
 The starting surface selects the gesture: Pip squishes/lifts; the plate turns. A second touch that starts on Pip can join a toy gesture; it cannot change a plate gesture into a pinch. Removing either finger hands control to the survivor with a rebased drag. Rotation stops immediately on release. Small rim marks show the plate turning. The Touch/Rotate mode buttons have been removed.
 
@@ -66,9 +64,9 @@ dotnet run --project Tests/Pockle.Core.Checks/Pockle.Core.Checks.csproj
 dotnet run --project tools/Pockle.SourceChecks/Pockle.SourceChecks.csproj -- .
 ```
 
-In the prepared cloud workspace, the verified SDK is at `/workspace/.tools/dotnet/dotnet`. These commands test the actual engine-independent deformation/spring code and check C# syntax and asset GUID references. **They do not compile Unity APIs, render shaders, import the Unity scene, or validate touch on a device.**
+In the prepared cloud workspace, the verified SDK is at `/workspace/.tools/dotnet/dotnet`. These commands test the actual engine-independent collection/reward and deformation/spring code and check C# syntax and asset GUID references. **They do not compile Unity APIs, render shaders, import the Unity scene, or validate touch on a device.**
 
-In Unity, open **Window → General → Test Runner → EditMode** and run `Pockle.Core.EditMode.Tests`. Under **PlayMode**, run `Pockle.Variants.PlayMode.Tests` to check repeated variant switching, preserved deformation, cleanup, and saved selection. Both Unity suites remain unrun in cloud. Then follow [the manual device checklist](docs/VALIDATION.md).
+In Unity, open **Window → General → Test Runner → EditMode** and run `Pockle.Core.EditMode.Tests`. Under **PlayMode**, run `Pockle.Variants.PlayMode.Tests` to check variants and the collection UI: separate shelf portraits, toy selection, unavailable checkout, daily unlocks, and repeated claim protection. Both Unity suites remain unrun in cloud. Then follow [the manual device checklist](docs/VALIDATION.md).
 
 ## Source map
 
@@ -76,7 +74,7 @@ In Unity, open **Window → General → Test Runner → EditMode** and run `Pock
 - `Assets/Pockle/Runtime/JellyToy.cs`: authored or procedural mesh, deformed facial features, and materials.
 - `Assets/Pockle/Runtime/PipCharacterAsset.cs`: native mesh and authored feature anchors.
 - `Assets/Pockle/Runtime/TactilePrototype.cs`: pointer capture, reveal, feedback, and preferences.
-- `Assets/Pockle/Runtime/PrototypeHud.cs` / `PrototypeHud.Store.cs` / `PrototypeStage.cs`: responsive controls, the store preview, and presentation.
+- `Assets/Pockle/Runtime/PrototypeHud.cs` / `PrototypeHud.Store.cs` / `PrototypeStage.cs`: the collection UI, box catalog, and presentation.
 - `Assets/Pockle/Shaders/`: simple Built-in candy, accent, and reveal shaders.
 - `Assets/Pockle/Resources/`: imported character source and material references that retain shaders in player builds.
 - `Assets/Pockle/Scenes/PockleTactile.unity`: committed scene entry point.
@@ -86,6 +84,6 @@ The authored body has 3,158 vertices and 5,814 triangles; the original baseline 
 
 ## Current collecting direction
 
-The owner has simplified the collecting loop to daily collection-themed boxes unlocked by walking, plus optional paid boxes (proposed price points: $0.99 standard and $2.99 special). Packaging identifies the collection while color/variant remains a surprise. These are product decisions recorded in [the brief](docs/PRODUCT_BRIEF.md), not implemented rewards, location tracking, or purchases. Lights-off glow and squeeze-reactive internal stars/pearls are also planned after the current viewer test.
+The owner has simplified the collecting loop to daily collection-themed boxes unlocked by walking, plus optional paid boxes (proposed price points: $0.99 standard and $2.99 special). Packaging identifies the collection while color/variant remains a surprise. The [local collection beta](docs/COLLECTION_UI.md) implements the shelf and walking reward; location checks, server authority, and real purchases remain to be connected. Lights-off glow and squeeze-reactive internal stars/pearls are also planned after the current viewer test.
 
 See the [collection box studies](docs/packaging/README.md) for three editable concept dielines and the [viewer direction](docs/INTERACTION_DIRECTION.md) for the planned two-finger, glow, and reactive-filling experiments.

@@ -13,5 +13,6 @@
     <Compile Include="InteractionChecks.cs" />
     <Compile Include="ManipulationChecks.cs" />
     <Compile Include="RevealChecks.cs" />
+    <Compile Include="CollectionChecks.cs" />
   </ItemGroup>
 </Project>

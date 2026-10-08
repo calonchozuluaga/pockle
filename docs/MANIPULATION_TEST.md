@@ -1,3 +1,5 @@
+> Collection UI update: select a toy on **Shelf** to play. Comfort controls are in **Settings**. Open an earned daily box from **Boxes**; `Space` previews the opening in the editor. Former variant, Reset, and Reveal again buttons are gone. See [current UI tests](COLLECTION_UI.md).
+
 # Lift, pinch, and shake test
 
 The interaction update adds one-finger lifting, two-finger squish/stretch, and accelerometer jiggle to both Peach and Moon. It also includes the store preview published immediately before it.
