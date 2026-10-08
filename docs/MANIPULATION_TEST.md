@@ -1,3 +1,5 @@
+> Weighted lift update: test hanging sag, gravity drops, regrab, and landing pulses using [the current weight checklist](WEIGHT_AND_GRAVITY.md).
+
 > Collection UI update: select a toy on **Shelf** to play. Comfort controls are in **Settings**. Open an earned daily box from **Boxes**; `Space` previews the opening in the editor. Former variant, Reset, and Reveal again buttons are gone. See [current UI tests](COLLECTION_UI.md).
 
 # Lift, pinch, and shake test

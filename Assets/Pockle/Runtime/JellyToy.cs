@@ -52,6 +52,8 @@ namespace Pockle.Runtime
         private float previousContactZ;
         private float previousPinch;
         private Vector3 previousPinchAxis;
+        private float previousSag, previousClearance;
+        private Vector3 previousGrip;
         public float DeformedTop { get; private set; }
 
         public Transform VisualRoot { get { Initialize(); return visualRoot; } }
@@ -76,7 +78,7 @@ namespace Pockle.Runtime
             }
             BuildSuspendedAccents();
             haveDeformation = false;
-            SetDeformation(previousCompression, previousStretch, previousTiltX, previousTiltZ, previousContactX, previousContactZ, previousPinch, previousPinchAxis);
+            SetDeformation(previousCompression, previousStretch, previousTiltX, previousTiltZ, previousContactX, previousContactZ, previousPinch, previousPinchAxis, previousSag, previousGrip, previousClearance);
             if (Application.isEditor || Debug.isDebugBuild)
                 Debug.Log("Pip variant: " + PipVariants.Label(variant), this);
         }
@@ -208,7 +210,8 @@ namespace Pockle.Runtime
         /// when the deformation changes; an idle toy has no per-frame work or allocations.
         /// </summary>
         public void SetDeformation(float compression, float stretch, float tiltX,
-            float tiltZ, float contactX, float contactZ, float pinch = 0f, Vector3 pinchAxis = default(Vector3))
+            float tiltZ, float contactX, float contactZ, float pinch = 0f, Vector3 pinchAxis = default(Vector3),
+            float sag = 0f, Vector3 grip = default(Vector3), float clearance = 0f)
         {
             Initialize();
             // Match the portable shape's safe range so feature scale follows its shell,
@@ -220,6 +223,9 @@ namespace Pockle.Runtime
             contactX = SafeClamp(contactX, -1.2f, 1.2f);
             contactZ = SafeClamp(contactZ, -1.2f, 1.2f);
             pinch = SafeClamp(pinch, -.35f, .55f);
+            sag = SafeClamp(sag, 0f, .24f);
+            clearance = SafeClamp(clearance, 0f, 1.05f);
+            grip = new Vector3(SafeClamp(grip.x, -1.5f, 1.5f), SafeClamp(grip.y, -1.5f, 2f), SafeClamp(grip.z, -1.5f, 1.5f));
             if (!float.IsNaN(pinchAxis.sqrMagnitude) && !float.IsInfinity(pinchAxis.sqrMagnitude) && pinchAxis.sqrMagnitude > .000001f)
                 pinchAxis.Normalize();
             else pinchAxis = Vector3.up;
@@ -231,6 +237,9 @@ namespace Pockle.Runtime
                 Mathf.Abs(contactX - previousContactX) < ChangeThreshold &&
                 Mathf.Abs(contactZ - previousContactZ) < ChangeThreshold &&
                 Mathf.Abs(pinch - previousPinch) < ChangeThreshold &&
+                Mathf.Abs(sag - previousSag) < ChangeThreshold &&
+                (sag == 0f || Mathf.Abs(clearance - previousClearance) < ChangeThreshold &&
+                    (grip - previousGrip).sqrMagnitude < ChangeThreshold * ChangeThreshold) &&
                 (pinchAxis - previousPinchAxis).sqrMagnitude < ChangeThreshold * ChangeThreshold) return;
 
             previousCompression = compression;
@@ -241,13 +250,15 @@ namespace Pockle.Runtime
             previousContactZ = contactZ;
             previousPinch = pinch;
             previousPinchAxis = pinchAxis;
+            previousSag = sag; previousGrip = grip; previousClearance = clearance;
             haveDeformation = true;
             var directional = new DirectionalStretch(pinch, new Point3(pinchAxis.x, pinchAxis.y, pinchAxis.z));
+            var suspension = new SuspendedShape(sag, new Point3(grip.x, grip.y, grip.z), clearance);
 
             DeformedTop = -1f;
             for (int i = 0; i < vertices.Length; i++)
             {
-                vertices[i] = Deform(restVertices[i], compression, stretch, tiltX, tiltZ, contactX, contactZ, directional);
+                vertices[i] = Deform(restVertices[i], compression, stretch, tiltX, tiltZ, contactX, contactZ, directional, suspension);
                 DeformedTop = Mathf.Max(DeformedTop, vertices[i].y);
             }
 
@@ -266,13 +277,13 @@ namespace Pockle.Runtime
             for (int i = 0; i < accents.Count; i++)
             {
                 var accent = accents[i];
-                accent.Transform.localPosition = Deform(accent.Rest, compression, stretch, tiltX, tiltZ, contactX, contactZ, directional);
+                accent.Transform.localPosition = Deform(accent.Rest, compression, stretch, tiltX, tiltZ, contactX, contactZ, directional, suspension);
                 accent.Transform.localScale = Vector3.Scale(accent.Scale, featureScale);
                 if (accent.IsSurface) accent.Transform.localRotation = featureRotation;
             }
 
             for (int i = 0; i < mouthRest.Length; i++)
-                mouthPositions[i] = Deform(mouthRest[i], compression, stretch, tiltX, tiltZ, contactX, contactZ, directional);
+                mouthPositions[i] = Deform(mouthRest[i], compression, stretch, tiltX, tiltZ, contactX, contactZ, directional, suspension);
             mouth.SetPositions(mouthPositions);
         }
 
@@ -282,11 +293,12 @@ namespace Pockle.Runtime
         }
 
         private static Vector3 Deform(Vector3 rest, float compression, float stretch,
-            float tiltX, float tiltZ, float contactX, float contactZ, DirectionalStretch directional)
+            float tiltX, float tiltZ, float contactX, float contactZ, DirectionalStretch directional, SuspendedShape suspension)
         {
             Point3 deformed = JellyShape.Deform(new Point3(rest.x, rest.y, rest.z),
                 compression, stretch, tiltX, tiltZ, contactX, contactZ);
             deformed = directional.Apply(deformed);
+            deformed = suspension.Apply(deformed);
             return new Vector3((float)deformed.X, (float)deformed.Y, (float)deformed.Z);
         }
 

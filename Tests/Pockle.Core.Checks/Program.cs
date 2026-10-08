@@ -22,6 +22,7 @@ internal static class Program
             ManipulationChecks.Run();
             RevealChecks.Run();
             CollectionChecks.Run();
+            WeightChecks.Run();
             return 0;
         }
         catch (Exception exception)

@@ -14,5 +14,6 @@
     <Compile Include="ManipulationChecks.cs" />
     <Compile Include="RevealChecks.cs" />
     <Compile Include="CollectionChecks.cs" />
+    <Compile Include="WeightChecks.cs" />
   </ItemGroup>
 </Project>

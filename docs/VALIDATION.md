@@ -1,3 +1,7 @@
+## Weighted lift update
+
+Executed the complete portable suite with 152,104 new weight/sag assertions, plus C# syntax/assets across default, Editor, and Android branches. The Unity variant pose test now includes sag and remains unrun in cloud. Follow [the weight/device checklist](WEIGHT_AND_GRAVITY.md) for grip support, higher drops, regrab, handoffs, clearance, and calm mode.
+
 ## Collection UI beta (October 8, 2026)
 
 Executed: the full portable suite, including 124 walking/inventory assertions; C# syntax and asset references; Android Java compilation against the checksum-verified official API 23 jar; `git diff --check`. New PlayMode UI tests cover shelf portraits/selection, unavailable checkout without awards, and one-time daily unlocks. Unity is unavailable in cloud, so these PlayMode tests, actual UI rendering, Android library import/packaging, physical step counting, background restrictions, and phone layout are unrun here. Follow [the local collection checklist](COLLECTION_UI.md).

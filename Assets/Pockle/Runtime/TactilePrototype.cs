@@ -14,7 +14,9 @@ namespace Pockle.Runtime
         private readonly Spring1D stretch = new Spring1D(3.6f, 0.59f);
         private readonly Spring1D tiltX = new Spring1D(3.3f, 0.63f);
         private readonly Spring1D tiltZ = new Spring1D(3.3f, 0.63f);
-        private readonly Spring1D lift = new Spring1D(4f, .70f);
+        private readonly WeightedLift lift = new WeightedLift();
+        private readonly Spring1D sag = new Spring1D(3.3f, .78f);
+        private Vector3 gripPoint, gripTarget;
         private readonly Spring1D pinch = new Spring1D(4f, .64f);
         private readonly Spring1D jiggleX = new Spring1D(5.2f, .44f);
         private readonly Spring1D jiggleY = new Spring1D(5.2f, .44f);
@@ -58,6 +60,7 @@ namespace Pockle.Runtime
         private bool revealing;
         private float revealTime;
         private bool revealChimePlayed;
+        private bool dropFeedback;
 
         private void Start()
         {
@@ -124,7 +127,20 @@ namespace Pockle.Runtime
             stretch.Step(dt);
             tiltX.Step(dt);
             tiltZ.Step(dt);
-            lift.Step(dt);
+            bool held = gesture.IsActive && gesture.Target == PointerTarget.Toy && !revealing && !hud.StoreVisible;
+            lift.Step(dt, held, reducedMotion || revealing || hud.StoreVisible);
+            sag.Target = !reducedMotion && held ? .18f * Mathf.Clamp01(lift.Value / .25f) : 0f;
+            sag.Step(dt);
+            gripPoint = Vector3.Lerp(gripPoint, gripTarget, 1f - Mathf.Exp(-18f * dt));
+            if (lift.LandingSpeed > .08f && !revealing && !hud.StoreVisible && !reducedMotion)
+            {
+                compression.Reset(Mathf.Clamp(lift.LandingSpeed * .075f, .025f, .24f));
+                compression.Target = 0f;
+                jiggleY.Reset(-Mathf.Min(.1f, lift.LandingSpeed * .025f));
+                tiltX.Reset(Mathf.Clamp(gripPoint.x * lift.LandingSpeed * .035f, -.08f, .08f)); tiltX.Target = 0;
+                if (dropFeedback) { Play(releaseClip); Vibrate(); }
+                dropFeedback = false;
+            }
             pinch.Step(dt);
             jiggleX.Step(dt); jiggleY.Step(dt); jiggleZ.Step(dt);
             // Reduced motion keeps direct touch feedback and omits the spring rebound.
@@ -140,9 +156,14 @@ namespace Pockle.Runtime
             // compresses. The shape's safe nonnegative inputs still permit this rebound.
             float squash = Mathf.Max(0f, c) + Mathf.Max(0f, -s) * 0.35f + Mathf.Max(0f, -jiggleY.Value) * .6f;
             float elongation = Mathf.Max(0f, s) + Mathf.Max(0f, -c) * 0.65f + Mathf.Max(0f, jiggleY.Value) * .6f;
-            toy.SetDeformation(squash, elongation, tx, tz, contactX, contactZ,
-                reducedMotion ? pinch.Target : pinch.Value, pinchAxis);
+            float hanging = reducedMotion || revealing ? 0f : Mathf.Max(0f, sag.Value);
+            float clearance = revealing ? 0f : lift.Value;
+            float p = reducedMotion ? pinch.Target : pinch.Value;
+            toy.SetDeformation(squash, elongation, tx, tz, contactX, contactZ, p, pinchAxis, hanging, gripPoint, clearance);
             ApplyLift();
+            if (hanging > 0f && visibleLift < clearance - .0001f)
+                toy.SetDeformation(squash, elongation, tx, tz, contactX, contactZ, p, pinchAxis, hanging, gripPoint, visibleLift);
+            if (!revealing) lift.ConstrainHeight(visibleLift);
         }
 
         private void ReadInput()
@@ -190,8 +211,11 @@ namespace Pockle.Runtime
             liftStart = visibleLift;
             if (target == PointerTarget.Toy)
             {
+                dropFeedback = false;
                 lift.Target = liftStart;
                 Vector3 localContact = toy.transform.InverseTransformPoint(toyPoint);
+                gripTarget = localContact;
+                if (visibleLift <= .001f) gripPoint = gripTarget;
                 contactX = Mathf.Clamp(localContact.x, -0.9f, 0.9f);
                 contactZ = Mathf.Clamp(localContact.z, -0.8f, 0.8f);
                 compression.Target = 0.23f;
@@ -232,7 +256,9 @@ namespace Pockle.Runtime
             gesture.Cancel();
             compression.Target = stretch.Target = tiltX.Target = tiltZ.Target = 0f;
             lift.Target = pinch.Target = 0f;
-            if (feedback && wasPressed)
+            dropFeedback = feedback && wasPressed && !reducedMotion && visibleLift > .03f;
+            if (!feedback) { lift.Reset(); sag.Reset(); }
+            if (feedback && wasPressed && (reducedMotion || visibleLift <= .03f))
             {
                 Play(releaseClip);
                 Vibrate();
@@ -253,6 +279,7 @@ namespace Pockle.Runtime
             turntable.localRotation = Quaternion.identity;
             compression.Reset(); stretch.Reset(); tiltX.Reset(); tiltZ.Reset();
             lift.Reset(); pinch.Reset(); ClearMotion();
+            sag.Reset(); gripPoint = gripTarget = Vector3.zero;
             revealLift = 0f;
             visibleLift = 0f;
             toy.transform.localPosition = Vector3.zero;

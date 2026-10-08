@@ -2,6 +2,8 @@
 
 Unity source for Pockle's **collection UI beta**. Peach Jelly, Moon Jelly, Gold Glitter, and Mint Soft each have their own toy on the shelf. Tap one to play; direct squish, lift, two-finger stretch, plate rotation, and phone-motion jiggle remain. The prototype control card is gone; comfort preferences live in Settings.
 
+Lifting now has [weight and gravity](docs/WEIGHT_AND_GRAVITY.md): Pip sags below the grip and follows the hand with slight lag. Release makes him fall, squash, jiggle, and settle, with stronger feedback for higher drops. Motion calm keeps direct control without those extra movements.
+
 **Boxes** offers a daily Jelly Garden box earned by **1,000 steps**, plus three proposed paid offers. Supported Android phones use the hardware step counter with Physical activity permission. Daily progress, local ownership, and interrupted box reveals persist. This beta starts with all four toys so each finish remains testable.
 
 Buy actions currently explain that checkout is unavailable; they cannot charge or grant toys. Real billing, authoritative reward/inventory validation, location checks, and guaranteed background walking are not connected. See [the collection UI and test guide](docs/COLLECTION_UI.md) for the exact behavior and next integration steps.

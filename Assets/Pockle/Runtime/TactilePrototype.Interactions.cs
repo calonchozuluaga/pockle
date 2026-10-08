@@ -36,8 +36,10 @@ namespace Pockle.Runtime
                 Touch survivor = liveFirst ? first : second;
                 pointerStart = pointerPrevious = survivor.position;
                 liftStart = visibleLift;
+                lift.Reset(visibleLift);
                 lift.Target = liftStart;
                 pinch.Target = 0f; // Ease out rather than snapping the mesh.
+                CaptureGrip(survivor.position);
                 hud.SetStatus("Drag up to lift. Add a finger to stretch.");
                 return;
             }
@@ -54,7 +56,11 @@ namespace Pockle.Runtime
                     pairStartCenter = (first.position + candidate.position) * .5f;
                     pairLiftStart = visibleLift;
                     pairStartPinch = pinch.Target;
+                    lift.Reset(visibleLift);
                     lift.Target = pairLiftStart;
+                    Vector3 secondGrip;
+                    if (toy.RaycastBody(viewCamera.ScreenPointToRay(candidate.position), out secondGrip))
+                        gripTarget = (gripTarget + toy.transform.InverseTransformPoint(secondGrip)) * .5f;
                     hud.SetStatus("Pull apart to stretch. Pinch to squish.");
                     MovePair(first.position, candidate.position);
                     return;
@@ -102,20 +108,21 @@ namespace Pockle.Runtime
             return false;
         }
 
+        private void CaptureGrip(Vector2 position)
+        {
+            Vector3 point;
+            if (toy.RaycastBody(viewCamera.ScreenPointToRay(position), out point))
+                gripTarget = toy.transform.InverseTransformPoint(point);
+        }
+
         private void ApplyLift()
         {
-            float previous = visibleLift;
             float requested = revealing ? revealLift : reducedMotion ? lift.Target : lift.Value;
             // Keep the top of a lifted, vertically stretched Pip inside the viewer.
             float scale = Mathf.Max(.01f, toyMount.lossyScale.y);
             float room = Mathf.Max(0f, 3.4f - (toyMount.position.y + toy.DeformedTop * scale)) / scale;
             visibleLift = Mathf.Clamp(requested, 0f, Mathf.Min(revealing ? 1.05f : .75f, room));
             toy.transform.localPosition = Vector3.up * visibleLift;
-            if (!reducedMotion && !revealing && !gesture.IsActive && previous > .001f && visibleLift <= .001f && lift.Velocity < -.08f)
-            {
-                compression.Reset(Mathf.Clamp(-lift.Velocity * .06f, .025f, .12f));
-                compression.Target = 0f;
-            }
             if (Mathf.Abs(visibleLift - lastShadowLift) < .001f) return;
             lastShadowLift = visibleLift;
             float height = Mathf.Clamp01(visibleLift * scale / .75f);
