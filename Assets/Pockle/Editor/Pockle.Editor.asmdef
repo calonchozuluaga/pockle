@@ -1,0 +1,7 @@
+{
+  "name": "Pockle.Editor",
+  "rootNamespace": "Pockle.Editor",
+  "references": ["Pockle.Runtime"],
+  "includePlatforms": ["Editor"],
+  "autoReferenced": true
+}

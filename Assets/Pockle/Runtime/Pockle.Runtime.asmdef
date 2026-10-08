@@ -1,0 +1,6 @@
+{
+  "name": "Pockle.Runtime",
+  "rootNamespace": "Pockle.Runtime",
+  "references": ["Pockle.Core", "UnityEngine.UI"],
+  "autoReferenced": true
+}
