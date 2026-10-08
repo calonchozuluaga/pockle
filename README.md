@@ -6,6 +6,8 @@ Pip can be pressed, dragged upward to stretch, released to rebound, and rotated.
 
 The character mesh, materials, audio tones, reveal box, and UI are **procedural placeholders**, not final production art or sound. There are no collection rewards, purchases, accounts, trades, walking mechanics, or AI calls in this milestone.
 
+For the next art step, follow the [character generation pipeline](docs/CHARACTER_PIPELINE.md): establish Pip's design reference, build a reusable Blender mesh, and validate its Unity deformation and materials on Android before expanding the roster.
+
 ## Open locally
 
 1. Use your installed **Unity 6.6, version `6000.6.5f1`**. That exact version is recorded in `ProjectSettings/ProjectVersion.txt`. Before building for a phone, install that editor's Android or iOS build-support modules and check its [platform requirements](https://docs.unity3d.com/6000.6/Documentation/Manual/system-requirements.html), including Xcode for iOS.
