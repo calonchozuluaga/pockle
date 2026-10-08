@@ -79,3 +79,5 @@ The authored body has 3,158 vertices and 5,814 triangles; the original baseline 
 ## Current collecting direction
 
 The owner has simplified the collecting loop to daily collection-themed boxes unlocked by walking, plus optional paid boxes (proposed price points: $0.99 standard and $2.99 special). Packaging identifies the collection while color/variant remains a surprise. These are product decisions recorded in [the brief](docs/PRODUCT_BRIEF.md), not implemented rewards, location tracking, or purchases. Lights-off glow and squeeze-reactive internal stars/pearls are also planned after the current viewer test.
+
+See the [collection box studies](docs/packaging/README.md) for three editable concept dielines and the [viewer direction](docs/INTERACTION_DIRECTION.md) for the planned two-finger, glow, and reactive-filling experiments.

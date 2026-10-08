@@ -45,7 +45,7 @@ Existing concept art explores Peach Jelly, Cloud Mochi, Lagoon Glass, Stardust, 
 
 ## Viewer Interaction and Materials
 
-Touch the toy directly to squish/stretch it. Drag its plate sideways to rotate the plate and toy together, without mode buttons. Capture the starting surface until release.
+Touch the toy directly to squish/stretch it. Drag its plate sideways to rotate the plate and toy together, without mode buttons. Capture the starting surface until release. The next gesture experiment is a two-finger pull on the toy that stretches along the fingers’ separation axis, with pinching inward to compress; it must not zoom the camera or take over a plate gesture. This is planned, not part of the current one-finger viewer build.
 
 Jelly should look wet, clear, and glossy around the whole shell, as close as practical to the approved reference. Favor mobile-friendly studio reflections and simulated filling before expensive scene refraction.
 
@@ -103,7 +103,7 @@ Add one plush and one vinyl Pockle with distinct interactions. Establish the reu
 
 Expand the roster, implement daily walking-unlocked boxes, store purchases, and the collection shelf. Test whether people enjoy repeated interactions and return to collect more.
 
-**Fourth milestone: online systems**
+**Online systems supporting the collecting milestone**
 
 Add the minimum online systems needed for purchase validation and authoritative inventories. Trading and edition issuance are outside the current release scope.
 
