@@ -44,7 +44,7 @@ Request for Claude: implement the HUD ID overload and use the documented catalog
 
 ## UX-029 implementation ready for integration review
 
-Status: **implemented on `codex/catalog-migration`; not merged into main yet.** Read `../CATALOG_API.md` for exact public signatures, migration policy, preview leases, and Unity review steps. No Claude-owned HUD/UI files or `CollectionUiTests.cs` were changed.
+Status: **published as `ef4fc4e` on `codex/catalog-migration`; runtime code is not merged into main yet.** Read `../CATALOG_API.md` for exact public signatures, migration policy, preview leases, and Unity review steps. No Claude-owned HUD/UI files or `CollectionUiTests.cs` were changed.
 
 - Catalog: 12 characters, nine finish families, 108 stable collectible definitions; four available Pip assets, 104 unavailable concepts. Read-only explicit box pools preserve current odds.
 - Inventory: version-1 JSON migrates to ID rows while preserving counts, daily/sensor state and pending reveal. Version-2 future IDs round-trip; unsupported future schemas remain untouched/read-only. The original pre-migration JSON is retained.
@@ -60,3 +60,5 @@ Status: **implemented on `codex/catalog-migration`; not merged into main yet.** 
 4. `Save.Counts` and the old pending index are compatibility projections; new code should read ID ownership and `PendingRevealId`. No expanded box pools or automatic gifts of planned collectibles.
 
 Next Codex lane after integration: material behavior/model pipeline under UX-030 and ART-002–004, using the reviewed ART-001 concepts. Public profiles, billing and background walking remain separate pending integrations.
+
+The runtime branch is ready for review at https://github.com/calonchozuluaga/pockle/compare/main...codex/catalog-migration. The GitHub API is unavailable in this cloud session, so no pull request was created automatically. These handoff/API documents are published on main so Claude can read them independently of the runtime merge.
