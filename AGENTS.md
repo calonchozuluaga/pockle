@@ -10,33 +10,23 @@ Two AI agents build Pockle: **Codex** and **Claude**. The owner (Carlos) runs Un
 | What's done, what's next, acceptance criteria | `docs/UI_UX_TASKS.md` (stable task IDs: UX-001…) |
 | How the code fits together | `docs/ARCHITECTURE.md` |
 | What has actually been verified, and how | `docs/VALIDATION.md` |
+| Who owns what, and how to hand off | `docs/AGENT_COORDINATION.md`, `docs/handoffs/` |
 | CI and how to read its results | `docs/CI.md` |
 
 If a change alters any of these, update the doc in the same PR.
 
-## Lanes — who owns what
+## Lanes and handoffs
 
-Lanes keep two agents from editing the same files at once. Before starting, check **Current work** below and add your line in your PR. If you must touch another lane's files, keep the change minimal and say so in the PR description.
+Ownership and the handoff process live in [`docs/AGENT_COORDINATION.md`](docs/AGENT_COORDINATION.md); that document wins if anything here disagrees. In short:
 
-| Lane | Owner | Main paths |
-| --- | --- | --- |
-| Toy feel, deformation, materials, shaders, reveal | Codex | `Runtime/Core/*` (springs, shape, gesture, reveal), `JellyToy.cs`, `TactilePrototype*.cs`, `MysteryBox.cs`, `Shaders/` |
-| Menus and screens (Home, Shelf, Boxes, You, Settings, onboarding) | Codex | `PrototypeHud*.cs`, `PrototypeStage.cs`, `MenuNavigation.cs` |
-| CI, build pipeline, test infrastructure | Claude | `.github/`, `docs/CI.md` |
-| Content catalog: toys, series, rarity, drop tables, save migrations | Claude | `CollectionProgress.cs`, `CollectionSession.cs`, `BoxCatalog.cs`, new catalog assets |
-| Walking (Android Health Connect, iOS Core Motion/HealthKit) | Claude | `AndroidWalkingTracker.cs`, `Assets/Plugins/` |
-| Backend, accounts, purchases/IAP validation | Claude | new `Runtime/Services/` (once a backend is chosen) |
-| Product/design reviews of the other agent's PRs | Either | PR comments only |
+- **Claude:** UI and visual design: UX-002 visual system, then UX-003/004 Home and shelf polish (`PrototypeHud*.cs`, new UI artwork/resources, UI PlayMode tests, UI design notes), plus CI (`.github/`, `docs/CI.md`).
+- **Codex:** runtime interaction, Android walking, reward/inventory reliability, and portable checks (`TactilePrototype.cs`, `JellyToy*`, `Runtime/Core/`, `CollectionSession.cs`, `AndroidWalkingTracker.cs`, the Android plugin, `Tests/Pockle.Core.Checks/`).
 
-### Current work
-
-Keep one line per open branch. Remove your line when the PR merges.
-
-- `claude/agents-and-ci` — Claude — this file, `CLAUDE.md`, CI workflow, `docs/CI.md`.
+At the start of every task, fetch `origin/main` and read both `docs/handoffs/codex.md` and `docs/handoffs/claude.md`. Record your claimed task IDs, branch, and files in your own handoff note. Ask for changes in the other lane's files through your handoff note instead of editing them concurrently.
 
 ## Branches and pull requests
 
-- Never commit directly to `main`. Branch as `codex/<topic>` or `claude/<topic>` from the latest `main`, and open a PR.
+- Keep `main` as the owner's testable build. Work on `codex/<topic>` or `claude/<topic>` branches from the latest `main`, in a separate checkout, and merge through a pull request (or leave the branch reference in your handoff note). Don't force-push shared branches.
 - One topic per PR. Rebase on `main` before asking for review; resolve conflicts in favor of whatever is already on `main` unless the PR's purpose is to change it.
 - CI must be green before merge (see `docs/CI.md`). A red Unity job is a real failure, not noise.
 - Every PR description ends with **Verified** (what ran and passed: CI jobs, portable checks, owner device test) and **Not verified** (what still needs Unity editor or a phone). Never describe unrun tests or unseen visuals as passing.

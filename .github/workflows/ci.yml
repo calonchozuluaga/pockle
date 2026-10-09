@@ -29,10 +29,22 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
+      - name: Pin the .NET 8 SDK (the runner also ships newer SDKs)
+        run: |
+          v=$(dotnet --list-sdks | awk '/^8\.0\./{print $1}' | sort -V | tail -1)
+          echo "{\"sdk\":{\"version\":\"$v\",\"rollForward\":\"latestPatch\"}}" > global.json
+          dotnet --version
+      # Each check's output is also posted as annotations so failures are readable on the PR.
       - name: Core logic checks
-        run: dotnet run --project Tests/Pockle.Core.Checks/Pockle.Core.Checks.csproj
+        run: |
+          set -o pipefail
+          dotnet run --project Tests/Pockle.Core.Checks/Pockle.Core.Checks.csproj 2>&1 | tee core.log || \
+            { tail -25 core.log | sed 's/^/::error title=Core checks::/'; exit 1; }
       - name: C# syntax and asset GUID checks
-        run: dotnet run --project tools/Pockle.SourceChecks/Pockle.SourceChecks.csproj -- .
+        run: |
+          set -o pipefail
+          dotnet run --project tools/Pockle.SourceChecks/Pockle.SourceChecks.csproj -- . 2>&1 | tee source.log || \
+            { tail -25 source.log | sed 's/^/::error title=Source checks::/'; exit 1; }
       - name: Whitespace errors
         run: git diff --check 4b825dc642cb6eb9a060e54bf8d69288fbee4904 HEAD -- . ':(exclude)*.pocklemesh' ':(exclude)*.svg' ':(exclude)*.pdf'
 
