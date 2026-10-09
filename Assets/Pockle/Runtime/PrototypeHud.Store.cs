@@ -22,8 +22,8 @@ namespace Pockle.Runtime
 
         private void BuildStore()
         {
-            walkCard = Rect("Daily walking box", boxesRoot); Surface(walkCard, Paper);
-            Label("YOUR DAILY BOX", walkCard, 10, MutedInk, FontStyle.Bold, TextAnchor.MiddleCenter,
+            walkCard = Rect("Daily walking box", boxesRoot); Card(walkCard, Paper);
+            Label("YOUR DAILY BOX", walkCard, PockleTheme.EyebrowSize, MutedInk, FontStyle.Bold, TextAnchor.MiddleCenter,
                 new Vector2(0, -16), new Vector2(250, 20));
             Label("A little walk. A little wonder.", walkCard, 18, Ink, FontStyle.Bold, TextAnchor.MiddleCenter,
                 new Vector2(0, -40), new Vector2(290, 28));
@@ -33,12 +33,12 @@ namespace Pockle.Runtime
             var fill = Rect("Earned steps", track); Stretch(fill); walkFill = fill.gameObject.AddComponent<Image>();
             walkFill.sprite = roundedSprite; walkFill.color = Peach; walkFill.type = Image.Type.Filled; walkFill.fillMethod = Image.FillMethod.Horizontal;
             walkFill.fillOrigin = 0; walkFill.raycastTarget = false; walkFill.fillAmount = 0;
-            walkStatus = Label("Enable walking to get started.", walkCard, 11, MutedInk, FontStyle.Normal,
+            walkStatus = Label("Enable walking to get started.", walkCard, PockleTheme.CaptionSize, MutedInk, FontStyle.Normal,
                 TextAnchor.MiddleCenter, new Vector2(0, -140), new Vector2(280, 42));
             walkButtons = Rect("Walking actions", walkCard); TopCentered(walkButtons, new Vector2(0, -194), new Vector2(290, 48));
             CreateButton("Enable walking", walkButtons, Vector2.zero, new Vector2(140, 48), Quiet, () => session?.EnableWalking(), out _, 12);
             openDaily = CreateButton("Walk to unlock", walkButtons, new Vector2(150, 0), new Vector2(140, 48), Peach, () => DailyBoxRequested?.Invoke(), out _, 12);
-            Label("Jelly Garden: Peach or Mint, equal chance.", walkCard, 10, MutedInk, FontStyle.Normal,
+            Label("Jelly Garden: Peach or Mint, equal chance.", walkCard, PockleTheme.EyebrowSize, MutedInk, FontStyle.Normal,
                 TextAnchor.MiddleCenter, new Vector2(0, -250), new Vector2(290, 22));
             shopHeading = Label("Or pick a surprise box", boxesRoot, 20, Ink, FontStyle.Bold, TextAnchor.MiddleCenter,
                 Vector2.zero, new Vector2(300, 30)).rectTransform;
@@ -48,7 +48,7 @@ namespace Pockle.Runtime
             {
                 int index = i;
                 BoxOffer offer = BoxCatalog.Offers[i];
-                storeCards[i] = Rect(offer.Name + " · shop", boxesRoot); Surface(storeCards[i], Paper);
+                storeCards[i] = Rect(offer.Name + " · shop", boxesRoot); Card(storeCards[i], Paper);
                 storePictures[i] = Rect("Closed collection box", storeCards[i]);
                 if (artwork != null)
                 {
@@ -56,17 +56,17 @@ namespace Pockle.Runtime
                     image.uvRect = crops[i]; image.raycastTarget = false;
                 }
                 else Surface(storePictures[i], Quiet);
-                storeNames[i] = Label(offer.Name, storeCards[i], 14, Ink, FontStyle.Bold, TextAnchor.MiddleCenter,
+                storeNames[i] = Label(offer.Name, storeCards[i], 15, Ink, FontStyle.Bold, TextAnchor.MiddleCenter,
                     Vector2.zero, new Vector2(160, 26)).rectTransform;
                 storePrices[i] = Label(offer.ProposedPrice, storeCards[i], 21, Ink, FontStyle.Bold, TextAnchor.MiddleCenter,
                     Vector2.zero, new Vector2(160, 30)).rectTransform;
-                storeOdds[i] = Label(offer.Contents, storeCards[i], 10, MutedInk, FontStyle.Normal, TextAnchor.MiddleCenter,
+                storeOdds[i] = Label(offer.Contents, storeCards[i], PockleTheme.EyebrowSize, MutedInk, FontStyle.Normal, TextAnchor.MiddleCenter,
                     Vector2.zero, new Vector2(160, 32)).rectTransform;
                 var buy = CreateButton("Buy box", storeCards[i], Vector2.zero, new Vector2(150, 48), Peach,
                     () => BuyBox(BoxCatalog.Offers[index]), out _, 12);
                 storeBuy[i] = buy.GetComponent<RectTransform>();
             }
-            catalogNote = Label("Test catalog · proposed USD prices. Checkout coming next.", boxesRoot, 10, MutedInk,
+            catalogNote = Label("Test catalog · proposed USD prices. Checkout coming next.", boxesRoot, PockleTheme.EyebrowSize, MutedInk,
                 FontStyle.Normal, TextAnchor.MiddleCenter, Vector2.zero, new Vector2(330, 30)).rectTransform;
         }
 

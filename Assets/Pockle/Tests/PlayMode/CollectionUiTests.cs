@@ -18,9 +18,12 @@ namespace Pockle.Tests
         private CollectionSession session;
         private string oldSave, oldBackup;
         private bool hadSave, hadBackup;
-        private readonly string[] profileKeys = { "pockle.profile.local.name", "pockle.profile.local.avatar", "pockle.profile.local.favorite" };
-        private readonly string[] previousProfile = new string[3];
-        private readonly bool[] hadProfile = new bool[3];
+        // String keys hold names/IDs; the legacy avatar/favorite keys are ints. All are restored after each test.
+        private readonly string[] profileKeys = { "pockle.profile.local.name", "pockle.profile.local.avatar", "pockle.profile.local.favorite",
+            "pockle.profile.local.avatarId", "pockle.profile.local.favoriteId" };
+        private static bool IsIntKey(int index) => index == 1 || index == 2;
+        private readonly string[] previousProfile = new string[5];
+        private readonly bool[] hadProfile = new bool[5];
         private bool hadVolume;
         private float previousVolume, observedVolume;
 
@@ -33,7 +36,7 @@ namespace Pockle.Tests
             for (int i = 0; i < profileKeys.Length; i++)
             {
                 hadProfile[i] = PlayerPrefs.HasKey(profileKeys[i]);
-                previousProfile[i] = i == 0 ? PlayerPrefs.GetString(profileKeys[i]) : PlayerPrefs.GetInt(profileKeys[i]).ToString();
+                previousProfile[i] = IsIntKey(i) ? PlayerPrefs.GetInt(profileKeys[i]).ToString() : PlayerPrefs.GetString(profileKeys[i]);
                 PlayerPrefs.DeleteKey(profileKeys[i]);
             }
             hadVolume = PlayerPrefs.HasKey("pockle.prototype.soundVolume"); previousVolume = PlayerPrefs.GetFloat("pockle.prototype.soundVolume");
@@ -56,8 +59,8 @@ namespace Pockle.Tests
             for (int i = 0; i < profileKeys.Length; i++)
             {
                 if (!hadProfile[i]) PlayerPrefs.DeleteKey(profileKeys[i]);
-                else if (i == 0) PlayerPrefs.SetString(profileKeys[i], previousProfile[i]);
-                else PlayerPrefs.SetInt(profileKeys[i], int.Parse(previousProfile[i]));
+                else if (IsIntKey(i)) PlayerPrefs.SetInt(profileKeys[i], int.Parse(previousProfile[i]));
+                else PlayerPrefs.SetString(profileKeys[i], previousProfile[i]);
             }
             if (hadVolume) PlayerPrefs.SetFloat("pockle.prototype.soundVolume", previousVolume); else PlayerPrefs.DeleteKey("pockle.prototype.soundVolume");
             PlayerPrefs.Save();
@@ -73,7 +76,7 @@ namespace Pockle.Tests
             Assert.IsTrue(portraits.All(image => ((RenderTexture)image.texture).IsCreated()));
             PipVariant selected = PipVariant.PeachJelly;
             hud.VariantChanged += choice => selected = choice;
-            ButtonWithText("MOON JELLY").onClick.Invoke();
+            ButtonWithText("Moon Jelly").onClick.Invoke();
             Assert.AreEqual(PipVariant.MoonJelly, selected);
             Assert.IsFalse(hud.StoreVisible, "Selected toy must be available for direct manipulation.");
             hud.GoBack();
@@ -115,7 +118,7 @@ namespace Pockle.Tests
             var scroll = root.GetComponentInChildren<ScrollRect>();
             float position = Mathf.Max(0, scroll.content.rect.height - scroll.viewport.rect.height) * .5f;
             scroll.content.anchoredPosition = new Vector2(0, position);
-            ButtonWithText("MOON JELLY").onClick.Invoke();
+            ButtonWithText("Moon Jelly").onClick.Invoke();
             Assert.AreEqual(AppPage.Play, hud.CurrentPage);
             ButtonWithText("Settings").onClick.Invoke();
             Assert.AreEqual(AppPage.Settings, hud.CurrentPage); Assert.IsTrue(hud.StoreVisible);
@@ -139,7 +142,7 @@ namespace Pockle.Tests
             field.text = "  Lucía 李  "; field.onEndEdit.Invoke(field.text);
             Assert.AreEqual("Lucía 李", PlayerPrefs.GetString("pockle.profile.local.name"));
             Assert.IsFalse(field.textComponent.supportRichText);
-            ButtonWithText("MOON JELLY").onClick.Invoke();
+            ButtonWithText("Moon Jelly").onClick.Invoke();
             var avatar = root.GetComponentsInChildren<Button>().Single(button => button.name == "Avatar · MOON JELLY");
             avatar.onClick.Invoke();
             Assert.AreEqual(1, PlayerPrefs.GetInt("pockle.profile.local.avatar"));
@@ -159,6 +162,48 @@ namespace Pockle.Tests
             Assert.IsTrue(root.GetComponentsInChildren<Text>().Any(text => text.text == "Hey, Lucía 李"));
             ButtonWithText("You").onClick.Invoke();
             Assert.AreEqual("Lucía 李", root.GetComponentInChildren<InputField>().text);
+        }
+
+        [UnityTest]
+        public IEnumerator HomeAndShelfReflectProgressAndKeepUndiscoveredToysASurprise()
+        {
+            // Restart with a saved ID inventory: Moon not yet discovered, three Mint duplicates.
+            Object.Destroy(root); yield return null;
+            var save = new CollectionSave { Version = CollectionProgress.SaveVersion, Day = CollectionSession.Today,
+                Inventory = new System.Collections.Generic.List<OwnedCollectible> {
+                    new OwnedCollectible(PipVariants.CollectibleId(PipVariant.PeachJelly), 1),
+                    new OwnedCollectible(PipVariants.CollectibleId(PipVariant.GoldGlitter), 1),
+                    new OwnedCollectible(PipVariants.CollectibleId(PipVariant.MintSoft), 3) } };
+            PlayerPrefs.SetString(SaveKey, JsonUtility.ToJson(save));
+            root = new GameObject("Partial collection UI test");
+            session = root.AddComponent<CollectionSession>(); session.Initialize();
+            Assert.AreEqual(0, session.GetOwnedCount(PipVariants.CollectibleId(PipVariant.MoonJelly)));
+            hud = root.AddComponent<PrototypeHud>(); hud.Initialize(_ => { }, _ => { }, _ => { }); hud.Bind(session);
+            session.SimulateDailyWalk(); // Ready box; also raises Changed so the HUD refreshes.
+            yield return null;
+            Assert.IsTrue(ButtonWithText("Open your box").interactable, "Home must offer the ready box as its main action.");
+            Assert.IsTrue(VisibleText("Your box is ready!"), "Rewards tile must reflect today's ready box.");
+            Assert.IsTrue(VisibleText("3 of 4 finishes · 5 toys on your shelf"));
+            ButtonWithText("Collection").onClick.Invoke();
+            yield return null; Canvas.ForceUpdateCanvases();
+            Assert.IsTrue(VisibleText("3 of 4 discovered"));
+            Assert.IsTrue(VisibleText("???"), "An undiscovered toy must keep its name a surprise.");
+            Assert.IsFalse(VisibleText("Moon Jelly"), "An undiscovered toy's name must not be shown.");
+            var moon = root.GetComponentsInChildren<Button>().Single(button => button.name == "MOON JELLY · shelf toy");
+            Assert.IsFalse(moon.interactable, "An undiscovered toy cannot be played.");
+            Assert.IsTrue(VisibleText("×3"), "Duplicates show a count badge.");
+            var portraits = root.GetComponentsInChildren<RawImage>().Where(image => image.texture is RenderTexture).ToArray();
+            Assert.AreEqual(3, portraits.Length, "Only discovered toys show their rendered portrait.");
+            Assert.IsFalse(hud.ShowToy(PipVariants.CollectibleId(PipVariant.MoonJelly)), "An unowned ID must not open play.");
+            Assert.IsFalse(hud.ShowToy("moss.velvet-flock"), "A planned collectible without art must not open play.");
+            Assert.AreEqual(AppPage.Shelf, hud.CurrentPage);
+            Assert.IsTrue(hud.ShowToy(PipVariants.CollectibleId(PipVariant.MintSoft)), "An owned, available ID opens play.");
+            Assert.AreEqual(AppPage.Play, hud.CurrentPage);
+        }
+
+        private bool VisibleText(string value)
+        {
+            return root.GetComponentsInChildren<Text>().Any(text => text.text == value && text.enabled);
         }
 
         private Button ButtonWithText(string value)

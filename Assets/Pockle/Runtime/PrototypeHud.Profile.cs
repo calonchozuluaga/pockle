@@ -18,14 +18,15 @@ namespace Pockle.Runtime
 
         private void BuildProfile()
         {
-            identityCard = Rect("Your local identity", profileRoot); Surface(identityCard, Paper);
+            identityCard = Rect("Your local identity", profileRoot); Card(identityCard, Paper);
             var portrait = Rect("Your avatar", identityCard); TopCentered(portrait, new Vector2(0, -8), new Vector2(110, 110));
             profilePortrait = portrait.gameObject.AddComponent<RawImage>(); profilePortrait.raycastTarget = false;
-            Label("DISPLAY NAME", identityCard, 10, MutedInk, FontStyle.Bold, TextAnchor.MiddleCenter,
+            Label("DISPLAY NAME", identityCard, PockleTheme.EyebrowSize, MutedInk, FontStyle.Bold, TextAnchor.MiddleCenter,
                 new Vector2(0, -122), new Vector2(270, 20));
             var field = Rect("Display name", identityCard); TopCentered(field, new Vector2(0, -148), new Vector2(270, 48));
             var background = Surface(field, Quiet); background.raycastTarget = true;
             var text = Label("", field, 18, Ink, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
+            text.resizeTextForBestFit = false; // InputField carets misalign with best-fit text.
             Stretch(text.rectTransform); text.rectTransform.offsetMin = new Vector2(14, 4); text.rectTransform.offsetMax = new Vector2(-14, -4);
             profileName = field.gameObject.AddComponent<InputField>(); profileName.targetGraphic = background;
             profileName.textComponent = text; profileName.characterLimit = 60; profileName.lineType = InputField.LineType.SingleLine;
@@ -33,10 +34,10 @@ namespace Pockle.Runtime
             profileName.onEndEdit.AddListener(_ => CommitProfile());
             profileSummary = Label("", identityCard, 12, MutedInk, FontStyle.Normal, TextAnchor.MiddleCenter,
                 new Vector2(0, -206), new Vector2(300, 32));
-            Label("Saved on this device. Your profile isn't public yet.", identityCard, 11, MutedInk, FontStyle.Normal,
+            Label("Saved on this device. Your profile isn't public yet.", identityCard, PockleTheme.CaptionSize, MutedInk, FontStyle.Normal,
                 TextAnchor.MiddleCenter, new Vector2(0, -244), new Vector2(280, 38));
             avatarRow = Rect("Choose your avatar", profileRoot);
-            Label("CHOOSE YOUR PIP AVATAR", avatarRow, 10, MutedInk, FontStyle.Bold, TextAnchor.MiddleCenter,
+            Label("CHOOSE YOUR PIP AVATAR", avatarRow, PockleTheme.EyebrowSize, MutedInk, FontStyle.Bold, TextAnchor.MiddleCenter,
                 new Vector2(0, 0), new Vector2(300, 24));
             for (int i = 0; i < 4; i++)
             {
@@ -48,17 +49,17 @@ namespace Pockle.Runtime
                 image.offsetMin = new Vector2(2, 2); image.offsetMax = new Vector2(-2, -2);
                 var raw = image.gameObject.AddComponent<RawImage>(); raw.texture = previews[i]; raw.raycastTarget = false;
             }
-            favoriteCard = Rect("Favorite toy", profileRoot); Surface(favoriteCard, Paper);
-            Label("YOUR FAVORITE TOY", favoriteCard, 11, MutedInk, FontStyle.Bold, TextAnchor.MiddleCenter,
+            favoriteCard = Rect("Favorite toy", profileRoot); Card(favoriteCard, Paper);
+            Label("YOUR FAVORITE TOY", favoriteCard, PockleTheme.EyebrowSize, MutedInk, FontStyle.Bold, TextAnchor.MiddleCenter,
                 new Vector2(0, -12), new Vector2(270, 24));
             for (int i = 0; i < 4; i++)
             {
                 PipVariant choice = (PipVariant)i;
-                favoriteButtons[i] = CreateButton(PipVariants.Label(choice), favoriteCard, Vector2.zero, new Vector2(135, 48), Quiet,
-                    () => { profile.SetFavorite(choice); RefreshProfile(); }, out favoriteColours[i], 11);
+                favoriteButtons[i] = CreateButton(ToyName(choice), favoriteCard, Vector2.zero, new Vector2(135, 48), Quiet,
+                    () => { profile.SetFavorite(choice); RefreshProfile(); }, out favoriteColours[i], 13);
             }
             playFavorite = CreateButton("Play with your favorite", favoriteCard, Vector2.zero, new Vector2(270, 48), Peach,
-                () => ShowToy(profile.Favorite), out _);
+                () => ShowToy(profile.FavoriteId), out _);
             profileLinks = Rect("Your profile links", profileRoot);
             CreateButton("Settings", profileLinks, Vector2.zero, new Vector2(290, 48), Quiet, ShowSettings, out _);
             CreateButton("Badge cabinet", profileLinks, Vector2.zero, new Vector2(290, 48), Quiet,
@@ -84,13 +85,12 @@ namespace Pockle.Runtime
                 var picture = (RectTransform)avatarButtons[i].transform.GetChild(1);
                 picture.offsetMin = new Vector2(6, 6); picture.offsetMax = new Vector2(-6, -6);
                 favoriteColours[i].color = (int)profile.Favorite == i ? Peach : Quiet;
-                favoriteButtons[i].interactable = session == null || session.Progress.Save.Counts[i] > 0;
+                favoriteButtons[i].interactable = session == null || Owned((PipVariant)i) > 0;
             }
-            playFavorite.interactable = session == null || session.Progress.Save.Counts[(int)profile.Favorite] > 0;
+            playFavorite.interactable = session == null || session.IsOwnedAndAvailable(profile.FavoriteId);
             if (session != null)
             {
-                int distinct = 0, total = 0;
-                foreach (int count in session.Progress.Save.Counts) { if (count > 0) distinct++; total += count; }
+                CollectionTotals(out int distinct, out int total);
                 profileSummary.text = distinct + " collected finishes · " + total + " toys";
             }
         }

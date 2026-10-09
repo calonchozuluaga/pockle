@@ -39,6 +39,14 @@ Proposed navigation within those confirmed choices: bottom tabs **Home**, **Boxe
 
 See [Home hub review](HOME_UI.md) for routes, limitations, and phone checks. Checkboxes below stay open until each task's full acceptance criteria pass. No achievement or social service is represented as completed by this UI pass.
 
+## Implementation progress — Visual system 01 and Home/shelf 01 (Claude)
+
+| Task | Implemented in this pass | Remaining acceptance work |
+| --- | --- | --- |
+| UX-002 | Theme tokens (`PockleTheme`), Fredoka/Nunito type, squishy plum wordmark matching the box art, tab and header icons, card shadows, button lips, press squish with calm variant, best-fit text guard. See [VISUAL_SYSTEM.md](VISUAL_SYSTEM.md). | Unity compile/render check, small-phone readability, CJK/emoji fallback on device, owner's look-and-feel review |
+| UX-003 | Home: today's box card with Jelly Garden box art, step count and progress, status, and one action that turns primary when the box is ready; "Your places" with a Collection tile showing owned toys, plus Rewards (live daily status) and Friends ("Soon") half tiles. See [HOME_UI.md](HOME_UI.md). | Same Unity/device review; production onboarding (UX-007) still decides first-run content |
+| UX-004 | Shelf: discovery progress card, display cubbies on ceramic shelves, title-case names, duplicate badges, favorite heart, mystery cubby ("???") for undiscovered toys, centered partial rows, 1–4 columns by width, and an honest "more collections" row. | Same Unity/device review; favorite/reorder actions and 100+ item browsing move to UX-031 |
+
 ## First: mobile game foundation
 
 - [ ] **UX-001 — Finalize the screen map and navigation.** Use the confirmed home hub with Collection, Rewards, and Friends tiles; define tab destinations, back behavior, and routes between play, reveal, boxes, discovery, and visited shelves. Acceptance: every primary destination is reachable without losing the current shelf/scroll context.
