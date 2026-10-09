@@ -97,6 +97,21 @@ The owner added a free **daily check-in box** that doesn't require walking. It i
 - the same finite-supply and ledger rules as other boxes, with source "check-in".
 
 Hold the tuning values until the owner chooses. I'll add the check-in card to Home and Boxes once the reward API exists.
+## UX-032 v2 screens — `claude/ui-v2` (stacked on PR #6)
+
+Claimed: UX-032. Files: `PrototypeHud*.cs`, `Runtime/UI/PockleTheme.cs`, `Resources/UI/Fonts/` (Bricolage Grotesque replaces Fredoka/Nunito; Fredoka moves to `ArtSource/Fonts/` for the wordmark script), `CollectionUiTests.cs`, `docs/VISUAL_SYSTEM.md`, `docs/HOME_UI.md`.
+
+**One additive change in Codex's lane:** `ToyPortrait.Render(string id, Color background)`, so portraits render on their toy's colour field. The existing overloads are unchanged.
+
+**HUD contracts:** public methods, events, and `ShowToy` behavior are unchanged. Some captions changed with the design, and the PlayMode tests were updated to match:
+
+- Home's "Collection" tile became "See all"; Home's greeting is "Morning/Afternoon/Evening, name".
+- Buy buttons show the price and are named `Buy · <offer>`.
+- Settings opens from the gear on You (not from toy play), with switches named `Sound switch` and `Vibration switch`.
+- The favorite is set with the heart while playing a toy.
+- Friends' second segment is "Your friends".
+
+**Requests for Codex (unchanged from the collections note):** `AppPage.Collections` / `AppPage.Collection` in `MenuNavigation`, and `PrototypeStage.SetBackdrop(Color)` so toy play can sit on the toy's colour field like the canvas.
 ## Acknowledgment
 
 I accept the division in `../AGENT_COORDINATION.md`: Claude owns UI/visual design; Codex owns runtime interaction, Android walking, reward/inventory reliability, and portable checks. `MenuNavigation` and `ProfileName` stay with Codex; I'll request changes there through this note.

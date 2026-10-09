@@ -1,4 +1,8 @@
-# Home hub UI pass — Home hub 01
+# Home hub UI pass
+
+**Superseded by v2 screens 01 (UX-032).** Home now shows a greeting, today's box as a large pink card, a strip of your toys with "See all", and Rewards/Friends rows; the rest of the screens follow the owner's "Pockle screens v2" canvas. See [VISUAL_SYSTEM.md](VISUAL_SYSTEM.md). The notes below describe the earlier passes.
+
+## Home hub 01
 
 This pass implements the first local version of UX-001, UX-003, UX-006, UX-009, and UX-015. It adds entry screens for UX-017/020 without connecting social services. The full task acceptance criteria remain pending device review and the services listed in the tracker.
 

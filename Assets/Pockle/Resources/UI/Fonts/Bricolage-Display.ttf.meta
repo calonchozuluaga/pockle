@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: de9f91bc2d534f4508890e7f49b8eba8
+guid: ed87d90139bfb1c3fee7018059f81e7e
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - Nunito
+  - Bricolage Display
   fallbackFontReferences: []
   customCharacters:
   fontRenderingMode: 0
