@@ -10,7 +10,7 @@ Owner decisions, October 9, 2026, and the UI and catalog plan that follows from 
 4. **Vintage matters.** A toy keeps the series it came from and the date it was first found, and the UI shows both (for example "Jelly Garden series 6 (2026)" and "First found Oct 8, 2026"). Toys never leave the shelf.
 5. **Secret figures.** Each series can include one secret figure at about **1 in 72** boxes. Its silhouette is shown on the collection page; its identity is not.
 6. **Walking boxes feature the newest series.** Longer walks raise the chance of a rare figure (decided October 9).
-7. **Duplicates have two uses:** trade them with other players, or combine spares to craft a missing toy (decided October 9).
+7. **Duplicates have two uses:** trade them with other players, or combine spares to craft a missing toy (decided October 9). A third use, fusion, is proposed in [FUSION.md](FUSION.md).
 
 8. **Paid boxes never give a duplicate.** A purchased box always contains a toy you don't own yet, so you can only buy your own copy. Once you own every regular toy in a series, that series' paid box closes for you. Spares come only from free walking boxes. This stops one player from buying up supply to resell (decided October 9).
 9. **Finite editions.** Each toy has a fixed edition size. A series stays on sale until its toys sell out; a sold-out toy can only be traded for. Every copy carries a serial number (for example "#0421 of 5,000") and its history, recorded in a public ledger (decided October 9).
