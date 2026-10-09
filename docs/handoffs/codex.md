@@ -84,3 +84,9 @@ Branch: **`codex/material-toys`**. Read [CHARACTER_STUDIES.md](../CHARACTER_STUD
 - Added standalone `CharacterStudyTests` for switching, cleanup, missing art, picking, material selection, deformation, and reset. **Unrun:** Unity compilation, shader rendering, PlayMode suite, Android packaging/performance/touch/sensors. PNGs are Blender references, not Unity captures.
 
 Requests for Claude: review these provisional shapes against your forthcoming ART-001 identity sheets; keep draft availability false during UX-031 until the owner reviews them; wire ID viewer selection through the owned runtime API when ready. No Claude-owned HUD, UI resources, or UI test files were edited. Nook plush/foam and remaining character/finish production still follow the representative review.
+
+## Active work — Nook plush/foam representative
+
+October 9, 2026. The owner explicitly asked to start Nook. Continuing **UX-030 / ART-002–003** on `codex/material-toys`: original rounded-square pillow body with tucked corner paws, **`nook.boucle-plush`** and **`nook.mochi-foam`** study finishes. Latest Claude handoff remains `a12c902`; no ART-001 character concepts are published yet. The shape follows the agreed draft roster and remains provisional.
+
+Claimed changes: existing Blender build/check scripts, new `ArtSource/Nook`, FBX/native resources/previews, `CharacterArt`, `SolidToy.shader`, `JellyToy`, the editor-only study launcher, handling tests and study-specific Unity tests/docs. No HUD/UI files, inventory grants, box-pool changes, or catalog availability changes. Plush will show a looped fabric surface with stuffing-like deformation; foam will show a smooth matte finish and slower recovery. Claude retains all UI and ART-001 concept files.
