@@ -17,6 +17,8 @@ namespace Pockle.Editor
             {
                 if (GUILayout.Button("Preview Moss · Velvet Flock")) Preview(CharacterArt.MossStudyId);
                 if (GUILayout.Button("Preview Bop · Gloss Vinyl")) Preview(CharacterArt.BopStudyId);
+                if (GUILayout.Button("Preview Nook · Oat Bouclé Plush")) Preview(CharacterArt.NookPlushStudyId);
+                if (GUILayout.Button("Preview Nook · Lilac Mochi Foam")) Preview(CharacterArt.NookFoamStudyId);
             }
         }
         private static void Preview(string id)

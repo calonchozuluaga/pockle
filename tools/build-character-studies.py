@@ -1,4 +1,4 @@
-"""Build provisional Moss and Bop with Blender 4.3+: blender -b --python this.py -- --render.
+"""Build character studies with Blender 4.3+: blender -b --python this.py -- --render.
 
 Exports original, joined mobile meshes in Pip's coordinate/anchor contract.
 Studio and procedural Blender materials are authoring references, not Unity shaders.
@@ -67,13 +67,19 @@ def export_body(body, name, colors):
     logical = [(float(v.co.x), float(v.co.z), float(-v.co.y)) for v in body.data.vertices]
     positions, uv, groups, triangles = [], [], [], []
     keyed = {}; layer = body.data.uv_layers.new(name=name + "UV")
+    if name == "Nook":
+        bpy.ops.object.select_all(action='DESELECT'); body.select_set(True); bpy.context.view_layer.objects.active = body
+        bpy.ops.object.mode_set(mode='EDIT'); bpy.ops.mesh.select_all(action='SELECT')
+        bpy.ops.uv.smart_project(angle_limit=math.radians(66), island_margin=.015, scale_to_bounds=True)
+        bpy.ops.object.mode_set(mode='OBJECT')
     for polygon in body.data.polygons:
         us = [(math.atan2(logical[i][2], logical[i][0]) / (2 * math.pi)) % 1 for i in polygon.vertices]
         if max(us) - min(us) > .5: us = [u + 1 if u < .5 else u for u in us]
         if max(us) > 1: us = [u - min(us) for u in us]
         for vertex, loop, u in zip(polygon.vertices, polygon.loop_indices, us):
             v = (logical[vertex][1] + 1) / 2
-            layer.data[loop].uv = (u, v)
+            if name == "Nook": u, v = layer.data[loop].uv
+            else: layer.data[loop].uv = (u, v)
             key = (vertex, round(u, 7), round(v, 7))
             if key not in keyed:
                 keyed[key] = len(positions); positions.append(logical[vertex]); uv.append((u, v)); groups.append(vertex)
@@ -82,7 +88,7 @@ def export_body(body, name, colors):
         hit, location, _, _ = body.ray_cast(Vector(art.blender_point((x, y, -2))), Vector((0, -1, 0)))
         if not hit: raise RuntimeError("Face anchor missed " + name)
         return (x, y, -float(location.y) - offset)
-    face_y = -.10 if name == "Moss" else .16
+    face_y = {"Moss": -.10, "Bop": .16, "Nook": .04}[name]
     eyes = [project(side * .265, face_y, .034) for side in [-1, 1]]
     glints = [(x - .022, y + .038, z - .038) for x, y, z in eyes]
     cheeks = [project(side * .415, face_y - .15, .027) for side in [-1, 1]]
@@ -100,15 +106,57 @@ def export_body(body, name, colors):
     return data
 
 
+def pillow_body(finish, character):
+    bpy.ops.mesh.primitive_cube_add(size=2)
+    body = bpy.context.object; body.name = "Puffy square cushion"
+    body.scale = (.74, .46, .73)
+    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+    bevel = body.modifiers.new("Soft pillow corners", 'BEVEL'); bevel.width = .24; bevel.segments = 5
+    bpy.ops.object.modifier_apply(modifier=bevel.name)
+    subdivide = body.modifiers.new("Padded face", 'SUBSURF'); subdivide.levels = 2
+    bpy.ops.object.modifier_apply(modifier=subdivide.name)
+    for vertex in body.data.vertices:
+        x, depth, y = vertex.co
+        puff = .14 * max(0, 1 - (x / .74) ** 2) * max(0, 1 - (y / .73) ** 2)
+        vertex.co.y += math.copysign(puff * min(1, abs(depth) / .35), depth)
+    for old in list(body.users_collection): old.objects.unlink(body)
+    character.objects.link(body); body.data.materials.append(finish)
+    return body
+
+
+def boucle_material(color):
+    mat = art.material("Nook oat boucle - looped fabric study", color, 0, .94)
+    nodes = mat.node_tree.nodes; links = mat.node_tree.links; bsdf = nodes.get("Principled BSDF")
+    bsdf.inputs['Coat Weight'].default_value = 0; bsdf.inputs['Sheen Weight'].default_value = .6
+    uv = nodes.new('ShaderNodeTexCoord')
+    scale = nodes.new('ShaderNodeVectorMath'); scale.operation = 'SCALE'; scale.inputs[3].default_value = 64
+    links.new(uv.outputs['UV'], scale.inputs[0])
+    fraction = nodes.new('ShaderNodeVectorMath'); fraction.operation = 'FRACTION'; links.new(scale.outputs['Vector'], fraction.inputs[0])
+    center = nodes.new('ShaderNodeVectorMath'); center.operation = 'SUBTRACT'; center.inputs[1].default_value = (.5, .5, 0)
+    links.new(fraction.outputs['Vector'], center.inputs[0])
+    ellipse = nodes.new('ShaderNodeVectorMath'); ellipse.operation = 'MULTIPLY'; ellipse.inputs[1].default_value = (1, .72, 0)
+    links.new(center.outputs['Vector'], ellipse.inputs[0])
+    radius = nodes.new('ShaderNodeVectorMath'); radius.operation = 'LENGTH'; links.new(ellipse.outputs['Vector'], radius.inputs[0])
+    difference = nodes.new('ShaderNodeMath'); difference.operation = 'SUBTRACT'; difference.inputs[1].default_value = .26
+    links.new(radius.outputs['Value'], difference.inputs[0])
+    distance = nodes.new('ShaderNodeMath'); distance.operation = 'ABSOLUTE'; links.new(difference.outputs[0], distance.inputs[0])
+    loop = nodes.new('ShaderNodeMath'); loop.operation = 'LESS_THAN'; loop.inputs[1].default_value = .07
+    links.new(distance.outputs[0], loop.inputs[0])
+    bump = nodes.new('ShaderNodeBump'); bump.inputs['Strength'].default_value = .40; bump.inputs['Distance'].default_value = .018
+    links.new(loop.outputs[0], bump.inputs['Height']); links.new(bump.outputs['Normal'], bsdf.inputs['Normal'])
+    return mat
+
+
 def build(name):
     clear_scene()
     character = bpy.data.collections.new(name + " - exportable character")
     bpy.context.scene.collection.children.link(character)
     moss = name == "Moss"
-    colors = ((.48, .65, .36), (.72, .82, .50), (.28, .45, .22)) if moss else ((.97, .58, .20), (1, .78, .38), (.84, .33, .13))
-    finish = art.material(name + (" short flock study" if moss else " coated vinyl study"), colors[0], 0, .88 if moss else .20)
+    nook = name == "Nook"
+    colors = ((.70, .53, .39), (.88, .72, .54), (.49, .33, .23)) if nook else (((.48, .65, .36), (.72, .82, .50), (.28, .45, .22)) if moss else ((.97, .58, .20), (1, .78, .38), (.84, .33, .13)))
+    finish = boucle_material(colors[0]) if nook else art.material(name + (" short flock study" if moss else " coated vinyl study"), colors[0], 0, .88 if moss else .20)
     bsdf = finish.node_tree.nodes.get("Principled BSDF")
-    bsdf.inputs["Coat Weight"].default_value = 0 if moss else .42
+    bsdf.inputs["Coat Weight"].default_value = 0 if moss or nook else .42
     if moss:
         bsdf.inputs["Sheen Weight"].default_value = .65
         noise = finish.node_tree.nodes.new('ShaderNodeTexNoise'); noise.inputs['Scale'].default_value = 145
@@ -129,7 +177,13 @@ def build(name):
         ((.34, -.83, -.02), (.29, .24, .38)),
         ((0, .85, 0), (.17, .20, .17))
     ]
+    if nook: shapes = []
     parts = [art.sphere("Molded part " + str(i), point, scale, finish, character) for i, (point, scale) in enumerate(shapes)]
+    if nook:
+        # Nook has an original square cushion, not the Bop or Moss silhouette.
+        parts = [pillow_body(finish, character)]
+        parts += [art.sphere("Tucked corner paw", (x * .60, y * .56, -.13), (.24, .24, .33), finish, character)
+                  for x in [-1, 1] for y in [-1, 1]]
     body = join_body(parts, name)
     data = export_body(body, name, colors)
     plum = art.material("Plum eyes", (.075, .012, .04), 0, .20)
@@ -170,9 +224,22 @@ def build(name):
     previews = ROOT / "docs/concepts/roster-studies"; previews.mkdir(parents=True, exist_ok=True)
     scene.render.filepath = str(previews / (name.lower() + "-study-01.png"))
     source = ROOT / "ArtSource" / name; source.mkdir(parents=True, exist_ok=True)
+    if nook:
+        foam = art.material("Nook lilac mochi foam study", (.70, .60, .82), 0, .82)
+        foam.node_tree.nodes.get('Principled BSDF').inputs['Coat Weight'].default_value = 0
+        foam.use_fake_user = True
     bpy.ops.wm.save_as_mainfile(filepath=str(source / (name + ".blend")))
     print('CHARACTER_EXPORT ' + json.dumps(dict(name=name, vertices=len(data['positions'])//3, triangles=len(data['triangles'])//3)))
     if '--render' in sys.argv: bpy.ops.render.render(write_still=True)
+    if nook and '--render' in sys.argv:
+        body.data.materials.clear(); body.data.materials.append(foam)
+        scene.render.filepath = str(previews / 'nook-foam-study-01.png')
+        bpy.ops.render.render(write_still=True)
 
 
-for name in ['Moss', 'Bop']: build(name)
+names = ['Moss', 'Bop', 'Nook']
+if '--character' in sys.argv:
+    selected = sys.argv[sys.argv.index('--character') + 1]
+    if selected not in names: raise ValueError('Unknown character: ' + selected)
+    names = [selected]
+for name in names: build(name)

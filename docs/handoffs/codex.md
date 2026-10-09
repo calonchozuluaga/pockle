@@ -1,6 +1,6 @@
 # Codex handoff
 
-October 9, 2026. Status: **Moss/Bop draft models and material handling ready for review on `codex/material-toys`. UX-029 catalog/save foundation is merged into main.** Claude HUD integration and Unity/device validation remain pending.
+October 9, 2026. Status: **Moss, Bop, and Nook draft models/materials ready for review on `codex/material-toys`. UX-029 catalog/save foundation is merged into main.** Claude HUD integration and Unity/device validation remain pending.
 
 - Prior Home hub baseline: `6809f9a` — Build home hub, local profile, and full game settings.
 - The owner asked whether Codex and Claude can split work and communicate. See `../AGENT_COORDINATION.md` for the proposed split and repository handoff process.
@@ -90,3 +90,16 @@ Requests for Claude: review these provisional shapes against your forthcoming AR
 October 9, 2026. The owner explicitly asked to start Nook. Continuing **UX-030 / ART-002–003** on `codex/material-toys`: original rounded-square pillow body with tucked corner paws, **`nook.boucle-plush`** and **`nook.mochi-foam`** study finishes. Latest Claude handoff remains `a12c902`; no ART-001 character concepts are published yet. The shape follows the agreed draft roster and remains provisional.
 
 Claimed changes: existing Blender build/check scripts, new `ArtSource/Nook`, FBX/native resources/previews, `CharacterArt`, `SolidToy.shader`, `JellyToy`, the editor-only study launcher, handling tests and study-specific Unity tests/docs. No HUD/UI files, inventory grants, box-pool changes, or catalog availability changes. Plush will show a looped fabric surface with stuffing-like deformation; foam will show a smooth matte finish and slower recovery. Claude retains all UI and ART-001 concept files.
+
+## Nook implementation ready for review
+
+Nook's original rounded-square cushion and tucked corner paws are built: **2,564 exported vertices / 4,528 triangles**, one shared native mesh, Blender source and FBX. Two explicit study IDs: **`nook.boucle-plush`** (oat looped fabric) and **`nook.mochi-foam`** (smooth matte lilac). Blender previews are `docs/concepts/roster-studies/nook-study-01.png` and `nook-foam-study-01.png`; Unity appearance remains unverified. Nook's Blender source retains both recipes.
+
+- Both studies are selectable through **Pockle → Character studies** while playing. `CharacterArt.NookPlushStudyId` / `.NookFoamStudyId` and `IsStudy(string)` extend the explicit art registry. Production ownership/availability and the four existing Pip presets are unchanged.
+- The opaque shader now has separate bouclé and foam properties, alongside flock and vinyl. Recipes reset every finish flag and restore the base palette when switching back from lilac foam.
+- Same-character finish selection reuses the body mesh, face, material, and root. The raw pose is replayed with the new profile. The authoring launcher also avoids rebuilding Pip when already on the play page.
+- Plush has stuffing-like give/sag; foam compresses more deeply, stretches less, sags less, and recovers more slowly. Portable checks confirm the recovery difference across frame rates. Phone feel still needs review.
+- Executed: all portable suites, **8,738 total material assertions**; all three study geometry checks; Blender FBX round trips including Nook's eight parts with maximum position error **0.000000260 m**; source checks **53 files / three symbol profiles / 110 GUIDs / zero failures**.
+- New Unity coverage checks Nook finish reuse, recipe restoration, pose compliance, reset, and missing-finish rejection, plus cross-character cleanup. **Unrun:** Unity compilation/shaders/PlayMode, Android packaging, actual touch/sensors/performance.
+
+Please review Nook alongside Moss/Bop when completing ART-001 and preserve all four study IDs as catalog-unavailable until designs and acquisition are reviewed. No Claude-owned HUD/UI files or UI fixtures were changed. Exact interfaces and local review instructions are in [CHARACTER_STUDIES.md](../CHARACTER_STUDIES.md).

@@ -45,6 +45,28 @@ internal static class MaterialHandlingChecks
         }
         Check(MaterialHandling.ForFinish("gloss-vinyl") == firm && MaterialHandling.ForFinish("matte-vinyl") == firm && MaterialHandling.ForFinish("coated-metallic") == firm, "Hard finishes disagree on compliance.");
         Check(MaterialHandling.ForFinish("velvet-flock") == flock, "Flock dispatch is incorrect.");
+        Check(MaterialHandling.ForFinish("boucle-plush") == MaterialHandling.Plush &&
+            MaterialHandling.ForFinish("mochi-foam") == MaterialHandling.Foam, "Nook finish dispatch is incorrect.");
+        foreach (float step in new[] { 1f/240, 1f/60, 1f/15, .25f })
+        {
+            var plush = new Spring1D(MaterialHandling.Plush.RecoveryFrequency, MaterialHandling.Plush.RecoveryDamping, .4f);
+            var foam = new Spring1D(MaterialHandling.Foam.RecoveryFrequency, MaterialHandling.Foam.RecoveryDamping, .4f);
+            plush.Target = foam.Target = 0;
+            float elapsed = 0;
+            while (elapsed < .2f)
+            {
+                float dt = Math.Min(step, .2f - elapsed);
+                plush.Step(dt); foam.Step(dt); elapsed += dt;
+            }
+            Check(foam.Value > plush.Value * 1.5f, "Foam should recover more slowly than plush after release.");
+            Check(.42f * MaterialHandling.Foam.Compression > .42f * MaterialHandling.Plush.Compression,
+                "Foam should give more deeply than a stuffed pillow.");
+            Check(MaterialHandling.Plush.Sag > MaterialHandling.Foam.Sag,
+                "Plush stuffing should hang more softly than resilient foam.");
+            plush.Step(5); foam.Step(5);
+            Check(Math.Abs(plush.Value) < .00001f && Math.Abs(foam.Value) < .00001f,
+                "A pause leaves a Nook finish stuck away from rest.");
+        }
         Console.WriteLine("PASS: " + assertions + " material handling assertions (compliance, rebound, settling, frame timing).");
     }
 }

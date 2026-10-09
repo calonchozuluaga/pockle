@@ -406,7 +406,7 @@ namespace Pockle.Runtime
         /// <summary>Authoring review only: preview studies without modifying player inventory.</summary>
         public bool PreviewCharacterStudy(string id)
         {
-            if (toy == null || revealing || (id != CharacterArt.MossStudyId && id != CharacterArt.BopStudyId)) return false;
+            if (toy == null || revealing || !CharacterArt.IsStudy(id)) return false;
             int ownedPip = -1;
             for (int i = 0; i < PipVariants.Count; i++)
                 if (collection.IsOwnedAndAvailable(ToyCatalog.LegacyCollectibleId(i))) { ownedPip = i; break; }
@@ -414,7 +414,10 @@ namespace Pockle.Runtime
             // Existing HUD remains in Claude's lane; enter its viewer using the preserved overload.
             bool hadPreference = PlayerPrefs.HasKey(PipVariants.Preference);
             int savedVariant = PlayerPrefs.GetInt(PipVariants.Preference);
-            try { hud.ShowToy((PipVariant)ownedPip); }
+            try
+            {
+                if (hud.CurrentPage != AppPage.Play) hud.ShowToy((PipVariant)ownedPip);
+            }
             finally
             {
                 if (hadPreference) PlayerPrefs.SetInt(PipVariants.Preference, savedVariant);
@@ -424,7 +427,8 @@ namespace Pockle.Runtime
             if (!toy.TrySetCollectible(id)) return false;
             ResetToy();
             ConfigureHandling();
-            hud.SetStatus("Draft " + (id == CharacterArt.MossStudyId ? "Moss" : "Bop") + " · drag to lift, J to test jiggle");
+            if (ToyCatalog.TryGetCollectible(id, out var definition))
+                hud.SetStatus("Draft " + definition.DisplayName + " · drag to lift, J to test jiggle");
             return true;
         }
 #endif

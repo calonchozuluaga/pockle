@@ -82,6 +82,17 @@ namespace Pockle.Runtime
             Initialize();
             if (!CharacterArt.TryLoad(id, out var asset)) return false;
             if (id == collectibleId) return true;
+            if (asset == characterAsset && asset.CharacterId != "pip")
+            {
+                // Alternate finishes share a body and face: only change the recipe
+                // and replay the unscaled pose under the new handling profile.
+                collectibleId = id;
+                ApplyVariantMaterial();
+                haveDeformation = false;
+                SetDeformation(previousCompression, previousStretch, previousTiltX, previousTiltZ,
+                    previousContactX, previousContactZ, previousPinch, previousPinchAxis, previousSag, previousGrip, previousClearance);
+                return true;
+            }
             if (PipVariants.TryFromCollectibleId(id, out var choice) &&
                 (characterAsset == null || characterAsset.CharacterId == "pip"))
             { SetVariant(choice); return true; }
@@ -635,15 +646,12 @@ namespace Pockle.Runtime
         {
             if (characterAsset != null && characterAsset.CharacterId != "pip")
             {
-                bool flock = collectibleId == CharacterArt.MossStudyId;
                 Shader studyShader = Shader.Find("Pockle/Solid Toy");
                 if (studyShader == null || !studyShader.isSupported)
                     studyShader = Shader.Find("Standard");
                 var study = new Material(studyShader) { name = characterAsset.name, color = characterAsset.BodyColor };
                 SetColor(study, "_TopColor", characterAsset.TopColor);
                 SetColor(study, "_BottomColor", characterAsset.BottomColor);
-                SetFloat(study, "_Flock", flock ? 1 : 0);
-                SetFloat(study, "_Glossiness", flock ? .05f : .8f);
                 if (studioReflection != null && study.HasProperty("_StudioCube"))
                     study.SetTexture("_StudioCube", studioReflection);
                 ownedMaterials.Add(study);
@@ -668,7 +676,7 @@ namespace Pockle.Runtime
         {
             if (characterAsset != null && characterAsset.CharacterId != "pip")
             {
-                visualRoot.name = characterAsset.name;
+                ApplyStudyMaterial();
                 return;
             }
             // Restore every finish-specific property before applying another preset.
@@ -734,6 +742,29 @@ namespace Pockle.Runtime
             }
             if (visualRoot != null) visualRoot.name = "Pip · " + PipVariants.Label(variant);
             bodyMaterial.name = "Pip · " + PipVariants.Label(variant) + " shell";
+        }
+
+        private void ApplyStudyMaterial()
+        {
+            if (!ToyCatalog.TryGetCollectible(collectibleId, out var definition)) return;
+            bool flock = definition.FinishId == "velvet-flock";
+            bool boucle = definition.FinishId == "boucle-plush";
+            bool foam = definition.FinishId == "mochi-foam";
+            bodyMaterial.color = characterAsset.BodyColor;
+            SetColor(bodyMaterial, "_TopColor", characterAsset.TopColor);
+            SetColor(bodyMaterial, "_BottomColor", characterAsset.BottomColor);
+            SetFloat(bodyMaterial, "_Flock", flock ? 1 : 0);
+            SetFloat(bodyMaterial, "_Boucle", boucle ? 1 : 0);
+            SetFloat(bodyMaterial, "_Foam", foam ? 1 : 0);
+            SetFloat(bodyMaterial, "_Glossiness", flock || boucle || foam ? .05f : .8f);
+            if (collectibleId == CharacterArt.NookFoamStudyId)
+            {
+                bodyMaterial.color = new Color(.70f, .60f, .82f, 1);
+                SetColor(bodyMaterial, "_TopColor", new Color(.90f, .79f, .96f, 1));
+                SetColor(bodyMaterial, "_BottomColor", new Color(.51f, .40f, .67f, 1));
+            }
+            bodyMaterial.name = definition.DisplayName;
+            visualRoot.name = definition.DisplayName;
         }
 
         private static void SetColor(Material material, string property, Color color)

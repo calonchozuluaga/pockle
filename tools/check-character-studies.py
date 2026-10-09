@@ -68,4 +68,4 @@ def check(name):
     print(f'PASS: {name}: {len(vertices)} vertices, {len(indices)//3} triangles; closed connected mesh, finite UVs, front face anchors, volume {volume:.3f}')
 
 
-for name in ['Moss', 'Bop']: check(name)
+for name in ['Moss', 'Bop', 'Nook']: check(name)

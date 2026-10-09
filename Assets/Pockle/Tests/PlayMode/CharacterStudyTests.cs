@@ -41,7 +41,8 @@ namespace Pockle.Tests
         public IEnumerator StudySwitchingReleasesOldAssetsAndRejectsMissingArt()
         {
             var toy = root.AddComponent<JellyToy>();
-            foreach (string id in new[] { CharacterArt.MossStudyId, CharacterArt.BopStudyId, ToyCatalog.PeachId, CharacterArt.MossStudyId })
+            foreach (string id in new[] { CharacterArt.MossStudyId, CharacterArt.NookPlushStudyId,
+                CharacterArt.BopStudyId, CharacterArt.NookFoamStudyId, ToyCatalog.PeachId, CharacterArt.MossStudyId })
             {
                 Mesh previous = toy.BodyRenderer.GetComponent<MeshFilter>().sharedMesh;
                 Material oldMaterial = toy.BodyRenderer.sharedMaterial;
@@ -93,6 +94,54 @@ namespace Pockle.Tests
             }
             Assert.That(shifts[0], Is.GreaterThan(shifts[1] * 5), "Vinyl should feel much firmer than flock.");
             yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator NookFinishesReuseAssetsAndRestoreRecipesWhileChangingCompliance()
+        {
+            var toy = root.AddComponent<JellyToy>();
+            Assert.That(toy.TrySetCollectible(CharacterArt.NookPlushStudyId), Is.True);
+            var renderer = toy.BodyRenderer;
+            Mesh mesh = renderer.GetComponent<MeshFilter>().sharedMesh;
+            Material material = renderer.sharedMaterial;
+            Transform visual = toy.VisualRoot;
+            int partCount = visual.childCount;
+            Vector3[] rest = mesh.vertices;
+            toy.SetDeformation(.35f, 0, 0, 0, 0, 0);
+            float plushHeight = toy.DeformedTop;
+            for (int i = 0; i < 8; i++)
+            {
+                bool foam = i % 2 == 0;
+                string id = foam ? CharacterArt.NookFoamStudyId : CharacterArt.NookPlushStudyId;
+                Assert.That(toy.TrySetCollectible(id), Is.True);
+                yield return null;
+                Assert.That(toy.BodyRenderer, Is.SameAs(renderer));
+                Assert.That(toy.VisualRoot, Is.SameAs(visual));
+                Assert.That(renderer.GetComponent<MeshFilter>().sharedMesh, Is.SameAs(mesh));
+                Assert.That(renderer.sharedMaterial, Is.SameAs(material));
+                Assert.That(visual.childCount, Is.EqualTo(partCount));
+                Assert.That(toy.Handling, Is.SameAs(foam ? MaterialHandling.Foam : MaterialHandling.Plush));
+                Assert.That(material.GetFloat("_Flock"), Is.Zero);
+                Assert.That(material.GetFloat("_Boucle"), Is.EqualTo(foam ? 0 : 1));
+                Assert.That(material.GetFloat("_Foam"), Is.EqualTo(foam ? 1 : 0));
+                Assert.That(material.GetFloat("_Glossiness"), Is.LessThan(.1f));
+                Assert.That(material.renderQueue, Is.LessThan(2500));
+                if (foam)
+                {
+                    Assert.That(material.color, Is.EqualTo(new Color(.70f, .60f, .82f, 1)));
+                    Assert.That(toy.DeformedTop, Is.LessThan(plushHeight - .05f), "Foam should give more deeply under the same raw press.");
+                }
+                else Assert.That(toy.DeformedTop, Is.EqualTo(plushHeight).Within(.000002f));
+                Assert.That(toy.TrySetCollectible("nook.gloss-vinyl"), Is.False);
+                Assert.That(toy.CollectibleId, Is.EqualTo(id));
+                Assert.That(ToyCatalog.TryGetCollectible(id, out var definition), Is.True);
+                Assert.That(definition.Available, Is.False);
+                Assert.That(ToyCatalog.IsDailyEligible(id), Is.False);
+            }
+            toy.ResetToy();
+            Vector3[] reset = mesh.vertices;
+            for (int i = 0; i < rest.Length; i++)
+                Assert.That(Vector3.Distance(rest[i], reset[i]), Is.LessThan(.000002f));
         }
     }
 }

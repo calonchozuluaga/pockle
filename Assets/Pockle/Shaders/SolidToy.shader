@@ -6,6 +6,8 @@ Shader "Pockle/Solid Toy"
         _TopColor ("Top", Color) = (.72, .82, .50, 1)
         _BottomColor ("Base", Color) = (.28, .45, .22, 1)
         _Flock ("Short flock", Range(0,1)) = 1
+        _Boucle ("Looped plush", Range(0,1)) = 0
+        _Foam ("Matte foam", Range(0,1)) = 0
         _Glossiness ("Vinyl glaze", Range(0,1)) = .8
         _StudioCube ("Studio reflection", Cube) = "" {}
     }
@@ -24,7 +26,7 @@ Shader "Pockle/Solid Toy"
             #pragma target 3.0
             #include "UnityCG.cginc"
             fixed4 _Color, _TopColor, _BottomColor;
-            half _Flock, _Glossiness;
+            half _Flock, _Boucle, _Foam, _Glossiness;
             samplerCUBE _StudioCube;
             struct appdata { float4 vertex : POSITION; float3 normal : NORMAL; float2 uv : TEXCOORD0; };
             struct v2f
@@ -63,11 +65,21 @@ Shader "Pockle/Solid Toy"
                 float footprint = max(fwidth(grid.x), fwidth(grid.y));
                 half resolved = 1 - smoothstep(.5, 2, footprint);
                 half fiber = (noise - .5h) * resolved * .13h * _Flock;
-                half clothRim = pow(1 - facing, 3) * .20h * _Flock;
+                // Larger oval loops attach to the same rest UVs as the fine flock.
+                // Fade their contrast when too small to resolve on a shelf portrait.
+                float2 loopGrid = input.uv * 64;
+                float loopFootprint = max(fwidth(loopGrid.x), fwidth(loopGrid.y));
+                half loopResolved = 1 - smoothstep(.6, 1.8, loopFootprint);
+                float2 loopCoord = (frac(loopGrid) - .5) * float2(1, .72);
+                half loop = 1 - smoothstep(.045, .095, abs(length(loopCoord) - .26));
+                half knit = (loop * .20h - .06h) * loopResolved * _Boucle;
+                fiber += knit + (noise - .5h) * resolved * .025h * _Foam;
+                half clothRim = pow(1 - facing, 3) * (.20h * _Flock + .16h * _Boucle + .05h * _Foam);
                 half3 color = tint * (diffuse + fiber) + half3(.85h, .93h, .72h) * clothRim;
                 half3 reflection = reflect(-view, n);
                 half3 studio = texCUBE(_StudioCube, reflection).rgb;
-                half glaze = _Glossiness * (1 - _Flock);
+                half soft = max(_Flock, max(_Boucle, _Foam));
+                half glaze = _Glossiness * (1 - soft);
                 color += studio * glaze * .7h;
                 color += pow(saturate(dot(n, normalize(key + view))), 64) * glaze * .2h;
                 return fixed4(color, 1);

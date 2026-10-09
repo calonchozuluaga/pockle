@@ -79,7 +79,7 @@ The shelf and profile UI should consume catalog definitions rather than fixed ar
 
 - [ ] **ART-001 — Character identity sheet.** Review all 12 silhouettes, front/side/back views, face placement, and relative scale. Agree working names and shape identities before making full finish sets.
 - [ ] **ART-002 — Representative material batch.** Use Pip for gel, Moss for flock, Nook for plush/foam, and Bop for vinyl. Build the four representative models and a small set of finishes; compare appearance and touch on Android before multiplying recipes.
-  - First draft models: Moss / Velvet Flock and Bop / Gloss Vinyl on `codex/material-toys`. See [study assets and review instructions](CHARACTER_STUDIES.md). Nook, concept approval, and Unity/Android review remain pending.
+  - Draft models on `codex/material-toys`: Moss / Velvet Flock, Bop / Gloss Vinyl, and Nook / Oat Bouclé Plush + Lilac Mochi Foam, alongside Pip. See [study assets and review instructions](CHARACTER_STUDIES.md). Concept approval and Unity/Android review remain pending.
 - [ ] **ART-003 — Nine finish recipes.** Establish repeatable Unity materials, texture baking, interaction profiles, calm motion, feedback, and mobile budgets. Approve flock/plush and firm vinyl behavior alongside the established jelly baseline.
 - [ ] **ART-004 — Full character production.** Expand to the twelve reviewed models, then make each one's 8–10 distinct finishes. Reuse tooling and profiles while preserving character identity.
 - [ ] **ART-005 — Collection presentation.** Finish previews, names, collection packaging, box pools, and visual consistency. A planned catalog entry becomes an available collectible only after its assets, behavior, and acquisition rules are ready.
