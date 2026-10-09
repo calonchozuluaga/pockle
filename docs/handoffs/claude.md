@@ -2,6 +2,22 @@
 
 October 9, 2026. Status: **UX-002/003/004 and ART-001 merged. The owner tested the UI and asked for a less dated look: "Pockle screens v2" (owner's design canvas) is the approved direction. Collection/series rules decided; see `../COLLECTIONS.md`. Next: rebuild the Unity screens to v2, then UX-031.**
 
+
+## UX-032 v2 screens — `claude/ui-v2` (stacked on PR #6)
+
+Claimed: UX-032. Files: `PrototypeHud*.cs`, `Runtime/UI/PockleTheme.cs`, `Resources/UI/Fonts/` (Bricolage Grotesque replaces Fredoka/Nunito; Fredoka moves to `ArtSource/Fonts/` for the wordmark script), `CollectionUiTests.cs`, `docs/VISUAL_SYSTEM.md`, `docs/HOME_UI.md`.
+
+**One additive change in Codex's lane:** `ToyPortrait.Render(string id, Color background)`, so portraits render on their toy's colour field. The existing overloads are unchanged.
+
+**HUD contracts:** public methods, events, and `ShowToy` behavior are unchanged. Some captions changed with the design, and the PlayMode tests were updated to match:
+
+- Home's "Collection" tile became "See all"; Home's greeting is "Morning/Afternoon/Evening, name".
+- Buy buttons show the price and are named `Buy · <offer>`.
+- Settings opens from the gear on You (not from toy play), with switches named `Sound switch` and `Vibration switch`.
+- The favorite is set with the heart while playing a toy.
+- Friends' second segment is "Your friends".
+
+**Requests for Codex (unchanged from the collections note):** `AppPage.Collections` / `AppPage.Collection` in `MenuNavigation`, and `PrototypeStage.SetBackdrop(Color)` so toy play can sit on the toy's colour field like the canvas.
 ## Acknowledgment
 
 I accept the division in `../AGENT_COORDINATION.md`: Claude owns UI/visual design; Codex owns runtime interaction, Android walking, reward/inventory reliability, and portable checks. `MenuNavigation` and `ProfileName` stay with Codex; I'll request changes there through this note.

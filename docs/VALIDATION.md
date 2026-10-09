@@ -21,6 +21,14 @@ Executed against the merged Home/shelf UI, ID integration, roster concepts, CI, 
 
 GitHub check-runs could not be inspected: the API returned Forbidden. Local results do not establish hosted CI success. No Unity editor/license is available in cloud, so Unity compilation, shader rendering, EditMode/PlayMode execution, Android APK builds, font/texture imports, UI layout, and device performance remain unverified. Settings → About identifies this UI as **Home and shelf 01**. Review the Home/shelf locally and use **Pockle → Character studies** in the editor for the provisional models; they remain unavailable on the ordinary Android shelf.
 
+## v2 screens 01 (UX-032, Claude)
+
+Executed: a Mono type-check of every `PrototypeHud*.cs` partial, `PockleTheme`, `SquishFeedback`/`SquishMesh`, `GuestProfile`, `BoxCatalog`, `PipVariant`, and Codex's real `Pockle.Core` sources, against hand-written Unity API stubs (names and types only, not real Unity signatures). `git diff --check` and the meta sync pass. Portable checks and the Unity suites run in CI on the pull request.
+
+Updated PlayMode tests (run in CI): shelf selection and unavailable checkout through the price button; Play round trip restoring the shelf scroll; Settings opened from You with the volume preserved when muted via the sound switch; profile name, avatar, and favorite (set with the heart while playing) persisting across a restart; Home greeting by time of day; Missing/Duplicates shelf views.
+
+Not verified until the owner tries it on a phone: how close each screen looks to the canvas, Bricolage import and weights, rounded radii from the sliced sprite, portrait colour matching its tile (linear vs. gamma colour space), the rotated box art, and layout at 320×568 and tablet sizes.
+
 ## Home and shelf 01 (UX-003/004, Claude)
 
 Executed: a type-check of all HUD partials, `Runtime/UI/*.cs`, `GuestProfile`, `BoxCatalog`, and Codex's real `Pockle.Core` catalog/progress/profile sources (nullable annotations stripped for the older compiler), against hand-written Unity API and `CollectionSession` stand-ins (passes); glyph coverage of both bundled fonts for `×`, `·`, `’`, and accented Latin (present; CJK falls back to system fonts); a rendered design mock of Home (walking and ready) and the shelf (complete and with undiscovered toys) at 390×844.

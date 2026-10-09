@@ -5,17 +5,24 @@ using UnityEngine.UI;
 
 namespace Pockle.Runtime
 {
-    /// <summary>UX-004 shelf: a display cabinet of cubbies, one per collectible, with progress and room to grow.</summary>
+    /// <summary>
+    /// v2 Shelf (UX-032): Everything / Missing / Duplicates views, then one section per character collection
+    /// (newest series first) with its progress and a grid of toy tiles on their colour fields.
+    /// Only Pip (Series 1) has playable art today, so there is one section.
+    /// </summary>
     public sealed partial class PrototypeHud
     {
-        private RectTransform shelfSummary, shelfTrack, shelfComingSoon;
-        private Text shelfSummaryTitle;
-        private Image shelfFill;
+        private enum ShelfView { Everything, Missing, Duplicates }
+        private ShelfView shelfView;
+        private RectTransform shelfViews, shelfSection, shelfEmpty;
+        private Text shelfSectionName, shelfSectionSeries, shelfSectionProgress, shelfEmptyText;
+        private readonly Image[] shelfViewFaces = new Image[3];
         private readonly RectTransform[] toyMysteries = new RectTransform[4];
         private readonly RectTransform[] toyCountBadges = new RectTransform[4];
         private readonly Text[] toyCountBadgeLabels = new Text[4];
         private readonly RectTransform[] toyFavoriteBadges = new RectTransform[4];
         private readonly Text[] toyNameLabels = new Text[4];
+        private readonly Image[] toyFaces = new Image[4];
 
         /// <summary>Display name from the catalog ("Moon Jelly"); falls back to the legacy label in title case.</summary>
         private static string ToyName(PipVariant variant)
@@ -24,118 +31,159 @@ namespace Pockle.Runtime
             return CultureInfo.InvariantCulture.TextInfo.ToTitleCase(PipVariants.Label(variant).ToLowerInvariant());
         }
 
+        /// <summary>"Pip, Series 1": the character collection a toy belongs to, from the catalog.</summary>
+        private static string SeriesLine(PipVariant variant)
+        {
+            if (ToyCatalog.TryGetCollectible(PipVariants.CollectibleId(variant), out var collectible)
+                && ToyCatalog.TryGetCollection(collectible.CollectionId, out var collection))
+                return collection.SeriesNumber > 0 ? collection.DisplayName + ", Series " + collection.SeriesNumber : collection.DisplayName;
+            return "Pip";
+        }
+
         private void BuildShelf()
         {
-            previews[0] = ToyPortrait.Render(PipVariant.PeachJelly);
-            previews[1] = ToyPortrait.Render(PipVariant.MoonJelly);
-            previews[2] = ToyPortrait.Render(PipVariant.GoldGlitter);
-            previews[3] = ToyPortrait.Render(PipVariant.MintSoft);
+            // Each portrait is rendered once, on its toy's colour field, and shared by every screen.
+            for (int i = 0; i < previews.Length; i++)
+            {
+                string id = PipVariants.CollectibleId((PipVariant)i);
+                previews[i] = ToyPortrait.Render(id, PockleTheme.FieldFor(id));
+            }
 
-            // Collection progress across the top of the cabinet.
-            shelfSummary = Rect("Collection progress", shelfRoot); Card(shelfSummary, Paper);
-            Label("JELLY GARDEN · PIP", shelfSummary, PockleTheme.EyebrowSize, MutedInk, FontStyle.Bold, TextAnchor.MiddleLeft,
-                Vector2.zero, new Vector2(200, 18));
-            shelfSummaryTitle = Label("0 of 4 discovered", shelfSummary, 17, Ink, FontStyle.Bold, TextAnchor.MiddleLeft,
-                Vector2.zero, new Vector2(200, 26));
-            shelfTrack = Rect("Discovered progress", shelfSummary); Surface(shelfTrack, Quiet);
-            var fill = Rect("Discovered fill", shelfTrack); Stretch(fill);
-            shelfFill = fill.gameObject.AddComponent<Image>(); shelfFill.sprite = roundedSprite; shelfFill.color = PockleTheme.PeachDeep;
-            shelfFill.type = Image.Type.Filled; shelfFill.fillMethod = Image.FillMethod.Horizontal; shelfFill.raycastTarget = false;
+            // View switch: Everything / Missing / Duplicates.
+            shelfViews = Rect("Shelf views", shelfRoot); Surface(shelfViews, Quiet, 24);
+            string[] views = { "Everything", "Missing", "Duplicates" };
+            for (int i = 0; i < views.Length; i++)
+            {
+                var view = (ShelfView)i;
+                CreateButton(views[i], shelfViews, Vector2.zero, new Vector2(100, 40), Paper, () => { shelfView = view; RefreshShelf(); AdaptLayout(); },
+                    out shelfViewFaces[i], 15);
+            }
+
+            // Collection section header: colour dot, name, series, and progress.
+            shelfSection = Rect("Pip collection", shelfRoot);
+            var dot = Rect("Collection colour", shelfSection); Surface(dot, PockleTheme.FieldPeach, 7);
+            LeftLabel(dot, new Vector2(0, -10), new Vector2(14, 14));
+            shelfSectionName = Label("Pip", shelfSection, 18, Ink, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, new Vector2(120, 28));
+            shelfSectionSeries = Label(SeriesNumberLine(), shelfSection, PockleTheme.CaptionSize, MutedInk, FontStyle.Normal, TextAnchor.MiddleLeft,
+                Vector2.zero, new Vector2(120, 24));
+            shelfSectionProgress = Label("", shelfSection, PockleTheme.CaptionSize, MutedInk, FontStyle.Bold, TextAnchor.MiddleRight,
+                Vector2.zero, new Vector2(150, 24));
 
             for (int i = 0; i < toyTiles.Length; i++)
             {
                 PipVariant choice = (PipVariant)i;
                 toyTiles[i] = Rect(PipVariants.Label(choice) + " · shelf toy", shelfRoot);
-                var face = Card(toyTiles[i], PockleTheme.ShelfFace); face.raycastTarget = true;
-                toyButtons[i] = toyTiles[i].gameObject.AddComponent<Button>(); toyButtons[i].targetGraphic = face;
+                toyFaces[i] = Surface(toyTiles[i], PockleTheme.FieldFor(PipVariants.CollectibleId(choice)), PockleTheme.TileRadius);
+                toyFaces[i].raycastTarget = true;
+                toyButtons[i] = toyTiles[i].gameObject.AddComponent<Button>(); toyButtons[i].targetGraphic = toyFaces[i];
                 var colours = toyButtons[i].colors;
-                colours.pressedColor = new Color(.95f, .93f, .92f); colours.disabledColor = Color.white; colours.fadeDuration = .08f;
+                colours.pressedColor = new Color(.92f, .9f, .91f); colours.disabledColor = Color.white; colours.fadeDuration = .08f;
                 toyButtons[i].colors = colours;
                 toyButtons[i].onClick.AddListener(() => ShowToy(choice));
                 toyTiles[i].gameObject.AddComponent<SquishFeedback>();
 
-                toyPictures[i] = Rect("Pip portrait", toyTiles[i]);
-                var image = toyPictures[i].gameObject.AddComponent<RawImage>(); image.texture = previews[i]; image.raycastTarget = false;
-                // An undiscovered toy shows a mystery cubby instead of its portrait.
-                toyMysteries[i] = Rect("Yet to discover", toyTiles[i]); Surface(toyMysteries[i], Quiet);
-                var mark = Label("?", toyMysteries[i], 64, new Color(.84f, .78f, .74f), FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
+                toyPictures[i] = Portrait(toyTiles[i], i).rectTransform;
+                // An undiscovered toy keeps its look a surprise: a soft "?" instead of its portrait.
+                toyMysteries[i] = Rect("Yet to discover", toyTiles[i]);
+                var mark = Label("?", toyMysteries[i], 44, PockleTheme.FillDeep, FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
                 Stretch(mark.rectTransform);
 
-                // A two-tone ceramic shelf the toy stands on.
-                toyPlanks[i] = Rect("Ceramic shelf", toyTiles[i]); Surface(toyPlanks[i], PockleTheme.ShelfPlank);
-                var edge = Rect("Shelf edge", toyPlanks[i]); Surface(edge, PockleTheme.ShelfEdge);
-                edge.anchorMin = new Vector2(0, 0); edge.anchorMax = new Vector2(1, 0); edge.pivot = new Vector2(.5f, 0);
-                edge.offsetMin = new Vector2(0, 0); edge.offsetMax = new Vector2(0, 5);
-
-                toyNameLabels[i] = Label(ToyName(choice), toyTiles[i], 15, Ink, FontStyle.Bold, TextAnchor.MiddleCenter,
-                    Vector2.zero, new Vector2(150, 24));
-                toyNames[i] = toyNameLabels[i].rectTransform;
-                toyCounts[i] = Label("", toyTiles[i], PockleTheme.CaptionSize, MutedInk, FontStyle.Normal, TextAnchor.MiddleCenter,
+                toyNameLabels[i] = Label(ToyName(choice), toyTiles[i], PockleTheme.SmallSize, Ink, FontStyle.Bold, TextAnchor.MiddleCenter,
                     Vector2.zero, new Vector2(150, 20));
+                toyNames[i] = toyNameLabels[i].rectTransform;
+                toyCounts[i] = Label("", toyTiles[i], PockleTheme.SmallSize, MutedInk, FontStyle.Normal, TextAnchor.MiddleCenter,
+                    Vector2.zero, new Vector2(150, 18));
+                toyCounts[i].enabled = false; // Spoken by the tile name for accessibility; the badge carries the count visually.
 
-                toyCountBadges[i] = Rect("Count", toyTiles[i]); Surface(toyCountBadges[i], Paper);
-                toyCountBadgeLabels[i] = Label("×2", toyCountBadges[i], 13, Ink, FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
+                toyCountBadges[i] = Rect("Count", toyTiles[i]); Surface(toyCountBadges[i], Ink, 12);
+                toyCountBadgeLabels[i] = Label("×2", toyCountBadges[i], PockleTheme.SmallSize, PockleTheme.OnPlum, FontStyle.Bold,
+                    TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
                 Stretch(toyCountBadgeLabels[i].rectTransform);
-                toyFavoriteBadges[i] = Rect("Favorite", toyTiles[i]); Surface(toyFavoriteBadges[i], Paper);
-                var heart = AddIcon(toyFavoriteBadges[i], "Heart", 16, PockleTheme.PeachDeep); heart.anchoredPosition = Vector2.zero;
+                toyFavoriteBadges[i] = Rect("Favorite", toyTiles[i]); Surface(toyFavoriteBadges[i], Paper, 14);
+                var heart = AddIcon(toyFavoriteBadges[i], "Heart", 16, PockleTheme.Heart); heart.anchoredPosition = Vector2.zero;
             }
 
-            // Honest room to grow: more collections are planned but not in this build.
-            shelfComingSoon = Rect("More collections", shelfRoot); Surface(shelfComingSoon, Quiet);
-            var soonIcon = AddIcon(shelfComingSoon, "Box", 22, MutedInk);
-            soonIcon.anchorMin = soonIcon.anchorMax = soonIcon.pivot = new Vector2(0, .5f); soonIcon.anchoredPosition = new Vector2(16, 0);
-            var soonText = Label("More little collections are on the way.", shelfComingSoon, 13, MutedInk, FontStyle.Normal,
-                TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
-            Stretch(soonText.rectTransform); soonText.rectTransform.offsetMin = new Vector2(48, 4); soonText.rectTransform.offsetMax = new Vector2(-14, -4);
+            shelfEmpty = Rect("Nothing in this view", shelfRoot);
+            shelfEmptyText = Label("", shelfEmpty, PockleTheme.BodySize, MutedInk, FontStyle.Normal, TextAnchor.UpperCenter, Vector2.zero, Vector2.zero);
+            Stretch(shelfEmptyText.rectTransform);
+        }
+
+        private static string SeriesNumberLine()
+        {
+            return ToyCatalog.TryGetCollection("pip", out var pip) && pip.SeriesNumber > 0 ? "Series " + pip.SeriesNumber : "";
+        }
+
+        private bool ShowOnShelf(int index)
+        {
+            int owned = Owned((PipVariant)index);
+            switch (shelfView)
+            {
+                case ShelfView.Missing: return owned == 0;
+                case ShelfView.Duplicates: return owned > 1;
+                default: return true;
+            }
         }
 
         private float LayoutShelf(float width)
         {
             float y = 0;
-            const float summaryHeight = 64;
-            TopCentered(shelfSummary, Vector2.zero, new Vector2(width, summaryHeight));
-            var summaryLabels = shelfSummary.GetComponentsInChildren<Text>();
-            float trackWidth = Mathf.Clamp(width * .32f, 60, 160);
-            LeftLabel(summaryLabels[0].rectTransform, new Vector2(16, -12), new Vector2(width - trackWidth - 40, 18));
-            LeftLabel(shelfSummaryTitle.rectTransform, new Vector2(16, -30), new Vector2(width - trackWidth - 40, 26));
-            shelfTrack.anchorMin = shelfTrack.anchorMax = shelfTrack.pivot = new Vector2(1, .5f);
-            shelfTrack.anchoredPosition = new Vector2(-16, -6); shelfTrack.sizeDelta = new Vector2(trackWidth, 8);
-            y += summaryHeight + 16;
+            TopCentered(shelfViews, Vector2.zero, new Vector2(width, 48));
+            float segment = (width - 8 - 8) / 3;
+            for (int i = 0; i < 3; i++)
+                LeftLabel(shelfViewFaces[i].rectTransform, new Vector2(4 + i * (segment + 4), -4), new Vector2(segment, 40));
+            y += 48 + 20;
 
-            int count = toyTiles.Length;
-            int columns = width >= 650 ? 4 : width >= 470 ? 3 : width >= 260 ? 2 : 1;
-            const float gap = 14;
+            TopCentered(shelfSection, new Vector2(0, -y), new Vector2(width, 34));
+            float nameWidth = Mathf.Min(shelfSectionName.preferredWidth + 4, 160);
+            LeftLabel(shelfSectionName.rectTransform, new Vector2(22, -3), new Vector2(nameWidth, 28));
+            LeftLabel(shelfSectionSeries.rectTransform, new Vector2(22 + nameWidth + 8, -5), new Vector2(110, 24));
+            shelfSectionProgress.rectTransform.anchorMin = shelfSectionProgress.rectTransform.anchorMax = shelfSectionProgress.rectTransform.pivot = new Vector2(1, 1);
+            shelfSectionProgress.rectTransform.anchoredPosition = new Vector2(0, -5);
+            shelfSectionProgress.rectTransform.sizeDelta = new Vector2(Mathf.Max(80, width - 22 - nameWidth - 130), 24);
+            y += 34 + 10;
+
+            int columns = width >= 560 ? 4 : width >= 270 ? 3 : 2;
+            const float gap = 10;
             float tileWidth = (width - (columns - 1) * gap) / columns;
-            float portrait = Mathf.Min(220, tileWidth - 16);
-            float tileHeight = portrait + 74;
-            int rows = (count + columns - 1) / columns;
-            for (int i = 0; i < count; i++)
+            float tileHeight = Mathf.Round(tileWidth * 1.2f);
+            float portrait = tileWidth * .78f;
+            int slot = 0;
+            for (int i = 0; i < toyTiles.Length; i++)
             {
-                // Keep the last row centered when it isn't full.
-                int row = i / columns, inRow = Mathf.Min(columns, count - row * columns);
-                float rowOffset = (width - (inRow * tileWidth + (inRow - 1) * gap)) / 2;
-                LeftLabel(toyTiles[i], new Vector2(rowOffset + (i % columns) * (tileWidth + gap), -y - row * (tileHeight + gap)),
-                    new Vector2(tileWidth, tileHeight));
-                TopCentered(toyPictures[i], new Vector2(0, -8), new Vector2(portrait, portrait));
-                TopCentered(toyMysteries[i], new Vector2(0, -8), new Vector2(portrait, portrait));
-                TopCentered(toyPlanks[i], new Vector2(0, -8 - portrait + 6), new Vector2(tileWidth - 8, 14));
-                TopCentered(toyNames[i], new Vector2(0, -portrait - 24), new Vector2(tileWidth - 16, 24));
-                TopCentered(toyCounts[i].rectTransform, new Vector2(0, -portrait - 48), new Vector2(tileWidth - 16, 20));
+                bool shown = ShowOnShelf(i);
+                toyTiles[i].gameObject.SetActive(shown);
+                if (!shown) continue;
+                int row = slot / columns, column = slot % columns; slot++;
+                LeftLabel(toyTiles[i], new Vector2(column * (tileWidth + gap), -y - row * (tileHeight + gap)), new Vector2(tileWidth, tileHeight));
+                TopCentered(toyPictures[i], new Vector2(0, -6), new Vector2(portrait, portrait));
+                TopCentered(toyMysteries[i], new Vector2(0, -6), new Vector2(portrait, portrait));
+                toyNames[i].anchorMin = toyNames[i].anchorMax = toyNames[i].pivot = new Vector2(.5f, 0);
+                toyNames[i].anchoredPosition = new Vector2(0, 10); toyNames[i].sizeDelta = new Vector2(tileWidth - 12, 20);
+                TopCentered(toyCounts[i].rectTransform, new Vector2(0, -tileHeight), new Vector2(tileWidth - 12, 18));
                 toyCountBadges[i].anchorMin = toyCountBadges[i].anchorMax = toyCountBadges[i].pivot = new Vector2(1, 1);
-                toyCountBadges[i].anchoredPosition = new Vector2(-14, -14); toyCountBadges[i].sizeDelta = new Vector2(38, 24);
-                LeftLabel(toyFavoriteBadges[i], new Vector2(14, -14), new Vector2(28, 28));
+                toyCountBadges[i].anchoredPosition = new Vector2(-8, -8); toyCountBadges[i].sizeDelta = new Vector2(34, 24);
+                LeftLabel(toyFavoriteBadges[i], new Vector2(8, -8), new Vector2(28, 28));
             }
-            y += rows * tileHeight + (rows - 1) * gap + 16;
-            TopCentered(shelfComingSoon, new Vector2(0, -y), new Vector2(width, 56));
-            y += 56;
-            TopCentered(shelfRoot, Vector2.zero, new Vector2(width, y));
+            int rows = (slot + columns - 1) / columns;
+            y += rows > 0 ? rows * tileHeight + (rows - 1) * gap : 0;
+            shelfEmpty.gameObject.SetActive(slot == 0);
+            if (slot == 0) { TopCentered(shelfEmpty, new Vector2(0, -y - 8), new Vector2(width, 60)); y += 68; }
+            TopCentered(shelfRoot, Vector2.zero, new Vector2(width, y + 8));
             RefreshShelf();
-            return y;
+            return y + 8;
+        }
+
+        /// <summary>The line under "Your shelf": how many toys and how many finishes discovered.</summary>
+        private string ShelfLine()
+        {
+            if (session == null) return "";
+            CollectionTotals(out int distinct, out int total);
+            return total + (total == 1 ? " toy" : " toys") + " · " + distinct + " of " + PipVariants.Count + " Pip finishes found";
         }
 
         private void RefreshShelf()
         {
-            if (session == null || shelfSummaryTitle == null) return;
+            if (session == null || shelfSectionProgress == null) return;
             int discovered = 0;
             for (int i = 0; i < toyTiles.Length; i++)
             {
@@ -145,6 +193,7 @@ namespace Pockle.Runtime
                 toyButtons[i].interactable = has;
                 toyPictures[i].gameObject.SetActive(has);
                 toyMysteries[i].gameObject.SetActive(!has);
+                toyFaces[i].color = has ? PockleTheme.FieldFor(PipVariants.CollectibleId((PipVariant)i)) : PockleTheme.Mystery;
                 // Blind-box rule: an undiscovered toy keeps its name a surprise.
                 toyNameLabels[i].text = has ? ToyName((PipVariant)i) : "???";
                 toyNameLabels[i].color = has ? Ink : MutedInk;
@@ -153,22 +202,22 @@ namespace Pockle.Runtime
                 toyCountBadgeLabels[i].text = "×" + Mathf.Min(owned, 99);
                 toyFavoriteBadges[i].gameObject.SetActive(has && profile != null && profile.FavoriteId == PipVariants.CollectibleId((PipVariant)i));
             }
-            shelfSummaryTitle.text = discovered + " of " + toyTiles.Length + " discovered";
-            shelfFill.fillAmount = toyTiles.Length == 0 ? 0 : discovered / (float)toyTiles.Length;
+            shelfSectionProgress.text = discovered + " of " + toyTiles.Length + " discovered";
+            for (int i = 0; i < 3; i++)
+            {
+                bool selected = (int)shelfView == i;
+                shelfViewFaces[i].color = selected ? Paper : new Color(1, 1, 1, 0);
+                shelfViewFaces[i].GetComponentInChildren<Text>().color = selected ? Ink : MutedInk;
+            }
+            shelfEmptyText.text = shelfView == ShelfView.Missing ? "You've found every Pip finish. Nice shelf!" : "No duplicates here yet. Spares come from walking boxes.";
+            if (page == AppPage.Shelf && subtitle != null) subtitle.text = ShelfLine();
         }
 
         private void RefreshCollection()
         {
             if (session == null) return;
-            var saved = session.Progress.Save;
-            RefreshShelf(); RefreshHome(); RefreshProfile(); RefreshSettings();
-            bool currentDay = saved.Day == CollectionSession.Today;
-            walkProgress.text = saved.Steps.ToString("N0") + " / 1,000 steps";
-            walkFill.fillAmount = saved.Steps / 1000f;
-            walkStatus.text = !currentDay ? "Check your device date to continue walking." : saved.Claimed
-                ? "Today's box is yours. A new box arrives tomorrow (UTC)." : session.WalkingStatus;
-            openDaily.interactable = currentDay && session.Progress.CanClaim;
-            openDaily.GetComponentInChildren<Text>().text = saved.Claimed ? "Opened today" : session.Progress.CanClaim ? "Open your box" : "Walk to unlock";
+            RefreshShelf(); RefreshHome(); RefreshProfile(); RefreshSettings(); RefreshWalkingCard();
+            if (page == AppPage.Shelf && lastLayoutSize.x > 0) AdaptLayout(); // Missing/Duplicates views change with ownership.
         }
     }
 }

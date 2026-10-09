@@ -1,69 +1,54 @@
-# Pockle visual system (UX-002)
+# Pockle visual system (v2, UX-032)
 
-Version **Visual system 01** (shown in **Settings → About Pockle**). Owner: Claude, per `AGENT_COORDINATION.md`. Tokens live in `Assets/Pockle/Runtime/UI/PockleTheme.cs`; screens take values from there rather than hard-coding them.
+Version **v2 screens 01** (shown in **Settings → About**). Owner: Claude, per `AGENT_COORDINATION.md`. The owner approved the direction in the design canvas "Pockle screens v2" on October 9, 2026, replacing Visual system 01 after on-device feedback that the first pass felt clunky and dated. Tokens live in `Assets/Pockle/Runtime/UI/PockleTheme.cs`; screens take values from there.
 
 ## Personality
 
-Soft, squishy, and warm: the UI should feel like the packaging of a designer toy, not a utility app. Rounded shapes everywhere, chunky readable type, a little bounce when you press things, and nothing that competes with the toy itself.
+Calm, modern, and toy-first: a milk-white app with plum ink, where colour comes from the toys themselves. Each toy sits on its own colour field. The UI is flat, with no drop shadows or button lips, so the jelly toys provide the depth.
 
 ## Colour
 
 | Token | Hex | Use |
 | --- | --- | --- |
-| `Ink` | `#4A364A` | Titles, button captions, icons on light surfaces |
-| `MutedInk` | `#7A666C` | Descriptions, status, unselected tabs (≈5:1 on Paper) |
-| `Paper` | `#FFFDF8` | Cards, tab bar, dialogs |
-| `Quiet` | `#F3ECE4` | Secondary buttons, progress tracks, inputs |
-| `Peach` | `#F7B092` | Primary actions, selected tab, progress fill |
-| `PeachDeep` | `#E3876B` | The lip under primary buttons |
-| `TilePeach` / `TileLavender` / `TileMint` | `#FCDCC5` / `#DCE2FA` / `#DBF0E2` | Home hub tiles (Collection / Rewards / Friends) |
-| `ShelfFace` / `ShelfPlank` | `#FAF5EF` / `#E6D7C9` | Shelf tiles and their ceramic shelf |
+| `Milk` | `#FBF8F5` | Page ground, dialogs, selected segments |
+| `Plum` | `#2A1430` | Text, primary buttons, the tab bar, progress fills |
+| `PlumSoft` | `#6E5A72` | Secondary text and unselected segments |
+| `OnPlum` / `OnPlumMuted` | `#FBF8F5` / `#E8DCE6` | Text and icons on plum |
+| `Fill` / `FillDeep` | `#F1ECEF` / `#E2D8DE` | Rows, inputs, header buttons, segmented controls; dividers and switch-off |
+| `Mystery` | `#EFE9EC` | Tiles for toys you haven't found |
+| `Jelly` / `JellyInk` | `#FFC6D6` / `#7A2A4E` | Brand pink: today's box, the selected tab; text on pink |
+| `FieldPeach` / `FieldMoon` / `FieldGold` / `FieldMint` | `#FFD8C4` / `#D8DDFF` / `#FFE3A3` / `#CDEFDB` | Each toy's colour field (`FieldFor(id)`) |
+| `Midnight`, `Confetti` | `#2E2A5C`, `#F1E6FF` | Box/pool cards (`CollectionField(poolId, ...)`) |
+| `Heart` | `#C2416E` | Favorite |
 
-The toy stage background and lighting belong to the runtime lane and are unchanged.
+Toy portraits render once, on their own field colour (`ToyPortrait.Render(id, background)`), so they sit seamlessly on tiles. The 3D stage behind toy play belongs to the runtime lane; a per-toy backdrop (`PrototypeStage.SetBackdrop`) is requested in the handoff note.
 
 ## Type
 
-| Role | Face | Size (ref. px at 390×844) |
-| --- | --- | --- |
-| Screen title | Fredoka SemiBold | 23 |
-| Section heading | Fredoka SemiBold | 19 |
-| Button caption | Fredoka SemiBold | 15 (12–14 in tight spots) |
-| Body | Nunito SemiBold | 14 |
-| Caption / status | Nunito SemiBold | 12 |
-| Eyebrow (UPPERCASE) | Fredoka SemiBold | 11 |
+Bricolage Grotesque (SIL Open Font License), shipped as three static instances in `Resources/UI/Fonts/`: **Display** (bold, large titles and numbers), **Label** (semibold, buttons, names, headings), **Body** (regular, descriptions). Bold labels 24 px and up use Display; other bold labels use Label; everything else uses Body.
 
-Any label rendered "bold" uses Fredoka; everything else uses Nunito, so weights come from real font files instead of Unity's synthesized bold. Every label best-fits down by up to 5 px (never below 10) instead of clipping on small phones or long names; the profile name field opts out because InputField carets misalign with best-fit text.
+| Role | Size (ref. px at 390×844) |
+| --- | --- |
+| Screen title | 32 |
+| Section heading | 21 |
+| Button | 17 |
+| Body | 16 |
+| Caption | 14 |
+| Small (badges, tile names) | 13 |
 
-Both fonts are under the SIL Open Font License; license texts sit next to them in `Resources/UI/Fonts/`. Neither covers CJK or emoji. Unity's dynamic fonts fall back to the device's system fonts for missing glyphs, which needs a device check with a name like `Lucía 李`.
+Labels best-fit down by up to 5 px, never below 11. The font has no CJK or emoji, so Unity falls back to system fonts; a name like `Lucía 李` needs a device check.
 
-## Shape, depth, and spacing
+## Shape and spacing
 
-- Corners: 16 px radius on every surface (the generated 9-slice sprite).
-- **Cards** (`Card(...)`): Paper surface with a soft plum drop shadow 4 px below.
-- **Buttons**: rounded surface with a darker **lip** 4 px below. Primary (Peach) buttons get a PeachDeep lip; neutral buttons a translucent plum lip. Tabs are flat.
-- Touch targets: at least 48 px tall (the Settings gear is 48×48).
-- Screen gutter: 16 px. The tab bar floats 16 px above the bottom safe area.
+- Rounded corners from one 128 px 9-slice sprite; `SetRadius` sets the drawn radius per surface. Cards 28, tiles 22, rows 20, buttons are pills.
+- Header: 44 px circular buttons (back, settings, favorite, avatar) on `Fill`, or translucent milk over the toy stage.
+- Tab bar: a floating plum pill, 64 px tall, 20 px above the bottom safe area. The selected tab is a jelly-pink pill with plum ink.
+- Gutter 20 px. Touch targets at least 44 px.
 
 ## Motion
 
-`SquishFeedback` is on every button and shelf tile. Pressing squishes it to 93% around its centre; releasing springs back with one small bounce (~0.3 s). It scales vertices only, so layout, hit areas, and scroll positions never move. **Motion calm** dips to 97% and settles without a bounce. Disabled buttons don't squish.
+`SquishFeedback` is on every button and tile: press squishes to 95% and springs back; Motion calm dips to 98% with no bounce.
 
-## Brand assets
+## Screens
 
-Generated by `tools/build-ui-assets.py` into `Assets/Pockle/Resources/UI/`:
-
-- `PockleWordmark.png`: the squishy wordmark, matching the approved collection box art: bouncing Fredoka Bold letters in glossy plum with candy highlights and a blush outline. Shown on Home in place of the old text logo.
-- `Icons/Home`, `Box`, `You`, `Settings`, `Back`: white-on-transparent so code tints them. Tabs use Home/Box/You; the header uses Settings (gear) and Back (chevron).
-
-Re-run the script after editing shapes; it keeps file names and the committed `.meta` GUIDs stay valid.
-
-## Applying it to a screen
-
-- Containers: `Card(rect, Paper)`. Inline surfaces (tracks, inputs): `Surface(rect, Quiet)`.
-- Text: `Label(text, parent, PockleTheme.<Role>Size, Ink or MutedInk, FontStyle.Bold for display / Normal for body, ...)`.
-- Actions: `CreateButton(...)` with `Peach` for the one primary action per card, `Quiet` otherwise.
-- Never hard-code a colour in a screen file; add a token here and in `PockleTheme.cs` if one is missing.
-
-## Not yet covered
-
-Home and shelf layout polish (UX-003/004), illustrated empty states, the reveal-screen "Add to shelf / Play" moment (UX-012), and per-collection accent colours as more series arrive.
+Home, Shelf, Boxes, You, Settings, Friends, and the toy header follow the canvas. The Collection ("Who's inside") and Collections pages need new pages in `MenuNavigation` (requested from Codex), and the Box reveal moment is UX-012.
