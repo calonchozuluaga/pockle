@@ -15,8 +15,8 @@ internal static class CatalogChecks
     }
     private static void Definitions()
     {
-        Assert(ToyCatalog.Characters.Count == 12 && ToyCatalog.Finishes.Count == 9 && ToyCatalog.Collectibles.Count == 108, "Roster is not twelve distinct characters with nine finishes.");
-        Assert(ToyCatalog.Collectibles.Select(c => c.Id).Distinct(StringComparer.Ordinal).Count() == 108, "Collectible IDs collide.");
+        Assert(ToyCatalog.Characters.Count == 12 && ToyCatalog.Finishes.Count == 10 && ToyCatalog.Collectibles.Count == 120, "Roster is not twelve distinct characters with ten finishes.");
+        Assert(ToyCatalog.Collectibles.Select(c => c.Id).Distinct(StringComparer.Ordinal).Count() == 120, "Collectible IDs collide.");
         Assert(ToyCatalog.Collectibles.Count(c => c.Available) == 4, "Planned art was marked playable.");
         foreach (var definition in ToyCatalog.Collectibles)
         {
@@ -25,10 +25,10 @@ internal static class CatalogChecks
             Assert(ToyCatalog.TryGetCharacter(definition.CharacterId, out var character), "Collectible references a missing character.");
             Assert(ToyCatalog.TryGetFinish(definition.FinishId, out _), "Collectible references a missing finish.");
             Assert(character.AccentColor.Red >= 0 && character.AccentColor.Red <= 1, "Accent RGB is outside UI color bounds.");
-            Assert(definition.Available || definition.CollectionId == "", "Unapproved concepts acquired a box pool.");
+            Assert(ToyCatalog.TryGetCollection(definition.CollectionId, out var collection) && collection.CharacterId == definition.CharacterId, "Variety was placed outside its character collection.");
         }
         foreach (var character in ToyCatalog.Characters)
-            Assert(ToyCatalog.Collectibles.Count(c => c.CharacterId == character.Id) == 9, "A character is merely a finish entry rather than its own silhouette.");
+            Assert(ToyCatalog.Collectibles.Count(c => c.CharacterId == character.Id) == 10, "A character is merely a finish entry rather than its own silhouette.");
         string[] oldIds = { "pip.peach-jelly", "pip.moon-pearl", "pip.gold-confetti", "pip.mint-mochi" };
         for (int i = 0; i < oldIds.Length; i++)
         {
@@ -48,10 +48,10 @@ internal static class CatalogChecks
         foreach (float invalid in new[] { float.NaN, float.PositiveInfinity, -1f, 1.001f })
             Assert(!pool.TryChoose(invalid, out _), "Invalid reward roll selected a collectible.");
         foreach (var box in ToyCatalog.BoxPools)
-            Assert(box.Entries.All(e => ToyCatalog.TryGetCollectible(e.CollectibleId, out var item) && item.Available && item.CollectionId == box.Id), "Box pool includes an unapproved/mismatched concept.");
+            Assert(ToyCatalog.TryGetCollectionForPool(box.Id, out var collection) && collection.Id == "pip" && box.Entries.All(e => ToyCatalog.TryGetCollectible(e.CollectibleId, out var item) && item.Available && item.CollectionId == collection.Id), "Legacy Pip sub-pool includes an unapproved/mismatched concept.");
         bool immutable = false;
         try { ((IList<CollectibleDefinition>)ToyCatalog.Collectibles).Clear(); } catch (NotSupportedException) { immutable = true; }
-        Assert(immutable && ToyCatalog.Collectibles.Count == 108, "A HUD consumer mutated the shared catalog.");
+        Assert(immutable && ToyCatalog.Collectibles.Count == 120, "A HUD consumer mutated the shared catalog.");
     }
     private static void Migration()
     {

@@ -1,3 +1,9 @@
+## Series metadata and lineup motion (October 9, 2026)
+
+Executed: **130,254 series/motion assertions**, plus 418,742 assertions across the existing suites (**548,996 total**). The expanded catalog suite now reports 1,296 assertions and material handling 9,705 because the planned catalog has ten varieties per character. Coverage includes one character per collection, at least ten members per catalog collection, Pip in Series 1, immutable membership and disclosed probabilities, positive/unique prize validation and overflow-safe totals, null release dates, UTC date boundaries, permanent collections, a deterministic 72,000-draw 1-in-72 secret fixture, all twelve idle/eager loop profiles, bounded nonfinite/extreme-time behavior, calm neutrality, zero sampling allocations, and shared animation slot limits/reuse. The existing four-Pip inventory migration and daily odds still pass unchanged.
+
+Source checks pass for **61 C# files**, three symbol profiles, five assembly definitions, and **137 GUIDs**. Four Unity PlayMode cases are authored but unrun: beta offer mapping to Pip, visibility/calming/restoration, reconfiguration/destruction, and disabled toy cleanup. Unity compiler/lifecycle execution, rendering and motion feel, actual live lineup UI integration, Android packaging, and performance remain unverified. No licensed Unity editor is available here. See [exact APIs and Claude integration guidance](SERIES_AND_MOTION_API.md).
+
 ## Editor assembly reference correction (October 9, 2026)
 
 The owner supplied a Unity Console error: `PipCharacterImporter.cs(63,18): CS0234`, because `Pockle.Editor.asmdef` referenced Runtime but not Core while the importer directly called `Pockle.Core.ToyCatalog`. Added the required direct Core reference. This is a confirmed Unity compilation failure in the previous merged build, despite the syntax/geometry checks passing.

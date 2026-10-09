@@ -10,7 +10,7 @@ Prepared October 8, 2026. This is an asynchronous handoff through the shared Git
 - Implemented: four separate shelf toys, glossy/pearl/glitter/soft finishes, lift/sag/gravity, two-finger squish/stretch, shake jiggle, branded daily opening, local walking rewards, Home, full Settings, and a local profile.
 - Pending: live accounts, public shelves, friends, cloud save, verified purchases, authoritative rewards, badges/milestones, dependable background walking, glow environments, and reactive filling.
 - Read `UI_UX_TASKS.md`, `HOME_UI.md`, `COLLECTION_UI.md`, and `VALIDATION.md`. Keep implemented local features distinct from unavailable online services.
-- Expanded roster requested by the owner: at least **12 characters with 8–10 finishes each**. Read `CHARACTER_ROSTER.md` for a draft 12-character/9-finish plan, ART-001–005, and UX-029–031. The current build still has four finishes of Pip; the proposed roster is not shipped content.
+- Expanded roster requested by the owner: at least **12 distinct character collections with at least 10 color/texture/material varieties each**. Pip is one collection in Series 1; finish themes are not separate collections. Read `CHARACTER_ROSTER.md` for the updated minimum 120-collectible plan, ART-001–005, and UX-029–031. The current build still has four finishes of Pip; the proposed roster is not shipped content.
 
 ## Proposed division
 
