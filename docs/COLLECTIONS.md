@@ -72,9 +72,33 @@ Per owned copy (server-owned once accounts exist): **serial number**, **first-fo
 
 Per character: a short **idle** and an **eager** animation (hop, wave, peek) for the collection lineup (delivered as `CharacterMotion` recipes). The lineup animates only the handful of toys on screen; the shelf keeps static thumbnails from the bounded preview cache.
 
+## Daily check-in box (decided October 9, tuning open)
+
+**Decision.** Players also get a free **daily check-in box** that needs no walking: open the app and claim it. It is the accessibility-friendly floor, and walking stays the better, faster path on top.
+
+**Why.** If walking were the only free reward, the game would shut out wheelchair users and anyone else who can't walk. It would also shut out people who don't want to walk and won't pay. Many of them would delete the app on day one. The check-in box means every player gets a toy regularly without walking or paying.
+
+**Devices without a step sensor.** Tablets and older phones can't earn the walking box; the app says walking isn't available rather than faking steps. The check-in box is their free path.
+
+**How it fits the existing rules.**
+- It is a free box like the walking box, so it can give duplicates; spares from it can be traded or crafted. Paid boxes still never give a duplicate.
+- It draws from the same finite supply, so its toys carry serial numbers and ledger entries (source: check-in).
+- Walk tiers are unchanged. The walking box keeps its 1,000 / 5,000 / 10,000-step upgrades and better odds.
+- Odds for the check-in box must be shown before opening, like every other box.
+
+**Tuning options to keep walking worthwhile (owner to choose; these can be combined):**
+1. **Older series.** The check-in box draws from older series, while the walking box features the newest.
+2. **Less often.** The check-in box arrives less often, for example every two days.
+3. **Lower rare odds.** The check-in box has lower odds for rare and secret toys than any walking tier.
+
+Also open: whether a player who walks gets both boxes that day, or whether the walking box replaces the check-in box.
+
+The check-in box is reward logic, so it is Codex's lane (claim timing, pool, and a one-claim-per-period guarantee, later validated by the server). The UI shows it on Home and Boxes alongside the walking box.
+
 ## Not decided yet
 
 - Edition sizes per toy and secret, and the exact walk-tier odds.
+- Check-in box tuning (options above) and whether walkers get both boxes.
 
 ## Backend (decided October 9)
 

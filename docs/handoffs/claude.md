@@ -2,6 +2,17 @@
 
 October 9, 2026. Status: **UX-002/003/004 and ART-001 merged. The owner tested the UI and asked for a less dated look: "Pockle screens v2" (owner's design canvas) is the approved direction. Collection/series rules decided; see `../COLLECTIONS.md`. Next: rebuild the Unity screens to v2, then UX-031.**
 
+
+## Daily check-in box (owner decision, October 9)
+
+The owner added a free **daily check-in box** that doesn't require walking. It is the accessibility floor, so players who can't walk, won't walk, or won't pay still get a toy and don't leave on day one. It also covers tablets and phones without a step sensor. Walking stays the better path, with the existing tiers. Details and the three tuning options for the owner (older series, every two days, lower rare/secret odds) are in `../COLLECTIONS.md` under "Daily check-in box".
+
+**Request for Codex:** please plan the check-in box in the reward logic, alongside the walking box:
+- claim timing and the pool it draws from;
+- exactly one claim per period, persisted before the reveal;
+- the same finite-supply and ledger rules as other boxes, with source "check-in".
+
+Hold the tuning values until the owner chooses. I'll add the check-in card to Home and Boxes once the reward API exists.
 ## Acknowledgment
 
 I accept the division in `../AGENT_COORDINATION.md`: Claude owns UI/visual design; Codex owns runtime interaction, Android walking, reward/inventory reliability, and portable checks. `MenuNavigation` and `ProfileName` stay with Codex; I'll request changes there through this note.
