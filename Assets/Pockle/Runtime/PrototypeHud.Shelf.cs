@@ -1,4 +1,5 @@
 using System.Globalization;
+using Pockle.Core;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,9 +17,10 @@ namespace Pockle.Runtime
         private readonly RectTransform[] toyFavoriteBadges = new RectTransform[4];
         private readonly Text[] toyNameLabels = new Text[4];
 
-        /// <summary>Title-case display name for UI ("Moon Jelly"); <see cref="PipVariants.Label"/> stays the data label.</summary>
+        /// <summary>Display name from the catalog ("Moon Jelly"); falls back to the legacy label in title case.</summary>
         private static string ToyName(PipVariant variant)
         {
+            if (ToyCatalog.TryGetCollectible(PipVariants.CollectibleId(variant), out var collectible)) return collectible.FinishDisplayName;
             return CultureInfo.InvariantCulture.TextInfo.ToTitleCase(PipVariants.Label(variant).ToLowerInvariant());
         }
 
@@ -134,11 +136,10 @@ namespace Pockle.Runtime
         private void RefreshShelf()
         {
             if (session == null || shelfSummaryTitle == null) return;
-            var counts = session.Progress.Save.Counts;
             int discovered = 0;
             for (int i = 0; i < toyTiles.Length; i++)
             {
-                int owned = i < counts.Length ? counts[i] : 0;
+                int owned = Owned((PipVariant)i);
                 bool has = owned > 0;
                 if (has) discovered++;
                 toyButtons[i].interactable = has;
@@ -150,7 +151,7 @@ namespace Pockle.Runtime
                 toyCounts[i].text = owned > 1 ? owned + " on your shelf" : has ? "Yours to play with" : "Yet to discover";
                 toyCountBadges[i].gameObject.SetActive(owned > 1);
                 toyCountBadgeLabels[i].text = "×" + Mathf.Min(owned, 99);
-                toyFavoriteBadges[i].gameObject.SetActive(has && profile != null && (int)profile.Favorite == i);
+                toyFavoriteBadges[i].gameObject.SetActive(has && profile != null && profile.FavoriteId == PipVariants.CollectibleId((PipVariant)i));
             }
             shelfSummaryTitle.text = discovered + " of " + toyTiles.Length + " discovered";
             shelfFill.fillAmount = toyTiles.Length == 0 ? 0 : discovered / (float)toyTiles.Length;

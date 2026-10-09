@@ -119,11 +119,34 @@ namespace Pockle.Runtime
         public void ShowToy(PipVariant choice)
         {
             choice = PipVariants.FromSaved((int)choice);
-            if (session != null && session.Progress.Save.Counts[(int)choice] <= 0) return;
+            if (session != null && Owned(choice) <= 0) return;
             SetVariant(choice);
             if (page != AppPage.Shelf && page != AppPage.Play) Navigate(AppPage.Shelf);
             Navigate(AppPage.Play); VariantChanged?.Invoke(choice);
         }
+        /// <summary>Plays an owned collectible by stable catalog ID. Unknown, planned, or unowned IDs do nothing.</summary>
+        public bool ShowToy(string collectibleId)
+        {
+            if (session == null || !session.TryGetPlayableVariant(collectibleId, out var choice) || Owned(choice) <= 0) return false;
+            ShowToy(choice);
+            return page == AppPage.Play;
+        }
+
+        /// <summary>Owned count for one of the four playable Pip presets, read from ID inventory.</summary>
+        private int Owned(PipVariant variant)
+        {
+            return session == null ? 0 : session.GetOwnedCount(PipVariants.CollectibleId(variant));
+        }
+
+        /// <summary>Discovered playable finishes and total owned toys (including preserved future IDs).</summary>
+        private void CollectionTotals(out int discovered, out int total)
+        {
+            discovered = 0; total = 0;
+            if (session == null) return;
+            foreach (var entry in session.OwnedCounts) if (entry.Value > 0) total += entry.Value;
+            for (int i = 0; i < PipVariants.Count; i++) if (Owned((PipVariant)i) > 0) discovered++;
+        }
+
         public bool GoBack()
         {
             if (modal.gameObject.activeSelf) { CloseModal(); return true; }

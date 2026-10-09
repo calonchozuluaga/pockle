@@ -59,7 +59,7 @@ namespace Pockle.Runtime
                     () => { profile.SetFavorite(choice); RefreshProfile(); }, out favoriteColours[i], 13);
             }
             playFavorite = CreateButton("Play with your favorite", favoriteCard, Vector2.zero, new Vector2(270, 48), Peach,
-                () => ShowToy(profile.Favorite), out _);
+                () => ShowToy(profile.FavoriteId), out _);
             profileLinks = Rect("Your profile links", profileRoot);
             CreateButton("Settings", profileLinks, Vector2.zero, new Vector2(290, 48), Quiet, ShowSettings, out _);
             CreateButton("Badge cabinet", profileLinks, Vector2.zero, new Vector2(290, 48), Quiet,
@@ -85,13 +85,12 @@ namespace Pockle.Runtime
                 var picture = (RectTransform)avatarButtons[i].transform.GetChild(1);
                 picture.offsetMin = new Vector2(6, 6); picture.offsetMax = new Vector2(-6, -6);
                 favoriteColours[i].color = (int)profile.Favorite == i ? Peach : Quiet;
-                favoriteButtons[i].interactable = session == null || session.Progress.Save.Counts[i] > 0;
+                favoriteButtons[i].interactable = session == null || Owned((PipVariant)i) > 0;
             }
-            playFavorite.interactable = session == null || session.Progress.Save.Counts[(int)profile.Favorite] > 0;
+            playFavorite.interactable = session == null || session.IsOwnedAndAvailable(profile.FavoriteId);
             if (session != null)
             {
-                int distinct = 0, total = 0;
-                foreach (int count in session.Progress.Save.Counts) { if (count > 0) distinct++; total += count; }
+                CollectionTotals(out int distinct, out int total);
                 profileSummary.text = distinct + " collected finishes · " + total + " toys";
             }
         }

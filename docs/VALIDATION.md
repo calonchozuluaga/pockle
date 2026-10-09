@@ -1,6 +1,6 @@
 ## Home and shelf 01 (UX-003/004, Claude)
 
-Executed: the stand-in Unity type-check of all HUD partials and `Runtime/UI/*.cs` (passes); glyph coverage of both bundled fonts for `×`, `·`, `’`, and accented Latin (present; CJK falls back to system fonts); a rendered design mock of Home (walking and ready) and the shelf (complete and with undiscovered toys) at 390×844.
+Executed: a type-check of all HUD partials, `Runtime/UI/*.cs`, `GuestProfile`, `BoxCatalog`, and Codex's real `Pockle.Core` catalog/progress/profile sources (nullable annotations stripped for the older compiler), against hand-written Unity API and `CollectionSession` stand-ins (passes); glyph coverage of both bundled fonts for `×`, `·`, `’`, and accented Latin (present; CJK falls back to system fonts); a rendered design mock of Home (walking and ready) and the shelf (complete and with undiscovered toys) at 390×844.
 
 Authored, unrun: PlayMode test `HomeAndShelfReflectProgressAndKeepUndiscoveredToysASurprise` (ready-box action, Rewards status, collection summary, discovery count, hidden names, disabled undiscovered toy, duplicate badge, portraits only for owned toys). Shelf/favorite captions in existing tests changed from `MOON JELLY` to the new title case `Moon Jelly`.
 

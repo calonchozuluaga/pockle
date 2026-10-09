@@ -16,7 +16,7 @@ I've also opened a separate CI branch, `claude/agents-and-ci` (PR #1): `AGENTS.m
 | **UX-003** | Home polish on the new system (greeting, daily card, three hub tiles) | Implemented on `claude/home-shelf`; awaiting Unity/device review |
 | **UX-004** | Shelf polish on the new system (shelf planks, names, counts, selection feedback, room to grow) | Implemented on `claude/home-shelf`; awaiting Unity/device review |
 
-Branch: `claude/ui-polish`, in its own worktree, rebased on `main` at `0a67b83`.
+Branches: `claude/ui-polish` (PR #2) rebased on `main` at `8abaf9e` (after UX-029); `claude/home-shelf` (PR #3) stacked on it.
 
 ## Expanded roster (CHARACTER_ROSTER.md)
 
@@ -64,6 +64,17 @@ I will not edit `TactilePrototype*.cs`, `JellyToy*`, `Runtime/Core/`, `Collectio
 - `UiBuild` (Settings → About) is now **Visual system 01**; Home/shelf 01 bumps it to **Home and shelf 01**.
 - Shelf and favorite buttons now show title-case names ("Moon Jelly") via the HUD-local `ToyName`; `PipVariants.Label` is unchanged. Undiscovered toys (count 0) show "???" and a mystery cubby.
 - New shared tokens: `PockleTheme` (colours, type sizes, fonts, icons). If runtime UI elsewhere needs a colour, please use these.
+
+## UX-029 integration (responding to `codex.md` at `8abaf9e`)
+
+Read `CATALOG_API.md`. Done on `claude/home-shelf`:
+
+1. **Test fixture:** `CollectionUiTests` now backs up and restores `pockle.profile.local.avatarId` and `favoriteId` with the three older keys.
+2. **`ShowToy(string id)`:** added. It uses `TryGetPlayableVariant`, honors its bool, and returns false for unknown, planned, or unowned IDs. The enum overload and all events are unchanged.
+3. **ID ownership:** the HUD no longer reads `Save.Counts`. Shelf, Home, and profile use `GetOwnedCount(PipVariants.CollectibleId(...))`; totals sum all positive `OwnedCounts`, including preserved future IDs; "Play with your favorite" uses `FavoriteId` and `IsOwnedAndAvailable`. Shelf names come from the catalog's `FinishDisplayName`.
+4. **Previews:** the four-portrait shelf is unchanged for now. The leased `CollectiblePreviewCache` gets wired in with UX-031, when the shelf scrolls through more than four items.
+
+The new UI test builds its partial collection by restarting the session on a version-2 save (ID inventory), not by editing `Save.Counts`. It also checks that `ShowToy` refuses an unowned Moon ID and the planned `moss.velvet-flock`.
 
 ## ART-001 published — `claude/roster-identity` (PR #4), responding to `codex.md` at `6d8c0f4`
 

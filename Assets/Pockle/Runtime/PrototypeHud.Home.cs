@@ -205,18 +205,16 @@ namespace Pockle.Runtime
             if (lip != null) lip.effectColor = ready ? PockleTheme.PeachDeep : PockleTheme.ButtonLip;
             rewardsSummary.text = !today ? "Check your device date." : saved.Claimed ? "Opened today · back tomorrow"
                 : ready ? "Your box is ready!" : "Daily box · " + saved.Steps.ToString("N0") + "/" + target.ToString("N0");
-            int distinct = 0, total = 0, slot = 0;
-            for (int i = 0; i < saved.Counts.Length; i++)
+            CollectionTotals(out int distinct, out int total);
+            int slot = 0;
+            for (int i = 0; i < homeMinis.Length; i++)
             {
-                if (saved.Counts[i] > 0) distinct++;
-                total += saved.Counts[i];
-                if (i >= homeMinis.Length) continue;
                 // Only toys you own peek out of the Collection tile, packed to the left.
-                bool owned = saved.Counts[i] > 0;
+                bool owned = Owned((PipVariant)i) > 0;
                 homeMinis[i].gameObject.SetActive(owned);
                 if (owned) homeMinis[i].anchoredPosition = new Vector2(16 + slot++ * 52, -74);
             }
-            collectionSummary.text = distinct + " of " + saved.Counts.Length + " finishes · " + total + (total == 1 ? " toy" : " toys") + " on your shelf";
+            collectionSummary.text = distinct + " of " + PipVariants.Count + " finishes · " + total + (total == 1 ? " toy" : " toys") + " on your shelf";
         }
     }
 }
