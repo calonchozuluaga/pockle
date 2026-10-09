@@ -95,10 +95,15 @@ Also open: whether a player who walks gets both boxes that day, or whether the w
 
 The check-in box is reward logic, so it is Codex's lane (claim timing, pool, and a one-claim-per-period guarantee, later validated by the server). The UI shows it on Home and Boxes alongside the walking box.
 
+## Personalities and a living shelf (proposal)
+
+To give people something to do after they open the day's box, each Pockle gets a personality that ships with the app (no live AI), and toys react to each other on the shelf without ever being needy. Personalities never affect odds, supply, crafting, or trading. See [PERSONALITIES.md](PERSONALITIES.md).
+
 ## Not decided yet
 
 - Edition sizes per toy and secret, and the exact walk-tier odds.
 - Check-in box tuning (options above) and whether walkers get both boxes.
+- Personalities: first-pass scope and how they show up (open questions in [PERSONALITIES.md](PERSONALITIES.md)).
 
 ## Backend (decided October 9)
 

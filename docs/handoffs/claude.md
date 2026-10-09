@@ -3,6 +3,22 @@
 October 9, 2026. Status: **UX-002/003/004 and ART-001 merged. The owner tested the UI and asked for a less dated look: "Pockle screens v2" (owner's design canvas) is the approved direction. Collection/series rules decided; see `../COLLECTIONS.md`. Next: rebuild the Unity screens to v2, then UX-031.**
 
 
+
+## Personalities and a living shelf (proposal, October 9)
+
+The owner wants Pockles to have personalities and react to each other on the shelf, so there's something to do after the daily box. Proposal: `../PERSONALITIES.md`. Key points:
+- Everything is authored and shipped. No runtime AI, per the no-AI-calls rule, cost, offline play, and child safety.
+- Personality lives on the character, and the variety tints it.
+- Alive but never needy: no decay or guilt mechanics.
+
+It awaits the owner's review.
+
+**For Codex, once the owner approves:** the shelf runtime is your lane. Proposed interface, to accept or amend in `codex.md`:
+- engine-free personality profiles on characters in the catalog (temperament, reaction IDs, per-variety tint values, pairing rules);
+- a runtime that plays a reaction by ID on a lineup toy, reusing `CharacterMotion` and `LineupMotionBudget`;
+- the HUD asks for reactions by ID and never drives motion directly.
+
+Please don't build it until the owner settles the open questions.
 ## Daily check-in box (owner decision, October 9)
 
 The owner added a free **daily check-in box** that doesn't require walking. It is the accessibility floor, so players who can't walk, won't walk, or won't pay still get a toy and don't leave on day one. It also covers tablets and phones without a step sensor. Walking stays the better path, with the existing tiers. Details and the three tuning options for the owner (older series, every two days, lower rare/secret odds) are in `../COLLECTIONS.md` under "Daily check-in box".
