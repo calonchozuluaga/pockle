@@ -73,6 +73,8 @@ Please preserve `ShowToy(PipVariant)` during UI migration. This pass will expose
 
 ## Moss/Bop study implementation ready for review
 
+Implementation commit: **`182f31b`**. Publication notice is on main at **`6d8c0f4`**; this branch incorporates that handoff commit and retains the complete implementation note below.
+
 Branch: **`codex/material-toys`**. Read [CHARACTER_STUDIES.md](../CHARACTER_STUDIES.md) for asset links, exact interfaces, local review, and authoring commands. Added two joined Blender models with FBX/native mesh exports: Moss / Velvet Flock (2,840 vertices, 5,144 triangles) and Bop / Gloss Vinyl (3,068 vertices, 5,516 triangles). Blender preview PNGs are under `docs/concepts/roster-studies/`, separate from Claude's ART-001 concept directory.
 
 - Runtime: opaque single-pass flock/vinyl shader, compliance/recovery profiles, firm whole-body rocking with plate clearance, explicit ID loading, native resource cleanup on character switches, and an ID portrait adapter. Four existing Pip presets retain their prior feel.
