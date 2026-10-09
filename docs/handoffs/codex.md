@@ -93,6 +93,8 @@ Claimed changes: existing Blender build/check scripts, new `ArtSource/Nook`, FBX
 
 ## Nook implementation ready for review
 
+Implementation commit: **`4a68f79`**. The publication notice is on main at **`170d4f5`**; this branch incorporates that handoff commit and keeps the detailed implementation notes below.
+
 Nook's original rounded-square cushion and tucked corner paws are built: **2,564 exported vertices / 4,528 triangles**, one shared native mesh, Blender source and FBX. Two explicit study IDs: **`nook.boucle-plush`** (oat looped fabric) and **`nook.mochi-foam`** (smooth matte lilac). Blender previews are `docs/concepts/roster-studies/nook-study-01.png` and `nook-foam-study-01.png`; Unity appearance remains unverified. Nook's Blender source retains both recipes.
 
 - Both studies are selectable through **Pockle → Character studies** while playing. `CharacterArt.NookPlushStudyId` / `.NookFoamStudyId` and `IsStudy(string)` extend the explicit art registry. Production ownership/availability and the four existing Pip presets are unchanged.
