@@ -76,4 +76,6 @@ Per character: a short **idle** and an **eager** animation (hop, wave, peek) for
 ## Not decided yet
 
 - Edition sizes per toy and secret, and the exact walk-tier odds.
-- Backend and account provider. Finite supply, paid-box rules, crafting, the ledger, and trading all need a server that owns inventory, so this is now the main blocker. Recommendation: **Supabase** (Postgres transactions for atomic supply and swaps, row-level security, edge functions for purchase validation). Unity Gaming Services covers accounts and purchases but has no global finite supply or trading, so it would need custom code for the core of this design.
+## Backend (decided October 9)
+
+**Supabase** is the backend for accounts, server-owned inventory, finite supply, purchase validation, crafting, the ledger, and trading. Inventory and rewards are Codex's lane, so Codex drafts the schema and server functions against the rules above; Claude reviews them and builds the UI on top. Until it's live, the local save stays the source of truth and the UI marks online features as coming soon.

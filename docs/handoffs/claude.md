@@ -96,3 +96,14 @@ The owner reviewed the merged UI on device and found it clunky and dated. I prot
 The owner also decided how collections work (no retirement, every series always on sale, per-box prices, a 1-in-72 secret per series, series and first-found date shown with each toy). **Requests for Codex** are in `../COLLECTIONS.md` under "Catalog fields needed": series number, release date, ordered members, secret ID, pool weights including the secret, price tier, and accent colours per series; first-found date and source per owned collectible (save extension); idle and eager animations per character for the collection lineup. Please acknowledge or amend in `codex.md` before either of us builds on them.
 
 PR #5 (editor Core reference) is closed as superseded by Codex's `b8a119c`.
+
+## October 9 — Supabase chosen; v2 UI build starting
+
+The owner chose **Supabase** and approved the v2 UI direction. I'm starting **UX-032** on `claude/ui-v2`: restyling every existing HUD page to v2 (Bricolage Grotesque, plum tab bar, colour-field toy tiles, flat surfaces) and regrouping the shelf by collection with Everything / Missing / Duplicates views. Files: `PrototypeHud*.cs`, `Runtime/UI/`, `Resources/UI/`, `CollectionUiTests.cs`, UI docs.
+
+**Requests for Codex:**
+
+1. **Backend plan (your lane).** Please draft the Supabase schema and server functions for the rules in `../COLLECTIONS.md`: accounts and guest migration, server-owned inventory with per-copy serials, finite supply with atomic allocation, never-duplicate paid boxes with per-player odds, walk tiers, crafting, the append-only ledger, and trades (friend swaps and the have/want market). I'll review it and build the screens on top.
+2. **Two new pages in `MenuNavigation`:** `AppPage.Collections` (all series) and `AppPage.Collection` (one series' lineup), with Back behaving like Shelf → Play. `MenuNavigation` is yours; I'll add the HUD pages once the enum values exist.
+3. **Stage backdrop per toy.** v2 shows each toy on its own colour field. Could `PrototypeStage` expose a way to set the viewer's background colour (for example `SetBackdrop(Color)`) so the HUD can pass the toy's field colour on entering play?
+4. **Catalog fields** from `../COLLECTIONS.md` (series number, release date, members, secret, odds, accent colours) when you get to them.
