@@ -1,6 +1,6 @@
 # Codex handoff
 
-October 8, 2026. Status: **UX-029 catalog/save foundation merged into main at the owner’s request.** Claude HUD integration and Unity/device migration validation remain pending.
+October 9, 2026. Status: **UX-029 is merged. Moss/Bop draft models and handling are published separately on `codex/material-toys` at `182f31b`.** Claude HUD integration and Unity/device review remain pending.
 
 - Prior Home hub baseline: `6809f9a` — Build home hub, local profile, and full game settings.
 - The owner asked whether Codex and Claude can split work and communicate. See `../AGENT_COORDINATION.md` for the proposed split and repository handoff process.
@@ -70,3 +70,15 @@ October 9, 2026. The owner asked Codex to continue building the other toys. Clai
 Claimed files: Blender build/check scripts and new `ArtSource/Moss`, `ArtSource/Bop`, character resources/FBX/study renders; `PipCharacterAsset`, importer, `JellyToy`, runtime portrait adapter, handling helpers/tests, and a separate editor study launcher. Any runtime viewer integration stays in `TactilePrototype*.cs`. No Claude-owned HUD/UI files or UI tests will be edited.
 
 Please preserve `ShowToy(PipVariant)` during UI migration. This pass will expose an ID-based runtime selection API and portraits for new character studies; exact signatures and whether studies are published as catalog-available will be documented before handoff. New art will not expand reward pools, change saved ownership, or grant paid products. Claude retains ART-001 concepts and all shelf presentation.
+
+## Moss/Bop studies published — `182f31b`
+
+Implementation and assets are on **`codex/material-toys`**, awaiting art/Unity review; they are not merged into the main app. Read [study instructions and exact runtime interfaces](https://github.com/calonchozuluaga/pockle/blob/codex/material-toys/docs/CHARACTER_STUDIES.md), or fetch the branch and inspect its own handoff.
+
+- Original draft models: **Moss / Velvet Flock** (2,840 vertices / 5,144 triangles) and **Bop / Gloss Vinyl** (3,068 / 5,516). `.blend`, FBX, `.pocklemesh`, and Blender studio renders are committed. Preview PNGs are in `docs/concepts/roster-studies/` on that branch, separate from your ART-001 concepts.
+- Runtime: single-pass opaque flock/vinyl shader, compliance/recovery profiles, firm rocking with plate clearance, ID art loading, native cleanup, and ID portrait rendering. The current four Pip presets keep their prior feel.
+- Local study review: while playing the Pockle scene, use **Pockle → Character studies** to select Moss/Bop. Editor access does not grant inventory. Both study IDs remain catalog-unavailable, with unchanged reward pools; ordinary Android shelf selection is pending your ID UI integration and art/acquisition review.
+- Exact APIs: `JellyToy.TrySetCollectible(string id)` selects visual art only; `TactilePrototype.TryPlayCollectible(string id)` requires owned, catalog-available play after navigation. Keep the legacy enum overload/events. `.Variant` remains a Pip compatibility bridge, not new-character identity. Preview leases retain their availability gate.
+- Validation: existing portable suites and **8,721 new material assertions passed**, both geometry checks and Blender FBX round trips passed, source checks **53 C# files / three profiles / 106 GUIDs / zero failures**. New `CharacterStudyTests` are authored but unrun. Unity compilation, shader rendering, PlayMode, Android packaging/performance and touch remain unverified.
+
+Please review these provisional silhouettes against your ART-001 sheets and retain draft availability until the owner reviews them. No Claude-owned HUD/UI files or UI test fixtures were edited. Nook plush/foam and the rest of the twelve-character/nine-finish production still follow the representative review.
