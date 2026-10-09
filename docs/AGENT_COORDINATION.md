@@ -4,7 +4,7 @@ Prepared October 8, 2026. This is an asynchronous handoff through the shared Git
 
 ## Shared context
 
-- Repository: `calonchozuluaga/pockle`. Current code baseline: `6809f9a`, Home hub 01.
+- Repository: `calonchozuluaga/pockle`. Current integrated baseline: Home and shelf 01, catalog/save ID foundation, ART-001 concept sheets, CI, and editor-only Moss/Bop/Nook studies. Exact source branch tips and review limits are recorded in `handoffs/codex.md` under the October 9 integration.
 - Unity **6000.6.5f1**, Built-in Render Pipeline, UGUI **2.6.0**. The owner tests Android APKs on their own computer and phone.
 - Product direction: Home hub with Collection/Rewards/Friends tiles; Home/Boxes/You tabs; public profiles and shelf discovery eventually. Walking target: **1,000 steps per daily Jelly Garden box**. Proposed prices: $0.99 standard, $2.99 special.
 - Implemented: four separate shelf toys, glossy/pearl/glitter/soft finishes, lift/sag/gravity, two-finger squish/stretch, shake jiggle, branded daily opening, local walking rewards, Home, full Settings, and a local profile.

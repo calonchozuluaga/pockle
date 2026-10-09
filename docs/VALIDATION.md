@@ -1,3 +1,14 @@
+## Combined Claude/Codex integration (October 9, 2026)
+
+Executed against the merged Home/shelf UI, ID integration, roster concepts, CI, and Moss/Bop/Nook study tree:
+
+- Portable suites: 29,837 core, 104,048 authored geometry, 531 pointer interaction, 114,326 manipulation, 6,031 reveal, 124 collection, 152,809 weight, 35 menu/profile, 1,224 catalog, and 8,738 material assertions; all passed (417,703 total).
+- C# source checks: 56 files across default, Editor, and Android symbol profiles; 132 asset GUIDs; zero failures. These check syntax/references, not Unity API compilation.
+- `python tools/check-character-studies.py`: Moss 2,840 vertices / 5,144 triangles, Bop 3,068 / 5,516, Nook 2,564 / 4,528; all connected, closed, within budget, with finite UVs and valid front anchors.
+- CI's whole-tree whitespace check caught two trailing spaces in font-license text; removed the spaces without changing the license prose. The same whole-tree check passes after the cleanup.
+
+GitHub check-runs could not be inspected: the API returned Forbidden. Local results do not establish hosted CI success. No Unity editor/license is available in cloud, so Unity compilation, shader rendering, EditMode/PlayMode execution, Android APK builds, font/texture imports, UI layout, and device performance remain unverified. Settings → About identifies this UI as **Home and shelf 01**. Review the Home/shelf locally and use **Pockle → Character studies** in the editor for the provisional models; they remain unavailable on the ordinary Android shelf.
+
 ## Home and shelf 01 (UX-003/004, Claude)
 
 Executed: a type-check of all HUD partials, `Runtime/UI/*.cs`, `GuestProfile`, `BoxCatalog`, and Codex's real `Pockle.Core` catalog/progress/profile sources (nullable annotations stripped for the older compiler), against hand-written Unity API and `CollectionSession` stand-ins (passes); glyph coverage of both bundled fonts for `×`, `·`, `’`, and accented Latin (present; CJK falls back to system fonts); a rendered design mock of Home (walking and ready) and the shelf (complete and with undiscovered toys) at 390×844.

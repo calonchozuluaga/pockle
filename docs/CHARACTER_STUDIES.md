@@ -1,6 +1,6 @@
 # Moss, Bop, and Nook — representative material studies
 
-Branch: `codex/material-toys`. These are provisional original silhouettes from `CHARACTER_ROSTER.md`, prepared while Claude's ART-001 sheets are pending. Three new models and four study finishes are included, alongside the existing Pip. This is the first representative batch toward twelve characters and nine finishes each.
+Merged into `main` from `codex/material-toys`. These are provisional original silhouettes from `CHARACTER_ROSTER.md`. Claude's [ART-001 identity sheets](concepts/roster/README.md) are now included alongside them and await the owner's art review. Three new models and four study finishes are included, alongside the existing Pip. This is the first representative batch toward twelve characters and nine finishes each.
 
 | Study | Shape | Surface | Handling | Runtime mesh |
 | --- | --- | --- | --- | --- |
@@ -13,7 +13,7 @@ The PNGs are **Blender studio renders**. Unity uses its own single-pass Built-in
 
 ## Local review
 
-1. Fetch and switch to `codex/material-toys` with Unity closed, preserving any local changes first.
+1. Pull `main` with Unity closed, preserving any local changes first.
 2. Open the Pockle scene in Unity **6000.6.5f1**, allow the `.pocklemesh` imports to finish, and press Play.
 3. Open **Pockle → Character studies**. Preview Moss, Bop, **Nook · Oat Bouclé Plush**, or **Nook · Lilac Mochi Foam**. This uses an owned Pip to enter the existing viewer; no study is granted to inventory. Finish any pending box opening first.
 4. Drag upward to lift, release to drop, and press **J** to simulate a phone shake. Moss should give and settle; Bop should rock while retaining its shape. Nook plush should hang more softly than foam; foam should compress more deeply and recover more slowly. The current viewer heading still says Pip because Claude owns the UI integration.
@@ -30,7 +30,7 @@ The review launcher exists only in the editor. Draft studies are still catalog-u
 - `CollectiblePreviewCache` now renders through an ID adapter but still gates on catalog availability. It will not offer draft portraits. After art approval, availability and acquisition policy must be agreed separately; then the same bounded cache can load their portraits.
 - `PreviewCharacterStudy(string id)` is editor-only authoring access. It does not modify inventory or the saved Pip preset. It requires at least one owned Pip and does not bypass a running reveal.
 
-No HUD/UI files or UI test fixtures were edited. Please keep the old overloads/events and use the owned runtime API when adding the ID callback. The prior request to back up the new profile ID keys in your UI fixture still applies.
+The study implementation did not edit HUD/UI files or UI test fixtures. The merged Claude UI now reads ID-based ownership, has a gated `ShowToy(string)` overload, and backs up the new profile ID keys in its test fixture. It still presents the four available Pip finishes; broader catalog browsing and preview-cache leases remain UX-031 work. Please preserve the old overloads/events when adding the ID callback for new characters.
 
 ## Authoring and checks
 
@@ -55,4 +55,4 @@ Portable material tests exercise compliance limits, recovery/rebound, shake sett
 
 `CharacterStudyTests` adds Unity PlayMode coverage for repeated switching and cleanup, missing-art rejection, picking, reset, opaque material selection, relative flock/vinyl deformation, and Nook finish reuse/recipe restoration/compliance. **Unity compilation, shader compilation/rendering, PlayMode tests, Android packaging, and device performance have not run in cloud.**
 
-Next: review these silhouettes against Claude's identity sheets and compare the representative materials in Unity/Android, then expand approved finish recipes and remaining character models. Keep public availability and reward-pool changes explicit.
+Next: review these silhouettes against Claude's identity sheets and compare the representative materials in Unity/Android, then expand approved finish recipes and remaining character models. Claude's shape feedback is recorded for the next art pass: give Moss a pointed central leaf tip, drooping pointed side tips, and a shaded face recess; reshape Bop as a spinning top widest at mid-height, tapering below, with a small off-centre cap. Review Nook's face height and relative scale against its identity sheet. These revisions are not part of this integration. Keep public availability and reward-pool changes explicit.

@@ -1,6 +1,18 @@
 # Codex handoff
 
-October 9, 2026. Status: **Moss, Bop, and Nook draft models/materials ready for review on `codex/material-toys`. UX-029 catalog/save foundation is merged into main.** Claude HUD integration and Unity/device validation remain pending.
+October 9, 2026. Status: **Integrated on `main`: Claude's visual system, Home/shelf UI, catalog ID integration, ART-001 concept sheets, and CI; Codex's Moss, Bop, and Nook draft models/materials.** Unity/device validation and broader UX-031 catalog browsing remain pending. See the integration record below for exact branch tips and validation limits.
+
+## October 9 integration — owner's requested merge
+
+Merged sequentially without conflicts: `codex/material-toys` (`3f67133`), `claude/home-shelf` (`f4b80bb`, including `claude/ui-polish` at `f9cca47`), `claude/roster-identity` (`5eeb131`), and `claude/agents-and-ci` (`dc2f3ee`). The UI build label is **Home and shelf 01**. No `ProjectSettings/` or `Packages/manifest.json` changes were included.
+
+Claude's HUD ID overload, ID ownership reads, profile ID fixture backups, and title-case shelf captions are integrated. Four Pip finishes remain playable; Moss/Bop/Nook are editor-only draft studies under **Pockle → Character studies**, with no inventory grants or reward-pool expansion. ART-001 concepts are included for review. I acknowledge Claude's Moss/Bop silhouette feedback and will use it for the next art pass; those shapes are not revised in this merge. Nook should also be reviewed against the published face placement and scale guidance.
+
+Executed on the combined tree: all ten portable suites (417,703 assertions total), C# syntax across 56 files in default/Editor/Android profiles, 132 asset GUID checks, and manifold/UV/anchor/budget checks for all three study meshes. The CI whole-tree whitespace check exposed trailing spaces in two font-license files; trimmed only those spaces, preserving the license prose. See `../VALIDATION.md` for the integration evidence.
+
+GitHub's check-runs API returned **Forbidden** with the available authentication, so hosted CI status could not be read. Local portable checks passed; this is not a claim that GitHub CI, Unity compilation/shaders, Unity PlayMode/EditMode tests, or Android packaging/device checks passed. The newly merged workflow will run on the main push; Unity jobs depend on repository license secrets. No licensed Unity editor is available in this cloud workspace.
+
+Next coordination: Claude retains the UI/CI lane and UX-031 browsing; Codex retains runtime/art and will align the provisional shapes with ART-001 after owner review. Both agents should fetch this integrated main before starting another branch.
 
 - Prior Home hub baseline: `6809f9a` — Build home hub, local profile, and full game settings.
 - The owner asked whether Codex and Claude can split work and communicate. See `../AGENT_COORDINATION.md` for the proposed split and repository handoff process.
