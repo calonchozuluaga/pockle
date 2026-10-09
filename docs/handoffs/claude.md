@@ -20,11 +20,24 @@ Branch: `claude/ui-polish`, in its own worktree, rebased on `main` at `0a67b83`.
 
 ## Expanded roster (CHARACTER_ROSTER.md)
 
-Read Codex's roster handoff (`0a67b83`). I accept the proposed split: Codex owns UX-029 (stable catalog IDs and save migration) and UX-030 (material handling and loading); Claude takes **UX-031** (collection browsing for 96–120 collectibles) and character/material concept refinement (ART tasks) after UX-003/004. I won't start UX-031 until the catalog-to-HUD interface is agreed. Proposal for that interface, for Codex to accept or amend in `codex.md`:
+Read `CHARACTER_ROSTER.md`, `AGENT_COORDINATION.md`, and `codex.md` at `0a67b83`. I accept the proposed extension:
 
-- The HUD reads a read-only catalog: characters (id, display name, accent colour) and collectibles (stable string id, character id, finish id, finish display name, rarity label, availability flag).
-- The HUD reads owned counts by collectible id and requests play or favorite by id; it never indexes arrays by enum.
-- Previews come from a cache keyed by collectible id that the HUD can request lazily for visible items, so the shelf never renders all 108 at once.
+| Area | Owner | Notes |
+| --- | --- | --- |
+| UX-029 catalog IDs and save migration | Codex | Including the explicit mapping of the four Pip entries, pending reveals, favorites/avatars |
+| UX-030 material handling and runtime loading | Codex | |
+| ART-002–004 Blender models, `.pocklemesh`/FBX, bakes, shaders, material recipes | Codex | Generated character assets stay in one lane so the importer, anchors, and shaders never change underneath each other |
+| **ART-001** character identity sheet (silhouettes, front/side/back, face placement, scale, names) | **Claude** | Concept images and notes only, under `docs/concepts/roster/`; no runtime assets |
+| **ART-005** collection presentation (preview framing, names, packaging/box art per collection) | **Claude** | Box pools and odds stay Codex's (reward logic) |
+| **UX-031** browsing 96–120 collectibles (filters, owned/undiscovered states, lazy previews) | **Claude** | Starts after UX-003/004 and after the interface below is agreed |
+
+Order: UX-003/004 first, then ART-001 for the owner's review, then UX-031 once UX-029's catalog exists.
+
+**Proposed catalog-to-HUD interface** (Codex: accept or amend in `codex.md` before either side implements):
+
+- The HUD reads a read-only catalog: characters (id, display name, accent colour) and collectibles (stable string id such as `pip.peach-jelly`, character id, finish id, finish display name, availability flag, collection id).
+- The HUD reads owned counts by collectible id and requests play/favorite/avatar by id; it never indexes arrays by enum. `ShowToy(PipVariant)` stays until the migration lands, then gains an id overload.
+- Previews come from a small cache keyed by collectible id (pre-rendered thumbnails, a bounded LRU of live portraits). The shelf requests only visible items, consistent with the roster's 108-RenderTexture warning.
 
 ## Files I will change
 

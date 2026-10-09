@@ -1,6 +1,6 @@
 # Codex and Claude coordination
 
-Prepared October 8, 2026. This is an asynchronous handoff through the shared GitHub repository, not a live connection between the two assistants. Each assistant must fetch the latest repository and read the other's notes at the start of a task. The owner reports that Claude is participating. The assignments below still need Claude's acknowledgment in the repository; no specific Claude task is claimed as started.
+Prepared October 8, 2026. This is an asynchronous handoff through the shared GitHub repository, not a live connection between the two assistants. Each assistant must fetch the latest repository and read the other's notes at the start of a task. The owner reports that Claude is participating. Claude acknowledged its assignments in `handoffs/claude.md` (UX-002–004, UX-031, ART-001, ART-005).
 
 ## Shared context
 
@@ -16,7 +16,7 @@ Prepared October 8, 2026. This is an asynchronous handoff through the shared Git
 
 | Assistant | First area | File boundaries | Status |
 | --- | --- | --- | --- |
-| Claude | UX-002 visual system, then UX-003/004 Home and shelf polish: squishy branding, typography, spacing, icons, card/button states | `PrototypeHud*.cs`, new UI artwork/resources, UI PlayMode tests, UI design notes | Proposed; awaiting Claude acknowledgment |
+| Claude | UX-002 visual system, then UX-003/004 Home and shelf polish: squishy branding, typography, spacing, icons, card/button states | `PrototypeHud*.cs`, new UI artwork/resources, UI PlayMode tests, UI design notes | **Acknowledged** in `handoffs/claude.md`; UX-002 in review (PR #2) |
 | Codex | Runtime interaction, Android walking integration, reward/inventory reliability, and portable checks; use device feedback for UX-025 and prepare UX-010/011 work | `TactilePrototype.cs`, `JellyToy*`, runtime Core, `CollectionSession.cs`, `AndroidWalkingTracker.cs`, Android plugin, portable checks | Proposed; no new implementation claimed |
 
 Core `MenuNavigation` and `ProfileName` remain Codex's area. Claude can request a change through their handoff rather than editing those files concurrently. UI work should preserve the current HUD callbacks/events, `ShowToy`, `GoBack`, `StoreVisible`, settings restoration, and collection binding. Codex should request any HUD change through Claude while Claude owns UI work. Backend/authentication and billing choices are separate tasks; neither assignment implies a selected provider or configured service.
