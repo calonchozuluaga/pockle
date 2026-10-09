@@ -16,5 +16,6 @@
     <Compile Include="CollectionChecks.cs" />
     <Compile Include="WeightChecks.cs" />
     <Compile Include="MenuChecks.cs" />
+    <Compile Include="CatalogChecks.cs" />
   </ItemGroup>
 </Project>

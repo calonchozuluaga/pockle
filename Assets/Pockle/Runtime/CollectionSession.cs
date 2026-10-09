@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Pockle.Core;
 using UnityEngine;
 
@@ -10,7 +11,15 @@ namespace Pockle.Runtime
         private const string SaveKey = "pockle.collection.v1";
         public CollectionProgress Progress { get; private set; }
         public event Action Changed;
-        public string WalkingStatus => tracker == null ? "Step tracking unavailable." : tracker.Status;
+        public string WalkingStatus => readOnlySave ? "This build cannot update your saved collection. Use a compatible Pockle version before earning more boxes."
+            : Progress != null && PendingRevealId.Length > 0 && !IsOwnedAndAvailable(PendingRevealId)
+                ? "An unfinished reveal isn't available in this build. Your saved collection is preserved."
+                : tracker == null ? "Step tracking unavailable." : tracker.Status;
+        public IReadOnlyDictionary<string, int> OwnedCounts => Progress.OwnedCounts;
+        public int GetOwnedCount(string id) => Progress.GetOwnedCount(id);
+        public string PendingRevealId => Progress.Save.PendingRevealId;
+        public bool IsReadOnlySave => readOnlySave;
+        private bool readOnlySave;
         private AndroidWalkingTracker tracker;
         private float nextPoll;
         private float nextSave;
@@ -26,32 +35,72 @@ namespace Pockle.Runtime
                 // Preserve a damaged/unknown save instead of silently overwriting it.
                 string json = PlayerPrefs.GetString(SaveKey);
                 try { saved = JsonUtility.FromJson<CollectionSave>(json); }
-                catch (Exception) { PlayerPrefs.SetString(SaveKey + ".backup", json); }
-                if (saved != null && saved.Version != 1)
-                { PlayerPrefs.SetString(SaveKey + ".backup", json); saved = null; }
+                catch (Exception) { readOnlySave = true; }
+                if (saved == null)
+                {
+                    PlayerPrefs.SetString(SaveKey + ".backup", json); readOnlySave = true;
+                    saved = new CollectionSave { Day = Today }; // Existing unreadable data is not a new install.
+                }
+                if (!readOnlySave && saved.Version == 1 && !PlayerPrefs.HasKey(SaveKey + ".before-v2"))
+                    PlayerPrefs.SetString(SaveKey + ".before-v2", json);
+                if (saved != null && saved.Version != 1 && saved.Version != CollectionProgress.SaveVersion)
+                {
+                    // Do not overwrite a newer schema. Show its legacy snapshot without allowing rewards.
+                    PlayerPrefs.SetString(SaveKey + ".backup", json); readOnlySave = true;
+                    saved = LegacySnapshot(saved);
+                }
+                else if (saved.Version == CollectionProgress.SaveVersion && saved.Inventory == null)
+                {
+                    PlayerPrefs.SetString(SaveKey + ".backup", json); readOnlySave = true;
+                    saved = LegacySnapshot(saved);
+                }
             }
             Progress = new CollectionProgress(saved, Today);
             tracker = new AndroidWalkingTracker();
-            tracker.ResumeIfAllowed();
+            if (!readOnlySave) tracker.ResumeIfAllowed();
             Persist();
         }
 
-        public void EnableWalking() { tracker.Enable(); Changed?.Invoke(); }
+        private static CollectionSave LegacySnapshot(CollectionSave source) => new CollectionSave {
+            Counts = source.Counts, Day = source.Day, Steps = source.Steps, Claimed = source.Claimed,
+            SensorTotal = source.SensorTotal, SensorUptime = source.SensorUptime, SensorBoot = source.SensorBoot
+        };
+
+        public void EnableWalking() { if (!readOnlySave) tracker.Enable(); Changed?.Invoke(); }
 
         public bool ClaimDaily(out PipVariant variant)
         {
-            variant = UnityEngine.Random.value < .5f ? PipVariant.PeachJelly : PipVariant.MintSoft;
-            if (!Progress.TryClaimDaily(Today, (int)variant)) return false;
+            variant = PipVariant.PeachJelly;
+            if (readOnlySave || !ToyCatalog.TryGetBoxPool(ToyCatalog.DailyPoolId, out var pool) ||
+                !pool.TryChoose(UnityEngine.Random.value, out string id) || !PipVariants.TryFromCollectibleId(id, out variant) ||
+                !Progress.TryClaimDaily(Today, id)) return false;
             Persist();
             Changed?.Invoke();
             return true;
         }
 
-        public void FinishReveal() { Progress.FinishReveal(); Persist(); Changed?.Invoke(); }
+        public bool ClaimDailyCollectible(out string id)
+        {
+            bool claimed = ClaimDaily(out PipVariant variant); id = claimed ? PipVariants.CollectibleId(variant) : "";
+            return claimed;
+        }
+        public bool IsOwnedAndAvailable(string id) => GetOwnedCount(id) > 0 &&
+            ToyCatalog.TryGetCollectible(id, out var definition) && definition.Available;
+        public bool TryGetPlayableVariant(string id, out PipVariant variant)
+        {
+            variant = PipVariant.PeachJelly;
+            return IsOwnedAndAvailable(id) && PipVariants.TryFromCollectibleId(id, out variant);
+        }
+        public void FinishReveal() { FinishReveal(PendingRevealId); }
+        public bool FinishReveal(string expectedId)
+        {
+            if (readOnlySave || !IsOwnedAndAvailable(expectedId) || !Progress.FinishReveal(expectedId)) return false;
+            Persist(); Changed?.Invoke(); return true;
+        }
 
         private void Update()
         {
-            if (Progress == null || Time.unscaledTime < nextPoll) return;
+            if (Progress == null || readOnlySave || Time.unscaledTime < nextPoll) return;
             nextPoll = Time.unscaledTime + 1f;
             bool changed = Progress.AdvanceDay(Today);
             tracker.ResumeIfAllowed();
@@ -63,15 +112,16 @@ namespace Pockle.Runtime
         }
 
         private void Persist()
-        { PlayerPrefs.SetString(SaveKey, JsonUtility.ToJson(Progress.Save)); PlayerPrefs.Save(); dirty = false; }
+        { if (!readOnlySave) PlayerPrefs.SetString(SaveKey, JsonUtility.ToJson(Progress.Save)); PlayerPrefs.Save(); dirty = false; }
 
         private void OnApplicationPause(bool paused) { if (paused && Progress != null) Persist(); }
-        private void OnApplicationFocus(bool focused) { if (focused && tracker != null) tracker.ResumeIfAllowed(); }
+        private void OnApplicationFocus(bool focused) { if (focused && tracker != null && !readOnlySave) tracker.ResumeIfAllowed(); }
         private void OnDestroy() { if (Progress != null) Persist(); tracker?.Dispose(); }
 
 #if UNITY_EDITOR
         public void SimulateDailyWalk()
         {
+            if (readOnlySave) return;
             var save = Progress.Save;
             Progress.ObserveSteps(Today, 0, 0, int.MaxValue);
             Progress.ObserveSteps(Today, CollectionProgress.DailyTarget, 600, int.MaxValue);

@@ -1,3 +1,5 @@
+using Pockle.Core;
+
 namespace Pockle.Runtime
 {
     public enum PipVariant { PeachJelly = 0, MoonJelly = 1, GoldGlitter = 2, MintSoft = 3 }
@@ -8,6 +10,13 @@ namespace Pockle.Runtime
         public const int Count = 4;
         public static PipVariant FromSaved(int value)
         { return value >= 0 && value < Count ? (PipVariant)value : PipVariant.PeachJelly; }
+        public static string CollectibleId(PipVariant variant) => ToyCatalog.LegacyCollectibleId((int)FromSaved((int)variant));
+        public static bool TryFromCollectibleId(string id, out PipVariant variant)
+        {
+            bool known = ToyCatalog.TryGetLegacyIndex(id, out int index);
+            variant = known ? (PipVariant)index : PipVariant.PeachJelly;
+            return known;
+        }
         public static string Label(PipVariant variant)
         {
             switch (variant)

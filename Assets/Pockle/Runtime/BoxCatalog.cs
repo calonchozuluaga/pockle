@@ -1,20 +1,26 @@
+using Pockle.Core;
+
 namespace Pockle.Runtime
 {
     /// <summary>Test catalog. Storefront prices must replace proposed USD labels when billing is connected.</summary>
     public sealed class BoxOffer
     {
         public readonly string ProductId, Name, ProposedPrice, Contents;
+        public string CollectionId { get; }
+        public BoxPoolDefinition Pool => ToyCatalog.TryGetBoxPool(CollectionId, out var pool) ? pool : null;
         public BoxOffer(string id, string name, string price, string contents)
-        { ProductId = id; Name = name; ProposedPrice = price; Contents = contents; }
+            : this(id, name, price, contents, "") { }
+        public BoxOffer(string id, string name, string price, string contents, string collectionId)
+        { ProductId = id; Name = name; ProposedPrice = price; Contents = contents; CollectionId = collectionId; }
     }
 
     public static class BoxCatalog
     {
         // Proposed Google Play consumable IDs, to be configured before enabling checkout.
         public static readonly BoxOffer[] Offers = {
-            new BoxOffer("pockle.jelly_garden.box", "Jelly Garden", "$0.99", "Peach / Mint · 50% each"),
-            new BoxOffer("pockle.midnight_glow.box", "Midnight Glow", "$2.99", "Moon Jelly · 100%"),
-            new BoxOffer("pockle.gold_confetti.box", "Gold Confetti", "$2.99", "Gold Glitter · 100%")
+            new BoxOffer("pockle.jelly_garden.box", "Jelly Garden", "$0.99", "Peach / Mint · 50% each", ToyCatalog.DailyPoolId),
+            new BoxOffer("pockle.midnight_glow.box", "Midnight Glow", "$2.99", "Moon Jelly · 100%", "midnight-glow"),
+            new BoxOffer("pockle.gold_confetti.box", "Gold Confetti", "$2.99", "Gold Glitter · 100%", "gold-confetti")
         };
     }
 
