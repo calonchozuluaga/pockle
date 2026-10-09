@@ -5,6 +5,45 @@ October 9, 2026. Status: **UX-002/003/004 and ART-001 merged. The owner tested t
 
 
 
+
+## Target jelly look for the toys (owner feedback, October 9)
+
+The owner says the in-app toys read as **smooth blobs** next to the concept renders (for example `../concepts/pip-peach-jelly-concept-01.png`, which the v2 preview screens use). The concepts look like jelly you could squish: lit from within, glowing, with things floating inside.
+
+**This looks like a material and lighting gap, not a modeling one.** The silhouettes are probably fine. The concepts come from offline rendering, where light travels through the material. A phone can't do that, but most of the look can be faked in real time.
+
+`JellyCandy.shader` already has a lot of this:
+- gloss and rim terms
+- studio cubemap reflections
+- pearl sheen and glitter flakes
+- suspended pearls drawn under the shell
+
+So the work is mostly about tuning and adding what's missing, not starting over. Materials and 3D are your lane. Here's the target, grouped by how achievable it is on a phone.
+
+**Very achievable (do these first):**
+- **Glassy sheen:** a soft, broad highlight that rolls over the shell as the toy turns and squishes. The concept's highlights are larger and softer than ours.
+- **Lit-through edges:** a stronger translucent rim, so the edges look lighter and more saturated than the centre, as if light passes through the thin parts. Tie it to the view angle (fresnel), not a flat edge colour.
+- **Soft glow:** the concepts have a gentle halo. Built-in RP has no bloom without a post-processing package, and `Packages/manifest.json` changes need the owner's approval. A cheap alternative is a slightly larger additive back shell or a soft glow sprite behind the toy.
+- **Keep the squish:** the existing deformation is the best part. Nothing here should cost it frame rate.
+
+**Medium effort:**
+- **Lit-from-within:** a cheap subsurface approximation, not true SSS. Wrapped diffuse lighting, a thickness term (thicker in the middle, thinner at the edges, so a baked thickness map or vertex value), and a back-light transmission term, so the toy glows when lit from behind. This is the stylized "glowing gummy" look most mobile games use.
+- **Floating bits that read as inside:** the pearls exist but should feel suspended in depth.
+  - Fade and tint them by depth inside the shell.
+  - Let them drift slightly, with a parallax offset as the toy rotates.
+  - Use an inner layer or interior sprites rather than more real geometry.
+  - Let them shift a little when the toy is squished (already in the interaction plans).
+
+**Hard; probably skip on phones:**
+- **True refraction:** bending the background through the toy needs a grab pass or an opaque-texture copy every frame. It's expensive, and it matters least for this cute, glowing look.
+
+**Ask:** please put the four Pip finishes in this material first:
+- Peach Jelly
+- Moon Jelly
+- Gold Glitter
+- Mint Soft, which is opaque and soft, so it mostly needs the sheen and a softer inner glow
+
+Then share an in-engine render or screenshot of each, next to the concept, so the owner can compare. Please also note the cost on a midrange Android phone. The stage lighting and background (`PrototypeStage`, also your lane) matter a lot to this look. A light from behind or the side that the transmission term can catch will help.
 ## Fusion (proposal, October 9)
 
 The owner wants two spares to fuse into a unique toy you can't buy. Proposal: `../FUSION.md`.
