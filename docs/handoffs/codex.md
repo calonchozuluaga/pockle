@@ -1,6 +1,6 @@
 # Codex handoff
 
-October 9, 2026. Status: **UX-029 is merged. Moss/Bop draft models and handling are published separately on `codex/material-toys` at `182f31b`.** Claude HUD integration and Unity/device review remain pending.
+October 9, 2026. Status: **UX-029 is merged. Moss/Bop/Nook draft models and handling are published separately on `codex/material-toys`; Nook implementation is `4a68f79`.** Claude HUD integration and Unity/device review remain pending.
 
 - Prior Home hub baseline: `6809f9a` — Build home hub, local profile, and full game settings.
 - The owner asked whether Codex and Claude can split work and communicate. See `../AGENT_COORDINATION.md` for the proposed split and repository handoff process.
@@ -82,3 +82,16 @@ Implementation and assets are on **`codex/material-toys`**, awaiting art/Unity r
 - Validation: existing portable suites and **8,721 new material assertions passed**, both geometry checks and Blender FBX round trips passed, source checks **53 C# files / three profiles / 106 GUIDs / zero failures**. New `CharacterStudyTests` are authored but unrun. Unity compilation, shader rendering, PlayMode, Android packaging/performance and touch remain unverified.
 
 Please review these provisional silhouettes against your ART-001 sheets and retain draft availability until the owner reviews them. No Claude-owned HUD/UI files or UI test fixtures were edited. Nook plush/foam and the rest of the twelve-character/nine-finish production still follow the representative review.
+
+## Nook published — `4a68f79`
+
+The owner asked to start Nook. Its representative model and both finishes are now on **`codex/material-toys`**, alongside Moss and Bop. Read the branch's [updated study guide](https://github.com/calonchozuluaga/pockle/blob/codex/material-toys/docs/CHARACTER_STUDIES.md) for exact APIs, asset links, and review steps.
+
+- **Nook**: original puffy rounded-square cushion with four tucked corner paws, **2,564 vertices / 4,528 triangles**; Blender source, FBX, and native readable mesh with packed UVs. Two finish IDs share the same model: **`nook.boucle-plush`** (oat looped fabric approximation) and **`nook.mochi-foam`** (smooth matte lilac).
+- Nook is selectable under **Pockle → Character studies** in editor Play mode. Studio preview PNGs are `docs/concepts/roster-studies/nook-study-01.png` and `nook-foam-study-01.png` on that branch. The PNGs are Blender renders, not Unity screenshots.
+- Plush hangs more softly; foam gives more deeply, stretches/sags less, and recovers more slowly. Switching Nook finishes reuses body/face/mesh/material assets and resets all recipe flags. The launcher avoids rebuilding Pip when already on the play page.
+- The explicit art registry adds `NookPlushStudyId`, `NookFoamStudyId`, and `IsStudy(string)`. The owned play API, production availability gate, old enum contracts, saved inventory, and reward pools remain unchanged. Four draft study IDs are still catalog-unavailable and not on the ordinary Android shelf.
+- Executed: all portable suites, **8,738 material assertions**, all three geometry validations, all three Blender FBX round trips, and source checks **53 files / three profiles / 110 GUIDs / zero failures**. Nook round-trip error was at most **0.000000260 m**.
+- Authored but unrun: Nook Unity tests for finish reuse, recipe restoration, pose compliance/reset, missing-finish rejection, and cross-character cleanup. Unity compilation/shader rendering/PlayMode, Android packaging and device feel remain pending.
+
+No Claude-owned HUD, UI assets, or UI test fixtures were edited. Please include these draft silhouettes/finishes in the ART-001 review before enabling availability or acquisition. Nook's representative implementation is ready; remaining character/finish production and all device acceptance still follow review.
