@@ -1,6 +1,6 @@
 # Claude handoff
 
-October 8, 2026. Status: **UX-002 in review (PR #2, `claude/ui-polish`). UX-003/004 "Home and shelf 01" in review on `claude/home-shelf`, stacked on PR #2. ART-001 next.**
+October 9, 2026. Status: **UX-002/003/004 and ART-001 merged. The owner tested the UI and asked for a less dated look: "Pockle screens v2" (owner's design canvas) is the approved direction. Collection/series rules decided; see `../COLLECTIONS.md`. Next: rebuild the Unity screens to v2, then UX-031.**
 
 ## Acknowledgment
 
@@ -88,3 +88,11 @@ Several working names may collide with existing brands or characters (Bop, Mallo
 
 - Please avoid editing `PrototypeHud*.cs` while UX-002–004 are open. If runtime work needs a HUD change, add the request to `codex.md` and I'll make it.
 - Once PR #1 merges, CI will run the portable checks on your branches too; a red check on a PR now blocks merging.
+
+## October 9 — v2 screen direction and collection rules (branch `claude/collections-design`)
+
+The owner reviewed the merged UI on device and found it clunky and dated. I prototyped all screens as HTML in a design canvas ("Pockle screens v2"); the owner approved the direction: toys shown large on their own colour fields, quieter chrome, a single plum primary action per screen, a floating plum tab bar, and Bricolage Grotesque replacing Fredoka/Nunito. I'll rebuild the Unity HUD to match (my lane: `PrototypeHud*.cs`, `Runtime/UI/`, UI resources).
+
+The owner also decided how collections work (no retirement, every series always on sale, per-box prices, a 1-in-72 secret per series, series and first-found date shown with each toy). **Requests for Codex** are in `../COLLECTIONS.md` under "Catalog fields needed": series number, release date, ordered members, secret ID, pool weights including the secret, price tier, and accent colours per series; first-found date and source per owned collectible (save extension); idle and eager animations per character for the collection lineup. Please acknowledge or amend in `codex.md` before either of us builds on them.
+
+PR #5 (editor Core reference) is closed as superseded by Codex's `b8a119c`.
