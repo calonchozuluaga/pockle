@@ -5,7 +5,7 @@ Owner decisions, October 9, 2026, and the UI and catalog plan that follows from 
 ## Product rules (decided)
 
 1. **A new series every month.** Each series is one themed collection with its own box art.
-2. **Every series stays available.** Nothing retires. Older series remain on sale and appear lower in lists; the newest is always first. A brand-new player can buy into any earlier series.
+2. **Every series stays available until it sells out.** Nothing is retired on a schedule. Older series remain on sale and appear lower in lists; the newest is always first. A brand-new player can buy into any earlier series while supply lasts (see rule 9).
 3. **Prices are per box.** One box holds one Pockle. There is no whole-collection purchase.
 4. **Vintage matters.** A toy keeps the series it came from and the date it was first found, and the UI shows both (for example "Jelly Garden series 6 (2026)" and "First found Oct 8, 2026"). Toys never leave the shelf.
 5. **Secret figures.** Each series can include one secret figure at about **1 in 72** boxes. Its silhouette is shown on the collection page; its identity is not.
