@@ -24,13 +24,13 @@ A shelf toy opens play. **Shelf** or Android Back returns to the same shelf posi
 
 **You** is a local profile: edit a display name, choose one of the four original Pip avatars, select an owned favorite, and play that favorite. Names are trimmed and limited to 20 text elements; display text disables rich-text markup. Avatar, favorite, and name persist under `pockle.profile.local.*`, separately from inventory. Collection totals come from actual saved counts. No account, global username, profile publication, or cloud save is created.
 
-**Settings** has sound mute and a volume slider, haptics, full/calm motion, walking status and an explicit Enable action, play/walking help, save/account information, and an About marker. Volume persists separately from mute, so muting preserves the chosen level. Existing toy and walking settings continue to work. See **Settings → About Pockle → Home hub 01** to identify this UI build.
+**Settings** has sound mute and a volume slider, haptics, full/calm motion, walking status and an explicit Enable action, play/walking help, save/account information, and an About marker. Volume persists separately from mute, so muting preserves the chosen level. Existing toy and walking settings continue to work. See **Settings → About Pockle** to identify the UI build; it now reads **Visual system 01** (see [VISUAL_SYSTEM.md](VISUAL_SYSTEM.md)).
 
 **Rewards** reuses the daily claim card from Boxes, explains the UTC reset and current foreground-walking limitation, and has a clearly unavailable badges/milestones entry. **Friends** has Discover and Friends sections with honest empty states. Real friend connections, public shelves, badge grants, and milestone rewards are still planned. Purchases retain the unavailable checkout behavior.
 
 ## Review when back at the phone
 
-1. Close Unity, run `git pull --ff-only origin main`, reopen the same project, press Play, and rebuild/install the APK. Expect Home immediately; check **Home hub 01** in Settings if an older APK is suspected.
+1. Close Unity, run `git pull --ff-only origin main`, reopen the same project, press Play, and rebuild/install the APK. Expect Home immediately; check the UI build name in Settings (**Visual system 01** or later) if an older APK is suspected.
 2. Open Collection, choose Moon, open Settings, change volume and motion, then use Back. Confirm it returns to Moon, then the same shelf position. Repeat after scrolling on a small or landscape screen.
 3. Open You. Change the name, avatar, and favorite. Return Home and check the greeting. Restart the app and confirm those choices and the sound level remain. Check native keyboard dismissal and long names.
 4. Open Rewards; test activity permission and daily progress. In the editor, use **Pockle → Testing → Complete today's walk (Play Mode only)**, open once, and confirm the claim/countdown updates on Home and Boxes. Return from the revealed toy to its shelf.

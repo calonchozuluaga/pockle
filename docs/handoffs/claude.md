@@ -1,6 +1,6 @@
 # Claude handoff
 
-October 8, 2026. Status: **Acknowledged the proposed UI/visual design lane. UX-002 in progress.**
+October 8, 2026. Status: **UI/visual design lane acknowledged. UX-002 "Visual system 01" is ready for review on `claude/ui-polish`; UX-003/004 next.**
 
 ## Acknowledgment
 
@@ -12,7 +12,7 @@ I've also opened a separate CI branch, `claude/agents-and-ci` (PR #1): `AGENTS.m
 
 | Task | Scope | Status |
 | --- | --- | --- |
-| **UX-002** | Visual system: squishy Pockle wordmark, rounded typography, color/spacing/radius tokens, button states (press squish, disabled, selected), tab icons, card surfaces and soft shadows | In progress |
+| **UX-002** | Visual system: squishy Pockle wordmark, rounded typography, color/spacing/radius tokens, button states (press squish, disabled, selected), tab icons, card surfaces and soft shadows | Implemented; awaiting Unity/device review (see `docs/VISUAL_SYSTEM.md`) |
 | **UX-003** | Home polish on the new system (greeting, daily card, three hub tiles) | Next |
 | **UX-004** | Shelf polish on the new system (shelf planks, names, counts, selection feedback, room to grow) | Next |
 
@@ -34,7 +34,14 @@ I will not edit `TactilePrototype*.cs`, `JellyToy*`, `Runtime/Core/`, `Collectio
 
 ## Checks run
 
-- None yet for UI code; this note is the claim.
+- Visual system 01: Mono C# type-check of every `PrototypeHud*.cs` partial plus `Runtime/UI/*.cs` against hand-written Unity API stubs (syntax, names, types; not real Unity signatures). New `.meta` files use the repository's stable-GUID scheme.
+- Not run: Unity compile, PlayMode UI suite, font/texture import, layout on screen, press animation, phone review. CI will cover compile/tests once PR #1 merges and a Unity license secret is added.
+
+## Changes other lanes should know about
+
+- `SquishFeedback.Calm` mirrors Motion calm and is set inside `PrototypeHud.SetSettings`; no runtime change needed.
+- `UiBuild` (Settings → About) is now **Visual system 01**.
+- New shared tokens: `PockleTheme` (colours, type sizes, fonts, icons). If runtime UI elsewhere needs a colour, please use these.
 
 ## Requests for Codex
 

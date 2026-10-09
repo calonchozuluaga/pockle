@@ -16,8 +16,8 @@ namespace Pockle.Runtime
 
         private void BuildHome()
         {
-            homeDaily = Rect("Today's little walk", homeRoot); Surface(homeDaily, Paper);
-            Label("TODAY'S JELLY GARDEN BOX", homeDaily, 11, MutedInk, FontStyle.Bold, TextAnchor.MiddleCenter,
+            homeDaily = Rect("Today's little walk", homeRoot); Card(homeDaily, Paper);
+            Label("TODAY'S JELLY GARDEN BOX", homeDaily, PockleTheme.EyebrowSize, MutedInk, FontStyle.Bold, TextAnchor.MiddleCenter,
                 new Vector2(0, -14), new Vector2(290, 22));
             homeProgress = Label("0 / 1,000 steps", homeDaily, 23, Ink, FontStyle.Bold, TextAnchor.MiddleCenter,
                 new Vector2(0, -42), new Vector2(290, 30));
@@ -26,7 +26,7 @@ namespace Pockle.Runtime
             homeFill = fill.gameObject.AddComponent<Image>(); homeFill.sprite = roundedSprite; homeFill.color = Peach;
             homeFill.type = Image.Type.Filled; homeFill.fillMethod = Image.FillMethod.Horizontal; homeFill.fillOrigin = 0;
             homeFill.raycastTarget = false; homeFill.fillAmount = 0;
-            homeStatus = Label("Your daily walk starts here.", homeDaily, 11, MutedInk, FontStyle.Normal,
+            homeStatus = Label("Your daily walk starts here.", homeDaily, PockleTheme.CaptionSize, MutedInk, FontStyle.Normal,
                 TextAnchor.MiddleCenter, new Vector2(0, -98), new Vector2(290, 34));
             homeDailyAction = CreateButton("View rewards", homeDaily, Vector2.zero, new Vector2(250, 48), Peach,
                 () => { if (session != null && session.Progress.CanClaim) DailyBoxRequested?.Invoke(); else Navigate(AppPage.Rewards); }, out _);
@@ -34,7 +34,7 @@ namespace Pockle.Runtime
             string[] names = { "Collection", "Rewards", "Friends" };
             string[] descriptions = { "Your own shelf of little wonders.", "A daily box, earned one step at a time.", "Discover shelves and meet collectors. Coming soon." };
             AppPage[] destinations = { AppPage.Shelf, AppPage.Rewards, AppPage.Social };
-            Color[] colours = { new Color(.99f, .86f, .77f), new Color(.86f, .89f, .98f), new Color(.86f, .94f, .89f) };
+            Color[] colours = { PockleTheme.TilePeach, PockleTheme.TileLavender, PockleTheme.TileMint };
             for (int i = 0; i < homeTiles.Length; i++)
             {
                 AppPage destination = destinations[i];
@@ -42,7 +42,7 @@ namespace Pockle.Runtime
                 homeTiles[i] = button.GetComponent<RectTransform>();
                 var title = button.GetComponentInChildren<Text>();
                 LeftLabel(title.rectTransform, new Vector2(20, -10), new Vector2(290, 34)); title.alignment = TextAnchor.MiddleLeft;
-                var detail = Label(descriptions[i], button.transform, 12, MutedInk, FontStyle.Normal,
+                var detail = Label(descriptions[i], button.transform, 13, MutedInk, FontStyle.Normal,
                     TextAnchor.UpperLeft, new Vector2(0, -50), new Vector2(290, 42));
                 if (i == 0) collectionSummary = detail;
             }
@@ -64,7 +64,7 @@ namespace Pockle.Runtime
         private void BuildRewards()
         {
             rewardNote = Label("Daily boxes reset at midnight UTC. Walking is counted while Pockle is open; keep it open during your walk for now.",
-                rewardsRoot, 13, MutedInk, FontStyle.Normal, TextAnchor.UpperCenter, Vector2.zero, new Vector2(330, 96)).rectTransform;
+                rewardsRoot, PockleTheme.BodySize, MutedInk, FontStyle.Normal, TextAnchor.UpperCenter, Vector2.zero, new Vector2(330, 96)).rectTransform;
             badgeEntry = CreateButton("Badges & milestones", rewardsRoot, Vector2.zero, new Vector2(290, 56), Quiet,
                 () => ShowDialog("More little milestones", "Badges and milestone rewards are coming later. Your daily walking box is the reward you can earn today."), out _).GetComponent<RectTransform>();
         }

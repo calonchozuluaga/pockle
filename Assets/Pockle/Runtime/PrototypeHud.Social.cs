@@ -14,7 +14,7 @@ namespace Pockle.Runtime
             socialTabs = Rect("Discover and friends", socialRoot);
             CreateButton("Discover", socialTabs, Vector2.zero, new Vector2(145, 48), Peach, () => SelectSocial(false), out discoverTab);
             CreateButton("Friends", socialTabs, Vector2.zero, new Vector2(145, 48), Quiet, () => SelectSocial(true), out friendsTab);
-            socialCard = Rect("Social empty state", socialRoot); Surface(socialCard, Paper);
+            socialCard = Rect("Social empty state", socialRoot); Card(socialCard, Paper);
             socialTitle = Label("", socialCard, 21, Ink, FontStyle.Bold, TextAnchor.MiddleCenter,
                 new Vector2(0, -24), new Vector2(300, 62));
             socialDescription = Label("", socialCard, 14, MutedInk, FontStyle.Normal, TextAnchor.UpperCenter,

@@ -1,3 +1,9 @@
+## Visual system 01 (UX-002, Claude)
+
+Executed: a type-check of all `PrototypeHud*.cs` partials and the new `Runtime/UI/` files with the Mono C# compiler against hand-written Unity API stubs (catches syntax, typos, and type mismatches in the changed code; does **not** prove the real Unity signatures). Rendered the wordmark and icons and reviewed them visually. CI's portable/source checks run on the pull request.
+
+Not executed: Unity compilation, the PlayMode UI suite, font/texture import, on-screen layout, press animation, and any phone check. Follow the review steps in [VISUAL_SYSTEM.md](VISUAL_SYSTEM.md) and the existing [Home hub device review](HOME_UI.md); Settings → About should read **Visual system 01**.
+
 ## Home hub 01: navigation, Settings, and local profile
 
 Executed the portable suite, including **35 new menu/profile assertions** covering Home cold start, contextual Back, Settings → Play → Shelf, independent scroll restoration, tab history, repeated taps, reward/social routes, invalid scroll, Unicode name normalization, and emoji-safe truncation. All existing spring, authored geometry, pointer, manipulation, reveal, collection, and weight checks still pass.

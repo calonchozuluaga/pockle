@@ -9,11 +9,12 @@ namespace Pockle.Runtime
     /// <summary>Home hub and collection UI. Toy manipulation stays on the toy and its plate.</summary>
     public sealed partial class PrototypeHud : MonoBehaviour
     {
-        private static readonly Color Ink = new Color(.29f, .21f, .29f);
-        private static readonly Color MutedInk = new Color(.48f, .41f, .43f);
-        private static readonly Color Peach = new Color(.965f, .72f, .61f);
-        private static readonly Color Quiet = new Color(.947f, .922f, .89f);
-        private static readonly Color Paper = new Color(1f, .99f, .971f);
+        // Short aliases for the UX-002 theme tokens used throughout the HUD partials.
+        private static Color Ink => PockleTheme.Ink;
+        private static Color MutedInk => PockleTheme.MutedInk;
+        private static Color Peach => PockleTheme.Peach;
+        private static Color Quiet => PockleTheme.Quiet;
+        private static Color Paper => PockleTheme.Paper;
         private readonly MenuNavigation navigator = new MenuNavigation();
         private AppPage page => navigator.Current;
         public AppPage CurrentPage => page;
@@ -23,11 +24,12 @@ namespace Pockle.Runtime
         public event Action<bool> StoreVisibilityChanged;
         public event Action DailyBoxRequested;
         private RectTransform safeRoot, browsing, content, navigation, modal, modalSafeRoot, modalCard;
-        private Text brand, heading, subtitle, playHint, modalTitle, modalText;
+        private RectTransform brand;
+        private Text heading, subtitle, playHint, modalTitle, modalText;
         private Button settingsButton, backButton;
         private Image homeTab, boxesTab, youTab;
+        private RectTransform backIcon;
         private RectTransform shelfRoot, boxesRoot, homeRoot, rewardsRoot, socialRoot, profileRoot, settingsRoot;
-        private Font font;
         private Sprite roundedSprite;
         private Texture2D roundedTexture;
         private Canvas canvas;
@@ -55,22 +57,25 @@ namespace Pockle.Runtime
             initialized = true;
             profile = new GuestProfile();
             soundCallback = sound; hapticsCallback = haptics; motionCallback = reducedMotion; volumeCallback = volume;
-            font = LoadFont(); roundedSprite = CreateRoundedSprite();
+            roundedSprite = CreateRoundedSprite();
             var root = new GameObject("Pockle · game UI", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
             root.transform.SetParent(transform, false);
             canvas = root.GetComponent<Canvas>(); canvas.renderMode = RenderMode.ScreenSpaceOverlay; canvas.sortingOrder = 20;
             scaler = root.GetComponent<CanvasScaler>(); scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(390, 844); scaler.matchWidthOrHeight = 1;
             safeRoot = Rect("Safe area", root.transform); Stretch(safeRoot);
-            brand = Label("Pockle", safeRoot, 32, Ink, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, new Vector2(180, 44));
-            LeftLabel(brand.rectTransform, new Vector2(22, -14), new Vector2(180, 44));
-            settingsButton = CreateButton("Settings", safeRoot, Vector2.zero, new Vector2(88, 44), Quiet, ShowSettings, out _, 12);
-            backButton = CreateButton("Shelf", safeRoot, new Vector2(22, 14), new Vector2(74, 44), Paper, () => GoBack(), out _, 12);
-            heading = Label("Your little collection", safeRoot, 23, Ink, FontStyle.Bold, TextAnchor.MiddleCenter,
+            brand = BuildWordmark(safeRoot);
+            settingsButton = CreateButton("Settings", safeRoot, Vector2.zero, new Vector2(48, 48), Paper, ShowSettings, out _, 12);
+            IconOnly(settingsButton, "Settings", 26);
+            backButton = CreateButton("Shelf", safeRoot, new Vector2(22, 14), new Vector2(98, 48), Paper, () => GoBack(), out _, 14);
+            backIcon = AddIcon(backButton.transform, "Back", 18, MutedInk);
+            backIcon.anchorMin = backIcon.anchorMax = new Vector2(0, .5f); backIcon.pivot = new Vector2(0, .5f); backIcon.anchoredPosition = new Vector2(12, 0);
+            var backLabel = backButton.GetComponentInChildren<Text>().rectTransform; backLabel.offsetMin = new Vector2(30, 2);
+            heading = Label("Your little collection", safeRoot, PockleTheme.TitleSize, Ink, FontStyle.Bold, TextAnchor.MiddleCenter,
                 new Vector2(0, -70), new Vector2(340, 34));
-            heading.resizeTextForBestFit = true; heading.resizeTextMinSize = 12; heading.resizeTextMaxSize = 23;
-            subtitle = Label("Four Pips. Four little personalities.", safeRoot, 12, MutedInk, FontStyle.Normal,
-                TextAnchor.MiddleCenter, new Vector2(0, -108), new Vector2(350, 26));
+            heading.resizeTextMinSize = 14;
+            subtitle = Label("Four Pips. Four little personalities.", safeRoot, 13, MutedInk, FontStyle.Normal,
+                TextAnchor.MiddleCenter, new Vector2(0, -106), new Vector2(350, 26));
             browsing = Rect("Collection browsing", safeRoot);
             var scroll = browsing.gameObject.AddComponent<ScrollRect>(); scroll.horizontal = false; scroll.movementType = ScrollRect.MovementType.Clamped;
             var viewport = Rect("Viewport", browsing); Stretch(viewport); viewport.gameObject.AddComponent<RectMask2D>();
@@ -82,11 +87,11 @@ namespace Pockle.Runtime
             socialRoot = Rect("Friends and discovery", content); profileRoot = Rect("Local profile", content);
             settingsRoot = Rect("Settings page", content);
             BuildShelf(); BuildStore(); BuildHome(); BuildRewards(); BuildProfile(); BuildSocial(); BuildSettings();
-            navigation = Rect("Navigation", safeRoot); Surface(navigation, Paper);
-            CreateButton("Home", navigation, Vector2.zero, new Vector2(100, 48), Peach, () => SelectTab(AppPage.Home), out homeTab);
-            CreateButton("Boxes", navigation, Vector2.zero, new Vector2(100, 48), Quiet, () => SelectTab(AppPage.Boxes), out boxesTab);
-            CreateButton("You", navigation, Vector2.zero, new Vector2(100, 48), Quiet, () => SelectTab(AppPage.Profile), out youTab);
-            playHint = Label("Make yourself at home.", safeRoot, 12, MutedInk, FontStyle.Normal, TextAnchor.MiddleCenter,
+            navigation = Rect("Navigation", safeRoot); Card(navigation, Paper);
+            BuildTab("Home", "Home", () => SelectTab(AppPage.Home), out homeTab);
+            BuildTab("Boxes", "Box", () => SelectTab(AppPage.Boxes), out boxesTab);
+            BuildTab("You", "You", () => SelectTab(AppPage.Profile), out youTab);
+            playHint = Label("Make yourself at home.", safeRoot, 13, MutedInk, FontStyle.Normal, TextAnchor.MiddleCenter,
                 Vector2.zero, new Vector2(350, 40));
             playHint.rectTransform.anchorMin = playHint.rectTransform.anchorMax = new Vector2(.5f, 0);
             playHint.rectTransform.pivot = new Vector2(.5f, 0); playHint.rectTransform.anchoredPosition = new Vector2(0, 20);
@@ -179,9 +184,9 @@ namespace Pockle.Runtime
                 case AppPage.Boxes: heading.text = "A little surprise awaits"; subtitle.text = "Walk for a box, or pick one to buy."; break;
                 default: heading.text = "Pip"; subtitle.text = PipVariants.Label(variant); break;
             }
-            homeTab.color = page == AppPage.Home || page == AppPage.Shelf || page == AppPage.Rewards || page == AppPage.Social ? Peach : Quiet;
-            boxesTab.color = page == AppPage.Boxes ? Peach : Quiet;
-            youTab.color = page == AppPage.Profile || page == AppPage.Settings ? Peach : Quiet;
+            StyleTab(homeTab, page == AppPage.Home || page == AppPage.Shelf || page == AppPage.Rewards || page == AppPage.Social);
+            StyleTab(boxesTab, page == AppPage.Boxes);
+            StyleTab(youTab, page == AppPage.Profile || page == AppPage.Settings);
             RefreshProfile(); RefreshSettings();
             content.anchoredPosition = new Vector2(0, navigator.Scroll);
             if (lastLayoutSize.x > 0) AdaptLayout();
@@ -190,6 +195,7 @@ namespace Pockle.Runtime
         public void SetSettings(bool sound, bool haptics, bool reducedMotion)
         {
             soundEnabled = sound; hapticsEnabled = haptics; reducedMotionEnabled = reducedMotion;
+            SquishFeedback.Calm = reducedMotion;
             if (soundLabel != null) soundLabel.text = sound ? "Sound on" : "Sound off";
             if (hapticsLabel != null) hapticsLabel.text = haptics ? "Haptics on" : "Haptics off";
             if (motionLabel != null) motionLabel.text = reducedMotion ? "Motion calm" : "Motion full";
@@ -198,13 +204,13 @@ namespace Pockle.Runtime
         private void BuildModal()
         {
             modal = Rect("Dialog backdrop", canvas.transform); Stretch(modal);
-            var backdrop = modal.gameObject.AddComponent<Image>(); backdrop.color = new Color(.23f, .17f, .22f, .35f);
+            var backdrop = modal.gameObject.AddComponent<Image>(); backdrop.color = PockleTheme.Backdrop;
             modalSafeRoot = Rect("Dialog safe area", modal); Stretch(modalSafeRoot);
             modalCard = Rect("Dialog", modalSafeRoot); modalCard.anchorMin = modalCard.anchorMax = new Vector2(.5f, .5f);
-            modalCard.pivot = new Vector2(.5f, .5f); Surface(modalCard, Paper);
+            modalCard.pivot = new Vector2(.5f, .5f); Card(modalCard, Paper);
             modalTitle = Label("", modalCard, 22, Ink, FontStyle.Bold, TextAnchor.MiddleCenter, new Vector2(0, -24), new Vector2(290, 36));
             modalText = Label("", modalCard, 14, MutedInk, FontStyle.Normal, TextAnchor.UpperCenter, new Vector2(0, -76), new Vector2(290, 132));
-            var b = CreateButton("Done", modalCard, Vector2.zero, new Vector2(140, 48), Peach, CloseModal, out _);
+            var b = CreateButton("Done", modalCard, Vector2.zero, new Vector2(150, 48), Peach, CloseModal, out _);
             var close = b.GetComponent<RectTransform>(); close.anchorMin = close.anchorMax = new Vector2(.5f, 0);
             close.pivot = new Vector2(.5f, 0); close.anchoredPosition = new Vector2(0, 22);
             modal.gameObject.SetActive(false);
@@ -244,19 +250,19 @@ namespace Pockle.Runtime
         {
             var size = safeRoot.rect.size; if (size.x < 1 || size.y < 1) return; lastLayoutSize = size;
             var settings = settingsButton.GetComponent<RectTransform>(); settings.anchorMin = settings.anchorMax = new Vector2(1, 1);
-            settings.pivot = new Vector2(1, 1); settings.anchoredPosition = new Vector2(-22, -14);
+            settings.pivot = new Vector2(1, 1); settings.anchoredPosition = new Vector2(-18, -12); settings.sizeDelta = new Vector2(48, 48);
             float width = Mathf.Max(1, Mathf.Min(820, size.x - 32));
             heading.rectTransform.sizeDelta = new Vector2(width, 34);
             subtitle.rectTransform.sizeDelta = new Vector2(width, 26);
-            float viewportHeight = Mathf.Max(30, size.y - 230);
+            float viewportHeight = Mathf.Max(30, size.y - 244);
             TopCentered(browsing, new Vector2(0, -148), new Vector2(width, viewportHeight));
             navigation.anchorMin = navigation.anchorMax = new Vector2(.5f, 0); navigation.pivot = new Vector2(.5f, 0);
-            navigation.anchoredPosition = new Vector2(0, 20); navigation.sizeDelta = new Vector2(Mathf.Min(340, width), 52);
+            navigation.anchoredPosition = new Vector2(0, 16); navigation.sizeDelta = new Vector2(Mathf.Min(340, width), 64);
             float navWidth = navigation.sizeDelta.x;
-            float tabWidth = (navWidth - 16) / 3;
-            LeftLabel(homeTab.rectTransform, Vector2.zero, new Vector2(tabWidth, 52));
-            LeftLabel(boxesTab.rectTransform, new Vector2(tabWidth + 8, 0), new Vector2(tabWidth, 52));
-            LeftLabel(youTab.rectTransform, new Vector2((tabWidth + 8) * 2, 0), new Vector2(tabWidth, 52));
+            float tabWidth = (navWidth - 12 - 8) / 3;
+            LeftLabel(homeTab.rectTransform, new Vector2(6, -6), new Vector2(tabWidth, 52));
+            LeftLabel(boxesTab.rectTransform, new Vector2(6 + tabWidth + 4, -6), new Vector2(tabWidth, 52));
+            LeftLabel(youTab.rectTransform, new Vector2(6 + (tabWidth + 4) * 2, -6), new Vector2(tabWidth, 52));
             playHint.rectTransform.sizeDelta = new Vector2(width, 40);
             float height;
             switch (page)
@@ -291,7 +297,7 @@ namespace Pockle.Runtime
         }
 
         private Button CreateButton(string title, Transform parent, Vector2 position, Vector2 size,
-            Color colour, Action click, out Image background, int fontSize = 13)
+            Color colour, Action click, out Image background, int fontSize = PockleTheme.ButtonSize, bool raised = true)
         {
             var rect = Rect(title, parent);
             rect.anchorMin = rect.anchorMax = new Vector2(0f, 1f);
@@ -311,6 +317,14 @@ namespace Pockle.Runtime
             colours.fadeDuration = 0.08f;
             button.colors = colours;
             button.onClick.AddListener(() => click?.Invoke());
+            if (raised)
+            {
+                // A darker "lip" under the button gives it a soft, pressable candy shape.
+                var lip = rect.gameObject.AddComponent<Shadow>();
+                lip.effectColor = colour == Peach ? PockleTheme.PeachDeep : PockleTheme.ButtonLip;
+                lip.effectDistance = PockleTheme.ButtonLipOffset; lip.useGraphicAlpha = true;
+            }
+            rect.gameObject.AddComponent<SquishFeedback>();
             var text = Label(title, rect, fontSize, Ink, FontStyle.Bold, TextAnchor.MiddleCenter,
                 Vector2.zero, size);
             Stretch(text.rectTransform);
@@ -325,10 +339,15 @@ namespace Pockle.Runtime
             var rect = Rect(value, parent);
             TopCentered(rect, position, dimensions);
             var text = rect.gameObject.AddComponent<Text>();
-            text.font = font;
+            // Bold labels use the rounded display face; everything else uses the body face.
+            text.font = style == FontStyle.Bold ? PockleTheme.DisplayFont : PockleTheme.BodyFont;
             text.text = value;
             text.fontSize = size;
-            text.fontStyle = style;
+            text.fontStyle = PockleTheme.HasBrandFonts ? FontStyle.Normal : style;
+            // Shrink rather than clip when a translation, a long name, or a small phone runs out of room.
+            text.resizeTextForBestFit = true;
+            text.resizeTextMaxSize = size;
+            text.resizeTextMinSize = Mathf.Min(size, Mathf.Max(PockleTheme.MinimumTextSize, size - 5));
             text.color = colour;
             text.alignment = alignment;
             text.horizontalOverflow = HorizontalWrapMode.Wrap;
@@ -371,13 +390,72 @@ namespace Pockle.Runtime
             rect.offsetMax = Vector2.zero;
         }
 
-        private static Font LoadFont()
+        /// <summary>A surface with a soft drop shadow, for cards and floating bars.</summary>
+        private Image Card(RectTransform rect, Color colour)
         {
-#if UNITY_2022_2_OR_NEWER
-            return Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-#else
-            return Resources.GetBuiltinResource<Font>("Arial.ttf");
-#endif
+            var image = Surface(rect, colour);
+            var shadow = rect.gameObject.AddComponent<Shadow>();
+            shadow.effectColor = PockleTheme.CardShadow; shadow.effectDistance = PockleTheme.CardShadowOffset;
+            shadow.useGraphicAlpha = true;
+            return image;
+        }
+
+        private RectTransform BuildWordmark(Transform parent)
+        {
+            var mark = Rect("Pockle wordmark", parent);
+            LeftLabel(mark, new Vector2(18, -12), new Vector2(136, 48));
+            var art = PockleTheme.Wordmark;
+            if (art != null)
+            {
+                var image = mark.gameObject.AddComponent<RawImage>(); image.texture = art; image.raycastTarget = false;
+                float aspect = art.height > 0 ? (float)art.width / art.height : 2.8f;
+                mark.sizeDelta = new Vector2(48 * aspect, 48);
+            }
+            else
+            {
+                var text = Label("Pockle", mark, 32, PockleTheme.PeachDeep, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
+                Stretch(text.rectTransform);
+            }
+            return mark;
+        }
+
+        /// <summary>Adds a tinted icon from Resources/UI/Icons. Returns null when the icon is missing.</summary>
+        private RectTransform AddIcon(Transform parent, string name, float size, Color colour)
+        {
+            var texture = PockleTheme.Icon(name);
+            if (texture == null) return Rect(name + " icon (missing)", parent);
+            var rect = Rect(name + " icon", parent);
+            rect.anchorMin = rect.anchorMax = rect.pivot = new Vector2(.5f, .5f);
+            rect.sizeDelta = new Vector2(size, size);
+            var image = rect.gameObject.AddComponent<RawImage>(); image.texture = texture; image.color = colour; image.raycastTarget = false;
+            return rect;
+        }
+
+        /// <summary>Shows an icon instead of the caption. The caption stays on the button (disabled) as its name.</summary>
+        private void IconOnly(Button button, string icon, float size)
+        {
+            if (PockleTheme.Icon(icon) == null) return;
+            button.GetComponentInChildren<Text>().enabled = false;
+            AddIcon(button.transform, icon, size, Ink);
+        }
+
+        private void BuildTab(string title, string icon, Action click, out Image background)
+        {
+            var button = CreateButton(title, navigation, Vector2.zero, new Vector2(100, 52), Paper, click, out background, 12, false);
+            var label = button.GetComponentInChildren<Text>().rectTransform;
+            label.anchorMin = new Vector2(0, 0); label.anchorMax = new Vector2(1, 0); label.pivot = new Vector2(.5f, 0);
+            label.offsetMin = new Vector2(4, 5); label.offsetMax = new Vector2(-4, 23);
+            var glyph = AddIcon(button.transform, icon, 24, MutedInk);
+            glyph.anchorMin = glyph.anchorMax = new Vector2(.5f, 1); glyph.pivot = new Vector2(.5f, 1); glyph.anchoredPosition = new Vector2(0, -6);
+        }
+
+        private void StyleTab(Image tab, bool selected)
+        {
+            tab.color = selected ? Peach : Paper;
+            var tint = selected ? Ink : MutedInk;
+            tab.GetComponentInChildren<Text>().color = tint;
+            var glyph = tab.GetComponentInChildren<RawImage>();
+            if (glyph != null) glyph.color = tint;
         }
 
         private Sprite CreateRoundedSprite()

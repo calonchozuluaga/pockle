@@ -39,6 +39,12 @@ Proposed navigation within those confirmed choices: bottom tabs **Home**, **Boxe
 
 See [Home hub review](HOME_UI.md) for routes, limitations, and phone checks. Checkboxes below stay open until each task's full acceptance criteria pass. No achievement or social service is represented as completed by this UI pass.
 
+## Implementation progress — Visual system 01 (Claude)
+
+| Task | Implemented in this pass | Remaining acceptance work |
+| --- | --- | --- |
+| UX-002 | Theme tokens (`PockleTheme`), Fredoka/Nunito type, squishy wordmark on Home, tab and header icons, card shadows, button lips, press squish with calm variant, best-fit text guard. See [VISUAL_SYSTEM.md](VISUAL_SYSTEM.md). | Unity compile/render check, small-phone readability, CJK/emoji fallback on device, owner's look-and-feel review |
+
 ## First: mobile game foundation
 
 - [ ] **UX-001 — Finalize the screen map and navigation.** Use the confirmed home hub with Collection, Rewards, and Friends tiles; define tab destinations, back behavior, and routes between play, reveal, boxes, discovery, and visited shelves. Acceptance: every primary destination is reachable without losing the current shelf/scroll context.

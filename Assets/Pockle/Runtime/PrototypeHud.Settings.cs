@@ -11,12 +11,12 @@ namespace Pockle.Runtime
         private Slider soundVolume;
         private Text volumeLabel, permissionStatus;
         private Action<float> volumeCallback;
-        public const string UiBuild = "Home hub 01";
+        public const string UiBuild = "Visual system 01";
 
         private void BuildSettings()
         {
-            comfortCard = Rect("Comfort settings", settingsRoot); Surface(comfortCard, Paper);
-            Label("YOUR COMFORT", comfortCard, 11, MutedInk, FontStyle.Bold, TextAnchor.MiddleCenter,
+            comfortCard = Rect("Comfort settings", settingsRoot); Card(comfortCard, Paper);
+            Label("YOUR COMFORT", comfortCard, PockleTheme.EyebrowSize, MutedInk, FontStyle.Bold, TextAnchor.MiddleCenter,
                 new Vector2(0, -12), new Vector2(270, 24));
             soundButton = CreateButton("", comfortCard, Vector2.zero, new Vector2(280, 48), Quiet,
                 () => { SetSettings(!soundEnabled, hapticsEnabled, reducedMotionEnabled); soundCallback?.Invoke(soundEnabled); RefreshSettings(); }, out _);
@@ -35,18 +35,18 @@ namespace Pockle.Runtime
             motionButton = CreateButton("", comfortCard, Vector2.zero, new Vector2(280, 48), Quiet,
                 () => { SetSettings(soundEnabled, hapticsEnabled, !reducedMotionEnabled); motionCallback?.Invoke(reducedMotionEnabled); RefreshSettings(); }, out _);
             motionLabel = motionButton.GetComponentInChildren<Text>();
-            walkingSettings = Rect("Walking access", settingsRoot); Surface(walkingSettings, Paper);
-            Label("WALKING ACCESS", walkingSettings, 11, MutedInk, FontStyle.Bold, TextAnchor.MiddleCenter,
+            walkingSettings = Rect("Walking access", settingsRoot); Card(walkingSettings, Paper);
+            Label("WALKING ACCESS", walkingSettings, PockleTheme.EyebrowSize, MutedInk, FontStyle.Bold, TextAnchor.MiddleCenter,
                 new Vector2(0, -12), new Vector2(270, 24));
             permissionStatus = Label("", walkingSettings, 13, MutedInk, FontStyle.Normal, TextAnchor.MiddleCenter,
                 new Vector2(0, -44), new Vector2(290, 80));
             CreateButton("Enable walking", walkingSettings, Vector2.zero, new Vector2(280, 48), Peach,
                 () => session?.EnableWalking(), out _);
             Label("If activity access is denied, allow Physical activity in your phone's app settings, then return here. Walking is counted while Pockle is open for now.",
-                walkingSettings, 11, MutedInk, FontStyle.Normal, TextAnchor.UpperCenter,
+                walkingSettings, PockleTheme.CaptionSize, MutedInk, FontStyle.Normal, TextAnchor.UpperCenter,
                 new Vector2(0, -194), new Vector2(290, 78));
-            aboutCard = Rect("About and help", settingsRoot); Surface(aboutCard, Paper);
-            Label("ABOUT POCKLE", aboutCard, 11, MutedInk, FontStyle.Bold, TextAnchor.MiddleCenter,
+            aboutCard = Rect("About and help", settingsRoot); Card(aboutCard, Paper);
+            Label("ABOUT POCKLE", aboutCard, PockleTheme.EyebrowSize, MutedInk, FontStyle.Bold, TextAnchor.MiddleCenter,
                 new Vector2(0, -12), new Vector2(270, 24));
             Label("Version " + Application.version + " · " + UiBuild, aboutCard, 12, MutedInk, FontStyle.Normal,
                 TextAnchor.MiddleCenter, new Vector2(0, -40), new Vector2(290, 28));
@@ -66,7 +66,7 @@ namespace Pockle.Runtime
             var handleArea = Rect("Volume handle area", root); Stretch(handleArea); handleArea.offsetMin = new Vector2(12, 0); handleArea.offsetMax = new Vector2(-12, 0);
             var handle = Rect("Volume handle", handleArea); handle.sizeDelta = new Vector2(24, 24);
             handle.anchorMin = handle.anchorMax = new Vector2(0, .5f); handle.pivot = new Vector2(.5f, .5f);
-            var image = Surface(handle, Ink); image.raycastTarget = true;
+            var image = Card(handle, Ink); image.raycastTarget = true;
             var slider = root.gameObject.AddComponent<Slider>(); slider.minValue = 0; slider.maxValue = 1;
             slider.fillRect = fill; slider.handleRect = handle; slider.targetGraphic = image; slider.direction = Slider.Direction.LeftToRight;
             return slider;

@@ -15,15 +15,16 @@ namespace Pockle.Runtime
             {
                 PipVariant choice = (PipVariant)i;
                 toyTiles[i] = Rect(PipVariants.Label(choice) + " · shelf toy", shelfRoot);
-                var face = Surface(toyTiles[i], new Color(.978f, .962f, .943f)); face.raycastTarget = true;
+                var face = Card(toyTiles[i], PockleTheme.ShelfFace); face.raycastTarget = true;
                 toyButtons[i] = toyTiles[i].gameObject.AddComponent<Button>(); toyButtons[i].targetGraphic = face;
                 toyButtons[i].onClick.AddListener(() => ShowToy(choice));
-                toyPlanks[i] = Rect("Ceramic shelf", toyTiles[i]); Surface(toyPlanks[i], new Color(.89f, .84f, .79f));
+                toyTiles[i].gameObject.AddComponent<SquishFeedback>();
+                toyPlanks[i] = Rect("Ceramic shelf", toyTiles[i]); Surface(toyPlanks[i], PockleTheme.ShelfPlank);
                 toyPictures[i] = Rect("Pip portrait", toyTiles[i]);
                 var image = toyPictures[i].gameObject.AddComponent<RawImage>(); image.texture = previews[i]; image.raycastTarget = false;
-                toyNames[i] = Label(PipVariants.Label(choice), toyTiles[i], 11, Ink, FontStyle.Bold, TextAnchor.MiddleCenter,
+                toyNames[i] = Label(PipVariants.Label(choice), toyTiles[i], 13, Ink, FontStyle.Bold, TextAnchor.MiddleCenter,
                     Vector2.zero, new Vector2(150, 22)).rectTransform;
-                toyCounts[i] = Label("", toyTiles[i], 10, MutedInk, FontStyle.Normal, TextAnchor.MiddleCenter,
+                toyCounts[i] = Label("", toyTiles[i], PockleTheme.CaptionSize, MutedInk, FontStyle.Normal, TextAnchor.MiddleCenter,
                     Vector2.zero, new Vector2(150, 20));
             }
         }
