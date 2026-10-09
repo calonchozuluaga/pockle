@@ -7,6 +7,7 @@ namespace Pockle.Runtime
     {
         public const string ResourcePath = "Pip/Pip";
         public const string BaselinePreference = "pockle.prototype.proceduralPip";
+        public string CharacterId = "pip";
         public Mesh BodyMesh;
         public bool IntegratedCrown;
         public int[] NormalGroups;

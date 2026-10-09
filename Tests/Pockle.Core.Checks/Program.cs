@@ -25,6 +25,7 @@ internal static class Program
             WeightChecks.Run();
             MenuChecks.Run();
             CatalogChecks.Run();
+            MaterialHandlingChecks.Run();
             return 0;
         }
         catch (Exception exception)

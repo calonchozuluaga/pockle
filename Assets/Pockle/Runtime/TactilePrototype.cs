@@ -10,17 +10,17 @@ namespace Pockle.Runtime
         private const int NoPointer = PointerGesture.NoPointer;
         private readonly PointerGesture gesture = new PointerGesture();
         private const string PrefPrefix = "pockle.prototype.";
-        private readonly Spring1D compression = new Spring1D(3.8f, .45f);
-        private readonly Spring1D stretch = new Spring1D(3.6f, 0.59f);
-        private readonly Spring1D tiltX = new Spring1D(3.3f, 0.63f);
-        private readonly Spring1D tiltZ = new Spring1D(3.3f, 0.63f);
+        private Spring1D compression = new Spring1D(3.8f, .45f);
+        private Spring1D stretch = new Spring1D(3.6f, 0.59f);
+        private Spring1D tiltX = new Spring1D(3.3f, 0.63f);
+        private Spring1D tiltZ = new Spring1D(3.3f, 0.63f);
         private readonly WeightedLift lift = new WeightedLift();
-        private readonly Spring1D sag = new Spring1D(2.9f, .62f);
+        private Spring1D sag = new Spring1D(2.9f, .62f);
         private Vector3 gripPoint, gripTarget;
-        private readonly Spring1D pinch = new Spring1D(4f, .64f);
-        private readonly Spring1D jiggleX = new Spring1D(ToyFeel.ShakeFrequency, ToyFeel.ShakeDamping);
-        private readonly Spring1D jiggleY = new Spring1D(ToyFeel.ShakeFrequency, ToyFeel.ShakeDamping);
-        private readonly Spring1D jiggleZ = new Spring1D(ToyFeel.ShakeFrequency, ToyFeel.ShakeDamping);
+        private Spring1D pinch = new Spring1D(4f, .64f);
+        private Spring1D jiggleX = new Spring1D(ToyFeel.ShakeFrequency, ToyFeel.ShakeDamping);
+        private Spring1D jiggleY = new Spring1D(ToyFeel.ShakeFrequency, ToyFeel.ShakeDamping);
+        private Spring1D jiggleZ = new Spring1D(ToyFeel.ShakeFrequency, ToyFeel.ShakeDamping);
         private readonly MotionJiggle motion = new MotionJiggle();
         private Camera viewCamera;
         private Transform toyMount;
@@ -84,6 +84,7 @@ namespace Pockle.Runtime
             toyObject.transform.SetParent(toyMount, false);
             toy = toyObject.AddComponent<JellyToy>();
             toy.Initialize();
+            ConfigureHandling();
 
             collection = gameObject.AddComponent<CollectionSession>();
             collection.Initialize();
@@ -369,10 +370,64 @@ namespace Pockle.Runtime
         {
             ResetToy();
             toy.SetVariant(choice);
+            ConfigureHandling();
             PlayerPrefs.SetInt(PipVariants.Preference, (int)toy.Variant);
             PlayerPrefs.Save();
             hud.SetVariant(toy.Variant);
         }
+
+        private void ConfigureHandling()
+        {
+            MaterialHandling h = toy.Handling;
+            bool gel = h == MaterialHandling.Gel;
+            compression = new Spring1D(h.RecoveryFrequency, h.RecoveryDamping);
+            stretch = new Spring1D(gel ? 3.6f : h.RecoveryFrequency, gel ? .59f : h.RecoveryDamping);
+            tiltX = new Spring1D(gel ? 3.3f : h.RecoveryFrequency, gel ? .63f : h.RecoveryDamping);
+            tiltZ = new Spring1D(gel ? 3.3f : h.RecoveryFrequency, gel ? .63f : h.RecoveryDamping);
+            pinch = new Spring1D(gel ? 4 : h.RecoveryFrequency, gel ? .64f : h.RecoveryDamping);
+            sag = new Spring1D(gel ? 2.9f : h.RecoveryFrequency, gel ? .62f : h.RecoveryDamping);
+            jiggleX = new Spring1D(h.ShakeFrequency, h.ShakeDamping);
+            jiggleY = new Spring1D(h.ShakeFrequency, h.ShakeDamping);
+            jiggleZ = new Spring1D(h.ShakeFrequency, h.ShakeDamping);
+            motion.Reset();
+        }
+
+        /// <summary>Call after the HUD navigates to its viewer. Does not grant ownership or complete a reveal.</summary>
+        public bool TryPlayCollectible(string id)
+        {
+            if (toy == null || collection == null || revealing ||
+                !collection.IsOwnedAndAvailable(id) || !toy.TrySetCollectible(id)) return false;
+            ResetToy();
+            ConfigureHandling();
+            return true;
+        }
+
+#if UNITY_EDITOR
+        /// <summary>Authoring review only: preview studies without modifying player inventory.</summary>
+        public bool PreviewCharacterStudy(string id)
+        {
+            if (toy == null || revealing || (id != CharacterArt.MossStudyId && id != CharacterArt.BopStudyId)) return false;
+            int ownedPip = -1;
+            for (int i = 0; i < PipVariants.Count; i++)
+                if (collection.IsOwnedAndAvailable(ToyCatalog.LegacyCollectibleId(i))) { ownedPip = i; break; }
+            if (ownedPip < 0) return false;
+            // Existing HUD remains in Claude's lane; enter its viewer using the preserved overload.
+            bool hadPreference = PlayerPrefs.HasKey(PipVariants.Preference);
+            int savedVariant = PlayerPrefs.GetInt(PipVariants.Preference);
+            try { hud.ShowToy((PipVariant)ownedPip); }
+            finally
+            {
+                if (hadPreference) PlayerPrefs.SetInt(PipVariants.Preference, savedVariant);
+                else PlayerPrefs.DeleteKey(PipVariants.Preference);
+                PlayerPrefs.Save();
+            }
+            if (!toy.TrySetCollectible(id)) return false;
+            ResetToy();
+            ConfigureHandling();
+            hud.SetStatus("Draft " + (id == CharacterArt.MossStudyId ? "Moss" : "Bop") + " · drag to lift, J to test jiggle");
+            return true;
+        }
+#endif
 
         private void StoreVisibilityChanged(bool visible)
         {

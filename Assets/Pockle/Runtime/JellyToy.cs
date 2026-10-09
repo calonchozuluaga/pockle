@@ -42,6 +42,8 @@ namespace Pockle.Runtime
         private Material sparkleMaterial;
         private Material silverMaterial;
         private PipVariant variant;
+        private string collectibleId;
+        private PipCharacterAsset requestedAsset;
         private bool initialized;
         private bool haveDeformation;
         private float previousCompression;
@@ -60,13 +62,49 @@ namespace Pockle.Runtime
         public Renderer BodyRenderer { get; private set; }
         public bool UsesAuthoredMesh { get { return characterAsset != null; } }
         public PipVariant Variant { get { Initialize(); return variant; } }
+        public string CollectibleId { get { Initialize(); return collectibleId; } }
+        public MaterialHandling Handling
+        {
+            get
+            {
+                Initialize();
+                // Retain the four reviewed Pip presets' existing feel in this first
+                // new-character pass. Their finish-specific handling can be reviewed separately.
+                if (ToyCatalog.TryGetLegacyIndex(collectibleId, out _)) return MaterialHandling.Gel;
+                return ToyCatalog.TryGetCollectible(collectibleId, out var definition)
+                    ? MaterialHandling.ForFinish(definition.FinishId) : MaterialHandling.Gel;
+            }
+        }
+
+        /// <summary>Visual selection only; the collection session must authorize owned play separately.</summary>
+        public bool TrySetCollectible(string id)
+        {
+            Initialize();
+            if (!CharacterArt.TryLoad(id, out var asset)) return false;
+            if (id == collectibleId) return true;
+            if (PipVariants.TryFromCollectibleId(id, out var choice) &&
+                (characterAsset == null || characterAsset.CharacterId == "pip"))
+            { SetVariant(choice); return true; }
+            ReleaseVisual();
+            collectibleId = id;
+            requestedAsset = asset;
+            if (PipVariants.TryFromCollectibleId(id, out choice)) variant = choice;
+            initialized = false;
+            haveDeformation = false;
+            Initialize();
+            return true;
+        }
 
         public void SetVariant(PipVariant choice)
         {
             Initialize();
             choice = PipVariants.FromSaved((int)choice);
+            string id = PipVariants.CollectibleId(choice);
+            if (characterAsset != null && characterAsset.CharacterId != "pip")
+            { TrySetCollectible(id); return; }
             if (choice == variant) return;
             variant = choice;
+            collectibleId = id;
             ApplyVariantMaterial();
             // Remove only filling pieces. Mesh, face, pose and turntable survive.
             for (int i = accents.Count - 1; i >= 0; i--)
@@ -126,9 +164,14 @@ namespace Pockle.Runtime
         {
             if (initialized) return;
             initialized = true;
-            variant = PipVariants.FromSaved(PlayerPrefs.GetInt(PipVariants.Preference, 0));
+            if (string.IsNullOrEmpty(collectibleId))
+            {
+                variant = PipVariants.FromSaved(PlayerPrefs.GetInt(PipVariants.Preference, 0));
+                collectibleId = PipVariants.CollectibleId(variant);
+            }
 
-            if (PlayerPrefs.GetInt(PipCharacterAsset.BaselinePreference, 0) == 0)
+            characterAsset = requestedAsset;
+            if (characterAsset == null && PlayerPrefs.GetInt(PipCharacterAsset.BaselinePreference, 0) == 0)
             {
                 characterAsset = Resources.Load<PipCharacterAsset>(PipCharacterAsset.ResourcePath);
                 if (characterAsset != null && (characterAsset.BodyMesh == null || !characterAsset.BodyMesh.isReadable))
@@ -252,15 +295,31 @@ namespace Pockle.Runtime
             previousPinchAxis = pinchAxis;
             previousSag = sag; previousGrip = grip; previousClearance = clearance;
             haveDeformation = true;
+            // Keep cached inputs unscaled: switching finish replays the original pose.
+            MaterialHandling handling = Handling;
+            visualRoot.localRotation = Quaternion.Euler(tiltZ * handling.RockDegrees, 0, -tiltX * handling.RockDegrees);
+            compression *= handling.Compression;
+            stretch *= handling.Stretch;
+            pinch *= handling.Pinch;
+            sag *= handling.Sag;
+            tiltX *= handling.Bend;
+            tiltZ *= handling.Bend;
             var directional = new DirectionalStretch(pinch, new Point3(pinchAxis.x, pinchAxis.y, pinchAxis.z));
             var suspension = new SuspendedShape(sag, new Point3(grip.x, grip.y, grip.z), clearance);
 
             DeformedTop = -1f;
+            float rotatedBottom = float.PositiveInfinity;
             for (int i = 0; i < vertices.Length; i++)
             {
                 vertices[i] = Deform(restVertices[i], compression, stretch, tiltX, tiltZ, contactX, contactZ, directional, suspension);
-                DeformedTop = Mathf.Max(DeformedTop, vertices[i].y);
+                float rotatedY = (visualRoot.localRotation * vertices[i]).y;
+                DeformedTop = Mathf.Max(DeformedTop, rotatedY);
+                rotatedBottom = Mathf.Min(rotatedBottom, rotatedY);
             }
+            // Keep a firm toy's lowest rocking edge on the plate.
+            float rockLift = handling.RockDegrees > 0 ? Mathf.Max(0, -1 - rotatedBottom) : 0;
+            visualRoot.localPosition = Vector3.up * rockLift;
+            DeformedTop += rockLift;
 
             RebuildNormals();
             bodyMesh.vertices = vertices;
@@ -506,6 +565,7 @@ namespace Pockle.Runtime
 
         private void BuildSuspendedAccents()
         {
+            if (characterAsset != null && characterAsset.CharacterId != "pip") return;
             // Glitter is shaded as dense microflakes; opaque soft gel hides filling.
             // Neither needs extra interior objects or per-flake draw calls.
             if (variant == PipVariant.GoldGlitter || variant == PipVariant.MintSoft) return;
@@ -573,6 +633,22 @@ namespace Pockle.Runtime
 
         private Material CreateBodyMaterial()
         {
+            if (characterAsset != null && characterAsset.CharacterId != "pip")
+            {
+                bool flock = collectibleId == CharacterArt.MossStudyId;
+                Shader studyShader = Shader.Find("Pockle/Solid Toy");
+                if (studyShader == null || !studyShader.isSupported)
+                    studyShader = Shader.Find("Standard");
+                var study = new Material(studyShader) { name = characterAsset.name, color = characterAsset.BodyColor };
+                SetColor(study, "_TopColor", characterAsset.TopColor);
+                SetColor(study, "_BottomColor", characterAsset.BottomColor);
+                SetFloat(study, "_Flock", flock ? 1 : 0);
+                SetFloat(study, "_Glossiness", flock ? .05f : .8f);
+                if (studioReflection != null && study.HasProperty("_StudioCube"))
+                    study.SetTexture("_StudioCube", studioReflection);
+                ownedMaterials.Add(study);
+                return study;
+            }
             if (characterAsset != null)
             {
                 Color shell = characterAsset.BodyColor;
@@ -590,6 +666,11 @@ namespace Pockle.Runtime
 
         private void ApplyVariantMaterial()
         {
+            if (characterAsset != null && characterAsset.CharacterId != "pip")
+            {
+                visualRoot.name = characterAsset.name;
+                return;
+            }
             // Restore every finish-specific property before applying another preset.
             bool soft = variant == PipVariant.MintSoft;
             SetFloat(bodyMaterial, "_Softness", soft ? 1f : 0f);
@@ -767,9 +848,10 @@ namespace Pockle.Runtime
             return mesh;
         }
 
-        private void OnDestroy()
+        private void ReleaseVisual()
         {
-            if (visualRoot != null) Destroy(visualRoot.gameObject);
+            if (visualRoot != null)
+            { visualRoot.gameObject.SetActive(false); Destroy(visualRoot.gameObject); }
             for (int i = 0; i < ownedMeshes.Count; i++)
                 if (ownedMeshes[i] != null) Destroy(ownedMeshes[i]);
             for (int i = 0; i < ownedMaterials.Count; i++)
@@ -777,6 +859,12 @@ namespace Pockle.Runtime
             if (studioReflection != null) Destroy(studioReflection);
             ownedMeshes.Clear();
             ownedMaterials.Clear();
+            accents.Clear();
+            visualRoot = null;
+            studioReflection = null;
+            BodyRenderer = null;
         }
+
+        private void OnDestroy() { ReleaseVisual(); }
     }
 }

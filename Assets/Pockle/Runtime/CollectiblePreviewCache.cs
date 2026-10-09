@@ -28,8 +28,7 @@ namespace Pockle.Runtime
         }
         private static RenderTexture? Render(string id)
         {
-            if (!PipVariants.TryFromCollectibleId(id, out var variant)) return null;
-            try { return ToyPortrait.Render(variant); }
+            try { return ToyPortrait.Render(id); }
             catch (Exception exception)
             { Debug.LogWarning("Pockle portrait unavailable for " + id + ": " + exception.GetType().Name); return null; }
         }

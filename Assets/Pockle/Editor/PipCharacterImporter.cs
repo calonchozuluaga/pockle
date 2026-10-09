@@ -11,7 +11,7 @@ namespace Pockle.Editor
     /// Imports Blender's explicit Unity-coordinate mesh and face anchors into native
     /// Unity assets. FBX is supplied for DCC interchange; runtime uses this native mesh.
     /// </summary>
-    [ScriptedImporter(2, "pocklemesh")]
+    [ScriptedImporter(3, "pocklemesh")]
     public sealed class PipCharacterImporter : ScriptedImporter
     {
         [Serializable]
@@ -19,6 +19,7 @@ namespace Pockle.Editor
         {
             public int schemaVersion;
             public string name;
+            public string characterId;
             public bool integratedCrown;
             public float[] positions;
             public int[] triangles;
@@ -58,6 +59,9 @@ namespace Pockle.Editor
 
             PipCharacterAsset asset = ScriptableObject.CreateInstance<PipCharacterAsset>();
             asset.name = source.name;
+            asset.CharacterId = string.IsNullOrEmpty(source.characterId) ? "pip" : source.characterId;
+            if (!Pockle.Core.ToyCatalog.TryGetCharacter(asset.CharacterId, out _))
+                throw new InvalidDataException("Unknown character ID.");
             asset.IntegratedCrown = source.integratedCrown;
             asset.NormalGroups = source.normalGroups;
             asset.Eyes = Triples(source.eyes, 2, "eyes");
@@ -75,7 +79,7 @@ namespace Pockle.Editor
             asset.TopColor = ReadColor(source.topColor);
             asset.BottomColor = ReadColor(source.bottomColor);
 
-            Mesh mesh = new Mesh { name = "Pip authored body", vertices = vertices, triangles = source.triangles, uv = uv };
+            Mesh mesh = new Mesh { name = asset.CharacterId + " authored body", vertices = vertices, triangles = source.triangles, uv = uv };
             mesh.RecalculateNormals();
             // Smooth split UV seams using the same logical-vertex groups as runtime.
             Vector3[] normals = mesh.normals;
