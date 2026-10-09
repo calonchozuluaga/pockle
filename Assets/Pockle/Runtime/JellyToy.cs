@@ -9,7 +9,7 @@ namespace Pockle.Runtime
     /// Blender supplies the rest mesh and anchors; interaction remains entirely local.
     /// </summary>
     [DisallowMultipleComponent]
-    public sealed class JellyToy : MonoBehaviour
+    public sealed partial class JellyToy : MonoBehaviour
     {
         private const int LatitudeSegments = 28;
         private const int LongitudeSegments = 36;
@@ -163,6 +163,7 @@ namespace Pockle.Runtime
             public Vector3 Rest;
             public Vector3 Scale;
             public bool IsSurface;
+            public bool IsFaceFeature;
         }
 
         private void Awake()
@@ -347,14 +348,13 @@ namespace Pockle.Runtime
             for (int i = 0; i < accents.Count; i++)
             {
                 var accent = accents[i];
+                if (accent.IsFaceFeature) continue;
                 accent.Transform.localPosition = Deform(accent.Rest, compression, stretch, tiltX, tiltZ, contactX, contactZ, directional, suspension);
                 accent.Transform.localScale = Vector3.Scale(accent.Scale, featureScale);
                 if (accent.IsSurface) accent.Transform.localRotation = featureRotation;
             }
 
-            for (int i = 0; i < mouthRest.Length; i++)
-                mouthPositions[i] = Deform(mouthRest[i], compression, stretch, tiltX, tiltZ, contactX, contactZ, directional, suspension);
-            mouth.SetPositions(mouthPositions);
+            ApplyFacePose(compression, stretch, tiltX, tiltZ, contactX, contactZ, directional, suspension);
         }
 
         private static float SafeClamp(float value, float minimum, float maximum)
@@ -513,9 +513,9 @@ namespace Pockle.Runtime
             {
                 int index = side < 0 ? 0 : 1;
                 Vector3 eye = characterAsset != null ? characterAsset.Eyes[index] : SurfacePoint(side * 0.225f, 0.18f, 0.034f);
-                AddAccent(side < 0 ? "Left soft eye" : "Right soft eye", eye,
+                faceEyes[index] = AddAccent(side < 0 ? "Left soft eye" : "Right soft eye", eye,
                     characterAsset != null ? new Vector3(0.092f, 0.127f, 0.042f) : new Vector3(0.068f, 0.103f, 0.041f), eyeMaterial, accentMesh, true);
-                AddAccent("Cream eye glint", characterAsset != null ? characterAsset.EyeGlints[index] : eye + new Vector3(-0.016f, 0.034f, -0.037f),
+                faceGlints[index] = AddAccent("Cream eye glint", characterAsset != null ? characterAsset.EyeGlints[index] : eye + new Vector3(-0.016f, 0.034f, -0.037f),
                     characterAsset != null ? new Vector3(0.020f, 0.024f, 0.012f) : new Vector3(0.018f, 0.021f, 0.011f), highlightMaterial, accentMesh, true);
                 AddAccent("Warm cheek", characterAsset != null ? characterAsset.Cheeks[index] : SurfacePoint(side * 0.355f, 0.022f, 0.022f),
                     characterAsset != null ? new Vector3(0.15f, 0.087f, 0.018f) : new Vector3(0.075f, 0.038f, 0.024f), cheekMaterial, accentMesh, true);
@@ -537,6 +537,7 @@ namespace Pockle.Runtime
                 float y = -0.04f + 0.055f * Mathf.Pow(x / 0.08f, 2f);
                 mouthRest[i] = characterAsset != null ? characterAsset.Mouth[i] : SurfacePoint(x, y, 0.052f);
             }
+            BuildExpressionFeatures();
         }
 
         private static Vector3 SurfacePoint(float x, float y, float outward)

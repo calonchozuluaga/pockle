@@ -118,6 +118,9 @@ namespace Pockle.Runtime
                 Debug.Log("Pockle controls: lift · two-finger squish/stretch · phone-motion jiggle", this);
         }
 
+        private readonly FaceExpressionController face = new FaceExpressionController();
+        public FaceExpression CurrentExpression { get { return face.Expression; } }
+
         private void Update()
         {
             if (toy == null) return;
@@ -175,6 +178,10 @@ namespace Pockle.Runtime
             if (hanging > 0f && visibleLift < clearance - .0001f)
                 toy.SetDeformation(squash, elongation, tx, tz, contactX, contactZ, p, pinchAxis, hanging, gripPoint, visibleLift);
             if (!revealing) lift.ConstrainHeight(visibleLift);
+            if (!revealing && !hud.StoreVisible)
+                toy.SetFacePose(face.Step(dt, held, squash, elongation, visibleLift, p,
+                    Mathf.Max(Mathf.Abs(jiggleX.Value), Mathf.Max(Mathf.Abs(jiggleY.Value), Mathf.Abs(jiggleZ.Value))),
+                    lift.LandingSpeed > .08f, reducedMotion));
         }
 
         private void ReadInput()
@@ -296,6 +303,8 @@ namespace Pockle.Runtime
             toy.transform.localPosition = Vector3.zero;
             contactX = contactZ = 0f;
             toy.ResetToy();
+            face.Reset();
+            toy.SetFacePose(face.Pose);
             hud.SetRevealAvailable(true);
             hud.SetStatus("Say hello to Pip. Squish or turn.");
         }
@@ -403,6 +412,13 @@ namespace Pockle.Runtime
         }
 
 #if UNITY_EDITOR
+        /// <summary>Session-only face preview; null restores gesture reactions.</summary>
+        public void PreviewExpression(FaceExpression? expression)
+        {
+            face.Preview(expression);
+            if (toy != null) toy.SetFacePose(face.Step(0f, false, 0f, 0f, 0f, 0f, 0f, false, true));
+        }
+
         /// <summary>Authoring review only: preview studies without modifying player inventory.</summary>
         public bool PreviewCharacterStudy(string id)
         {

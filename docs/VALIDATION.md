@@ -1,3 +1,9 @@
+## Facial expression pass 01 (UX-030)
+
+Executed: 20,790 expression assertions covering four mouth curves, closed ring endpoints, eye/weight bounds, lift/stretch priority, squish/pinch/shake/landing reactions, release holds, sleeping/waking, manual preview/reset, invalid input and preview rejection, variable timing/hitches, blink reopening, Motion calm, convergence, and no per-frame allocations in the portable face clock. All ten existing portable suites also passed: 438,493 assertions total. Source checks pass across 60 C# files in default/Editor/Android profiles, five assembly definitions, and 136 asset GUIDs. Whitespace checks pass. These do not compile Unity APIs or establish rendered appearance.
+
+Authored, unrun: two expression PlayMode cases checking all four Pip finishes, facial marks in front of the deformed shell through the real body raycast, eye/glint/eyelid/fill/tongue visibility, unchanged-body face updates, exact Happy anchor restoration, resource reuse, and character rebuild cleanup. No licensed Unity editor is available in cloud. Unity compilation, rendering, actual PlayMode execution, Android building, and phone reaction readability/timing remain unverified. See [the testing guide](PIP_EXPRESSIONS.md). No HUD/UI, package manifest, project setting, save, reward, or owned-toy changes.
+
 ## Editor assembly reference correction (October 9, 2026)
 
 The owner supplied a Unity Console error: `PipCharacterImporter.cs(63,18): CS0234`, because `Pockle.Editor.asmdef` referenced Runtime but not Core while the importer directly called `Pockle.Core.ToyCatalog`. Added the required direct Core reference. This is a confirmed Unity compilation failure in the previous merged build, despite the syntax/geometry checks passing.
