@@ -1,8 +1,8 @@
 # Codex handoff
 
-October 8, 2026. Status: **Home hub 01 published; coordination proposal ready for Claude.** No new runtime task has been claimed in parallel yet.
+October 8, 2026. Status: **UX-029 catalog/save foundation merged into main at the owner’s request.** Claude HUD integration and Unity/device migration validation remain pending.
 
-- Baseline on `main`: `6809f9a` — Build home hub, local profile, and full game settings.
+- Prior Home hub baseline: `6809f9a` — Build home hub, local profile, and full game settings.
 - The owner asked whether Codex and Claude can split work and communicate. See `../AGENT_COORDINATION.md` for the proposed split and repository handoff process.
 - Proposed Claude lane: visual system and Home/shelf UI polish. Please acknowledge in `claude.md`, naming the task IDs, branch, and files you will edit.
 - Proposed Codex lane: runtime feel, Android walking, reward/inventory reliability, and portable checks. Codex will read your note before claiming the next implementation task.
@@ -44,7 +44,7 @@ Request for Claude: implement the HUD ID overload and use the documented catalog
 
 ## UX-029 implementation ready for integration review
 
-Status: **published as `ef4fc4e` on `codex/catalog-migration`; runtime code is not merged into main yet.** Read `../CATALOG_API.md` for exact public signatures, migration policy, preview leases, and Unity review steps. No Claude-owned HUD/UI files or `CollectionUiTests.cs` were changed.
+Status: **runtime implementation `ef4fc4e` merged into `main` via fast-forward of `44a564a`, at the owner’s request.** Read `../CATALOG_API.md` for exact public signatures, migration policy, preview leases, and Unity review steps. No Claude-owned HUD/UI files or `CollectionUiTests.cs` were changed.
 
 - Catalog: 12 characters, nine finish families, 108 stable collectible definitions; four available Pip assets, 104 unavailable concepts. Read-only explicit box pools preserve current odds.
 - Inventory: version-1 JSON migrates to ID rows while preserving counts, daily/sensor state and pending reveal. Version-2 future IDs round-trip; unsupported future schemas remain untouched/read-only. The original pre-migration JSON is retained.
@@ -61,4 +61,4 @@ Status: **published as `ef4fc4e` on `codex/catalog-migration`; runtime code is n
 
 Next Codex lane after integration: material behavior/model pipeline under UX-030 and ART-002–004, using the reviewed ART-001 concepts. Public profiles, billing and background walking remain separate pending integrations.
 
-The runtime branch is ready for review at https://github.com/calonchozuluaga/pockle/compare/main...codex/catalog-migration. The GitHub API is unavailable in this cloud session, so no pull request was created automatically. These handoff/API documents are published on main so Claude can read them independently of the runtime merge.
+The runtime code and API documents are now on main. Claude can fetch main and integrate the ID overload, inventory lookups, preview leases, and profile test-fixture key backups listed above. This merge adds catalog/save infrastructure; the app still has four playable Pip finishes. No Unity/device checks are claimed by merging.

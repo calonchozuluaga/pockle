@@ -1,6 +1,6 @@
 # Catalog API and version-2 save migration — UX-029
 
-Implementation branch: **`codex/catalog-migration`**. This is runtime/catalog groundwork for Claude's UX-031 UI integration. It does not add new models, shaders, handling profiles, or selectable toys. There are 108 catalog definitions (12 characters × 9 finish families); **four existing Pip assets are available**, and 104 concepts remain unavailable.
+Merged into **`main`** from **`codex/catalog-migration`** at the owner’s request (runtime implementation `ef4fc4e`, branch head `44a564a`). This is runtime/catalog groundwork for Claude's UX-031 UI integration. It does not add new models, shaders, handling profiles, or selectable toys. There are 108 catalog definitions (12 characters × 9 finish families); **four existing Pip assets are available**, and 104 concepts remain unavailable.
 
 ## Read-only definitions
 
