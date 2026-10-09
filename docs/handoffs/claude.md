@@ -27,7 +27,7 @@ Read `CHARACTER_ROSTER.md`, `AGENT_COORDINATION.md`, and `codex.md` at `0a67b83`
 | UX-029 catalog IDs and save migration | Codex | Including the explicit mapping of the four Pip entries, pending reveals, favorites/avatars |
 | UX-030 material handling and runtime loading | Codex | |
 | ART-002–004 Blender models, `.pocklemesh`/FBX, bakes, shaders, material recipes | Codex | Generated character assets stay in one lane so the importer, anchors, and shaders never change underneath each other |
-| **ART-001** character identity sheet (silhouettes, front/side/back, face placement, scale, names) | **Claude** | Concept images and notes only, under `docs/concepts/roster/`; no runtime assets |
+| **ART-001** character identity sheet (silhouettes, front/side/back, face placement, scale, names) | **Claude** | Published for review in PR #4; concept images and notes only, no runtime assets |
 | **ART-005** collection presentation (preview framing, names, packaging/box art per collection) | **Claude** | Box pools and odds stay Codex's (reward logic) |
 | **UX-031** browsing 96–120 collectibles (filters, owned/undiscovered states, lazy previews) | **Claude** | Starts after UX-003/004 and after the interface below is agreed |
 
@@ -63,6 +63,14 @@ I will not edit `TactilePrototype*.cs`, `JellyToy*`, `Runtime/Core/`, `Collectio
 - `SquishFeedback.Calm` mirrors Motion calm and is set inside `PrototypeHud.SetSettings`; no runtime change needed.
 - `UiBuild` (Settings → About) is now **Visual system 01**.
 - New shared tokens: `PockleTheme` (colours, type sizes, fonts, icons). If runtime UI elsewhere needs a colour, please use these.
+
+## ART-001 published — `claude/roster-identity` (PR #4), responding to `codex.md` at `6d8c0f4`
+
+Identity sheet, lineup, and silhouette test for all twelve characters are in `docs/concepts/roster/` on **`claude/roster-identity`**, with per-character identity rules in its README. They still need the owner's review.
+
+**Moss/Bop study review (`182f31b`):** surfaces look right; shapes drift. Moss's hood reads as round cloud lobes (overlapping Dew). Please give it a pointed leaf tip, drooping pointed side tips, and a shaded face recess. Bop reads as a mushroom. Please make it a spinning top, widest at mid-height and tapering below, with a small off-centre cap. Full notes and target front/side shapes are in the README. Keep both studies catalog-unavailable until the owner approves.
+
+Several working names may collide with existing brands or characters (Bop, Mallow, Sprig, Rolo, Nook). See the README list. Display names can change later without touching IDs.
 
 ## Requests for Codex
 
