@@ -19,6 +19,10 @@ OUT = ROOT / "Assets/Pockle/Resources/UI"
 INK = (74, 54, 74)
 PEACH = (247, 176, 146)
 PEACH_DEEP = (233, 136, 108)
+# Wordmark colours match the approved collection box art: glossy plum letters, blush outline.
+PLUM_TOP = (122, 34, 84)
+PLUM_BOTTOM = (82, 18, 58)
+BLUSH = (252, 214, 206)
 SS = 4  # supersampling factor for smooth edges
 
 
@@ -45,26 +49,33 @@ def wordmark(font_path):
     for i, (mask, adv, box, pad) in enumerate(glyphs):
         shape.paste(255, (int(x + box[0] - pad), int(base + box[1] - pad + lift[i] * SS)), mask)
         x += adv - 8 * SS
-    outline = dilate(shape, 11 * SS)
+    outline = dilate(shape, 13 * SS)
     shadow = outline.filter(ImageFilter.GaussianBlur(14 * SS))
     canvas = Image.new("RGBA", (width, height), (0, 0, 0, 0))
     shadow_offset = Image.new("L", (width, height), 0)
-    shadow_offset.paste(shadow, (0, 16 * SS))
-    canvas.paste((INK[0], INK[1], INK[2], 70), (0, 0), shadow_offset)
-    canvas.paste(INK + (255,), (0, 0), outline)
-    # Peach body, deepening toward the bottom like light through gel.
+    shadow_offset.paste(shadow, (0, 14 * SS))
+    canvas.paste(PLUM_BOTTOM + (60,), (0, 0), shadow_offset)
+    canvas.paste(BLUSH + (255,), (0, 0), outline)
+    # Plum body, deepening toward the bottom.
     grad = Image.new("RGBA", (width, height))
     gd = ImageDraw.Draw(grad)
     for y in range(height):
         t = min(1, max(0, (y - base) / (size * 1.0)))
-        gd.line([(0, y), (width, y)], fill=tuple(int(PEACH[c] + (PEACH_DEEP[c] - PEACH[c]) * t) for c in range(3)) + (255,))
+        gd.line([(0, y), (width, y)], fill=tuple(int(PLUM_TOP[c] + (PLUM_BOTTOM[c] - PLUM_TOP[c]) * t) for c in range(3)) + (255,))
     canvas.paste(grad, (0, 0), shape)
-    # Glossy highlight: a soft crescent along the top edge of every letter.
-    inner = erode(shape, 12 * SS)
-    below = Image.new("L", (width, height), 0)
-    below.paste(inner, (0, 26 * SS))
-    gloss = ImageChops.subtract(inner, below).filter(ImageFilter.GaussianBlur(4 * SS))
-    canvas.paste((255, 255, 255, 255), (0, 0), gloss.point(lambda v: int(v * 0.55)))
+    # Glossy candy highlights: a thin specular rim on each letter's upper-left edge,
+    # limited to the top half so it reads as light on a rounded surface.
+    inner = erode(shape, 16 * SS)
+    shifted = Image.new("L", (width, height), 0)
+    shifted.paste(inner, (7 * SS, 12 * SS))
+    rim = ImageChops.subtract(inner, shifted)
+    top = Image.new("L", (width, height), 0)
+    ImageDraw.Draw(top).rectangle([0, 0, width, base + int(size * 0.55)], fill=255)
+    rim = ImageChops.multiply(rim, top).filter(ImageFilter.GaussianBlur(2 * SS))
+    canvas.paste((255, 240, 248, 255), (0, 0), rim.point(lambda v: min(255, int(v * 1.1))))
+    # Darker plum edge inside the blush outline keeps the letters crisp at small sizes.
+    edge = ImageChops.subtract(dilate(shape, 3 * SS), shape)
+    canvas.paste(PLUM_BOTTOM + (255,), (0, 0), edge.point(lambda v: int(v * 0.5)))
     canvas = canvas.crop(canvas.getbbox())
     return canvas.resize((canvas.width // SS, canvas.height // SS), Image.LANCZOS)
 

@@ -413,7 +413,7 @@ namespace Pockle.Runtime
             }
             else
             {
-                var text = Label("Pockle", mark, 32, PockleTheme.PeachDeep, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
+                var text = Label("Pockle", mark, 32, Ink, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
                 Stretch(text.rectTransform);
             }
             return mark;
