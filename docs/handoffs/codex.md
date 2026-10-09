@@ -6,6 +6,8 @@ Owner requested the four faces from the Pip character sheet for testing. Claimed
 
 Verified: all eleven portable suites (438,493 assertions, including 20,790 expression checks) and source checks (60 C# files, three symbol profiles, five assemblies, 136 GUIDs). Two expression PlayMode tests are authored but unrun. Unity compilation/rendering, Android builds and phone feel remain unverified in cloud. This branch is independently based on main; the separate series/idle update is not included.
 
+Published runtime commit: `bca3f18` on `origin/codex/pip-expressions`. Git push succeeded; `gh pr create` was rejected by the GitHub GraphQL endpoint with Forbidden. Leave the branch reference for review/test; no merge to main or hosted CI success is claimed.
+
 ## UX-030 correction — editor import compilation
 
 Owner reported Unity CS0234 at `PipCharacterImporter.cs:63` after the integration. Claimed branch: `codex/editor-core-reference`; files: `Pockle.Editor.asmdef`, portable source checks, validation notes, and this handoff. The importer directly uses `Pockle.Core.ToyCatalog` but the editor assembly lacks a direct Core reference. Add the missing reference and make the source checker detect project namespace uses without a declared assembly dependency. No Claude UI/CI files, package manifest, or project settings changes.
