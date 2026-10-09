@@ -1,0 +1,136 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      android_build:
+        description: Build an Android APK
+        type: boolean
+        default: true
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+  checks: write
+
+jobs:
+  portable:
+    name: Portable checks (.NET, no Unity)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Pin the .NET 8 SDK (the runner also ships newer SDKs)
+        run: |
+          v=$(dotnet --list-sdks | awk '/^8\.0\./{print $1}' | sort -V | tail -1)
+          echo "{\"sdk\":{\"version\":\"$v\",\"rollForward\":\"latestPatch\"}}" > global.json
+          dotnet --version
+      # Each check's output is also posted as annotations so failures are readable on the PR.
+      - name: Core logic checks
+        run: |
+          set -o pipefail
+          dotnet run --project Tests/Pockle.Core.Checks/Pockle.Core.Checks.csproj 2>&1 | tee core.log || \
+            { tail -25 core.log | sed 's/^/::error title=Core checks::/'; exit 1; }
+      - name: C# syntax and asset GUID checks
+        run: |
+          set -o pipefail
+          dotnet run --project tools/Pockle.SourceChecks/Pockle.SourceChecks.csproj -- . 2>&1 | tee source.log || \
+            { tail -25 source.log | sed 's/^/::error title=Source checks::/'; exit 1; }
+      - name: Whitespace errors
+        run: git diff --check 4b825dc642cb6eb9a060e54bf8d69288fbee4904 HEAD -- . ':(exclude)*.pocklemesh' ':(exclude)*.svg' ':(exclude)*.pdf'
+
+  unity-license:
+    name: Unity license available?
+    runs-on: ubuntu-latest
+    outputs:
+      present: ${{ steps.check.outputs.present }}
+    steps:
+      - id: check
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        run: |
+          if [ -n "$UNITY_LICENSE" ] || [ -n "$UNITY_SERIAL" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::No Unity license secret is set, so Unity compile/tests/build were skipped. See docs/CI.md."
+          fi
+
+  unity-tests:
+    name: Unity compile + EditMode/PlayMode tests
+    needs: [portable, unity-license]
+    if: needs.unity-license.outputs.present == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-tests-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: Library-tests-
+      - uses: game-ci/unity-test-runner@v4
+        id: tests
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          unityVersion: auto
+          testMode: all
+          artifactsPath: test-results
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          checkName: Unity test results
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: unity-test-results
+          path: ${{ steps.tests.outputs.artifactsPath }}
+          if-no-files-found: ignore
+
+  android:
+    name: Android APK
+    needs: [unity-tests]
+    if: >-
+      github.event_name == 'push' ||
+      (github.event_name == 'workflow_dispatch' && inputs.android_build) ||
+      contains(github.event.pull_request.labels.*.name, 'build-apk')
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Free disk space for the Android editor image
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+      - uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-Android-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: Library-Android-
+      - uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          unityVersion: auto
+          targetPlatform: Android
+          buildName: Pockle
+          versioning: None
+          androidExportType: androidPackage
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Pockle-android-${{ github.sha }}
+          path: build/Android
+          retention-days: 14

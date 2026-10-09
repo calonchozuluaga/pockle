@@ -61,6 +61,10 @@ The starting surface selects the gesture: Pip squishes/lifts; the plate turns. A
 
 Reduced motion preserves direct lifting and two-finger deformation but removes spring rebound, phone-motion jiggle, and large reveal movements. Sound is local synthesized placeholder audio. Haptics default off and use Unity's basic device vibration; finely tuned native haptics are future work. UI touches do not manipulate the toy. See [the new interaction checklist](docs/MANIPULATION_TEST.md) for Android testing.
 
+## Working on this repo
+
+Codex and Claude both contribute through pull requests; [AGENTS.md](AGENTS.md) holds the shared rules and who owns which area. GitHub Actions runs the checks below, the Unity test suites, and an Android build; see [CI](docs/CI.md), including the one-time Unity license setup.
+
 ## Checks available without Unity
 
 Install .NET SDK 8, then run from the repository root:
