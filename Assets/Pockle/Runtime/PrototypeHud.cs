@@ -187,7 +187,7 @@ namespace Pockle.Runtime
             StyleTab(homeTab, page == AppPage.Home || page == AppPage.Shelf || page == AppPage.Rewards || page == AppPage.Social);
             StyleTab(boxesTab, page == AppPage.Boxes);
             StyleTab(youTab, page == AppPage.Profile || page == AppPage.Settings);
-            RefreshProfile(); RefreshSettings();
+            RefreshShelf(); RefreshProfile(); RefreshSettings();
             content.anchoredPosition = new Vector2(0, navigator.Scroll);
             if (lastLayoutSize.x > 0) AdaptLayout();
             if (wasBlocked != StoreVisible) StoreVisibilityChanged?.Invoke(StoreVisible);

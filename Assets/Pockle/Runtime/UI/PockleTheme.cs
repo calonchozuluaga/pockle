@@ -20,6 +20,7 @@ namespace Pockle.Runtime
         public static readonly Color TileMint = Hex(0xDBF0E2);
         public static readonly Color ShelfFace = Hex(0xFAF5EF);
         public static readonly Color ShelfPlank = Hex(0xE6D7C9);
+        public static readonly Color ShelfEdge = Hex(0xD6C4B4);
         public static readonly Color Backdrop = new Color(.23f, .17f, .22f, .38f);
         /// <summary>Soft plum drop shadow under cards.</summary>
         public static readonly Color CardShadow = new Color(.29f, .21f, .29f, .10f);

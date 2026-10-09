@@ -153,12 +153,46 @@ def back(d, s):
         d.ellipse([p[0] - w / 2, p[1] - w / 2, p[0] + w / 2, p[1] + w / 2], fill=255)
 
 
+def heart(d, s):
+    r = s * .19
+    d.ellipse([s * .50 - 2 * r, s * .22, s * .50, s * .22 + 2 * r], fill=255)
+    d.ellipse([s * .50, s * .22, s * .50 + 2 * r, s * .22 + 2 * r], fill=255)
+    d.polygon([(s * .135, s * .44), (s * .865, s * .44), (s * .50, s * .84)], fill=255)
+
+
+def steps(d, s):
+    # Two little footprints.
+    for ox, oy in ((.30, .48), (.62, .22)):
+        d.ellipse([s * (ox - .11), s * oy, s * (ox + .11), s * (oy + .30)], fill=255)
+        d.ellipse([s * (ox - .085), s * (oy + .32), s * (ox + .085), s * (oy + .44)], fill=255)
+
+
+def friends(d, s):
+    w = int(s * 0.075)
+    d.ellipse([s * .14, s * .20, s * .42, s * .48], outline=255, width=w)
+    d.ellipse([s * .56, s * .26, s * .80, s * .50], outline=255, width=w)
+    d.rounded_rectangle([s * .02, s * .58, s * .56, s * 1.05], radius=s * .24, outline=255, width=w)
+    d.rounded_rectangle([s * .50, s * .62, s * .96, s * 1.05], radius=s * .21, outline=255, width=w)
+    d.rectangle([0, s * .86, s, s], fill=0)
+
+
+def shelf(d, s):
+    w = int(s * 0.085)
+    d.rounded_rectangle([s * .12, s * .14, s * .88, s * .86], radius=s * .10, outline=255, width=w)
+    d.line([(s * .12, s * .50), (s * .88, s * .50)], fill=255, width=w)
+    d.ellipse([s * .24, s * .26, s * .42, s * .46], fill=255)
+    d.ellipse([s * .56, s * .62, s * .74, s * .82], fill=255)
+
+
 def main():
     font = Path(sys.argv[1]) if len(sys.argv) > 1 else OUT / "Fonts/Fredoka-SemiBold.ttf"
     (OUT / "Icons").mkdir(parents=True, exist_ok=True)
     wordmark(font).save(OUT / "PockleWordmark.png", optimize=True)
-    for name, fn in [("Home", home), ("Box", box), ("You", you), ("Settings", settings), ("Back", back)]:
+    for name, fn in [("Home", home), ("Box", box), ("You", you), ("Settings", settings), ("Back", back),
+                     ("Heart", heart), ("Steps", steps), ("Friends", friends), ("Shelf", shelf)]:
         icon(fn).save(OUT / "Icons" / (name + ".png"), optimize=True)
+    # "Next" is the back chevron mirrored.
+    Image.open(OUT / "Icons/Back.png").transpose(Image.FLIP_LEFT_RIGHT).save(OUT / "Icons/Next.png", optimize=True)
     print("Wrote wordmark and icons to", OUT.relative_to(ROOT))
 
 

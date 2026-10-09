@@ -73,7 +73,7 @@ namespace Pockle.Tests
             Assert.IsTrue(portraits.All(image => ((RenderTexture)image.texture).IsCreated()));
             PipVariant selected = PipVariant.PeachJelly;
             hud.VariantChanged += choice => selected = choice;
-            ButtonWithText("MOON JELLY").onClick.Invoke();
+            ButtonWithText("Moon Jelly").onClick.Invoke();
             Assert.AreEqual(PipVariant.MoonJelly, selected);
             Assert.IsFalse(hud.StoreVisible, "Selected toy must be available for direct manipulation.");
             hud.GoBack();
@@ -115,7 +115,7 @@ namespace Pockle.Tests
             var scroll = root.GetComponentInChildren<ScrollRect>();
             float position = Mathf.Max(0, scroll.content.rect.height - scroll.viewport.rect.height) * .5f;
             scroll.content.anchoredPosition = new Vector2(0, position);
-            ButtonWithText("MOON JELLY").onClick.Invoke();
+            ButtonWithText("Moon Jelly").onClick.Invoke();
             Assert.AreEqual(AppPage.Play, hud.CurrentPage);
             ButtonWithText("Settings").onClick.Invoke();
             Assert.AreEqual(AppPage.Settings, hud.CurrentPage); Assert.IsTrue(hud.StoreVisible);
@@ -139,7 +139,7 @@ namespace Pockle.Tests
             field.text = "  Lucía 李  "; field.onEndEdit.Invoke(field.text);
             Assert.AreEqual("Lucía 李", PlayerPrefs.GetString("pockle.profile.local.name"));
             Assert.IsFalse(field.textComponent.supportRichText);
-            ButtonWithText("MOON JELLY").onClick.Invoke();
+            ButtonWithText("Moon Jelly").onClick.Invoke();
             var avatar = root.GetComponentsInChildren<Button>().Single(button => button.name == "Avatar · MOON JELLY");
             avatar.onClick.Invoke();
             Assert.AreEqual(1, PlayerPrefs.GetInt("pockle.profile.local.avatar"));
@@ -159,6 +159,33 @@ namespace Pockle.Tests
             Assert.IsTrue(root.GetComponentsInChildren<Text>().Any(text => text.text == "Hey, Lucía 李"));
             ButtonWithText("You").onClick.Invoke();
             Assert.AreEqual("Lucía 李", root.GetComponentInChildren<InputField>().text);
+        }
+
+        [UnityTest]
+        public IEnumerator HomeAndShelfReflectProgressAndKeepUndiscoveredToysASurprise()
+        {
+            var counts = session.Progress.Save.Counts;
+            counts[(int)PipVariant.MoonJelly] = 0; counts[(int)PipVariant.MintSoft] = 3;
+            session.SimulateDailyWalk(); // Also raises Changed so the HUD refreshes.
+            yield return null;
+            Assert.IsTrue(ButtonWithText("Open your box").interactable, "Home must offer the ready box as its main action.");
+            Assert.IsTrue(VisibleText("Your box is ready!"), "Rewards tile must reflect today's ready box.");
+            Assert.IsTrue(VisibleText("3 of 4 finishes · 5 toys on your shelf"));
+            ButtonWithText("Collection").onClick.Invoke();
+            yield return null; Canvas.ForceUpdateCanvases();
+            Assert.IsTrue(VisibleText("3 of 4 discovered"));
+            Assert.IsTrue(VisibleText("???"), "An undiscovered toy must keep its name a surprise.");
+            Assert.IsFalse(VisibleText("Moon Jelly"), "An undiscovered toy's name must not be shown.");
+            var moon = root.GetComponentsInChildren<Button>().Single(button => button.name == "MOON JELLY · shelf toy");
+            Assert.IsFalse(moon.interactable, "An undiscovered toy cannot be played.");
+            Assert.IsTrue(VisibleText("×3"), "Duplicates show a count badge.");
+            var portraits = root.GetComponentsInChildren<RawImage>().Where(image => image.texture is RenderTexture).ToArray();
+            Assert.AreEqual(3, portraits.Length, "Only discovered toys show their rendered portrait.");
+        }
+
+        private bool VisibleText(string value)
+        {
+            return root.GetComponentsInChildren<Text>().Any(text => text.text == value && text.enabled);
         }
 
         private Button ButtonWithText(string value)

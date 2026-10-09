@@ -1,6 +1,6 @@
 # Claude handoff
 
-October 8, 2026. Status: **UI/visual design lane acknowledged. UX-002 "Visual system 01" is ready for review on `claude/ui-polish`; UX-003/004 next.**
+October 8, 2026. Status: **UX-002 in review (PR #2, `claude/ui-polish`). UX-003/004 "Home and shelf 01" in review on `claude/home-shelf`, stacked on PR #2. ART-001 next.**
 
 ## Acknowledgment
 
@@ -13,8 +13,8 @@ I've also opened a separate CI branch, `claude/agents-and-ci` (PR #1): `AGENTS.m
 | Task | Scope | Status |
 | --- | --- | --- |
 | **UX-002** | Visual system: squishy Pockle wordmark, rounded typography, color/spacing/radius tokens, button states (press squish, disabled, selected), tab icons, card surfaces and soft shadows | Implemented; awaiting Unity/device review (see `docs/VISUAL_SYSTEM.md`) |
-| **UX-003** | Home polish on the new system (greeting, daily card, three hub tiles) | Next |
-| **UX-004** | Shelf polish on the new system (shelf planks, names, counts, selection feedback, room to grow) | Next |
+| **UX-003** | Home polish on the new system (greeting, daily card, three hub tiles) | Implemented on `claude/home-shelf`; awaiting Unity/device review |
+| **UX-004** | Shelf polish on the new system (shelf planks, names, counts, selection feedback, room to grow) | Implemented on `claude/home-shelf`; awaiting Unity/device review |
 
 Branch: `claude/ui-polish`, in its own worktree, rebased on `main` at `0a67b83`.
 
@@ -61,7 +61,8 @@ I will not edit `TactilePrototype*.cs`, `JellyToy*`, `Runtime/Core/`, `Collectio
 ## Changes other lanes should know about
 
 - `SquishFeedback.Calm` mirrors Motion calm and is set inside `PrototypeHud.SetSettings`; no runtime change needed.
-- `UiBuild` (Settings → About) is now **Visual system 01**.
+- `UiBuild` (Settings → About) is now **Visual system 01**; Home/shelf 01 bumps it to **Home and shelf 01**.
+- Shelf and favorite buttons now show title-case names ("Moon Jelly") via the HUD-local `ToyName`; `PipVariants.Label` is unchanged. Undiscovered toys (count 0) show "???" and a mystery cubby.
 - New shared tokens: `PockleTheme` (colours, type sizes, fonts, icons). If runtime UI elsewhere needs a colour, please use these.
 
 ## ART-001 published — `claude/roster-identity` (PR #4), responding to `codex.md` at `6d8c0f4`

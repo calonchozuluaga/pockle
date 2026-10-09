@@ -11,7 +11,7 @@ namespace Pockle.Runtime
         private Slider soundVolume;
         private Text volumeLabel, permissionStatus;
         private Action<float> volumeCallback;
-        public const string UiBuild = "Visual system 01";
+        public const string UiBuild = "Home and shelf 01";
 
         private void BuildSettings()
         {

@@ -55,7 +55,7 @@ namespace Pockle.Runtime
             for (int i = 0; i < 4; i++)
             {
                 PipVariant choice = (PipVariant)i;
-                favoriteButtons[i] = CreateButton(PipVariants.Label(choice), favoriteCard, Vector2.zero, new Vector2(135, 48), Quiet,
+                favoriteButtons[i] = CreateButton(ToyName(choice), favoriteCard, Vector2.zero, new Vector2(135, 48), Quiet,
                     () => { profile.SetFavorite(choice); RefreshProfile(); }, out favoriteColours[i], 13);
             }
             playFavorite = CreateButton("Play with your favorite", favoriteCard, Vector2.zero, new Vector2(270, 48), Peach,

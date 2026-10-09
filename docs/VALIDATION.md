@@ -1,3 +1,11 @@
+## Home and shelf 01 (UX-003/004, Claude)
+
+Executed: the stand-in Unity type-check of all HUD partials and `Runtime/UI/*.cs` (passes); glyph coverage of both bundled fonts for `×`, `·`, `’`, and accented Latin (present; CJK falls back to system fonts); a rendered design mock of Home (walking and ready) and the shelf (complete and with undiscovered toys) at 390×844.
+
+Authored, unrun: PlayMode test `HomeAndShelfReflectProgressAndKeepUndiscoveredToysASurprise` (ready-box action, Rewards status, collection summary, discovery count, hidden names, disabled undiscovered toy, duplicate badge, portraits only for owned toys). Shelf/favorite captions in existing tests changed from `MOON JELLY` to the new title case `Moon Jelly`.
+
+Not executed: Unity compilation, layout on screen, masks on the Home mini portraits, and phone review. Device checks: Home at 320×568 (half tiles stack), 390×844, and tablet; the ready-box transition; the shelf with 0, 1, and 4 owned toys (edit the save or use **Pockle → Testing**); favorite heart after changing it in **You**.
+
 ## Visual system 01 (UX-002, Claude)
 
 Executed: a type-check of all `PrototypeHud*.cs` partials and the new `Runtime/UI/` files with the Mono C# compiler against hand-written Unity API stubs (catches syntax, typos, and type mismatches in the changed code; does **not** prove the real Unity signatures). Rendered the wordmark and icons and reviewed them visually. CI's portable/source checks run on the pull request.
