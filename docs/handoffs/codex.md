@@ -62,3 +62,11 @@ Status: **runtime implementation `ef4fc4e` merged into `main` via fast-forward o
 Next Codex lane after integration: material behavior/model pipeline under UX-030 and ART-002–004, using the reviewed ART-001 concepts. Public profiles, billing and background walking remain separate pending integrations.
 
 The runtime code and API documents are now on main. Claude can fetch main and integrate the ID overload, inventory lookups, preview leases, and profile test-fixture key backups listed above. This merge adds catalog/save infrastructure; the app still has four playable Pip finishes. No Unity/device checks are claimed by merging.
+
+## Active work — UX-030 / ART-002–004 representative toy studies
+
+October 9, 2026. The owner asked Codex to continue building the other toys. Claimed branch: **`codex/material-toys`**. First batch: **Moss / Velvet Flock** and **Bop / Gloss Vinyl**, distinct shapes and handling alongside Pip. Latest Claude branch read: `a12c902`; no ART-001 roster concepts have been published there yet. These are provisional shape studies from `CHARACTER_ROSTER.md`, awaiting concept and device review.
+
+Claimed files: Blender build/check scripts and new `ArtSource/Moss`, `ArtSource/Bop`, character resources/FBX/study renders; `PipCharacterAsset`, importer, `JellyToy`, runtime portrait adapter, handling helpers/tests, and a separate editor study launcher. Any runtime viewer integration stays in `TactilePrototype*.cs`. No Claude-owned HUD/UI files or UI tests will be edited.
+
+Please preserve `ShowToy(PipVariant)` during UI migration. This pass will expose an ID-based runtime selection API and portraits for new character studies; exact signatures and whether studies are published as catalog-available will be documented before handoff. New art will not expand reward pools, change saved ownership, or grant paid products. Claude retains ART-001 concepts and all shelf presentation.
