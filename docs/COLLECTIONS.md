@@ -1,19 +1,16 @@
 # Collections and series
 
-Owner decisions, October 9, 2026, and the UI and catalog plan that follows from them. The screens are in the owner's design canvas "Pockle screens v2" (Collection, Collections, Shelf, Toy). Sample names such as Cloud Bakery and Lantern Night are placeholders, not approved content.
+Owner decisions, October 9, 2026, and the UI and catalog plan that follows from them. **A collection is one character in ten or more varieties** (finishes and materials), plus an optional secret; Pip is Series 1. Box pools such as Jelly Garden, Midnight Glow, and Gold Confetti are themed boxes drawn from a collection, not separate collections. The catalog side is delivered in `docs/SERIES_AND_MOTION_API.md`. The screens are in the owner's design canvas "Pockle screens v2" (Collection, Collections, Shelf, Toy). Sample names such as Cloud Bakery and Lantern Night are placeholders, not approved content.
 
 ## Product rules (decided)
 
-1. **A new series every month.** Each series is one themed collection with its own box art.
+1. **A new series every month.** Each series is one character's collection (ten or more varieties) with its own box art. About 120 collectibles are planned across the first twelve characters.
 2. **Every series stays available until it sells out.** Nothing is retired on a schedule. Older series remain on sale and appear lower in lists; the newest is always first. A brand-new player can buy into any earlier series while supply lasts (see rule 9).
 3. **Prices are per box.** One box holds one Pockle. There is no whole-collection purchase.
 4. **Vintage matters.** A toy keeps the series it came from and the date it was first found, and the UI shows both (for example "Jelly Garden series 6 (2026)" and "First found Oct 8, 2026"). Toys never leave the shelf.
 5. **Secret figures.** Each series can include one secret figure at about **1 in 72** boxes. Its silhouette is shown on the collection page; its identity is not.
-
 6. **Walking boxes feature the newest series.** Longer walks raise the chance of a rare figure (decided October 9).
 7. **Duplicates have two uses:** trade them with other players, or combine spares to craft a missing toy (decided October 9).
-
-Odds must be shown before purchase and before opening (store requirement), including the secret's rate and how a longer walk changes it.
 
 8. **Paid boxes never give a duplicate.** A purchased box always contains a toy you don't own yet, so you can only buy your own copy. Once you own every regular toy in a series, that series' paid box closes for you. Spares come only from free walking boxes. This stops one player from buying up supply to resell (decided October 9).
 9. **Finite editions.** Each toy has a fixed edition size. A series stays on sale until its toys sell out; a sold-out toy can only be traded for. Every copy carries a serial number (for example "#0421 of 5,000") and its history, recorded in a public ledger (decided October 9).
@@ -48,12 +45,14 @@ The box can be opened at any tier; opening it ends the day's upgrades. Higher ti
 
 ## Screens (Claude, UI lane)
 
-- **Collection ("Who's inside")**: the full lineup. Found toys idle with a gentle squish; unfound toys are silhouettes that hop and wave with "!" and "?" bubbles; the box bobs and wiggles; the secret appears as a twinkling silhouette with its odds. Actions: "Open a box" (price) and "Walk for one". Motion stops under Motion calm / reduced motion.
-- **Collections**: newest series as a large card, then "Earlier series" in release order, each with its series number, month, and your progress.
-- **Shelf**: grouped by series (newest first) with per-series progress, collection filter chips with counts, and an Everything / Missing / Duplicates view. Missing shows the gaps in each set as silhouettes.
+- **Collection ("Who's inside")**: one character's full lineup, all ten or more varieties plus the secret slot. Found toys idle with a gentle squish; unfound toys are silhouettes that hop and wave with "!" and "?" bubbles; the box bobs and wiggles; the secret appears as a twinkling silhouette with its odds. Actions: "Open a box" (price) and "Walk for one". Motion stops under Motion calm / reduced motion.
+- **Collections**: newest series (character) as a large card, then "Earlier series" in release order, each with its series number, month, and your progress.
+- **Shelf**: grouped by character collection (newest series first) with per-series progress, collection filter chips with counts, and an Everything / Missing / Duplicates view. Missing shows the gaps in each set as silhouettes.
 - **Toy**: series and first-found date shown with the toy.
 
-## Catalog fields needed (request for Codex, UX-029 follow-up)
+## Catalog fields (UX-029 follow-up)
+
+Delivered by Codex in `ToyCatalog.Collections` / `CollectionDefinition` (see `docs/SERIES_AND_MOTION_API.md`): series number, release date, ordered members, secret, odds, and field/ink colours, plus `CharacterMotion` idle/eager recipes and `ToyLineupAnimator`. Still requested are marked *pending*.
 
 Per collection/series, in `ToyCatalog` (read-only, engine-free):
 
@@ -64,18 +63,19 @@ Per collection/series, in `ToyCatalog` (read-only, engine-free):
 | `Members` (collectible IDs, ordered) | The lineup on the collection page, including not-yet-found toys |
 | `SecretId` (optional collectible ID) | The secret slot; shown as a silhouette until found |
 | Box pool weights including the secret | Displayed odds; the existing explicit-pool rules still apply |
-| `BoxPriceTier` (or product ID) | Price shown per box |
+| `BoxPriceTier` (or product ID) | Price shown per box (*pending*) |
 | Accent colours (field, ink) | Collection page and shelf section colours |
-| Walk-tier odds (per tier) | Displayed and applied odds for 1k/5k/10k-step boxes |
-| Craft cost (spares per toy, secret rule) | Crafting screen and validation |
+| Walk-tier odds (per tier) | Displayed and applied odds for 1k/5k/10k-step boxes (*pending*) |
+| Craft cost (spares per toy, secret rule) | Crafting screen and validation (*pending*) |
 
-Per owned copy (server-owned once accounts exist): **serial number**, **first-found date (UTC)**, and **source** (walking box, purchased box, crafted, or traded), recorded once and never overwritten. Per collectible: **edition size** and **remaining supply**. This extends the version-2 save; older saves should show "found before dates were recorded" rather than inventing a date.
+Per owned copy (server-owned once accounts exist): **serial number**, **first-found date (UTC)**, and **source** (walking box, purchased box, crafted, or traded), recorded once and never overwritten (*pending*). Per collectible: **edition size** and **remaining supply**. This extends the version-2 save; older saves should show "found before dates were recorded" rather than inventing a date.
 
-Per character: a short **idle** and an **eager** animation (hop, wave, peek) for the collection lineup. The lineup animates only the handful of toys on screen; the shelf keeps static thumbnails from the bounded preview cache.
+Per character: a short **idle** and an **eager** animation (hop, wave, peek) for the collection lineup (delivered as `CharacterMotion` recipes). The lineup animates only the handful of toys on screen; the shelf keeps static thumbnails from the bounded preview cache.
 
 ## Not decided yet
 
 - Edition sizes per toy and secret, and the exact walk-tier odds.
+
 ## Backend (decided October 9)
 
 **Supabase** is the backend for accounts, server-owned inventory, finite supply, purchase validation, crafting, the ledger, and trading. Inventory and rewards are Codex's lane, so Codex drafts the schema and server functions against the rules above; Claude reviews them and builds the UI on top. Until it's live, the local save stays the source of truth and the UI marks online features as coming soon.
