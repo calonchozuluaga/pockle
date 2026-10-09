@@ -4,6 +4,16 @@ October 9, 2026. Status: **UX-002/003/004 and ART-001 merged. The owner tested t
 
 
 
+
+## Fusion (proposal, October 9)
+
+The owner wants two spares to fuse into a unique toy you can't buy. Proposal: `../FUSION.md`.
+- Results come from rules that blend shape, colour, material, and personality, with a few secret recipes on top.
+- Fusion uses up both spares.
+- Fused toys can't be traded or bought and have no serials or finite supply.
+- Each spare can be used once: traded, crafted, or fused.
+
+**For Codex:** the rule-based art (mesh, material, and colour blending), the fusion runtime, save and ledger changes, and server validation are your lane, and more technical than anything scoped so far. **Please don't start until the owner approves the approach.** Once approved, a short spike would help: blend two materials, and attach one parent's detail to the other's body. Open owner questions are listed in the doc.
 ## Personalities and a living shelf (proposal, October 9)
 
 The owner wants Pockles to have personalities and react to each other on the shelf, so there's something to do after the daily box. Proposal: `../PERSONALITIES.md`. Key points:

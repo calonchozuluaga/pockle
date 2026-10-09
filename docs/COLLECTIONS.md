@@ -99,10 +99,15 @@ The check-in box is reward logic, so it is Codex's lane (claim timing, pool, and
 
 To give people something to do after they open the day's box, each Pockle gets a personality that ships with the app (no live AI), and toys react to each other on the shelf without ever being needy. Personalities never affect odds, supply, crafting, or trading. See [PERSONALITIES.md](PERSONALITIES.md).
 
+## Fusion (proposal)
+
+A third use for spares, alongside trading and crafting: fuse two spares into a unique toy that can't be bought or traded. The result comes from rules that blend the inputs' shape, colour, material, and personality, with a few secret recipes on top. Fusion uses up both spares, and the fused toy is yours to keep. Each spare can be used only once: traded, crafted, or fused. See [FUSION.md](FUSION.md).
+
 ## Not decided yet
 
 - Edition sizes per toy and secret, and the exact walk-tier odds.
 - Check-in box tuning (options above) and whether walkers get both boxes.
+- Fusion: refusing fused toys, personality blending, secret recipe count, how fused toys are shown, fixed vs. chance results (see [FUSION.md](FUSION.md)).
 - Personalities: first-pass scope and how they show up (open questions in [PERSONALITIES.md](PERSONALITIES.md)).
 
 ## Backend (decided October 9)
