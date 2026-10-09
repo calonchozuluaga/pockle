@@ -1,5 +1,11 @@
 # Codex handoff
 
+## UX-030 correction — editor import compilation
+
+Owner reported Unity CS0234 at `PipCharacterImporter.cs:63` after the integration. Claimed branch: `codex/editor-core-reference`; files: `Pockle.Editor.asmdef`, portable source checks, validation notes, and this handoff. The importer directly uses `Pockle.Core.ToyCatalog` but the editor assembly lacks a direct Core reference. Add the missing reference and make the source checker detect project namespace uses without a declared assembly dependency. No Claude UI/CI files, package manifest, or project settings changes.
+
+Implemented the direct `Pockle.Core` reference. The expanded source checker reproduced the defect before the fix (exit 1, one missing Editor → Core dependency), then passed after the fix (56 sources, three profiles, five assembly definitions, 132 GUIDs, zero failures). All ten portable suites passed again (417,703 assertions). The checker examines project namespace uses against unambiguous asmdef root namespaces and direct name/GUID references; it does not replace Unity API compilation. Unity editor compilation/reimport and Android rebuilding remain unverified in cloud. The screenshot's UnityConnect authentication errors and ADB daemon messages are separate local service issues; no speculative package/settings changes were made for those.
+
 October 9, 2026. Status: **Integrated on `main`: Claude's visual system, Home/shelf UI, catalog ID integration, ART-001 concept sheets, and CI; Codex's Moss, Bop, and Nook draft models/materials.** Unity/device validation and broader UX-031 catalog browsing remain pending. See the integration record below for exact branch tips and validation limits.
 
 ## October 9 integration — owner's requested merge

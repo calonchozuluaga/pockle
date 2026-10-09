@@ -1,3 +1,9 @@
+## Editor assembly reference correction (October 9, 2026)
+
+The owner supplied a Unity Console error: `PipCharacterImporter.cs(63,18): CS0234`, because `Pockle.Editor.asmdef` referenced Runtime but not Core while the importer directly called `Pockle.Core.ToyCatalog`. Added the required direct Core reference. This is a confirmed Unity compilation failure in the previous merged build, despite the syntax/geometry checks passing.
+
+Extended the portable source checker to inspect project namespace uses against unambiguous asmdef root namespaces and direct assembly references (names or GUIDs). With the old assembly definition it exits 1 and identifies exactly the missing Editor → Core reference; after the fix it passes: 56 C# files, three symbol profiles, five assembly definitions, 132 GUIDs. All 417,703 portable assertions passed again. Whitespace checks also pass. This dependency check does not resolve every symbol or compile Unity APIs; actual Unity reimport/compilation and an Android rebuild still need local confirmation. The owner's UnityConnect token-exchange and ADB service messages are separate from this assembly error.
+
 ## Combined Claude/Codex integration (October 9, 2026)
 
 Executed against the merged Home/shelf UI, ID integration, roster concepts, CI, and Moss/Bop/Nook study tree:

@@ -74,7 +74,7 @@ dotnet run --project Tests/Pockle.Core.Checks/Pockle.Core.Checks.csproj
 dotnet run --project tools/Pockle.SourceChecks/Pockle.SourceChecks.csproj -- .
 ```
 
-In the prepared cloud workspace, the verified SDK is at `/workspace/.tools/dotnet/dotnet`. These commands test the actual engine-independent collection/reward and deformation/spring code and check C# syntax and asset GUID references. **They do not compile Unity APIs, render shaders, import the Unity scene, or validate touch on a device.**
+In the prepared cloud workspace, the verified SDK is at `/workspace/.tools/dotnet/dotnet`. These commands test the actual engine-independent collection/reward and deformation/spring code and check C# syntax, direct project namespace dependencies between assembly definitions, and asset GUID references. **They do not compile Unity APIs, render shaders, import the Unity scene, or validate touch on a device.**
 
 In Unity, open **Window → General → Test Runner → EditMode** and run `Pockle.Core.EditMode.Tests`. Under **PlayMode**, run `Pockle.Variants.PlayMode.Tests` to check variants and the collection UI: separate shelf portraits, toy selection, menu/play Back and scroll, profile persistence, sound volume, unavailable checkout, daily unlocks, and repeated claim protection. Both Unity suites remain unrun in cloud. Then follow [the manual device checklist](docs/VALIDATION.md).
 
