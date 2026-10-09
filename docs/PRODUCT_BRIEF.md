@@ -45,6 +45,8 @@ Materials should change how a toy responds, not just its color. Keep shapes simp
 
 Existing concept art explores Peach Jelly, Cloud Mochi, Lagoon Glass, Stardust, Pearl Swirl, and Liquid Gold. Treat these as visual references, not a finalized roster.
 
+The owner expanded the target to **at least 12 distinct characters with 8–10 material/texture varieties each**, or 96–120 collectibles. The working content proposal is 12 × 9 = 108, including jelly, flocked/fuzzy, plush/foam, and firm vinyl/coated finishes with different handling properties. See [the character roster and material plan](CHARACTER_ROSTER.md) for twelve proposed silhouettes, nine finish families, the Blender-to-Unity pipeline, and production batches. Names and designs remain proposals; the current app still has one Pip model in four finishes.
+
 ## Viewer Interaction and Materials
 
 Touch the toy directly to squish/stretch it. Drag its plate sideways to rotate the plate and toy together, without mode buttons. Capture the starting surface until release. The next gesture experiment is a two-finger pull on the toy that stretches along the fingers’ separation axis, with pinching inward to compress; it must not zoom the camera or take over a plate gesture. This is implemented in the current viewer, with grip handoffs preserving position.
@@ -83,7 +85,7 @@ Biotadex, an existing React Native app, provides inspiration for collection and 
 
 ## First Playable Beta
 
-Suggested initial scope: **12 collectibles across three base shapes**, with varied materials and reactions. This is a starting target, not a fixed requirement.
+The expanded roster target is **12 distinct characters with 8–10 finishes each**. Build a representative batch across jelly, fuzzy/plush, foam, and vinyl first so materials and handling can be validated before producing the full 96–120 collectibles. This replaces the earlier provisional suggestion of 12 collectibles across three base shapes.
 
 Include:
 

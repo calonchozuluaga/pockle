@@ -10,7 +10,7 @@ Buy actions currently explain that checkout is unavailable; they cannot charge o
 
 The project uses the Built-in Render Pipeline and Unity **6000.6.5f1**. Cloud checks verify portable logic, C# syntax/assets, and Android Java compilation; Unity rendering, plugin packaging, and device behavior need your local editor and phone.
 
-The [UI/UX task tracker](docs/UI_UX_TASKS.md) tracks Home, Settings, profiles, friends, visited shelves, rewards, badges, and milestones, with stable IDs and acceptance criteria. It distinguishes the current beta from planned finished-game work.
+The [UI/UX task tracker](docs/UI_UX_TASKS.md) tracks Home, Settings, profiles, friends, visited shelves, rewards, badges, and milestones, with stable IDs and acceptance criteria. The owner has also expanded the content target to **12 characters with 8–10 material varieties each**; the [roster proposal](docs/CHARACTER_ROSTER.md) outlines twelve silhouettes, nine finish families, and catalog/migration work. These additional models and finishes are planned; the current build still has four Pip finishes.
 
 ## Open locally
 

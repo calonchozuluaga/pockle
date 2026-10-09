@@ -1,6 +1,6 @@
 # Codex and Claude coordination
 
-Prepared October 8, 2026. This is an asynchronous handoff through the shared GitHub repository, not a live connection between the two assistants. Each assistant must fetch the latest repository and read the other's notes at the start of a task. Claude's participation and the assignments below still need acknowledgment from Claude; no Claude work is claimed as started.
+Prepared October 8, 2026. This is an asynchronous handoff through the shared GitHub repository, not a live connection between the two assistants. Each assistant must fetch the latest repository and read the other's notes at the start of a task. The owner reports that Claude is participating. The assignments below still need Claude's acknowledgment in the repository; no specific Claude task is claimed as started.
 
 ## Shared context
 
@@ -10,6 +10,7 @@ Prepared October 8, 2026. This is an asynchronous handoff through the shared Git
 - Implemented: four separate shelf toys, glossy/pearl/glitter/soft finishes, lift/sag/gravity, two-finger squish/stretch, shake jiggle, branded daily opening, local walking rewards, Home, full Settings, and a local profile.
 - Pending: live accounts, public shelves, friends, cloud save, verified purchases, authoritative rewards, badges/milestones, dependable background walking, glow environments, and reactive filling.
 - Read `UI_UX_TASKS.md`, `HOME_UI.md`, `COLLECTION_UI.md`, and `VALIDATION.md`. Keep implemented local features distinct from unavailable online services.
+- Expanded roster requested by the owner: at least **12 characters with 8–10 finishes each**. Read `CHARACTER_ROSTER.md` for a draft 12-character/9-finish plan, ART-001–005, and UX-029–031. The current build still has four finishes of Pip; the proposed roster is not shipped content.
 
 ## Proposed division
 
@@ -19,6 +20,8 @@ Prepared October 8, 2026. This is an asynchronous handoff through the shared Git
 | Codex | Runtime interaction, Android walking integration, reward/inventory reliability, and portable checks; use device feedback for UX-025 and prepare UX-010/011 work | `TactilePrototype.cs`, `JellyToy*`, runtime Core, `CollectionSession.cs`, `AndroidWalkingTracker.cs`, Android plugin, portable checks | Proposed; no new implementation claimed |
 
 Core `MenuNavigation` and `ProfileName` remain Codex's area. Claude can request a change through their handoff rather than editing those files concurrently. UI work should preserve the current HUD callbacks/events, `ShowToy`, `GoBack`, `StoreVisible`, settings restoration, and collection binding. Codex should request any HUD change through Claude while Claude owns UI work. Backend/authentication and billing choices are separate tasks; neither assignment implies a selected provider or configured service.
+
+For the larger roster, the proposed extension is Codex on catalog/save migration and material handling/runtime; Claude on character/material concept refinement and collection UI presentation. Agree the catalog-to-HUD interface and generated asset ownership in handoffs before implementing either side. The owner can talk to both assistants simultaneously, but that does not create an automatic connection between their chats.
 
 ## How to work together
 

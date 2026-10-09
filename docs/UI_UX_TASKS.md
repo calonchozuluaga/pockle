@@ -82,6 +82,14 @@ See [Home hub review](HOME_UI.md) for routes, limitations, and phone checks. Che
 - [ ] **UX-027 — Polish loading, notifications, and offline recovery.** Cache shelves, show progress during sync, retain interrupted rewards, and make any reminders opt-in. Acceptance: offline browsing/play is useful and pending actions recover without duplicate delivery.
 - [ ] **UX-028 — Run the full first-day journey.** Guest → first toy → walk → daily box → reveal → shelf → profile/badge → friend visit → home; test optional purchase separately. Acceptance: device checks cover interrupted builds/sessions, permissions, accounts, payments, and low-end performance before calling the flow release-ready.
 
+## Expanded roster and catalog scope
+
+The owner now wants at least **12 characters × 8–10 material varieties**. The working proposal is 108 collectibles. See [character/art tasks ART-001–005](CHARACTER_ROSTER.md) for the draft roster and material pipeline. These are planned assets; they are not additional toys already available in the build.
+
+- [ ] **UX-029 — Replace the four-variant prototype catalog.** Stable character, finish, and collectible IDs; data-driven definitions and box pools; explicit migration from the four Pip entries. Acceptance: existing counts, favorites/avatars, and pending reveals survive; catalog ordering cannot change saved identity; future IDs are preserved safely. Coordinate runtime/UI contracts before parallel edits.
+- [ ] **UX-030 — Support material-specific toy handling and loading.** Jelly, foam, flock/plush, and firm vinyl profiles with reviewed grip/face anchors, calm motion, feedback, and per-selection asset loading. Acceptance: finishes feel different on the phone, rigid toys do not stretch like jelly, and assets/materials are reused or released appropriately.
+- [ ] **UX-031 — Scale collection browsing to 96–120 collectibles.** Cached previews, bounded visible-item work, character/material filters, owned/undiscovered states, and selection identity. Acceptance: the full roster is navigable without rendering every toy live, startup allocation stays bounded, and existing play/back context remains reliable. Availability and box odds reflect approved pools rather than automatically including planned art.
+
 ## Suggested work order
 
 1. Review **Home hub 01** and the stronger toy feel when the owner is back; both are available for the next phone build.
