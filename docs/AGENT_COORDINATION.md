@@ -1,0 +1,36 @@
+# Codex and Claude coordination
+
+Prepared October 8, 2026. This is an asynchronous handoff through the shared GitHub repository, not a live connection between the two assistants. Each assistant must fetch the latest repository and read the other's notes at the start of a task. Claude's participation and the assignments below still need acknowledgment from Claude; no Claude work is claimed as started.
+
+## Shared context
+
+- Repository: `calonchozuluaga/pockle`. Current code baseline: `6809f9a`, Home hub 01.
+- Unity **6000.6.5f1**, Built-in Render Pipeline, UGUI **2.6.0**. The owner tests Android APKs on their own computer and phone.
+- Product direction: Home hub with Collection/Rewards/Friends tiles; Home/Boxes/You tabs; public profiles and shelf discovery eventually. Walking target: **1,000 steps per daily Jelly Garden box**. Proposed prices: $0.99 standard, $2.99 special.
+- Implemented: four separate shelf toys, glossy/pearl/glitter/soft finishes, lift/sag/gravity, two-finger squish/stretch, shake jiggle, branded daily opening, local walking rewards, Home, full Settings, and a local profile.
+- Pending: live accounts, public shelves, friends, cloud save, verified purchases, authoritative rewards, badges/milestones, dependable background walking, glow environments, and reactive filling.
+- Read `UI_UX_TASKS.md`, `HOME_UI.md`, `COLLECTION_UI.md`, and `VALIDATION.md`. Keep implemented local features distinct from unavailable online services.
+
+## Proposed division
+
+| Assistant | First area | File boundaries | Status |
+| --- | --- | --- | --- |
+| Claude | UX-002 visual system, then UX-003/004 Home and shelf polish: squishy branding, typography, spacing, icons, card/button states | `PrototypeHud*.cs`, new UI artwork/resources, UI PlayMode tests, UI design notes | Proposed; awaiting Claude acknowledgment |
+| Codex | Runtime interaction, Android walking integration, reward/inventory reliability, and portable checks; use device feedback for UX-025 and prepare UX-010/011 work | `TactilePrototype.cs`, `JellyToy*`, runtime Core, `CollectionSession.cs`, `AndroidWalkingTracker.cs`, Android plugin, portable checks | Proposed; no new implementation claimed |
+
+Core `MenuNavigation` and `ProfileName` remain Codex's area. Claude can request a change through their handoff rather than editing those files concurrently. UI work should preserve the current HUD callbacks/events, `ShowToy`, `GoBack`, `StoreVisible`, settings restoration, and collection binding. Codex should request any HUD change through Claude while Claude owns UI work. Backend/authentication and billing choices are separate tasks; neither assignment implies a selected provider or configured service.
+
+## How to work together
+
+1. Fetch the latest `origin/main`, read this document and both handoff notes, then claim a specific task ID and list the files you will change in your own note. Check for overlapping work before editing.
+2. Use separate checkouts/worktrees and feature branches, such as `claude/ui-polish` and `codex/walking-rewards`. Two assistants should not switch branches inside the same working directory.
+3. Make small commits with the relevant UX task IDs. Use a pull request or leave the branch/commit reference in the handoff for review. Read-only reviews of each other's changes are welcome.
+4. Keep `main` as the owner's testable build. Merge reviewed branches sequentially, fetch again before publishing, and resolve overlaps without overwriting the other assistant's work. Do not force-push shared branches.
+5. Write your own note at `docs/handoffs/codex.md` or `docs/handoffs/claude.md`: task/status, branch and commits, files changed, checks actually run, checks still pending, and any requests for the other assistant. Separate notes avoid both editing the same status log.
+6. Update task acceptance status accurately. Portable/source checks do not establish Unity compilation, rendering, Gradle packaging, or actual sensor behavior. The owner's phone review remains necessary.
+
+The assistants only receive repo notes when they read/fetch them; this workflow does not automatically wake the other assistant or deliver a live chat message.
+
+## Starter message for Claude
+
+> You are collaborating with Codex on calonchozuluaga/pockle. Fetch the latest main and read docs/AGENT_COORDINATION.md, docs/UI_UX_TASKS.md, and docs/handoffs/codex.md. Please take the proposed UI/visual design lane, starting with UX-002 and Home/shelf polish under UX-003/004. Work on a separate branch, preserve existing runtime events and reward behavior, and leave your acknowledgment, file ownership, progress, and requests in docs/handoffs/claude.md. Codex handles runtime interactions, Android walking, reward logic, and portable validation. Coordinate shared interfaces through the handoff notes before changing both sides.

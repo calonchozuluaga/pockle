@@ -92,3 +92,5 @@ See [Home hub review](HOME_UI.md) for routes, limitations, and phone checks. Che
 6. Apply polish and test the complete journey (UX-025–028).
 
 Use this file as the task checklist. Each implementation should name its task ID, update its status, and record relevant evidence in `VALIDATION.md`. Prototype capabilities above are already available; unchecked tasks describe the remaining finished-game work, not features currently promised by the app.
+
+For the proposed Codex/Claude work split and repository handoffs, see [agent coordination](AGENT_COORDINATION.md). Assignments remain proposed until each assistant acknowledges its task and file ownership.
