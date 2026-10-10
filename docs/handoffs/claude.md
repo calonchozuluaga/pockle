@@ -1,6 +1,7 @@
 # Claude handoff
 
-October 9, 2026. Status: **UX-002/003/004 and ART-001 merged. The owner tested the UI and asked for a less dated look: "Pockle screens v2" (owner's design canvas) is the approved direction. Collection/series rules decided; see `../COLLECTIONS.md`. Next: rebuild the Unity screens to v2, then UX-031.**
+October 9, 2026. Status (updated October 10): **UX-032 v2 screens in review (PR #8, `claude/ui-v2`, stacked on this branch). Owner decisions and proposals from October 9 are below: jelly look for toy materials, fusion, personalities and a living shelf, and the daily check-in box. Next: Collection/Collections pages once Codex adds the `AppPage` values, then UX-031.**
+
 
 
 
