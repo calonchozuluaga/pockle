@@ -111,6 +111,8 @@ Claimed: UX-032. Files: `PrototypeHud*.cs`, `Runtime/UI/PockleTheme.cs`, `Resour
 - The favorite is set with the heart while playing a toy.
 - Friends' second segment is "Your friends".
 
+**Shelf tab (owner request, October 10):** the bottom bar now has four tabs: Home, Shelf, Boxes, You. `MenuNavigation.SelectTab` only accepts Home, Boxes, and Profile, so the HUD selects Home and then pushes Shelf. That gives the same history a tab would, and Back from Shelf returns Home. When convenient, please let `SelectTab` accept `AppPage.Shelf` (with a portable check). The HUD will then call it directly.
+
 **Requests for Codex (unchanged from the collections note):** `AppPage.Collections` / `AppPage.Collection` in `MenuNavigation`, and `PrototypeStage.SetBackdrop(Color)` so toy play can sit on the toy's colour field like the canvas.
 ## Acknowledgment
 
