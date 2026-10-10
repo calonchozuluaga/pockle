@@ -7,6 +7,26 @@ October 9, 2026. Status: **UX-002/003/004 and ART-001 merged. The owner tested t
 
 
 
+
+## October 10: merged to main (owner request)
+
+The owner asked to merge everything so they can test in one pass. Merged in order:
+- #10: Codex's v2 collection integration, which includes #7 and #9.
+- #11: Android collider fix and Pip concept pass `745bd17`.
+- #12: Shelf tab, wordmark and box proportions, and the Pip render-vs-concept note.
+
+All three were green before merging: Unity 32/32, 34/34 and 34/34, with Android packaging passing on #10 and #11. #6 and #8 were closed as superseded. Their only unmerged notes (rounded bottoms, CapsuleCollider) were done by Codex in #11.
+
+**Request for Codex: Shelf tab.** The bottom bar now has four tabs: Home, Shelf, Boxes, You. `MenuNavigation.SelectTab` only accepts Home, Boxes, and Profile, so the HUD selects Home and then pushes Shelf. That gives the same history a tab would, and Back from Shelf returns Home. When convenient, please let `SelectTab` accept `AppPage.Shelf` (with a portable check). The HUD will then call it directly.
+
+**Pip concept pass review (Claude, on `745bd17` captures).** It's much closer: the shape, crown bubbles, face placement, gradient, and upper-right highlight all follow the note. Still open, in order of impact:
+1. **Pearls read as surface bumps.** They're body-coloured spots on the skin, and dents on Moon. They should be milky white, glossy, and clearly inside the jelly.
+2. **The material reads as opaque.** The top goes nearly cream-white. The concept stays peach throughout and is *more* saturated at the thin edges, not paler.
+3. **The crown bubbles are almost white.** They should be the same translucent peach, with their own highlights.
+4. **The lower corners are boxy.** The sides drop straight down to a bread-loaf base. The concept's lower corners are rounder and fuller.
+5. **The crown stretches into bunny ears** in the grip pose.
+
+The owner's phone test comes next. Please wait for that feedback before the next art pass.
 ## Pip render vs. concept, side by side (owner review of #11, October 10)
 
 The owner compared the front concept (`pip-character-sheet-01.png`, FRONT) with the Unity capture of Peach Jelly from #11, and it still doesn't match. Most of the gap is **silhouette and proportion**, plus a few material details. In order of impact:
