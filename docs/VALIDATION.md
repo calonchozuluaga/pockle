@@ -1,3 +1,9 @@
+## Rounded jelly Pip and Android startup (October 10, 2026)
+
+Branch `codex/pip-jelly-device-pass`, stacked on v2 integration. Removed primitive construction's implicit physics dependencies; the stage retains its explicit touch collider. Regenerated rounded Pip source/FBX/runtime geometry and reprojected face anchors, tuned the four finishes and radial contact shadow. Passed **538,252 portable assertions**, including contact size, face projection, closed winding/UV/volume, deformation and picking; **66 C# files / three profiles / five assemblies / 142 GUIDs / zero source failures**; metadata/whitespace; Blender FBX import (20 parts, 2,868 logical vertices, 5,732 triangles, error at most .000000227).
+
+The collider-only commit passed hosted Unity compilation/tests; the final geometry/shader branch requires its own CI and Android build. New PlayMode startup coverage verifies the plate hit plane and missing implicit colliders, winding and resource disposal. `PipJellyCaptureTests` renders all four finishes plus a grip pose into the existing CI test-results artifact, when a graphics device is available. Actual combined captures have not yet been reviewed at publication. Device startup, appearance, touch and frame cost remain unverified; [PIP_JELLY_REVIEW.md](PIP_JELLY_REVIEW.md) contains the exact owner checks and comparison protocol.
+
 ## Collection runtime contracts and backend design (October 10, 2026)
 
 ### Combined v2 UI and collection routes

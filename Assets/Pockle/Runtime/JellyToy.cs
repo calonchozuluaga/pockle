@@ -688,6 +688,8 @@ namespace Pockle.Runtime
             SetFloat(bodyMaterial, "_StudioStrength", !soft && studioReflection != null ? 1f : 0f);
             SetFloat(bodyMaterial, "_ZWrite", soft ? 1f : 0f);
             SetFloat(bodyMaterial, "_PearlSheen", 0f);
+            SetFloat(bodyMaterial, "_Transmission", soft ? .04f : .32f);
+            SetFloat(bodyMaterial, "_EdgeLight", soft ? .12f : .7f);
             bodyMaterial.renderQueue = soft ? 2001 : 3000;
             bool moon = variant == PipVariant.MoonJelly;
             if (variant == PipVariant.GoldGlitter)
@@ -706,8 +708,8 @@ namespace Pockle.Runtime
                 SetColor(bodyMaterial, "_TopColor", new Color(.75f, .93f, .77f));
                 SetColor(bodyMaterial, "_BottomColor", new Color(.35f, .64f, .48f));
                 SetColor(bodyMaterial, "_RimColor", new Color(.67f, .89f, .73f));
-                SetFloat(bodyMaterial, "_Glossiness", .15f);
-                SetFloat(bodyMaterial, "_ReflectionStrength", .16f);
+                SetFloat(bodyMaterial, "_Glossiness", .38f);
+                SetFloat(bodyMaterial, "_ReflectionStrength", .4f);
                 cheekMaterial.color = new Color(.95f, .43f, .57f, .48f);
             }
             else if (moon)
@@ -716,8 +718,8 @@ namespace Pockle.Runtime
                 SetColor(bodyMaterial, "_TopColor", new Color(.77f, .92f, 1f, 1f));
                 SetColor(bodyMaterial, "_BottomColor", new Color(.35f, .40f, .82f, 1f));
                 SetColor(bodyMaterial, "_RimColor", new Color(.85f, .92f, 1f, 1f));
-                SetFloat(bodyMaterial, "_Glossiness", .58f);
-                SetFloat(bodyMaterial, "_ReflectionStrength", .62f);
+                SetFloat(bodyMaterial, "_Glossiness", .76f);
+                SetFloat(bodyMaterial, "_ReflectionStrength", .72f);
                 SetFloat(bodyMaterial, "_PearlSheen", .72f);
                 bubbleMaterial.color = new Color(.88f, .97f, 1f, .64f);
                 SetColor(bubbleMaterial, "_TopColor", new Color(.97f, .99f, 1f, 1f));

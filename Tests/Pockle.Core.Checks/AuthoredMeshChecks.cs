@@ -38,6 +38,16 @@ internal static class AuthoredMeshChecks
             Check(groups[i] >= 0 && groups[i] < count, "Normal weld group invalid.");
         }
         foreach (float coordinate in uv) Check(!float.IsNaN(coordinate) && coordinate >= 0 && coordinate <= 1, "UV outside 0..1.");
+        int contactPoints = 0;
+        double contactRadius = 0, undersideRadius = 0;
+        foreach (Point3 vertex in rest)
+        {
+            double radius = Math.Sqrt(vertex.X * vertex.X + vertex.Z * vertex.Z);
+            if (vertex.Y <= -.99999f) { contactPoints++; contactRadius = Math.Max(contactRadius, radius); }
+            if (vertex.Y < -.9f) undersideRadius = Math.Max(undersideRadius, radius);
+        }
+        Check(contactPoints >= 3 && contactRadius > .05 && contactRadius < .28, "Pip needs a small stable contact patch, not a broad flat foot.");
+        Check(undersideRadius > contactRadius * 1.5, "Underside must curve out above its contact patch.");
         Dictionary<(int, int), (int count, int direction)> edges = new Dictionary<(int, int), (int count, int direction)>();
         int[] parents = new int[count];
         for (int i = 0; i < count; i++) parents[i] = i;
@@ -73,7 +83,7 @@ internal static class AuthoredMeshChecks
                 Check(1.15 + transformed[i].Y < 3.6, "Integrated body/crown exceeds viewer framing.");
                 if (rest[i].Y == -1)
                     Check(transformed[i].X == rest[i].X && transformed[i].Y == -1 && transformed[i].Z == rest[i].Z,
-                        "Authored flat base moved.");
+                        "Authored contact patch moved.");
                 Point3 identity = JellyShape.Deform(rest[i], 0, 0, 0, 0, 0, 0);
                 Check(Math.Abs(identity.X - rest[i].X) < 1e-6 && Math.Abs(identity.Y - rest[i].Y) < 1e-6 && Math.Abs(identity.Z - rest[i].Z) < 1e-6,
                     "Reset does not recover authored rest shape.");
@@ -89,6 +99,21 @@ internal static class AuthoredMeshChecks
             Check(1.15 + point.Y + scales[i * 3 + 1] * 1.6 < 3.6, "Authored crown exceeds viewer framing.");
         }
         Check(Floats(source, "eyes").Length == 6 && Floats(source, "mouth").Length == 39, "Facial anchors missing.");
+        foreach (string key in new[] { "eyes", "eyeGlints", "cheeks", "mouth" })
+        {
+            float[] anchors = Floats(source, key);
+            for (int i = 0; i < anchors.Length; i += 3)
+            {
+                var origin = new Point3(anchors[i], anchors[i + 1], -2f);
+                float nearest = float.PositiveInfinity;
+                for (int face = 0; face < indices.Length; face += 3)
+                    if (SurfaceRaycast.TryTriangle(origin, new Point3(0, 0, 1), rest[indices[face]], rest[indices[face + 1]], rest[indices[face + 2]], out float distance))
+                        nearest = Math.Min(nearest, distance);
+                Check(!float.IsInfinity(nearest), key + " anchor misses the rounded body.");
+                float gap = -2f + nearest - anchors[i + 2];
+                Check(gap > .005f && gap < .15f, key + " anchor is buried or floating above the rounded body.");
+            }
+        }
         Console.WriteLine("PASS: " + assertions + " authored mesh assertions; " + count + " vertices / " + indices.Length / 3 + " triangles.");
         return assertions;
     }

@@ -16,6 +16,8 @@ Shader "Pockle/Jelly Candy"
         _GlitterStrength ("Microflake glitter", Range(0,1)) = 0
         _GlitterDensity ("Glitter density", Range(24,160)) = 96
         _GlitterColor ("Glitter tint", Color) = (1, .87, .44, 1)
+        _Transmission ("Soft transmitted light", Range(0,1)) = 0
+        _EdgeLight ("Saturated thin edges", Range(0,1)) = 0
     }
     SubShader
     {
@@ -46,6 +48,8 @@ Shader "Pockle/Jelly Candy"
             half _GlitterStrength;
             float _GlitterDensity;
             fixed4 _GlitterColor;
+            half _Transmission;
+            half _EdgeLight;
 
             struct appdata
             {
@@ -97,13 +101,20 @@ Shader "Pockle/Jelly Candy"
                 half rx = dot(reflection, across);
                 half ry = dot(reflection, along);
                 half gate = smoothstep(0.45h, 0.85h, dot(reflection, key));
-                half broad = exp2(-rx * rx * lerp(18.0h, 6.0h, _Softness) - ry * ry * lerp(5.0h, 2.0h, _Softness)) * gate;
-                half glaze = exp2(-rx * rx * 75.0h - ry * ry * 18.0h) * gate;
+                half broad = exp2(-rx * rx * lerp(10.0h, 6.0h, _Softness) - ry * ry * lerp(3.5h, 2.0h, _Softness)) * gate;
+                half glaze = exp2(-rx * rx * 42.0h - ry * ry * 12.0h) * gate;
                 half3 candy = lerp(_BottomColor.rgb, _TopColor.rgb, input.height);
                 candy = lerp(candy, _Color.rgb, 0.20h);
                 candy *= light;
                 candy += _RimColor.rgb * (rim * 0.24h + softFill * 0.22h);
-                half shine = (broad * 0.20h + glaze * 0.68h * (1.0h - _Softness)) * _Glossiness * _ReflectionStrength;
+                // A bounded studio back-light approximation brightens thin edges.
+                // The view-dependent thickness proxy needs no texture or extra pass.
+                half backlight = saturate(dot(normal, fill)) * (.30h + .70h * rim);
+                candy += _Color.rgb * backlight * _Transmission;
+                half3 thinTint = lerp(_Color.rgb, _RimColor.rgb, .35h);
+                candy = lerp(candy, thinTint, rim * _EdgeLight * .35h);
+                candy += _RimColor.rgb * rim * _EdgeLight * .22h;
+                half shine = (broad * 0.32h + glaze * 0.54h * (1.0h - _Softness)) * _Glossiness * _ReflectionStrength;
                 candy = lerp(candy, half3(1.0h, 0.98h, 0.91h), saturate(shine));
                 half3 studio = texCUBE(_StudioCube, reflection).rgb * _StudioStrength;
                 half coat = _Glossiness * _ReflectionStrength;

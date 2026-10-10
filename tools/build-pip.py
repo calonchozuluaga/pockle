@@ -1,4 +1,4 @@
-"""Rebuild Pip's joined-crown art pass with Blender 4.3+. Run via blender --background --python.
+"""Rebuild Pip's rounded-underbody art pass with Blender 4.3+. Run via blender --background --python.
 
 The Unity source has explicit Y-up / negative-Z-front coordinates. Blender uses
 Z-up. Export both a standard FBX and a small character source for our Unity importer.
@@ -17,7 +17,9 @@ UNITY_DIR = ROOT / "Assets" / "Pockle" / "Resources" / "Pip"
 PREVIEW_DIR = ROOT / "docs" / "concepts"
 RINGS = 28
 SIDES = 40
-BASE_COSINE = -.72
+# Continue the pear almost to its lower pole, leaving a small stable contact patch.
+BASE_COSINE = -.995
+CONTACT_CUT = -.99
 THETA_END = math.acos(BASE_COSINE)
 
 
@@ -148,11 +150,11 @@ def main():
     reduce = body.modifiers.new("Mobile surface budget", 'DECIMATE')
     reduce.ratio = .24
     bpy.ops.object.modifier_apply(modifier=reduce.name)
-    # Cut a small flat foot rather than flattening vertices into degenerate faces.
+    # Trim only the bottom of the rounded underside, preserving a small contact patch.
     import bmesh
     bm = bmesh.new(); bm.from_mesh(body.data)
     cut = bmesh.ops.bisect_plane(bm, geom=list(bm.verts) + list(bm.edges) + list(bm.faces),
-                                dist=.000001, plane_co=(0, 0, -.97), plane_no=(0, 0, 1), clear_inner=True)
+                                dist=.000001, plane_co=(0, 0, CONTACT_CUT), plane_no=(0, 0, 1), clear_inner=True)
     boundary = [edge for edge in cut['geom_cut'] if isinstance(edge, bmesh.types.BMEdge) and edge.is_boundary]
     bmesh.ops.holes_fill(bm, edges=boundary, sides=0)
     bmesh.ops.triangulate(bm, faces=list(bm.faces))
@@ -167,11 +169,11 @@ def main():
         bmesh.ops.collapse(bm, edges=[edge])
         bmesh.ops.triangulate(bm, faces=list(bm.faces))
     if any(face.calc_area() < .0000006 for face in bm.faces):
-        raise RuntimeError('Flat-foot cleanup left degenerate triangles')
+        raise RuntimeError('Contact-patch cleanup left degenerate triangles')
     bmesh.ops.recalc_face_normals(bm, faces=list(bm.faces))
     bm.to_mesh(body.data); bm.free()
-    # Move the cut foot back onto the unchanged platform contact plane.
-    for vertex in body.data.vertices: vertex.co.z -= .03
+    # Move the contact patch onto the unchanged y=-1 runtime contact plane.
+    for vertex in body.data.vertices: vertex.co.z += -1 - CONTACT_CUT
     positions = [(float(v.co.x), float(v.co.z), float(-v.co.y)) for v in body.data.vertices]
     positions = [(x, -1.0 if abs(y + 1) < .00001 else y, z) for x, y, z in positions]
     for vertex, point in zip(body.data.vertices, positions): vertex.co = blender_point(point)
@@ -264,7 +266,7 @@ def main():
     scene.render.resolution_x = 768; scene.render.resolution_y = 768; scene.render.resolution_percentage = 100
     scene.view_settings.view_transform = 'AgX'
     scene.render.image_settings.file_format = 'PNG'
-    scene.render.filepath = str(PREVIEW_DIR / "pip-model-study-02.png")
+    scene.render.filepath = str(PREVIEW_DIR / "pip-model-study-03.png")
     bpy.ops.wm.save_as_mainfile(filepath=str(SOURCE_DIR / "Pip.blend"))
     print('PIP_EXPORT ' + json.dumps(dict(logicalVertices=len(positions), unityVertices=len(export_positions),
                                        triangles=len(indices) // 3, characterObjects=len(character.objects))))

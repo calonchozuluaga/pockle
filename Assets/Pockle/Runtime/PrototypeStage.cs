@@ -64,6 +64,14 @@ namespace Pockle.Runtime
             var baseMaterial = MakeMaterial("Ceramic · lower rim", new Color(0.91f, 0.857f, 0.79f), 0.18f);
             var topMaterial = MakeMaterial("Ceramic · warm ivory", new Color(1f, 0.985f, 0.957f), 0.24f);
             var shadowMaterial = MakeMaterial("Soft contact shadow", new Color(0.91f, 0.835f, 0.762f), 0f);
+            Shader softShadow = Shader.Find("Pockle/Soft Blush");
+            if (softShadow != null && softShadow.isSupported)
+            {
+                Object.Destroy(shadowMaterial);
+                shadowMaterial = new Material(softShadow) { name = "Pip · radial contact shadow", color = new Color(.54f, .36f, .43f, .24f) };
+                shadowMaterial.SetFloat("_GroundPlane", 1f);
+                shadowMaterial.renderQueue = 2990; // Behind transparent Pip, over the opaque plate.
+            }
             resources.Materials = new[] { baseMaterial, topMaterial, shadowMaterial };
             Mesh diskMesh = PresentationMeshes.CreateDisk();
             resources.Mesh = diskMesh;
