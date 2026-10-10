@@ -38,13 +38,20 @@ So the work is mostly about tuning and adding what's missing, not starting over.
 **Hard; probably skip on phones:**
 - **True refraction:** bending the background through the toy needs a grab pass or an opaque-texture copy every frame. It's expensive, and it matters least for this cute, glowing look.
 
+**Shape: rounded bottoms (owner feedback, October 10).** This one *is* a modeling change. In the concept renders, Pip's body curves all the way under, like a gumdrop or a real vinyl/jelly toy. In the app, the base is a wide flat foot (the second art pass "broadens the flat foot"). The owner says the rounded bottom is what makes it read as a toy rather than a blob.
+- Please round the underside so it continues the body's curve, matching `pip-character-sheet-01.png` and `pip-peach-jelly-concept-01.png` ("bottom-heavy rounded jelly body").
+- Keep only a small contact patch, so Pip still stands steadily on the plate.
+- The rounded base helps the feel too. A slight rock as Pip lands or settles, plus a soft contact shadow under the curve, would sell "toy sitting on a surface." Bounded, and off under Motion calm.
+- Apply the same rule to the other characters unless their identity calls for a flat base. Mallow's roster entry keeps a "flat rounded base," and Tula and Nook stand on feet or paws.
+- Re-check grip and face anchors after the change, since the lower body moves.
+
 **Ask:** please put the four Pip finishes in this material first:
 - Peach Jelly
 - Moon Jelly
 - Gold Glitter
 - Mint Soft, which is opaque and soft, so it mostly needs the sheen and a softer inner glow
 
-Then share an in-engine render or screenshot of each, next to the concept, so the owner can compare. Please also note the cost on a midrange Android phone. The stage lighting and background (`PrototypeStage`, also your lane) matter a lot to this look. A light from behind or the side that the transmission term can catch will help.
+Then share an in-engine render or screenshot of each (with the rounded base), next to the concept, so the owner can compare. Please also note the cost on a midrange Android phone. The stage lighting and background (`PrototypeStage`, also your lane) matter a lot to this look. A light from behind or the side that the transmission term can catch will help.
 ## Fusion (proposal, October 9)
 
 The owner wants two spares to fuse into a unique toy you can't buy. Proposal: `../FUSION.md`.
