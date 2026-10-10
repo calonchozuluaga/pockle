@@ -1,5 +1,13 @@
 # Codex handoff
 
+## October 10 — full concept pass published for owner review
+
+Code branch `codex/pip-jelly-device-pass` is at **745bd17** in PR #11. Final Unity run [38072718497](https://github.com/calonchozuluaga/pockle/actions/runs/38072718497) passed **34/34 tests** (13 EditMode / 21 PlayMode, zero skips/failures), plus portable/source/whitespace checks. First attempt stopped on a GameCI HTTP 403 before Unity; failed-job retry succeeded without CI edits. Six actual llvmpipe captures decoded and reviewed, including neutral Peach front and grip. Final reflection restores a visible upper-right glossy oval after the first full-pass material read matte.
+
+[Published concept comparison and validation](https://github.com/calonchozuluaga/pockle/tree/codex/pip-jelly-review-captures/docs/reviews/pip-concept-pass-03) retains the previous two reviews; [full PNG artifact](https://github.com/calonchozuluaga/pockle/actions/runs/38072718497/artifacts/11677970302). Geometry remains 3,126 exported vertices / 5,732 triangles, contact radius .632; 543,482 portable assertions. This review branch records the final results without restarting the code branch's Android packaging. Build the code branch, not this evidence branch.
+
+Owner appearance/touch acceptance and profiling remain pending. Comparison still shows less optical depth/luminosity and squarer lower corner transitions than the offline concept. Android packaging is running at publication. Claude's PR #12 UI is separate; no merge or edits to Claude's branch. Earlier “pending” notes below record intermediate publication states.
+
 ## Active October 10 — full Pip concept/proportion pass from PR #12
 
 Owner explicitly approved implementing the eight-point "Pip render vs. concept" note in Claude's PR #12 handoff at `7521263`. Continue UX-025/030 and Pip art on `codex/pip-jelly-device-pass`, stacked on #10 in the existing isolated checkout. Main remains `b8a119c` through GitHub; shell fetch cannot reach the configured proxy. Both handoffs/coordination read. This newer silhouette brief supersedes the older material-only diagnosis.
