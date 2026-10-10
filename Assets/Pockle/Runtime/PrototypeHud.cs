@@ -30,7 +30,7 @@ namespace Pockle.Runtime
         private RawImage favoriteGlyph;
         private Text heading, subtitle, playHint, modalTitle, modalText;
         private Button settingsButton, backButton;
-        private Image homeTab, boxesTab, youTab;
+        private Image homeTab, shelfTab, boxesTab, youTab;
         private RectTransform backIcon;
         private RectTransform shelfRoot, boxesRoot, homeRoot, rewardsRoot, socialRoot, profileRoot, settingsRoot;
         private Sprite roundedSprite;
@@ -98,6 +98,7 @@ namespace Pockle.Runtime
             BuildShelf(); BuildStore(); BuildHome(); BuildRewards(); BuildProfile(); BuildSocial(); BuildSettings();
             navigation = Rect("Navigation", safeRoot); Surface(navigation, Primary, 32);
             BuildTab("Home", "Home", () => SelectTab(AppPage.Home), out homeTab);
+            BuildTab("Shelf", "Shelf", () => SelectTab(AppPage.Shelf), out shelfTab);
             BuildTab("Boxes", "Box", () => SelectTab(AppPage.Boxes), out boxesTab);
             BuildTab("You", "You", () => SelectTab(AppPage.Profile), out youTab);
             // Play hint: a soft milk pill near the bottom, over the toy's stage.
@@ -185,7 +186,12 @@ namespace Pockle.Runtime
         private void SelectTab(AppPage next)
         {
             if (page == next) return;
-            bool blocked = StoreVisible; SavePage(); navigator.SelectTab(next); ApplyPage(blocked);
+            bool blocked = StoreVisible; SavePage();
+            // MenuNavigation's tab roots are Home, Boxes, and You. The Shelf tab is Home's shelf with history reset,
+            // which gives the same stack a tab would: Back from Shelf returns Home.
+            if (next == AppPage.Shelf) { navigator.SelectTab(AppPage.Home); navigator.Push(AppPage.Shelf); }
+            else navigator.SelectTab(next);
+            ApplyPage(blocked);
         }
         private void SavePage()
         {
@@ -200,7 +206,7 @@ namespace Pockle.Runtime
             browsing.gameObject.SetActive(!play);
             pageGround.gameObject.SetActive(!play);
             // Tab pages show the tab bar; pages reached from them show a back button instead.
-            bool tabRoot = page == AppPage.Home || page == AppPage.Boxes || page == AppPage.Profile;
+            bool tabRoot = page == AppPage.Home || page == AppPage.Shelf || page == AppPage.Boxes || page == AppPage.Profile;
             navigation.gameObject.SetActive(!play);
             playHintPill.gameObject.SetActive(play);
             // On the toy's stage, header buttons are translucent milk; on pages they're the neutral fill.
@@ -228,7 +234,8 @@ namespace Pockle.Runtime
                 default: heading.text = ToyName(variant); subtitle.text = SeriesLine(variant); break;
             }
             RefreshFavoriteToggle(); RefreshAvatarButton();
-            StyleTab(homeTab, page == AppPage.Home || page == AppPage.Shelf || page == AppPage.Rewards || page == AppPage.Social);
+            StyleTab(homeTab, page == AppPage.Home || page == AppPage.Rewards || page == AppPage.Social);
+            StyleTab(shelfTab, page == AppPage.Shelf);
             StyleTab(boxesTab, page == AppPage.Boxes);
             StyleTab(youTab, page == AppPage.Profile || page == AppPage.Settings);
             RefreshShelf(); RefreshProfile(); RefreshSettings(); RefreshWalkingCard(); RefreshHome();
@@ -310,12 +317,13 @@ namespace Pockle.Runtime
             TopCentered(browsing, new Vector2(0, -top), new Vector2(width, viewportHeight));
             // Floating plum tab bar; the scroll area runs beneath it with bottom padding.
             navigation.anchorMin = navigation.anchorMax = new Vector2(.5f, 0); navigation.pivot = new Vector2(.5f, 0);
-            navigation.anchoredPosition = new Vector2(0, 20); navigation.sizeDelta = new Vector2(Mathf.Min(390 - gutter * 2, width), 64);
+            navigation.anchoredPosition = new Vector2(0, 20); navigation.sizeDelta = new Vector2(Mathf.Min(390 - gutter * 2, width), 68);
             float navWidth = navigation.sizeDelta.x;
-            float tabWidth = (navWidth - 12 - 8) / 3;
-            LeftLabel(homeTab.rectTransform, new Vector2(6, -6), new Vector2(tabWidth, 52));
-            LeftLabel(boxesTab.rectTransform, new Vector2(6 + tabWidth + 4, -6), new Vector2(tabWidth, 52));
-            LeftLabel(youTab.rectTransform, new Vector2(6 + (tabWidth + 4) * 2, -6), new Vector2(tabWidth, 52));
+            // Four tabs, each an icon over its label.
+            var tabButtons = new[] { homeTab, shelfTab, boxesTab, youTab };
+            float tabWidth = (navWidth - 12 - 4 * (tabButtons.Length - 1)) / tabButtons.Length;
+            for (int i = 0; i < tabButtons.Length; i++)
+                LeftLabel(tabButtons[i].rectTransform, new Vector2(6 + i * (tabWidth + 4), -6), new Vector2(tabWidth, 56));
             playHintPill.sizeDelta = new Vector2(Mathf.Min(width, 360), 40);
             float height;
             switch (page)
@@ -329,7 +337,7 @@ namespace Pockle.Runtime
                 default: height = LayoutShelf(width); break;
             }
             // Leave room to scroll the last row clear of the floating tab bar.
-            height += tabs ? 104 : 24;
+            height += tabs ? 108 : 24;
             content.sizeDelta = new Vector2(0, Mathf.Max(viewportHeight, height));
             content.anchoredPosition = new Vector2(0, Mathf.Clamp(content.anchoredPosition.y, 0, Mathf.Max(0, height - viewportHeight)));
             if (modal.gameObject.activeSelf) LayoutModal();
@@ -546,18 +554,15 @@ namespace Pockle.Runtime
 
         private void BuildTab(string title, string icon, Action click, out Image background)
         {
-            var button = CreateButton(title, navigation, Vector2.zero, new Vector2(100, 52), PockleTheme.Jelly, click, out background, 15);
-            // Icon and label side by side, centred as a pair.
+            var button = CreateButton(title, navigation, Vector2.zero, new Vector2(80, 56), PockleTheme.Jelly, click, out background, PockleTheme.SmallSize);
+            SetRadius(background, 22);
+            // Icon above, label below, so four tabs fit the bar.
+            var glyph = AddIcon(button.transform, icon, 22, Ink);
+            glyph.anchorMin = glyph.anchorMax = glyph.pivot = new Vector2(.5f, 1);
+            glyph.anchoredPosition = new Vector2(0, -8);
             var label = button.GetComponentInChildren<Text>();
-            label.alignment = TextAnchor.MiddleLeft; label.resizeTextForBestFit = false;
-            label.horizontalOverflow = HorizontalWrapMode.Overflow;
-            var glyph = AddIcon(button.transform, icon, 20, Ink);
-            glyph.anchorMin = glyph.anchorMax = glyph.pivot = new Vector2(.5f, .5f);
-            float labelWidth = label.preferredWidth > 0 ? label.preferredWidth : 40;
-            float pair = 20 + 8 + labelWidth;
-            glyph.anchoredPosition = new Vector2(-pair / 2 + 10, 0);
-            var lr = label.rectTransform; lr.anchorMin = lr.anchorMax = new Vector2(.5f, .5f); lr.pivot = new Vector2(0, .5f);
-            lr.anchoredPosition = new Vector2(-pair / 2 + 28, 0); lr.sizeDelta = new Vector2(labelWidth + 4, 24);
+            var lr = label.rectTransform; lr.anchorMin = new Vector2(0, 0); lr.anchorMax = new Vector2(1, 0); lr.pivot = new Vector2(.5f, 0);
+            lr.offsetMin = new Vector2(2, 7); lr.offsetMax = new Vector2(-2, 25);
         }
 
         private void StyleTab(Image tab, bool selected)

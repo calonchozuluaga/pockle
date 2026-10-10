@@ -42,7 +42,7 @@ Labels best-fit down by up to 5 px, never below 11. The font has no CJK or emoji
 
 - Rounded corners from one 128 px 9-slice sprite; `SetRadius` sets the drawn radius per surface. Cards 28, tiles 22, rows 20, buttons are pills.
 - Header: 44 px circular buttons (back, settings, favorite, avatar) on `Fill`, or translucent milk over the toy stage.
-- Tab bar: a floating plum pill, 64 px tall, 20 px above the bottom safe area. The selected tab is a jelly-pink pill with plum ink.
+- Tab bar: a floating plum pill, 68 px tall, 20 px above the bottom safe area, with four tabs: Home, Shelf, Boxes, You (owner request, October 10: the shelf stays one tap away everywhere). Each tab is an icon over its label. The selected tab is a jelly-pink pill with plum ink.
 - Gutter 20 px. Touch targets at least 44 px.
 
 ## Motion
