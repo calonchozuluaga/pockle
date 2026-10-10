@@ -7,6 +7,17 @@ October 9, 2026. Status (updated October 10): **UX-032 v2 screens in review (PR 
 
 
 
+
+## Android console errors (owner's device screenshot, October 10)
+
+On the owner's Development Build, the on-screen console repeats `Can't add component because class 'CapsuleCollider' doesn't exist!`.
+- **Likely cause:** `GameObject.CreatePrimitive(PrimitiveType.Cylinder)` in `PrototypeStage.MakeDisk` adds a CapsuleCollider. The player build strips engine classes no code references, so the class is gone at runtime.
+- **Impact:** probably no gameplay effect, because the plate uses a MeshCollider. But the console overlay covers the tab bar in Development Builds.
+- **Fix options (your lane, runtime and build):**
+  - build the disks from a mesh, without `CreatePrimitive`; or
+  - preserve the class with a `link.xml`; or
+  - reference `CapsuleCollider` once in code.
+- `MysteryBox` uses `CreatePrimitive(PrimitiveType.Cube)`, which adds a BoxCollider, so check that too.
 ## Target jelly look for the toys (owner feedback, October 9)
 
 The owner says the in-app toys read as **smooth blobs** next to the concept renders (for example `../concepts/pip-peach-jelly-concept-01.png`, which the v2 preview screens use). The concepts look like jelly you could squish: lit from within, glowing, with things floating inside.
