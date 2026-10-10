@@ -9,6 +9,7 @@ namespace Pockle.Runtime
     {
         private const float Width = 1.85f, Height = 1.55f, Depth = 1.50f;
         private Mesh boardMesh;
+        private Mesh floorMesh;
         private Material printed, lining;
         private Color printedColor = Color.white;
         private readonly Color liningColor = new Color(1f, .94f, .84f);
@@ -41,14 +42,12 @@ namespace Pockle.Runtime
             rightFlap = Hinge("Right dust flap hinge", new Vector3(Width * .5f, Height, 0f));
             AddBoard("Left inner flap", leftFlap, new Vector3(.21f, 0f, 0f), Quaternion.Euler(90f, 0f, 0f), .42f, Depth - .06f, false);
             AddBoard("Right inner flap", rightFlap, new Vector3(-.21f, 0f, 0f), Quaternion.Euler(90f, 0f, 0f), .42f, Depth - .06f, false);
-            GameObject floor = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            floor.name = "Carton floor";
+            var floor = new GameObject("Carton floor", typeof(MeshFilter), typeof(MeshRenderer));
+            floorMesh = PresentationMeshes.CreateBox();
+            floor.GetComponent<MeshFilter>().sharedMesh = floorMesh;
             floor.transform.SetParent(transform, false);
             floor.transform.localPosition = new Vector3(0f, .02f, 0f);
             floor.transform.localScale = new Vector3(Width, .04f, Depth);
-            var collider = floor.GetComponent<Collider>();
-            collider.enabled = false;
-            Destroy(collider);
             var renderer = floor.GetComponent<Renderer>();
             renderer.sharedMaterial = lining;
             renderer.shadowCastingMode = ShadowCastingMode.Off;
@@ -120,6 +119,7 @@ namespace Pockle.Runtime
         private void OnDestroy()
         {
             if (boardMesh != null) Destroy(boardMesh);
+            if (floorMesh != null) Destroy(floorMesh);
             if (printed != null) Destroy(printed);
             if (lining != null) Destroy(lining);
         }

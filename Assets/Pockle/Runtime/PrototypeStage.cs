@@ -65,12 +65,14 @@ namespace Pockle.Runtime
             var topMaterial = MakeMaterial("Ceramic · warm ivory", new Color(1f, 0.985f, 0.957f), 0.24f);
             var shadowMaterial = MakeMaterial("Soft contact shadow", new Color(0.91f, 0.835f, 0.762f), 0f);
             resources.Materials = new[] { baseMaterial, topMaterial, shadowMaterial };
+            Mesh diskMesh = PresentationMeshes.CreateDisk();
+            resources.Mesh = diskMesh;
             Transform lower = MakeDisk(turntable, "Pedestal · lower rim", new Vector3(0f, 0.045f, 0f),
-                new Vector3(2.68f, 0.035f, 2.68f), baseMaterial);
+                new Vector3(2.68f, 0.035f, 2.68f), baseMaterial, diskMesh);
             MakeDisk(turntable, "Pedestal · ceramic top", new Vector3(0f, 0.1f, 0f),
-                new Vector3(2.46f, 0.05f, 2.46f), topMaterial);
+                new Vector3(2.46f, 0.05f, 2.46f), topMaterial, diskMesh);
             contactShadow = MakeDisk(turntable, "Pip · contact shadow", new Vector3(0f, 0.151f, 0.04f),
-                new Vector3(1.36f, 0.0005f, 1.22f), shadowMaterial);
+                new Vector3(1.36f, 0.0005f, 1.22f), shadowMaterial, diskMesh);
             // A thin cylinder covers the exposed plate. CapsuleCollider cannot
             // represent this nonuniform scale: its radius would swallow the toy.
             var touchSurface = new GameObject("Plate touch surface", typeof(MeshCollider));
@@ -85,7 +87,7 @@ namespace Pockle.Runtime
             {
                 var radians = (i * 14f + 180f) * Mathf.Deg2Rad;
                 MakeDisk(turntable, "Turntable rim mark", new Vector3(Mathf.Sin(radians) * 1.13f, .151f, Mathf.Cos(radians) * 1.13f),
-                    new Vector3(.055f, .0005f, .055f), baseMaterial);
+                    new Vector3(.055f, .0005f, .055f), baseMaterial, diskMesh);
             }
 
             var keyObject = new GameObject("Soft studio key", typeof(Light));
@@ -122,15 +124,13 @@ namespace Pockle.Runtime
             return material;
         }
 
-        private static Transform MakeDisk(Transform parent, string name, Vector3 position, Vector3 scale, Material material)
+        private static Transform MakeDisk(Transform parent, string name, Vector3 position, Vector3 scale, Material material, Mesh mesh)
         {
-            var disk = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-            disk.name = name;
+            var disk = new GameObject(name, typeof(MeshFilter), typeof(MeshRenderer));
+            disk.GetComponent<MeshFilter>().sharedMesh = mesh;
             disk.transform.SetParent(parent, false);
             disk.transform.localPosition = position;
             disk.transform.localScale = scale;
-            var collider = disk.GetComponent<Collider>();
-            if (collider != null) { collider.enabled = false; Object.Destroy(collider); }
             var renderer = disk.GetComponent<MeshRenderer>();
             renderer.sharedMaterial = material;
             renderer.shadowCastingMode = ShadowCastingMode.Off;
@@ -142,9 +142,11 @@ namespace Pockle.Runtime
     internal sealed class StageResources : MonoBehaviour
     {
         public Material[] Materials;
+        public Mesh Mesh;
 
         private void OnDestroy()
         {
+            if (Mesh != null) Destroy(Mesh);
             if (Materials == null) return;
             foreach (var material in Materials)
                 if (material != null) Destroy(material);

@@ -1,5 +1,11 @@
 # Codex handoff
 
+## Active October 10 — Android startup and rounded jelly Pip
+
+Owner approved the follow-up after reviewing PR #6/#7: fix stripped primitive colliders before the next phone build, then round Pip's underside and improve the four finish materials. Branch: `codex/pip-jelly-device-pass`, isolated checkout stacked on the current v2 integration (`518d023` remotely; local equivalent `c321ba4`). Verified main is still `b8a119c`; shell fetch cannot reach its proxy, so GitHub supplies the remote baseline and latest Claude handoff (`25f838a`).
+
+Claimed UX-025/030 and Pip art follow-up: `PrototypeStage`, `MysteryBox`, presentation meshes, JellyToy/shader, Pip generator/source/exports, separate Unity tests, geometry checks and validation notes. Claude's HUD/CI remain untouched. Newer Claude requests (CapsuleCollider errors and rounded bottoms) are acknowledged here; the integration's retained Claude note predates those additions. Preserve the small contact patch and face/grip anchors; tune Peach/Moon/Gold/Mint without changing tactile/reward/save contracts. Device appearance/performance and live Android startup must be verified separately from editor CI.
+
 ## Active October 10 — UX-032/033 integration for owner testing
 
 The owner approved continuing with CI and UI integration after PR #9. Claimed branch: `codex/v2-collection-integration`, isolated checkout from main `b8a119c`, combining Claude v2 snapshot `d697e12`, newer collection notes `de285df`, and PR #9's runtime/backend contracts. This owner-directed integration includes HUD changes in Claude's usual lane; Claude's branch and published files remain untouched. Files: new HUD Collections partial/meta, existing HUD navigation/Home/Shelf hooks, runtime backdrop binding, new UI navigation tests, task/coordination/validation notes and this handoff. Preserve all prior handoff sections and current product decisions.
