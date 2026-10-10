@@ -101,7 +101,7 @@ Shader "Pockle/Jelly Candy"
                 half rx = dot(reflection, across);
                 half ry = dot(reflection, along);
                 half gate = smoothstep(0.45h, 0.85h, dot(reflection, key));
-                half broad = exp2(-rx * rx * lerp(8.0h, 5.0h, _Softness) - ry * ry * lerp(7.0h, 4.0h, _Softness)) * gate;
+                half broad = exp2(-rx * rx * lerp(42.0h, 5.0h, _Softness) - ry * ry * lerp(18.0h, 4.0h, _Softness)) * gate;
                 half glaze = exp2(-rx * rx * 22.0h - ry * ry * 18.0h) * gate;
                 // The coral filling gathers in the lower third; shoulders and
                 // crown keep the pale peach tint instead of a uniform orange.
@@ -116,14 +116,16 @@ Shader "Pockle/Jelly Candy"
                 candy += _Color.rgb * backlight * _Transmission;
                 half3 thinTint = lerp(_Color.rgb, _RimColor.rgb, .35h);
                 candy = lerp(candy, thinTint, rim * _EdgeLight * .22h);
-                half shine = (broad * 0.42h + glaze * 0.18h * (1.0h - _Softness)) * _Glossiness * _ReflectionStrength;
-                candy = lerp(candy, half3(1.0h, 0.98h, 0.91h), saturate(shine));
+                half shine = (broad * lerp(1.05h, .42h, _Softness) + glaze * .10h * (1.0h - _Softness)) * _Glossiness * _ReflectionStrength;
                 half3 studio = texCUBE(_StudioCube, reflection).rgb * _StudioStrength;
                 half coat = _Glossiness * _ReflectionStrength;
                 // Blend a bounded reflection instead of adding HDR white to an
                 // already lit shell, which blew out the outline and gradient.
                 half reflected = saturate(max(studio.r, max(studio.g, studio.b)) * coat);
-                candy = lerp(candy, half3(1.0h, .98h, .94h), reflected * .72h);
+                // Keep a readable softbox core. A very broad, low-contrast
+                // white blend made the captured peach look matte rather than wet.
+                half highlight = saturate(shine + smoothstep(.12h, .72h, reflected) * .90h);
+                candy = lerp(candy, half3(1.0h, .99h, .97h), highlight);
                 half pearl = _PearlSheen * (1.0h - facing) * (1.0h - facing);
                 half3 pearlColor = lerp(half3(.64h, .86h, 1.0h), half3(.91h, .73h, 1.0h), saturate(normal.y * .5h + .5h));
                 candy = lerp(candy, pearlColor, pearl * .38h);
@@ -148,7 +150,7 @@ Shader "Pockle/Jelly Candy"
                 // Keep the peach shell visible at grazing angles, with a soft
                 // transmitted center. One pass; no screen grab or extra lights.
                 // Reflections are opaque even where the peach gel is translucent.
-                half alpha = saturate(_Color.a + rim * (1.0h - _Color.a) * .72h + reflected * 0.32h);
+                half alpha = max(saturate(_Color.a + rim * (1.0h - _Color.a) * .72h), highlight);
                 return fixed4(candy, alpha);
             }
             ENDCG
