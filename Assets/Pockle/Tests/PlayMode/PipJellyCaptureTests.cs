@@ -1,6 +1,5 @@
 using System.Collections;
 using System.IO;
-using System.IO.Compression;
 using NUnit.Framework;
 using Pockle.Runtime;
 using UnityEngine;
@@ -119,7 +118,7 @@ namespace Pockle.Tests
                 }
                 using (var compressed = new MemoryStream())
                 {
-                    using (var gzip = new GZipStream(compressed, CompressionLevel.Fastest, true)) gzip.Write(rgb, 0, rgb.Length);
+                    using (var gzip = new System.IO.Compression.GZipStream(compressed, System.IO.Compression.CompressionLevel.Fastest, true)) gzip.Write(rgb, 0, rgb.Length);
                     Debug.Log("PIP_JELLY_PREVIEW " + Path.GetFileNameWithoutExtension(path) + " " + previewWidth + " " + previewHeight + " " + System.Convert.ToBase64String(compressed.ToArray()));
                 }
                 // Reject an empty render; aesthetic review is deliberately manual.
