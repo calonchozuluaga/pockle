@@ -1,5 +1,11 @@
 # Codex handoff
 
+## Active October 10 — owner correction: a settled belly, not a pointed bottom
+
+Owner rejected the first rounded-bottom capture: the concept carries its weight on a broad, softly flattened underside, while the .129-radius patch makes the runtime toy look pointed and balanced on its tip. Continuing UX-025/030 on `codex/pip-jelly-device-pass` in the same isolated checkout. Claimed files: Pip generator/source/exports, authored geometry/contact checks, capture fixture and review/validation/task notes. Preserve the earlier Android collider fix and materials. No physics, HUD, CI, settings or package changes are needed for this correction. Regenerate a broad resting belly with smoothly rounded corners; compare actual Unity captures before calling the shape accepted. Main remains `b8a119c` through GitHub; shell fetch still fails at the configured proxy. Both handoffs and coordination were read again.
+
+Correction implemented: lower pear volume is sculpted into a broad shallow resting centre with continuous rounded corners, not a larger straight cut. Contact radius .587; 3,275 exported / 3,034 welded vertices and 6,064 triangles. Source, FBX and runtime mesh regenerated, face anchors reprojected. Local geometry/deformation/picking suites pass **561,399 assertions**; FBX agrees within .000000254. Actual correction Unity captures/Android CI are still pending publication. The earlier 34/34 Unity/Android success belongs to rejected shape `5ee03f4`.
+
 ## Active October 10 — Android startup and rounded jelly Pip
 
 Owner approved the follow-up after reviewing PR #6/#7: fix stripped primitive colliders before the next phone build, then round Pip's underside and improve the four finish materials. Branch: `codex/pip-jelly-device-pass`, isolated checkout stacked on the current v2 integration (`518d023` remotely; local equivalent `c321ba4`). Verified main is still `b8a119c`; shell fetch cannot reach its proxy, so GitHub supplies the remote baseline and latest Claude handoff (`25f838a`).

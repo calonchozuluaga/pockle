@@ -73,8 +73,10 @@ namespace Pockle.Tests
                 foreach (Transform child in toyObject.GetComponentsInChildren<Transform>(true)) child.gameObject.layer = 31;
                 yield return null; // Destroy old filling and let stage framing initialize.
                 Assert.That(toy.RaycastBody(new Ray(mount.position + new Vector3(0, -.4f, -3), Vector3.forward), out _), Is.True);
+                Assert.That(toy.RaycastBody(new Ray(mount.position + new Vector3(.6f, -.9f, -3), Vector3.forward), out _), Is.True,
+                    "The settled lower belly must remain pickable beside its contact area.");
                 Assert.That(toy.RaycastBody(new Ray(mount.position + new Vector3(.75f, -.95f, -3), Vector3.forward), out _), Is.False,
-                    "The old wide foot must not remain pickable.");
+                    "Picking must follow the rounded corner rather than an invisible wide foot.");
                 camera.backgroundColor = PockleTheme.FieldFor(PipVariants.CollectibleId((PipVariant)i));
                 Capture(camera, Path.Combine(directory, ((PipVariant)i) + ".png"));
             }

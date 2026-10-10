@@ -39,15 +39,24 @@ internal static class AuthoredMeshChecks
         }
         foreach (float coordinate in uv) Check(!float.IsNaN(coordinate) && coordinate >= 0 && coordinate <= 1, "UV outside 0..1.");
         int contactPoints = 0;
-        double contactRadius = 0, undersideRadius = 0;
+        double contactRadius = 0, contactHalfWidth = 0, undersideHalfWidth = 0, bodyHalfWidth = 0;
         foreach (Point3 vertex in rest)
         {
             double radius = Math.Sqrt(vertex.X * vertex.X + vertex.Z * vertex.Z);
-            if (vertex.Y <= -.99999f) { contactPoints++; contactRadius = Math.Max(contactRadius, radius); }
-            if (vertex.Y < -.9f) undersideRadius = Math.Max(undersideRadius, radius);
+            bodyHalfWidth = Math.Max(bodyHalfWidth, Math.Abs(vertex.X));
+            if (vertex.Y <= -.99999f)
+            {
+                contactPoints++; contactRadius = Math.Max(contactRadius, radius);
+                contactHalfWidth = Math.Max(contactHalfWidth, Math.Abs(vertex.X));
+            }
+            if (vertex.Y < -.9f && vertex.Y > -.98f) undersideHalfWidth = Math.Max(undersideHalfWidth, Math.Abs(vertex.X));
         }
-        Check(contactPoints >= 3 && contactRadius > .05 && contactRadius < .28, "Pip needs a small stable contact patch, not a broad flat foot.");
-        Check(undersideRadius > contactRadius * 1.5, "Underside must curve out above its contact patch.");
+        Check(contactPoints >= 3 && contactRadius > .45 && contactRadius < .68,
+            "Pip needs a broad settled contact area rather than balancing on its lower pole.");
+        Check(contactHalfWidth / bodyHalfWidth > .55 && contactHalfWidth / bodyHalfWidth < .78,
+            "The resting belly must support the body while leaving room for rounded corners.");
+        Check(undersideHalfWidth > contactHalfWidth + .08 && undersideHalfWidth / bodyHalfWidth > .75,
+            "Rounded lower corners must carry the belly outward just above the resting plane.");
         Dictionary<(int, int), (int count, int direction)> edges = new Dictionary<(int, int), (int count, int direction)>();
         int[] parents = new int[count];
         for (int i = 0; i < count; i++) parents[i] = i;

@@ -1,4 +1,4 @@
-"""Rebuild Pip's rounded-underbody art pass with Blender 4.3+. Run via blender --background --python.
+"""Rebuild Pip's settled-belly art pass with Blender 4.3+. Run via blender --background --python.
 
 The Unity source has explicit Y-up / negative-Z-front coordinates. Blender uses
 Z-up. Export both a standard FBX and a small character source for our Unity importer.
@@ -17,9 +17,11 @@ UNITY_DIR = ROOT / "Assets" / "Pockle" / "Resources" / "Pip"
 PREVIEW_DIR = ROOT / "docs" / "concepts"
 RINGS = 28
 SIDES = 40
-# Continue the pear almost to its lower pole, leaving a small stable contact patch.
+# Sculpt a settled lower belly, with a shallow flat centre and rounded corners.
+# The full pear alone reads as a pointed egg; do not trim it to a tiny pole patch.
 BASE_COSINE = -.995
-CONTACT_CUT = -.99
+CONTACT_CUT = -.98
+BELLY_JOIN = -.10
 THETA_END = math.acos(BASE_COSINE)
 
 
@@ -32,6 +34,11 @@ def body_point(theta, phi):
     c = math.cos(theta)
     radius = math.sin(theta)
     y = -1 + max(0, (c - BASE_COSINE) / (1 - BASE_COSINE)) ** .8 * 1.75
+    if y < BELLY_JOIN:
+        u = (y + 1) / (BELLY_JOIN + 1)
+        # Zero slope at the floor and unit slope where the pear resumes:
+        # lower volume settles into the support instead of tapering to a point.
+        y = -1 + (BELLY_JOIN + 1) * (4 * u ** 4 - 3 * u ** 5)
     return (.86 * (1 - .24 * c) * radius * math.cos(phi), y,
             .64 * (1 - .16 * c) * radius * math.sin(phi))
 
@@ -150,7 +157,7 @@ def main():
     reduce = body.modifiers.new("Mobile surface budget", 'DECIMATE')
     reduce.ratio = .24
     bpy.ops.object.modifier_apply(modifier=reduce.name)
-    # Trim only the bottom of the rounded underside, preserving a small contact patch.
+    # Level the shallow resting centre; the surrounding belly keeps its roundover.
     import bmesh
     bm = bmesh.new(); bm.from_mesh(body.data)
     cut = bmesh.ops.bisect_plane(bm, geom=list(bm.verts) + list(bm.edges) + list(bm.faces),
