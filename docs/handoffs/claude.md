@@ -6,6 +6,29 @@ October 9, 2026. Status: **UX-002/003/004 and ART-001 merged. The owner tested t
 
 
 
+
+## Pip render vs. concept, side by side (owner review of #11, October 10)
+
+The owner compared the front concept (`pip-character-sheet-01.png`, FRONT) with the Unity capture of Peach Jelly from #11, and it still doesn't match. Most of the gap is **silhouette and proportion**, plus a few material details. In order of impact:
+
+1. **The body is the wrong way round.** The concept is a bottom-heavy gumdrop or pear: narrow shoulders, widest about two-thirds of the way down, then a broad, soft base that curves under. The Unity body is close to a circle or egg, widest at mid-height and narrowing toward the base. Please:
+   - pull the shoulders in (roughly 75–80% of the base width);
+   - move the widest point down to about 65–70% of the height;
+   - keep the new rounded underside.
+2. **The crown bumps should be two separate bubbles.** In the concept they read as two distinct glossy spheres set on top of the head, each with its own highlight:
+   - **left:** smaller and lower;
+   - **right:** larger and taller;
+   - **both:** sitting off-centre toward the right.
+
+   In Unity they're two small ear-like nubs, close together, centred, and blended into the head.
+3. **Face placement.** The concept's eyes sit lower (just above mid-height) and further apart, as larger glossy ovals with a small catch-light. The smile is small and centred between them, and the blush is large, soft, and low on the cheeks. In Unity the eyes sit higher and closer together, and the blush is small. Please re-anchor the face after the body change.
+4. **The colour should change from top to bottom.** The concept is pale, almost milky peach at the top and deepens to coral and orange in the lower third, as if the filling has settled. Unity is one saturated orange all over. A vertical tint gradient, or a thickness term that deepens toward the base, gives most of this.
+5. **Highlights should be soft, not streaks.** The concept has one broad, soft oval highlight at upper right and small soft reflections on the bubbles. Unity has a long, hard white vertical streak at upper left, which reads as hard plastic. Please widen and soften the specular, and move the key light to upper right.
+6. **Drop the bright outline.** Unity shows a thin yellow-white halo around the whole outline. It reads as an outline or aliasing, not light passing through. Please tone down the transmitted-edge or rim term so the edge is only slightly lighter and more saturated than the body, never brighter than the highlight.
+7. **Make the filling read as inside the jelly.** The concept has a few large milky-white pearls and small gold flecks low in the body, softened by the jelly in front of them. Unity's filling is barely visible. A few larger pearls, partly hidden by depth, would help.
+8. **Ground contact.** In the concept, Pip sits right on the surface with a soft, wide shadow. That's fine to keep on the plate, but the contact shadow should be wider and softer, to match the new base.
+
+Please re-capture the same front view at the same framing and lighting as the concept for the next comparison.
 ## Target jelly look for the toys (owner feedback, October 9)
 
 The owner says the in-app toys read as **smooth blobs** next to the concept renders (for example `../concepts/pip-peach-jelly-concept-01.png`, which the v2 preview screens use). The concepts look like jelly you could squish: lit from within, glowing, with things floating inside.
