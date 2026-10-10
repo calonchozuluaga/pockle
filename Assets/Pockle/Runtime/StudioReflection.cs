@@ -25,11 +25,11 @@ namespace Pockle.Runtime
                     float u = 2f * (x + .5f) / size - 1f;
                     float v = 2f * (y + .5f) / size - 1f;
                     Vector3 direction = FaceDirection(face, u, v).normalized;
-                    float key = Panel(direction, new Vector3(.5f, .64f, -.57f), .24f, .40f);
-                    float strip = Panel(direction, new Vector3(-.72f, .12f, -.68f), .06f, .60f);
-                    float back = Panel(direction, new Vector3(.62f, .25f, .74f), .15f, .48f);
-                    Color room = new Color(.035f, .028f, .021f, 1f);
-                    Color light = new Color(1f, .98f, .92f, 0f) * (key * 1.65f + strip * .85f + back * .55f);
+                    float key = Panel(direction, new Vector3(.64f, .70f, -.66f), .36f, .40f);
+                    float fill = Panel(direction, new Vector3(-.62f, .28f, -.72f), .30f, .28f);
+                    float back = Panel(direction, new Vector3(.62f, .25f, .74f), .32f, .36f);
+                    Color room = new Color(.015f, .012f, .01f, 1f);
+                    Color light = new Color(1f, .98f, .94f, 0f) * (key * 1.2f + fill * .10f + back * .08f);
                     pixels[y * size + x] = room + light;
                 }
                 cube.SetPixels(pixels, (CubemapFace)face);
@@ -59,8 +59,9 @@ namespace Pockle.Runtime
             Vector3 along = Vector3.Cross(across, center);
             float x = Vector3.Dot(direction, across) / width;
             float y = Vector3.Dot(direction, along) / height;
-            float edge = Mathf.Clamp01(1f - x * x * x * x - y * y * y * y);
-            return Mathf.Pow(edge, .18f);
+            // Gaussian oval: no bright strip or hard rectangular reflection edge.
+            return Mathf.Exp(-2f * (x * x + y * y))
+                * Mathf.SmoothStep(0f, 1f, (Vector3.Dot(direction, center) - .5f) * 2f);
         }
     }
 }

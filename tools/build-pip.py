@@ -20,8 +20,9 @@ SIDES = 40
 # Sculpt a settled lower belly, with a shallow flat centre and rounded corners.
 # The full pear alone reads as a pointed egg; do not trim it to a tiny pole patch.
 BASE_COSINE = -.995
-CONTACT_CUT = -.98
+CONTACT_CUT = -.985
 BELLY_JOIN = -.10
+BODY_TOP = .68
 THETA_END = math.acos(BASE_COSINE)
 
 
@@ -33,21 +34,26 @@ def blender_point(point):
 def body_point(theta, phi):
     c = math.cos(theta)
     radius = math.sin(theta)
-    y = -1 + max(0, (c - BASE_COSINE) / (1 - BASE_COSINE)) ** .8 * 1.75
+    y = -1 + max(0, (c - BASE_COSINE) / (1 - BASE_COSINE)) ** .8 * (BODY_TOP + 1)
     if y < BELLY_JOIN:
         u = (y + 1) / (BELLY_JOIN + 1)
         # Zero slope at the floor and unit slope where the pear resumes:
         # lower volume settles into the support instead of tapering to a point.
         y = -1 + (BELLY_JOIN + 1) * (4 * u ** 4 - 3 * u ** 5)
-    return (.86 * (1 - .24 * c) * radius * math.cos(phi), y,
-            .64 * (1 - .16 * c) * radius * math.sin(phi))
+    return (.84 * (1 - .42 * c) * radius * math.cos(phi), y,
+            .65 * (1 - .22 * c) * radius * math.sin(phi))
 
 
 def front_surface(x, y, offset):
-    c = min(1, max(BASE_COSINE, (1 - BASE_COSINE) * ((y + 1) / 1.75) ** (1 / .8) + BASE_COSINE))
-    radial = math.sqrt(max(0, 1 - c * c))
-    width = .86 * (1 - .24 * c) * radial
-    depth = .64 * (1 - .16 * c) * radial
+    # Invert the authored profile, including the settled belly. Final anchors
+    # are ray-projected again after the crown union and mobile reduction.
+    lo, hi = 0, THETA_END
+    for _ in range(40):
+        mid = (lo + hi) / 2
+        if body_point(mid, 0)[1] > y: lo = mid
+        else: hi = mid
+    width = body_point((lo + hi) / 2, 0)[0]
+    depth = body_point((lo + hi) / 2, math.pi / 2)[2]
     return (x, y, -depth * math.sqrt(max(0, 1 - (x / width) ** 2)) - offset)
 
 
@@ -96,7 +102,7 @@ def main():
     character = bpy.data.collections.new("Pip - exportable character")
     bpy.context.scene.collection.children.link(character)
 
-    positions = [(0, .75, 0)]
+    positions = [(0, BODY_TOP, 0)]
     positions += [body_point(THETA_END * ring / RINGS, 2 * math.pi * side / SIDES)
                   for ring in range(1, RINGS + 1) for side in range(SIDES)]
     positions.append((0, -1, 0))
@@ -118,17 +124,17 @@ def main():
     if (b - a).cross(c - a).dot(Vector((a.x, 0, a.z))) < 0:
         faces = [(a, c, b) for a, b, c in faces]
 
-    eyes = [front_surface(side * .29, .045, .034) for side in [-1, 1]]
-    glints = [(x - .022, y + .038, z - .038) for x, y, z in eyes]
-    cheeks = [front_surface(side * .435, -.10, .024) for side in [-1, 1]]
-    mouth = [front_surface((i / 12 - .5) * .17, -.108 + .053 * ((i / 12 - .5) * 2) ** 2, .043)
+    eyes = [front_surface(side * .335, -.055, .038) for side in [-1, 1]]
+    glints = [(x + .026, y + .045, z - .043) for x, y, z in eyes]
+    cheeks = [front_surface(side * .46, -.22, .028) for side in [-1, 1]]
+    mouth = [front_surface((i / 12 - .5) * .17, -.175 + .052 * ((i / 12 - .5) * 2) ** 2, .043)
              for i in range(13)]
-    crowns = [(-.31, .61, .015), (.095, .66, .015)]
-    crown_scales = [(.185, .215, .18), (.25, .33, .22)]
-    pearls = [(-.39, -.43, -.22), (.12, -.59, -.22), (.47, -.24, -.08),
-              (-.11, .36, -.10), (.30, .18, -.14), (-.42, -.05, -.06)]
-    flecks = [(-.25, .31, -.30), (.38, .23, -.26), (-.49, -.18, -.30),
-              (.37, -.40, -.27), (-.20, -.64, -.24), (.16, -.34, -.36)]
+    crowns = [(-.20, .74, .015), (.24, .755, .015)]
+    crown_scales = [(.165, .165, .16), (.24, .24, .225)]
+    pearls = [(-.43, -.48, -.37), (.08, -.64, -.38), (.47, -.30, -.25),
+              (-.16, -.75, -.24), (.29, -.76, -.18), (-.48, -.12, -.18)]
+    flecks = [(-.24, .26, -.36), (.38, -.32, -.36), (-.49, -.58, -.34),
+              (.36, -.65, -.29), (-.20, -.79, -.26), (.16, -.42, -.43)]
     jelly = material("Pip peach jelly - Blender material study", (1, .64, .40), .55, .22)
     plum = material("Pip plum eyes", (.09, .025, .058), 0, .24)
     cream = material("Pip cream glints and pearls", (1, .92, .72), .05, .25)
@@ -155,7 +161,7 @@ def main():
     smooth.factor = .8; smooth.iterations = 5
     bpy.ops.object.modifier_apply(modifier=smooth.name)
     reduce = body.modifiers.new("Mobile surface budget", 'DECIMATE')
-    reduce.ratio = .232
+    reduce.ratio = .22
     bpy.ops.object.modifier_apply(modifier=reduce.name)
     # Level the shallow resting centre; the surrounding belly keeps its roundover.
     import bmesh
@@ -216,20 +222,20 @@ def main():
         if not hit: raise RuntimeError('Face anchor missed joined body')
         return (x, y, -float(location.y) - offset)
     eyes = [project(point, .034) for point in eyes]
-    glints = [(x - .022, y + .038, z - .038) for x, y, z in eyes]
+    glints = [project((x + .026, y + .045, 0), .085) for x, y, z in eyes]
     cheeks = [project(point, .025) for point in cheeks]
     mouth = [project(point, .043) for point in mouth]
     data = dict(schemaVersion=1, name="Pip - Peach Jelly", integratedCrown=True,
                 positions=flat(export_positions), triangles=indices, uv=flat(export_uv), normalGroups=groups,
                 eyes=flat(eyes), eyeGlints=flat(glints), cheeks=flat(cheeks), mouth=flat(mouth),
-                crowns=flat(crowns), crownScales=flat(crown_scales), pearls=flat(pearls), flecks=flat(flecks),
-                bodyColor=[1, .64, .36, .72], topColor=[1, .80, .52, 1], bottomColor=[1, .36, .16, 1])
+                crowns=flat([(x, y - 1 - CONTACT_CUT, z) for x, y, z in crowns]), crownScales=flat(crown_scales), pearls=flat(pearls), flecks=flat(flecks),
+                bodyColor=[1, .65, .40, .44], topColor=[1, .85, .66, 1], bottomColor=[1, .30, .16, 1])
     (UNITY_DIR / "Pip.pocklemesh").write_text(json.dumps(data, separators=(',', ':')) + '\n')
-    for i, eye in enumerate(eyes): sphere("Eye " + str(i), eye, (.092, .127, .042), plum, character)
+    for i, eye in enumerate(eyes): sphere("Eye " + str(i), eye, (.102, .14, .045), plum, character)
     for i, point in enumerate(glints): sphere("Glint " + str(i), point, (.020, .024, .012), cream, character)
-    for i, point in enumerate(cheeks): sphere("Blush " + str(i), point, (.104, .048, .026), blush, character)
+    for i, point in enumerate(cheeks): sphere("Blush " + str(i), point, (.20, .112, .026), blush, character)
     for i, point in enumerate(pearls):
-        radius = .032 + (i % 3) * .011
+        radius = .062 + (i % 3) * .014
         sphere("Pearl " + str(i), point, (radius,) * 3, cream, character)
     for i, point in enumerate(flecks):
         bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=1, radius=.024 + (i % 2) * .006, location=blender_point(point))

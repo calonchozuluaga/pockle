@@ -68,7 +68,7 @@ namespace Pockle.Runtime
             if (softShadow != null && softShadow.isSupported)
             {
                 Object.Destroy(shadowMaterial);
-                shadowMaterial = new Material(softShadow) { name = "Pip · radial contact shadow", color = new Color(.54f, .36f, .43f, .24f) };
+                shadowMaterial = new Material(softShadow) { name = "Pip · radial contact shadow", color = new Color(.54f, .36f, .43f, .20f) };
                 shadowMaterial.SetFloat("_GroundPlane", 1f);
                 shadowMaterial.renderQueue = 2990; // Behind transparent Pip, over the opaque plate.
             }
@@ -80,7 +80,7 @@ namespace Pockle.Runtime
             MakeDisk(turntable, "Pedestal · ceramic top", new Vector3(0f, 0.1f, 0f),
                 new Vector3(2.46f, 0.05f, 2.46f), topMaterial, diskMesh);
             contactShadow = MakeDisk(turntable, "Pip · contact shadow", new Vector3(0f, 0.151f, 0.04f),
-                new Vector3(1.36f, 0.0005f, 1.22f), shadowMaterial, diskMesh);
+                new Vector3(1.88f, 0.0005f, 1.58f), shadowMaterial, diskMesh);
             // A thin cylinder covers the exposed plate. CapsuleCollider cannot
             // represent this nonuniform scale: its radius would swallow the toy.
             var touchSurface = new GameObject("Plate touch surface", typeof(MeshCollider));

@@ -72,7 +72,7 @@ Shader "Pockle/Jelly Candy"
                 output.position = UnityObjectToClipPos(input.vertex);
                 output.worldPosition = mul(unity_ObjectToWorld, input.vertex).xyz;
                 output.normal = UnityObjectToWorldNormal(input.normal);
-                output.height = saturate(input.vertex.y * 0.42h + 0.50h);
+                output.height = saturate((input.vertex.y + 1.0h) / 1.68h);
                 output.uv = input.uv;
                 return output;
             }
@@ -84,7 +84,7 @@ Shader "Pockle/Jelly Candy"
                 // A quiet studio key keeps the little toy welcoming under any scene light.
                 // This cheap transmitted-light approximation uses no scene color grab,
                 // live scene capture or additional lighting passes.
-                half3 key = normalize(half3(0.48h, 0.75h, -0.62h));
+                half3 key = normalize(half3(0.64h, 0.70h, -0.66h));
                 half3 fill = normalize(half3(0.60h, 0.18h, 0.70h));
                 half light = saturate(dot(normal, key)) * 0.18h + 0.82h;
                 light = lerp(light, .64h + .36h * saturate(dot(normal, key)), _Softness);
@@ -101,24 +101,29 @@ Shader "Pockle/Jelly Candy"
                 half rx = dot(reflection, across);
                 half ry = dot(reflection, along);
                 half gate = smoothstep(0.45h, 0.85h, dot(reflection, key));
-                half broad = exp2(-rx * rx * lerp(10.0h, 6.0h, _Softness) - ry * ry * lerp(3.5h, 2.0h, _Softness)) * gate;
-                half glaze = exp2(-rx * rx * 42.0h - ry * ry * 12.0h) * gate;
-                half3 candy = lerp(_BottomColor.rgb, _TopColor.rgb, input.height);
-                candy = lerp(candy, _Color.rgb, 0.20h);
+                half broad = exp2(-rx * rx * lerp(8.0h, 5.0h, _Softness) - ry * ry * lerp(7.0h, 4.0h, _Softness)) * gate;
+                half glaze = exp2(-rx * rx * 22.0h - ry * ry * 18.0h) * gate;
+                // The coral filling gathers in the lower third; shoulders and
+                // crown keep the pale peach tint instead of a uniform orange.
+                half gradient = smoothstep(.04h, .78h, input.height);
+                half3 candy = lerp(_BottomColor.rgb, _TopColor.rgb, gradient);
+                candy = lerp(candy, _Color.rgb, 0.10h);
                 candy *= light;
-                candy += _RimColor.rgb * (rim * 0.24h + softFill * 0.22h);
+                candy += _RimColor.rgb * softFill * 0.12h;
                 // A bounded studio back-light approximation brightens thin edges.
                 // The view-dependent thickness proxy needs no texture or extra pass.
                 half backlight = saturate(dot(normal, fill)) * (.30h + .70h * rim);
                 candy += _Color.rgb * backlight * _Transmission;
                 half3 thinTint = lerp(_Color.rgb, _RimColor.rgb, .35h);
-                candy = lerp(candy, thinTint, rim * _EdgeLight * .35h);
-                candy += _RimColor.rgb * rim * _EdgeLight * .22h;
-                half shine = (broad * 0.32h + glaze * 0.54h * (1.0h - _Softness)) * _Glossiness * _ReflectionStrength;
+                candy = lerp(candy, thinTint, rim * _EdgeLight * .22h);
+                half shine = (broad * 0.42h + glaze * 0.18h * (1.0h - _Softness)) * _Glossiness * _ReflectionStrength;
                 candy = lerp(candy, half3(1.0h, 0.98h, 0.91h), saturate(shine));
                 half3 studio = texCUBE(_StudioCube, reflection).rgb * _StudioStrength;
                 half coat = _Glossiness * _ReflectionStrength;
-                candy += studio * coat;
+                // Blend a bounded reflection instead of adding HDR white to an
+                // already lit shell, which blew out the outline and gradient.
+                half reflected = saturate(max(studio.r, max(studio.g, studio.b)) * coat);
+                candy = lerp(candy, half3(1.0h, .98h, .94h), reflected * .72h);
                 half pearl = _PearlSheen * (1.0h - facing) * (1.0h - facing);
                 half3 pearlColor = lerp(half3(.64h, .86h, 1.0h), half3(.91h, .73h, 1.0h), saturate(normal.y * .5h + .5h));
                 candy = lerp(candy, pearlColor, pearl * .38h);
@@ -140,13 +145,10 @@ Shader "Pockle/Jelly Candy"
                     candy = lerp(candy, _GlitterColor.rgb * (.65h + catchLight * .65h), flake * .75h);
                     candy += half3(1.0h, .98h, .83h) * flake * catchLight * .65h;
                 }
-                // Thin highlights at the silhouette read as a clear outer shell.
-                candy += _RimColor.rgb * pow(1.0h - facing, 5.0h) * 0.16h * _StudioStrength;
                 // Keep the peach shell visible at grazing angles, with a soft
                 // transmitted center. One pass; no screen grab or extra lights.
-                half reflected = max(studio.r, max(studio.g, studio.b)) * coat;
                 // Reflections are opaque even where the peach gel is translucent.
-                half alpha = saturate(_Color.a + rim * (1.0h - _Color.a) + reflected * 0.55h);
+                half alpha = saturate(_Color.a + rim * (1.0h - _Color.a) * .72h + reflected * 0.32h);
                 return fixed4(candy, alpha);
             }
             ENDCG

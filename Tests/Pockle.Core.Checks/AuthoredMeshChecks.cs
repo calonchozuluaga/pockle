@@ -30,6 +30,7 @@ internal static class AuthoredMeshChecks
         Check(count <= 4000, "Authored body exceeds the mobile vertex budget.");
         Check(count < 65000 && groups.Length == count && uv.Length == count * 2, "Mesh buffer dimensions mismatch.");
         Check(indices.Length > 0 && indices.Length % 3 == 0, "Malformed mesh indices.");
+        Check(indices.Length / 3 <= 6000, "Pip exceeds the existing mobile shell triangle budget.");
         Point3[] rest = new Point3[count];
         for (int i = 0; i < count; i++)
         {
@@ -57,6 +58,17 @@ internal static class AuthoredMeshChecks
             "The resting belly must support the body while leaving room for rounded corners.");
         Check(undersideHalfWidth > contactHalfWidth + .08 && undersideHalfWidth / bodyHalfWidth > .75,
             "Rounded lower corners must carry the belly outward just above the resting plane.");
+        Point3 widest = rest[0];
+        double shoulderHalfWidth = 0;
+        foreach (Point3 vertex in rest)
+        {
+            if (Math.Abs(vertex.X) > Math.Abs(widest.X)) widest = vertex;
+            if (vertex.Y > .18f && vertex.Y < .28f) shoulderHalfWidth = Math.Max(shoulderHalfWidth, Math.Abs(vertex.X));
+        }
+        double widestDown = (.665 - widest.Y) / 1.665;
+        Check(widestDown >= .63 && widestDown <= .72, "Pip's widest point must sit in the lower body, not at mid-height.");
+        Check(shoulderHalfWidth / bodyHalfWidth >= .70 && shoulderHalfWidth / bodyHalfWidth <= .82,
+            "Pip needs narrow pear shoulders above its fuller lower belly.");
         Dictionary<(int, int), (int count, int direction)> edges = new Dictionary<(int, int), (int count, int direction)>();
         int[] parents = new int[count];
         for (int i = 0; i < count; i++) parents[i] = i;
@@ -102,6 +114,13 @@ internal static class AuthoredMeshChecks
         }
         float[] crowns = Floats(source, "crowns"), scales = Floats(source, "crownScales");
         Check(crowns.Length == 6 && scales.Length == 6, "Crown dimensions invalid.");
+        Check(scales[0] < scales[3] && crowns[1] + scales[1] < crowns[4] + scales[4],
+            "The left crown bubble must be smaller and lower than the right bubble.");
+        Check(Math.Abs(scales[0] - scales[1]) < .015 && Math.Abs(scales[3] - scales[4]) < .015,
+            "Crown lobes must read as round bubbles rather than long ears.");
+        float[] eyes = Floats(source, "eyes"), cheeks = Floats(source, "cheeks");
+        Check(eyes[3] - eyes[0] >= .64f && eyes[1] < 0 && eyes[4] < 0, "Pip's eyes must be lower and wider apart.");
+        Check(cheeks[1] < eyes[1] - .1f && cheeks[4] < eyes[4] - .1f, "Blush belongs low on the cheeks.");
         for (int i = 0; i < 2; i++)
         {
             Point3 point = JellyShape.Deform(new Point3(crowns[i * 3], crowns[i * 3 + 1], crowns[i * 3 + 2]), 0, .6f, 0, 0, 0, 0);
@@ -122,6 +141,20 @@ internal static class AuthoredMeshChecks
                 float gap = -2f + nearest - anchors[i + 2];
                 Check(gap > .005f && gap < .15f, key + " anchor is buried or floating above the rounded body.");
             }
+        }
+        float[] pearls = Floats(source, "pearls");
+        foreach (Point3 direction in new[] { new Point3(1, 0, 0), new Point3(-1, 0, 0),
+            new Point3(0, 1, 0), new Point3(0, -1, 0), new Point3(0, 0, 1), new Point3(0, 0, -1) })
+        for (int i = 0; i < pearls.Length; i += 3)
+        {
+            var center = new Point3(pearls[i], pearls[i + 1], pearls[i + 2]);
+            float clearance = float.PositiveInfinity;
+            for (int face = 0; face < indices.Length; face += 3)
+                // Reverse winding to find the exit from inside the shell.
+                if (SurfaceRaycast.TryTriangle(center, direction, rest[indices[face + 2]], rest[indices[face + 1]], rest[indices[face]], out float distance))
+                    clearance = Math.Min(clearance, distance);
+            Check(!float.IsInfinity(clearance) && clearance > .105f,
+                "Suspended pearls need space inside the jelly, not anchors on its surface.");
         }
         Console.WriteLine("PASS: " + assertions + " authored mesh assertions; " + count + " vertices / " + indices.Length / 3 + " triangles.");
         return assertions;

@@ -75,22 +75,27 @@ namespace Pockle.Tests
                 Assert.That(toy.RaycastBody(new Ray(mount.position + new Vector3(0, -.4f, -3), Vector3.forward), out _), Is.True);
                 Assert.That(toy.RaycastBody(new Ray(mount.position + new Vector3(.6f, -.9f, -3), Vector3.forward), out _), Is.True,
                     "The settled lower belly must remain pickable beside its contact area.");
-                Assert.That(toy.RaycastBody(new Ray(mount.position + new Vector3(.75f, -.95f, -3), Vector3.forward), out _), Is.False,
+                Assert.That(toy.RaycastBody(new Ray(mount.position + new Vector3(.86f, -.95f, -3), Vector3.forward), out _), Is.False,
                     "Picking must follow the rounded corner rather than an invisible wide foot.");
                 camera.backgroundColor = PockleTheme.FieldFor(PipVariants.CollectibleId((PipVariant)i));
                 Capture(camera, Path.Combine(directory, ((PipVariant)i) + ".png"));
             }
             toy.SetVariant(PipVariant.PeachJelly);
+            toy.ResetToy();
+            foreach (Transform child in toyObject.GetComponentsInChildren<Transform>(true)) child.gameObject.layer = 31;
+            yield return null;
+            camera.backgroundColor = PrototypeStage.Background;
+            Capture(camera, Path.Combine(directory, "PeachJelly-front-reference.png"));
             toy.SetDeformation(.18f, .3f, .15f, -.15f, .2f, -.2f, .22f, new Vector3(1, 1, .1f));
             foreach (Transform child in toyObject.GetComponentsInChildren<Transform>(true)) child.gameObject.layer = 31;
             yield return null;
             Assert.That(toy.RaycastBody(new Ray(mount.position + new Vector3(0, -.4f, -3), Vector3.forward), out _), Is.True);
             camera.backgroundColor = PockleTheme.FieldFor(PipVariants.CollectibleId(PipVariant.PeachJelly));
-            Capture(camera, Path.Combine(directory, "PeachJelly-grip.png"));
+            Capture(camera, Path.Combine(directory, "PeachJelly-grip.png"), 2.15f);
             Debug.Log("PIP_JELLY_CAPTURES " + directory + " · " + SystemInfo.graphicsDeviceName);
         }
 
-        private void Capture(Camera camera, string path)
+        private void Capture(Camera camera, string path, float framing = 1.6f)
         {
             RenderTexture previous = RenderTexture.active;
             var image = new Texture2D(target.width, target.height, TextureFormat.RGB24, false);
@@ -98,8 +103,11 @@ namespace Pockle.Tests
             {
                 camera.targetTexture = target; camera.rect = new Rect(0, 0, 1, 1);
                 camera.clearFlags = CameraClearFlags.SolidColor;
-                camera.orthographicSize = 2.15f;
-                camera.transform.LookAt(new Vector3(0, 1.45f, 0));
+                camera.orthographicSize = framing;
+                // Front reference: near-level view with a small downward angle,
+                // neutral cream field and enough margin to compare the whole toy.
+                camera.transform.position = new Vector3(0, 1.65f, -6f);
+                camera.transform.LookAt(new Vector3(0, 1.12f, 0));
                 camera.Render();
                 RenderTexture.active = target;
                 image.ReadPixels(new Rect(0, 0, target.width, target.height), 0, 0);

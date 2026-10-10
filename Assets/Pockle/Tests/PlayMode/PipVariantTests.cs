@@ -76,9 +76,9 @@ namespace Pockle.Tests
                 Assert.That(material.GetFloat("_ZWrite"), Is.EqualTo(soft ? 1f : 0f));
                 Assert.That(material.renderQueue, Is.EqualTo(soft ? 2001 : 3000));
                 Assert.That(material.GetFloat("_StudioStrength") > 0f, Is.EqualTo(!soft));
-                Assert.That(material.GetFloat("_Transmission"), Is.EqualTo(soft ? .04f : .32f).Within(.00001f));
-                Assert.That(material.GetFloat("_EdgeLight"), Is.EqualTo(soft ? .12f : .7f).Within(.00001f));
-                Assert.That(material.color.a, Is.EqualTo(soft ? 1f : peach ? .60f : moon ? .54f : .58f).Within(.00001f));
+                Assert.That(material.GetFloat("_Transmission"), Is.EqualTo(soft ? .04f : .14f).Within(.00001f));
+                Assert.That(material.GetFloat("_EdgeLight"), Is.EqualTo(soft ? .12f : .15f).Within(.00001f));
+                Assert.That(material.color.a, Is.EqualTo(soft ? 1f : peach ? .44f : moon ? .54f : .58f).Within(.00001f));
             }
             Object.Destroy(root);
             yield return null;

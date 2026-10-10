@@ -1,3 +1,9 @@
+## Full Pip concept pass from PR #12 (October 10, 2026)
+
+Owner approved the eight-point silhouette/material brief at `7521263`. Narrowed shoulders, lowered the widest body band, preserved a broad rounded resting belly, made asymmetric crowns rounder, lowered/widened facial anchors, enlarged contained pearls, softened upper-right reflections/edges, strengthened the pale-peach/coral gradient and widened the radial shadow. Source/FBX/runtime export agree: 2,868 logical / 3,126 exported vertices, 5,732 triangles, contact radius .632; FBX maximum error .000000270. One closed shell, existing single-pass material and six pearl objects remain within the mobile geometry budget.
+
+Passed locally: **543,482 portable assertions** across eleven suites, including six-axis pearl containment and deformation/contact/face checks. Source checks: 66 files / three profiles / five assemblies / 142 GUIDs / zero failures; metadata and whitespace. Actual Unity rendering/tests and Android packaging for this pass are pending. The earlier `0c32c67` passed 34/34 Unity tests, but does not validate this new pass. Capture fixture adds a neutral front reference to the four finish fields and grip view; compare against the character sheet FRONT. Phone appearance, startup, interaction and profiling remain owner checks.
+
 ## Settled Pip belly correction (October 10, 2026)
 
 Owner rejected the .129-radius underside from `5ee03f4`: it appeared pointed instead of naturally resting. `codex/pip-jelly-device-pass` now has a broad .587-radius shallow contact area, rounded lower corners and fuller lower volume, with regenerated source/FBX/runtime mesh and face projection. New checks reject a tiny pole patch and require rounded corners above a broad support area; picking covers both the lower belly and the exposed plate corner. No tactile physics, HUD, CI, packages or settings changed in this correction.
