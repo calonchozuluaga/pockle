@@ -22,19 +22,32 @@ namespace Pockle.Runtime
         private readonly RectTransform[] storeBuy = new RectTransform[3];
         private readonly IBoxCheckout checkout = new UnconfiguredBoxCheckout();
 
-        /// <summary>Crops of the three closed boxes in Resources/Store/CollectionBoxes.</summary>
+        /// <summary>Transparent cutouts of the three closed boxes, in offer order, and their width/height ratios.</summary>
+        private static readonly string[] BoxCutouts = { "UI/Boxes/JellyGarden", "UI/Boxes/MidnightGlow", "UI/Boxes/GoldConfetti" };
+        private static readonly float[] BoxAspects = { 380f / 342f, 387f / 343f, 371f / 324f };
+        /// <summary>Fallback crops of Resources/Store/CollectionBoxes if a cutout is missing.</summary>
         private static readonly Rect[] BoxCrops = { new Rect(.04f, .09f, .30f, .74f), new Rect(.35f, .06f, .29f, .73f), new Rect(.655f, .09f, .325f, .74f) };
 
+        /// <summary>A closed box picture. Its aspect comes from the source image, not the imported texture, so it never stretches.</summary>
         private RectTransform BoxArt(Transform parent, int index)
         {
+            index = Mathf.Clamp(index, 0, BoxCutouts.Length - 1);
             var rect = Rect("Closed box", parent);
-            var artwork = Resources.Load<Texture2D>("Store/CollectionBoxes");
-            if (artwork != null)
+            var image = rect.gameObject.AddComponent<RawImage>(); image.raycastTarget = false;
+            var cutout = Resources.Load<Texture2D>(BoxCutouts[index]);
+            if (cutout != null) image.texture = cutout;
+            else
             {
-                var image = rect.gameObject.AddComponent<RawImage>(); image.texture = artwork;
-                image.uvRect = BoxCrops[Mathf.Clamp(index, 0, BoxCrops.Length - 1)]; image.raycastTarget = false;
+                image.texture = Resources.Load<Texture2D>("Store/CollectionBoxes");
+                image.uvRect = BoxCrops[index];
+                if (image.texture == null) image.enabled = false;
             }
             return rect;
+        }
+
+        private static Vector2 BoxSize(int index, float height)
+        {
+            return new Vector2(height * BoxAspects[Mathf.Clamp(index, 0, BoxAspects.Length - 1)], height);
         }
 
         private void BuildStore()
@@ -90,7 +103,7 @@ namespace Pockle.Runtime
             float w = Mathf.Min(width, 480);
             const float height = 150;
             TopCentered(walkCard, Vector2.zero, new Vector2(w, height));
-            LeftLabel(walkArt, new Vector2(12, -10), new Vector2(56, 66));
+            LeftLabel(walkArt, new Vector2(10, -16), BoxSize(0, 54));
             float textX = 80, textWidth = w - textX - 16;
             LeftLabel(walkTitle.rectTransform, new Vector2(textX, -12), new Vector2(textWidth, 24));
             LeftLabel(walkProgress.rectTransform, new Vector2(textX, -36), new Vector2(textWidth, 20));
@@ -114,7 +127,7 @@ namespace Pockle.Runtime
             {
                 TopCentered(storeCards[i], new Vector2(0, -y), new Vector2(w, cardHeight));
                 storePictures[i].anchorMin = storePictures[i].anchorMax = storePictures[i].pivot = new Vector2(1, .5f);
-                storePictures[i].anchoredPosition = new Vector2(-4, 0); storePictures[i].sizeDelta = new Vector2(art * .85f, art);
+                storePictures[i].anchoredPosition = new Vector2(-6, 0); storePictures[i].sizeDelta = BoxSize(i, art * .9f);
                 float textWidth = w - 20 - art - 8;
                 LeftLabel(storeNames[i].rectTransform, new Vector2(20, -18), new Vector2(textWidth, 30));
                 LeftLabel(storeOdds[i].rectTransform, new Vector2(20, -50), new Vector2(textWidth, 40));
