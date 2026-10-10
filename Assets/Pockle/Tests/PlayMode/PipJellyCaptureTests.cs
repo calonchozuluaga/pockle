@@ -1,5 +1,6 @@
 using System.Collections;
 using System.IO;
+using System.IO.Compression;
 using NUnit.Framework;
 using Pockle.Runtime;
 using UnityEngine;
@@ -103,6 +104,24 @@ namespace Pockle.Tests
                 image.ReadPixels(new Rect(0, 0, target.width, target.height), 0, 0);
                 image.Apply();
                 File.WriteAllBytes(path, image.EncodeToPNG());
+                // A compact review preview also travels in the CI log when a connector
+                // can return an artifact reference but cannot open the ZIP locally.
+                // RGB rows are top-down; full-resolution PNGs stay in the artifact.
+                const int previewWidth = 240, previewHeight = 320;
+                Color32[] pixels = image.GetPixels32();
+                var rgb = new byte[previewWidth * previewHeight * 3];
+                for (int y = 0; y < previewHeight; y++)
+                for (int x = 0; x < previewWidth; x++)
+                {
+                    Color32 pixel = pixels[(target.height - 1 - y * 3) * target.width + x * 3];
+                    int offset = (y * previewWidth + x) * 3;
+                    rgb[offset] = pixel.r; rgb[offset + 1] = pixel.g; rgb[offset + 2] = pixel.b;
+                }
+                using (var compressed = new MemoryStream())
+                {
+                    using (var gzip = new GZipStream(compressed, CompressionLevel.Fastest, true)) gzip.Write(rgb, 0, rgb.Length);
+                    Debug.Log("PIP_JELLY_PREVIEW " + Path.GetFileNameWithoutExtension(path) + " " + previewWidth + " " + previewHeight + " " + System.Convert.ToBase64String(compressed.ToArray()));
+                }
                 // Reject an empty render; aesthetic review is deliberately manual.
                 Assert.That(Vector4.Distance(image.GetPixel(360, 450), image.GetPixel(20, 940)), Is.GreaterThan(.05f));
             }

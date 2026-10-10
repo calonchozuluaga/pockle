@@ -15,6 +15,8 @@ Run PlayMode test `PipJellyCaptureTests.FourFinishesRenderOnTheirColourFieldsAnd
 
 Compare Peach/Moon against `docs/concepts/pip-character-sheet-01.png`, and Peach against `docs/concepts/pip-peach-jelly-concept-01.png`. The concept uses offline lighting; the PNGs use the actual Unity mesh/material/camera. Review the underside, face contact, sheen, colour saturation, interior filling and silhouette. These are render evidence, not a phone performance measurement.
 
+The project enables Unity's bundled `com.unity.modules.imageconversion` **1.0.0** for PNG encoding. This is the only package-manifest change; no render pipeline or external post-processing package is added. The capture fixture also emits compact 240×320 gzip/RGB previews in CI logs (`PIP_JELLY_PREVIEW`) so connector-only reviewers can inspect actual renders when ZIP references cannot be opened locally. Full-resolution PNGs remain in the artifact. A first combined run caught a capture namespace error; the next caught this missing encoding module. Those runs did not verify rendering or Android packaging.
+
 ## Owner phone checks
 
 1. Install the new APK as a Development Build if building locally. Cold start and open/replay a box. Confirm no "CapsuleCollider doesn't exist" or BoxCollider errors; capture any other Console errors.
