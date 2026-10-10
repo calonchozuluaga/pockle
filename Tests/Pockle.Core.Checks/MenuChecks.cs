@@ -35,6 +35,27 @@ internal static class MenuChecks
         try { menu.SelectTab(AppPage.Play); } catch (ArgumentException) { rejected = true; }
         Assert(rejected && menu.Current == AppPage.Home, "An invalid tab damaged navigation state.");
 
+        // Collection browsing has its own Back chain and scroll, including a return from toy play.
+        menu.Push(AppPage.Collections); menu.SaveScroll(810);
+        menu.Push(AppPage.Collection); menu.SaveScroll(240);
+        menu.Push(AppPage.Play);
+        Assert(menu.Back() && menu.Current == AppPage.Collection && menu.Scroll == 240,
+            "Toy play lost the originating collection lineup and its scroll.");
+        Assert(menu.Back() && menu.Current == AppPage.Collections && menu.Scroll == 810,
+            "Collection Back lost the series list and its scroll.");
+        Assert(menu.Back() && menu.Current == AppPage.Home && !menu.Back(), "Series browsing lost Home.");
+        foreach (AppPage candidate in new[] { AppPage.Collections, AppPage.Collection })
+        {
+            rejected = false;
+            try { menu.SelectTab(candidate); } catch (ArgumentException) { rejected = true; }
+            Assert(rejected && menu.Current == AppPage.Home, "Collection page was treated as a main tab.");
+        }
+        rejected = false;
+        try { menu.Push((AppPage)999); } catch (ArgumentOutOfRangeException) { rejected = true; }
+        Assert(rejected && menu.Current == AppPage.Home && !menu.Back(), "Unknown page damaged Back history.");
+        menu.Push(AppPage.Collection); menu.SelectTab(AppPage.Profile);
+        Assert(menu.Back() && menu.Current == AppPage.Home && !menu.Back(), "Tab change retained hidden collection history.");
+
         Assert(ProfileName.Normalize(null!) == "Collector" && ProfileName.Normalize(" \t\n") == "Collector", "An empty display name did not fall back.");
         Assert(ProfileName.Normalize("  Lucía 李  ") == "Lucía 李", "Non-English names or whitespace trimming broke.");
         Assert(ProfileName.Normalize("A\nB\tC\u2028D\u2029E\u202eF") == "ABCDEF", "Control/bidi characters escaped display-name normalization.");

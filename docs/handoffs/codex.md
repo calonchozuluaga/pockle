@@ -1,5 +1,21 @@
 # Codex handoff
 
+## October 10 — Claude v2 runtime requests and backend design
+
+Owner asked to begin the newer October 9 handoff. Read GitHub's `claude/ui-v2` at `d697e12` and `claude/collections-design`, including its newer reward/backend notes. Claimed branch: **`codex/collection-backend-contracts`**, separate worktree from verified GitHub main `b8a119c`. Git fetch failed because the executor proxy is unreachable; the connector verified the remote baseline and current handoffs.
+
+Task scope: **UX-033 runtime navigation foundation**, **UX-029 backend/copy contract follow-up**, and the v2 stage colour field. Files: Core `MenuNavigation`, `PrototypeStage`, portable `MenuChecks`, a separate `StageBackdropTests` fixture/meta, `docs/COLLECTION_RUNTIME_API.md`, `docs/BACKEND_PLAN.md`, architecture/validation/coordination/task notes and this handoff. No HUD partials, UI fixtures, CI, shaders, package manifest or project settings changed.
+
+Delivered: appended `AppPage.Collections` / `Collection` without renumbering existing pages; Back/scroll and invalid-destination coverage; `PrototypeStage.SetBackdrop(Color)` plus explicit-camera overload, changing both viewer and full-screen clear cameras without touching portraits or retaining static scene references. Exact integration details are in [COLLECTION_RUNTIME_API.md](../COLLECTION_RUNTIME_API.md).
+
+**Claude actions:** add the two page roots, keep the selected collection ID in the HUD, and let `ShowToy` navigate directly from Collection to Play instead of inserting Shelf. Pass the v2 field colour through the new backdrop API on toy entry/selection. These screens/backdrop calls are not wired by this branch because they are your HUD lane. Existing series metadata/motion/product fields from PR #7 already address the catalog request; this pass does not duplicate or activate them.
+
+Backend design is ready for review in [BACKEND_PLAN.md](../BACKEND_PLAN.md): concrete table keys/constraints/indexes, anonymous-account linking and legacy migration, per-copy serial/discovery/source, private server APIs, exact per-player quote odds, atomic finite allocation, receipt deduplication/reconciliation, spare reservations and two-leg trades, five-spare regular crafting, append-only private ledger with consent-based public projection, and concurrency acceptance cases. This is a design, not SQL deployed to a project.
+
+I accept the newer brief's adopted crafting/no-secret rules and check-in requirement. Check-in cadence/pool/odds and whether walkers receive both boxes remain unconfigured. Actual edition sizes/weights, late-payment handling, legacy import policy and server-day boundary need settled configuration before production. Fusion and personalities remain proposals. Material improvements are a separate follow-up requiring in-engine/device visual evidence; none are claimed here.
+
+Validation is recorded in [VALIDATION.md](../VALIDATION.md). Portable and Unity checks are distinct: the Unity backdrop fixture is authored but unrun locally. Backend SQL/RLS/concurrency, Android performance and visual colour-space correctness remain unverified. Do not merge before required CI is green and runtime/UI integration is reviewed.
+
 ## UX-030 correction — editor import compilation
 
 Owner reported Unity CS0234 at `PipCharacterImporter.cs:63` after the integration. Claimed branch: `codex/editor-core-reference`; files: `Pockle.Editor.asmdef`, portable source checks, validation notes, and this handoff. The importer directly uses `Pockle.Core.ToyCatalog` but the editor assembly lacks a direct Core reference. Add the missing reference and make the source checker detect project namespace uses without a declared assembly dependency. No Claude UI/CI files, package manifest, or project settings changes.

@@ -8,6 +8,17 @@ namespace Pockle.Runtime
     {
         public static readonly Color Background = new Color(0.973f, 0.957f, 0.933f, 1f);
 
+        /// <summary>Set both stage cameras to an opaque colour field. False if no Pockle stage is active.</summary>
+        public static bool SetBackdrop(Color colour) => SetBackdrop(Camera.main, colour);
+
+        /// <summary>Explicit viewer overload for isolated stages; never changes portrait or unrelated cameras.</summary>
+        public static bool SetBackdrop(Camera viewer, Color colour)
+        {
+            if (viewer == null) return false;
+            var framing = viewer.GetComponent<StageFraming>();
+            return framing != null && framing.SetBackdrop(colour);
+        }
+
         public static void Create(out Camera camera, out Transform toyMount, out Transform turntable, out Collider plateCollider, out Transform contactShadow)
         {
             var stage = new GameObject("Pockle · presentation stage");
@@ -152,6 +163,18 @@ namespace Pockle.Runtime
         {
             viewer = viewerCamera;
             background = backgroundCamera;
+        }
+
+        public bool SetBackdrop(Color colour)
+        {
+            if (viewer == null || background == null) return false;
+            if (float.IsNaN(colour.r) || float.IsInfinity(colour.r)
+                || float.IsNaN(colour.g) || float.IsInfinity(colour.g)
+                || float.IsNaN(colour.b) || float.IsInfinity(colour.b)) return false;
+            colour = new Color(Mathf.Clamp01(colour.r), Mathf.Clamp01(colour.g), Mathf.Clamp01(colour.b), 1f);
+            viewer.backgroundColor = colour;
+            background.backgroundColor = colour;
+            return true;
         }
 
         private void LateUpdate()

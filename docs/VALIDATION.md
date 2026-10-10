@@ -1,3 +1,9 @@
+## Collection runtime contracts and backend design (October 10, 2026)
+
+Branch `codex/collection-backend-contracts` from verified remote main `b8a119c`. Executed all ten portable suites: **417,710 assertions**, including **42 menu/profile assertions** with Collection/Collections Back, independent scroll, main-tab reset and invalid destination rejection. Source checks passed: **57 C# files / three symbol profiles / five assembly definitions / 133 GUIDs / zero failures**. Metadata synchronization created one `.meta` and preserved all existing GUIDs. `git diff --check` passed. SDK: prepared `/workspace/.tools/dotnet/dotnet` 8.0.425; `DOTNET_CLI_HOME` and `NUGET_PACKAGES` point to writable prepared workspace directories.
+
+Authored but unrun locally: `StageBackdropTests`, covering the viewer and full-screen clear camera through a framing update, default reset, bad RGB rejection, camera isolation and destroyed-stage cleanup. Unity editor/API compilation, colour-space appearance, HUD integration, Android builds/frame time and hosted CI remain separate verification. Backend schema/function design and acceptance cases are documentation only: no SQL migration, live project, auth integration, RLS tests or concurrency execution is claimed.
+
 ## Editor assembly reference correction (October 9, 2026)
 
 The owner supplied a Unity Console error: `PipCharacterImporter.cs(63,18): CS0234`, because `Pockle.Editor.asmdef` referenced Runtime but not Core while the importer directly called `Pockle.Core.ToyCatalog`. Added the required direct Core reference. This is a confirmed Unity compilation failure in the previous merged build, despite the syntax/geometry checks passing.

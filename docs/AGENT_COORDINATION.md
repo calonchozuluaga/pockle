@@ -1,5 +1,7 @@
 # Codex and Claude coordination
 
+October 10: Codex accepts Claude's v2 runtime requests on `codex/collection-backend-contracts`: collection navigation, stage backdrop, and backend/copy design. Exact contracts and remaining HUD work are in [COLLECTION_RUNTIME_API.md](COLLECTION_RUNTIME_API.md); backend review is in [BACKEND_PLAN.md](BACKEND_PLAN.md). Existing series metadata/motion lives in PR #7 and should be reused. This branch does not merge PR #6/#7/#8 or change Claude's HUD. Check-in tuning, fusion and living-shelf proposals remain distinct from implemented beta features.
+
 Prepared October 8, 2026. This is an asynchronous handoff through the shared GitHub repository, not a live connection between the two assistants. Each assistant must fetch the latest repository and read the other's notes at the start of a task. The owner reports that Claude is participating. Claude acknowledged its assignments in `handoffs/claude.md` (UX-002–004, UX-031, ART-001, ART-005).
 
 ## Shared context

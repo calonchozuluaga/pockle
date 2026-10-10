@@ -1,5 +1,7 @@
 # Pockle UI/UX task tracker
 
+October 10 Codex follow-up: **UX-033 runtime foundation implemented for review** — Collections/Collection navigation and per-toy stage backdrop API. Claude's UI pages and integration remain pending; the task is not complete. UX-033's full screen scope is defined on `claude/collections-design` in PR #6. **UX-029 backend follow-up: design ready for review**, covering server copies/serials/discovery, finite supply, exact odds, crafting/trades and check-in policy in [BACKEND_PLAN.md](BACKEND_PLAN.md); no live backend or save migration is implemented. The newer October 9 [collection rules](https://github.com/calonchozuluaga/pockle/blob/claude/collections-design/docs/COLLECTIONS.md) extend the older backlog's scope to crafting and trading.
+
 Updated October 8, 2026. This is the working backlog for making Pockle feel like a finished mobile collecting game. Task IDs stay stable so feedback and commits can refer to them. A task becomes complete when its acceptance criteria pass; a working prototype is not the same as a finished screen.
 
 The collecting loop remains **walk → earn a collection box → reveal a toy → enjoy your shelf**, with an optional purchase path. Profiles, friends, shelf visits, rewards, badges, and milestones are now requested planning scope. Trading, memberships, competitive ranks, and a new currency are not part of this plan.
