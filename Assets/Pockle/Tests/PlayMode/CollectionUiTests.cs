@@ -95,6 +95,11 @@ namespace Pockle.Tests
         {
             ButtonWithText("Boxes").onClick.Invoke();
             Assert.IsFalse(ButtonWithText("Walk to unlock").interactable);
+            // The Shelf tab is reachable from every tab page, and Back from it returns Home.
+            ButtonWithText("Shelf").onClick.Invoke();
+            Assert.AreEqual(AppPage.Shelf, hud.CurrentPage);
+            Assert.IsTrue(hud.GoBack()); Assert.AreEqual(AppPage.Home, hud.CurrentPage);
+            ButtonWithText("Boxes").onClick.Invoke();
             int grants = 0;
             hud.DailyBoxRequested += () => { if (session.ClaimDaily(out _)) grants++; };
             session.SimulateDailyWalk();
