@@ -53,6 +53,7 @@ namespace Pockle.Runtime
         private readonly RectTransform[] toyNames = new RectTransform[4];
         private RectTransform playHintPill;
         private bool initialized;
+        private const float WordmarkAspect = 824f / 295f;
 
         public void Initialize(Action<bool> sound, Action<bool> haptics, Action<bool> reducedMotion, Action<float> volume = null)
         {
@@ -465,8 +466,9 @@ namespace Pockle.Runtime
             if (art != null)
             {
                 var image = mark.gameObject.AddComponent<RawImage>(); image.texture = art; image.raycastTarget = false;
-                float aspect = art.height > 0 ? (float)art.width / art.height : 2.8f;
-                mark.sizeDelta = new Vector2(40 * aspect, 40);
+                // Use the source artwork's proportions (824 x 295). The imported texture can be resized to a power of two,
+                // so its width/height can't be trusted for the aspect.
+                mark.sizeDelta = new Vector2(40 * WordmarkAspect, 40);
             }
             else
             {

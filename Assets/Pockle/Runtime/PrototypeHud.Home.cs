@@ -80,7 +80,7 @@ namespace Pockle.Runtime
             LeftLabel(homeBoxLabel.rectTransform, new Vector2(22, -18), new Vector2(w - 44, 22));
             float art = Mathf.Min(188, boxHeight - 120);
             homeBoxArt.anchorMin = homeBoxArt.anchorMax = homeBoxArt.pivot = new Vector2(.5f, 1);
-            homeBoxArt.anchoredPosition = new Vector2(0, -42); homeBoxArt.sizeDelta = new Vector2(art * .85f, art);
+            homeBoxArt.anchoredPosition = new Vector2(0, -44); homeBoxArt.sizeDelta = BoxSize(0, art);
             var open = homeOpen.GetComponent<RectTransform>();
             open.anchorMin = open.anchorMax = open.pivot = new Vector2(.5f, 0);
             open.anchoredPosition = new Vector2(0, 20); open.sizeDelta = new Vector2(w - 44, 56);
