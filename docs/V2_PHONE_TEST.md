@@ -2,6 +2,15 @@
 
 Test branch: `codex/v2-collection-integration`. This combines Claude's v2 screens/catalog and Codex's collection/backdrop APIs. The integration PR supplies one checkout; it does not depend on merging the old PR stack first. Keep your local Android settings and use Unity **6000.6.5f1**.
 
+Review/build: [PR #10](https://github.com/calonchozuluaga/pockle/pull/10). It carries the `build-apk` label so the synchronized CI run can produce an Android artifact after Unity tests pass. Use that run's result/artifact; an older branch's green check is not proof of this integration. For a local editor review, fetch the branch into your usual repository and open that checkout; commit or stash your existing work before changing branches.
+
+```sh
+git fetch origin
+git switch --track origin/codex/v2-collection-integration
+```
+
+If you already have this branch locally, switch to it and pull instead. Run the pinned Unity editor and your usual Android build process. The remote APK job's success still does not verify phone layout or interaction feel.
+
 ## Quick route
 
 1. Open Home. Confirm the v2 fonts, plum navigation, daily card and toy strip fit the screen. Scroll to **Browse collections**.
