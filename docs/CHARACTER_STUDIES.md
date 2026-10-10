@@ -1,6 +1,6 @@
 # Moss, Bop, and Nook — representative material studies
 
-Merged into `main` from `codex/material-toys`. These are provisional original silhouettes from `CHARACTER_ROSTER.md`. Claude's [ART-001 identity sheets](concepts/roster/README.md) are now included alongside them and await the owner's art review. Three new models and four study finishes are included, alongside the existing Pip. This is the first representative batch toward twelve characters and nine finishes each.
+Merged into `main` from `codex/material-toys`. These are provisional original silhouettes from `CHARACTER_ROSTER.md`. Claude's [ART-001 identity sheets](concepts/roster/README.md) are now included alongside them and await the owner's art review. Three new models and four study finishes are included, alongside the existing Pip. This is the first representative batch toward twelve character collections and at least ten varieties each.
 
 | Study | Shape | Surface | Handling | Runtime mesh |
 | --- | --- | --- | --- | --- |

@@ -18,5 +18,6 @@
     <Compile Include="MenuChecks.cs" />
     <Compile Include="CatalogChecks.cs" />
     <Compile Include="MaterialHandlingChecks.cs" />
+    <Compile Include="SeriesMotionChecks.cs" />
   </ItemGroup>
 </Project>

@@ -185,7 +185,7 @@ def shelf(d, s):
 
 
 def main():
-    font = Path(sys.argv[1]) if len(sys.argv) > 1 else OUT / "Fonts/Fredoka-SemiBold.ttf"
+    font = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "ArtSource/Fonts/Fredoka-SemiBold.ttf"
     (OUT / "Icons").mkdir(parents=True, exist_ok=True)
     wordmark(font).save(OUT / "PockleWordmark.png", optimize=True)
     for name, fn in [("Home", home), ("Box", box), ("You", you), ("Settings", settings), ("Back", back),

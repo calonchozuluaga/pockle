@@ -1,73 +1,81 @@
+using Pockle.Core;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Pockle.Runtime
 {
+    /// <summary>
+    /// v2 Boxes (UX-032): today's free walking box as a jelly-pink card, then one colour-field card per box with
+    /// its contents and a price button. Checkout stays unavailable; buying never grants a toy.
+    /// </summary>
     public sealed partial class PrototypeHud
     {
-        private RectTransform walkCard;
-        private Text walkProgress, walkStatus;
+        private RectTransform walkCard, walkArt, walkTrack;
+        private Text walkTitle, walkProgress, walkStatus;
         private Image walkFill;
-        private Button openDaily;
+        private Button openDaily, enableWalking;
+        private RectTransform shopHeading, catalogNote;
         private readonly RectTransform[] storeCards = new RectTransform[3];
         private readonly RectTransform[] storePictures = new RectTransform[3];
-        private readonly RectTransform[] storeNames = new RectTransform[3];
-        private readonly RectTransform[] storePrices = new RectTransform[3];
+        private readonly Text[] storeNames = new Text[3];
+        private readonly Text[] storeOdds = new Text[3];
         private readonly RectTransform[] storeBuy = new RectTransform[3];
-        private readonly RectTransform[] storeOdds = new RectTransform[3];
-        private RectTransform shopHeading;
-        private RectTransform catalogNote;
-        private RectTransform walkButtons;
         private readonly IBoxCheckout checkout = new UnconfiguredBoxCheckout();
+
+        /// <summary>Crops of the three closed boxes in Resources/Store/CollectionBoxes.</summary>
+        private static readonly Rect[] BoxCrops = { new Rect(.04f, .09f, .30f, .74f), new Rect(.35f, .06f, .29f, .73f), new Rect(.655f, .09f, .325f, .74f) };
+
+        private RectTransform BoxArt(Transform parent, int index)
+        {
+            var rect = Rect("Closed box", parent);
+            var artwork = Resources.Load<Texture2D>("Store/CollectionBoxes");
+            if (artwork != null)
+            {
+                var image = rect.gameObject.AddComponent<RawImage>(); image.texture = artwork;
+                image.uvRect = BoxCrops[Mathf.Clamp(index, 0, BoxCrops.Length - 1)]; image.raycastTarget = false;
+            }
+            return rect;
+        }
 
         private void BuildStore()
         {
-            walkCard = Rect("Daily walking box", boxesRoot); Card(walkCard, Paper);
-            Label("YOUR DAILY BOX", walkCard, PockleTheme.EyebrowSize, MutedInk, FontStyle.Bold, TextAnchor.MiddleCenter,
-                new Vector2(0, -16), new Vector2(250, 20));
-            Label("A little walk. A little wonder.", walkCard, 18, Ink, FontStyle.Bold, TextAnchor.MiddleCenter,
-                new Vector2(0, -40), new Vector2(290, 28));
-            walkProgress = Label("0 / 1,000 steps", walkCard, 24, Ink, FontStyle.Bold, TextAnchor.MiddleCenter,
-                new Vector2(0, -76), new Vector2(250, 32));
-            var track = Rect("Step progress", walkCard); TopCentered(track, new Vector2(0, -119), new Vector2(250, 8)); Surface(track, Quiet);
-            var fill = Rect("Earned steps", track); Stretch(fill); walkFill = fill.gameObject.AddComponent<Image>();
-            walkFill.sprite = roundedSprite; walkFill.color = Peach; walkFill.type = Image.Type.Filled; walkFill.fillMethod = Image.FillMethod.Horizontal;
-            walkFill.fillOrigin = 0; walkFill.raycastTarget = false; walkFill.fillAmount = 0;
-            walkStatus = Label("Enable walking to get started.", walkCard, PockleTheme.CaptionSize, MutedInk, FontStyle.Normal,
-                TextAnchor.MiddleCenter, new Vector2(0, -140), new Vector2(280, 42));
-            walkButtons = Rect("Walking actions", walkCard); TopCentered(walkButtons, new Vector2(0, -194), new Vector2(290, 48));
-            CreateButton("Enable walking", walkButtons, Vector2.zero, new Vector2(140, 48), Quiet, () => session?.EnableWalking(), out _, 12);
-            openDaily = CreateButton("Walk to unlock", walkButtons, new Vector2(150, 0), new Vector2(140, 48), Peach, () => DailyBoxRequested?.Invoke(), out _, 12);
-            Label("Jelly Garden: Peach or Mint, equal chance.", walkCard, PockleTheme.EyebrowSize, MutedInk, FontStyle.Normal,
-                TextAnchor.MiddleCenter, new Vector2(0, -250), new Vector2(290, 22));
-            shopHeading = Label("Or pick a surprise box", boxesRoot, 20, Ink, FontStyle.Bold, TextAnchor.MiddleCenter,
+            // Today's free box. Shared with Rewards, so both always show the same claim state.
+            walkCard = Rect("Daily walking box", boxesRoot); Surface(walkCard, PockleTheme.Jelly, 24);
+            walkArt = BoxArt(walkCard, 0);
+            walkTitle = Label("Today's free box", walkCard, PockleTheme.BodySize, Ink, FontStyle.Bold, TextAnchor.MiddleLeft,
+                Vector2.zero, new Vector2(200, 24));
+            walkProgress = Label("0 of 1,000 steps", walkCard, PockleTheme.CaptionSize, PockleTheme.JellyInk, FontStyle.Normal, TextAnchor.MiddleLeft,
+                Vector2.zero, new Vector2(200, 20));
+            walkTrack = Rect("Step progress", walkCard); Surface(walkTrack, new Color(1, 1, 1, .6f), 3);
+            walkFill = ProgressFill(walkTrack, Ink);
+            openDaily = CreateButton("Walk to unlock", walkCard, Vector2.zero, new Vector2(120, 40), PockleTheme.Plum, () => DailyBoxRequested?.Invoke(), out _, 15);
+            walkStatus = Label("", walkCard, PockleTheme.SmallSize, PockleTheme.JellyInk, FontStyle.Normal, TextAnchor.UpperLeft,
+                Vector2.zero, new Vector2(280, 36));
+            enableWalking = CreateButton("Enable walking", walkCard, Vector2.zero, new Vector2(140, 40), new Color(1, 1, 1, .6f), () => session?.EnableWalking(), out _, 15);
+
+            shopHeading = Label("Collections", boxesRoot, PockleTheme.HeadingSize, Ink, FontStyle.Bold, TextAnchor.MiddleLeft,
                 Vector2.zero, new Vector2(300, 30)).rectTransform;
-            var artwork = Resources.Load<Texture2D>("Store/CollectionBoxes");
-            Rect[] crops = { new Rect(.04f, .09f, .30f, .74f), new Rect(.35f, .06f, .29f, .73f), new Rect(.655f, .09f, .325f, .74f) };
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < storeCards.Length; i++)
             {
                 int index = i;
                 BoxOffer offer = BoxCatalog.Offers[i];
-                storeCards[i] = Rect(offer.Name + " · shop", boxesRoot); Card(storeCards[i], Paper);
-                storePictures[i] = Rect("Closed collection box", storeCards[i]);
-                if (artwork != null)
-                {
-                    var image = storePictures[i].gameObject.AddComponent<RawImage>(); image.texture = artwork;
-                    image.uvRect = crops[i]; image.raycastTarget = false;
-                }
-                else Surface(storePictures[i], Quiet);
-                storeNames[i] = Label(offer.Name, storeCards[i], 15, Ink, FontStyle.Bold, TextAnchor.MiddleCenter,
-                    Vector2.zero, new Vector2(160, 26)).rectTransform;
-                storePrices[i] = Label(offer.ProposedPrice, storeCards[i], 21, Ink, FontStyle.Bold, TextAnchor.MiddleCenter,
-                    Vector2.zero, new Vector2(160, 30)).rectTransform;
-                storeOdds[i] = Label(offer.Contents, storeCards[i], PockleTheme.EyebrowSize, MutedInk, FontStyle.Normal, TextAnchor.MiddleCenter,
-                    Vector2.zero, new Vector2(160, 32)).rectTransform;
-                var buy = CreateButton("Buy box", storeCards[i], Vector2.zero, new Vector2(150, 48), Peach,
-                    () => BuyBox(BoxCatalog.Offers[index]), out _, 12);
+                Color field = PockleTheme.CollectionField(offer.PoolId, out Color ink, out _);
+                storeCards[i] = Rect(offer.Name + " · shop", boxesRoot); Card(storeCards[i], field);
+                storePictures[i] = BoxArt(storeCards[i], i);
+                storePictures[i].localEulerAngles = new Vector3(0, 0, -6);
+                storeNames[i] = Label(offer.Name, storeCards[i], 22, ink, FontStyle.Bold, TextAnchor.UpperLeft, Vector2.zero, new Vector2(180, 30));
+                storeOdds[i] = Label(offer.Contents, storeCards[i], PockleTheme.CaptionSize, ink, FontStyle.Normal, TextAnchor.UpperLeft,
+                    Vector2.zero, new Vector2(180, 40));
+                storeOdds[i].color = new Color(ink.r, ink.g, ink.b, .8f);
+                // The price is the button. A light button on dark fields, plum on light ones.
+                Color button = ink == PockleTheme.OnPlum ? PockleTheme.Jelly : PockleTheme.Plum;
+                var buy = CreateButton(offer.ProposedPrice, storeCards[i], Vector2.zero, new Vector2(110, 44), button,
+                    () => BuyBox(BoxCatalog.Offers[index]), out _, PockleTheme.BodySize);
+                buy.gameObject.name = "Buy · " + offer.Name;
                 storeBuy[i] = buy.GetComponent<RectTransform>();
             }
-            catalogNote = Label("Test catalog · proposed USD prices. Checkout coming next.", boxesRoot, PockleTheme.EyebrowSize, MutedInk,
-                FontStyle.Normal, TextAnchor.MiddleCenter, Vector2.zero, new Vector2(330, 30)).rectTransform;
+            catalogNote = Label("Test catalog. Prices are proposals, and checkout isn't connected yet.", boxesRoot, PockleTheme.SmallSize, MutedInk,
+                FontStyle.Normal, TextAnchor.MiddleLeft, Vector2.zero, new Vector2(330, 36)).rectTransform;
         }
 
         private void BuyBox(BoxOffer offer)
@@ -76,37 +84,62 @@ namespace Pockle.Runtime
             checkout.Begin(offer);
         }
 
-        private void LayoutWalkingCard(float width)
+        /// <summary>Lays out the shared daily card at the top of its page and returns its height.</summary>
+        private float LayoutWalkingCard(float width)
         {
-            TopCentered(walkCard, Vector2.zero, new Vector2(Mathf.Min(width, 480), 284));
-            float buttonWidth = Mathf.Min(width - 24, 290);
-            walkButtons.sizeDelta = new Vector2(buttonWidth, 48);
-            for (int i = 0; i < 2; i++) LeftLabel((RectTransform)walkButtons.GetChild(i), new Vector2(i * (buttonWidth + 10) / 2, 0), new Vector2((buttonWidth - 10) / 2, 48));
+            float w = Mathf.Min(width, 480);
+            const float height = 150;
+            TopCentered(walkCard, Vector2.zero, new Vector2(w, height));
+            LeftLabel(walkArt, new Vector2(12, -10), new Vector2(56, 66));
+            float textX = 80, textWidth = w - textX - 16;
+            LeftLabel(walkTitle.rectTransform, new Vector2(textX, -12), new Vector2(textWidth, 24));
+            LeftLabel(walkProgress.rectTransform, new Vector2(textX, -36), new Vector2(textWidth, 20));
+            LeftLabel(walkTrack, new Vector2(textX, -60), new Vector2(textWidth, 6));
+            LeftLabel(walkStatus.rectTransform, new Vector2(textX, -70), new Vector2(textWidth, 20));
+            float buttonWidth = (w - 32 - 10) / 2;
+            LeftLabel(enableWalking.GetComponent<RectTransform>(), new Vector2(16, -height + 14 + 40), new Vector2(buttonWidth, 40));
+            LeftLabel(openDaily.GetComponent<RectTransform>(), new Vector2(16 + buttonWidth + 10, -height + 14 + 40), new Vector2(buttonWidth, 40));
+            return height;
         }
 
         private float LayoutStore(float width)
         {
-            LayoutWalkingCard(width);
-            TopCentered(shopHeading, new Vector2(0, -308), new Vector2(width, 30));
-            const float gap = 14;
-            int columns = width >= 620 ? 3 : width >= 280 ? 2 : 1;
-            float cellWidth = (width - gap * (columns - 1)) / columns;
-            float imageHeight = Mathf.Min(170, cellWidth * .84f);
-            float cellHeight = imageHeight + 166;
-            int rows = (3 + columns - 1) / columns;
-            float height = 358 + rows * (cellHeight + gap);
-            TopCentered(boxesRoot, Vector2.zero, new Vector2(width, height + 42));
-            for (int i = 0; i < 3; i++)
+            float w = Mathf.Min(width, 480);
+            float y = LayoutWalkingCard(width) + 26;
+            TopCentered(shopHeading, new Vector2(0, -y), new Vector2(w, 30));
+            y += 42;
+            const float cardHeight = 150, gap = 12;
+            float art = Mathf.Min(130, w * .36f);
+            for (int i = 0; i < storeCards.Length; i++)
             {
-                LeftLabel(storeCards[i], new Vector2((i % columns) * (cellWidth + gap), -358 - (i / columns) * (cellHeight + gap)), new Vector2(cellWidth, cellHeight));
-                TopCentered(storePictures[i], new Vector2(0, -4), new Vector2(cellWidth - 8, imageHeight));
-                TopCentered(storeNames[i], new Vector2(0, -imageHeight - 10), new Vector2(cellWidth - 10, 26));
-                TopCentered(storePrices[i], new Vector2(0, -imageHeight - 38), new Vector2(cellWidth - 10, 30));
-                TopCentered(storeOdds[i], new Vector2(0, -imageHeight - 72), new Vector2(cellWidth - 10, 32));
-                TopCentered(storeBuy[i], new Vector2(0, -imageHeight - 111), new Vector2(cellWidth - 20, 48));
+                TopCentered(storeCards[i], new Vector2(0, -y), new Vector2(w, cardHeight));
+                storePictures[i].anchorMin = storePictures[i].anchorMax = storePictures[i].pivot = new Vector2(1, .5f);
+                storePictures[i].anchoredPosition = new Vector2(-4, 0); storePictures[i].sizeDelta = new Vector2(art * .85f, art);
+                float textWidth = w - 20 - art - 8;
+                LeftLabel(storeNames[i].rectTransform, new Vector2(20, -18), new Vector2(textWidth, 30));
+                LeftLabel(storeOdds[i].rectTransform, new Vector2(20, -50), new Vector2(textWidth, 40));
+                LeftLabel(storeBuy[i], new Vector2(20, -cardHeight + 16 + 44), new Vector2(Mathf.Min(120, textWidth), 44));
+                y += cardHeight + gap;
             }
-            TopCentered(catalogNote, new Vector2(0, -height), new Vector2(width, 32));
-            return height + 42;
+            TopCentered(catalogNote, new Vector2(0, -y), new Vector2(w, 36));
+            y += 36;
+            TopCentered(boxesRoot, Vector2.zero, new Vector2(width, y));
+            return y;
+        }
+
+        private void RefreshWalkingCard()
+        {
+            if (session == null || walkProgress == null) return;
+            var saved = session.Progress.Save;
+            int target = CollectionProgress.DailyTarget;
+            bool currentDay = saved.Day == CollectionSession.Today;
+            bool ready = currentDay && session.Progress.CanClaim;
+            walkTitle.text = saved.Claimed ? "Today's box is yours" : ready ? "Today's free box is ready" : "Today's free box";
+            walkProgress.text = Mathf.Min(saved.Steps, target).ToString("N0") + " of " + target.ToString("N0") + " steps";
+            walkFill.fillAmount = Mathf.Clamp01(saved.Steps / (float)target);
+            walkStatus.text = !currentDay ? "Check your device date to keep walking." : saved.Claimed ? NextBoxIn() : session.WalkingStatus;
+            openDaily.interactable = ready;
+            openDaily.GetComponentInChildren<Text>().text = saved.Claimed ? "Opened today" : ready ? "Open your box" : "Walk to unlock";
         }
     }
 }

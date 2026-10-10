@@ -1,5 +1,9 @@
 # Codex and Claude coordination
 
+Owner-approved October 10 follow-up: Codex is integrating the v2 HUD and UX-033 collection routes in `codex/v2-collection-integration`, using snapshots of Claude's published code rather than editing Claude's branch. The integration combines existing PR #6/#7/#8 content and PR #9 contracts, adds reachable collection pages and backdrop binding, and retains both handoffs. Static portraits are shared; live lineup rendering and visual shader tuning remain separate. Review this branch as one test build before choosing a main merge path.
+
+October 10: Codex accepts Claude's v2 runtime requests on `codex/collection-backend-contracts`: collection navigation, stage backdrop, and backend/copy design. Exact contracts and remaining HUD work are in [COLLECTION_RUNTIME_API.md](COLLECTION_RUNTIME_API.md); backend review is in [BACKEND_PLAN.md](BACKEND_PLAN.md). Existing series metadata/motion lives in PR #7 and should be reused. This branch does not merge PR #6/#7/#8 or change Claude's HUD. Check-in tuning, fusion and living-shelf proposals remain distinct from implemented beta features.
+
 Prepared October 8, 2026. This is an asynchronous handoff through the shared GitHub repository, not a live connection between the two assistants. Each assistant must fetch the latest repository and read the other's notes at the start of a task. The owner reports that Claude is participating. Claude acknowledged its assignments in `handoffs/claude.md` (UX-002–004, UX-031, ART-001, ART-005).
 
 ## Shared context
@@ -10,7 +14,7 @@ Prepared October 8, 2026. This is an asynchronous handoff through the shared Git
 - Implemented: four separate shelf toys, glossy/pearl/glitter/soft finishes, lift/sag/gravity, two-finger squish/stretch, shake jiggle, branded daily opening, local walking rewards, Home, full Settings, and a local profile.
 - Pending: live accounts, public shelves, friends, cloud save, verified purchases, authoritative rewards, badges/milestones, dependable background walking, glow environments, and reactive filling.
 - Read `UI_UX_TASKS.md`, `HOME_UI.md`, `COLLECTION_UI.md`, and `VALIDATION.md`. Keep implemented local features distinct from unavailable online services.
-- Expanded roster requested by the owner: at least **12 characters with 8–10 finishes each**. Read `CHARACTER_ROSTER.md` for a draft 12-character/9-finish plan, ART-001–005, and UX-029–031. The current build still has four finishes of Pip; the proposed roster is not shipped content.
+- Expanded roster requested by the owner: at least **12 distinct character collections with at least 10 color/texture/material varieties each**. Pip is one collection in Series 1; finish themes are not separate collections. Read `CHARACTER_ROSTER.md` for the updated minimum 120-collectible plan, ART-001–005, and UX-029–031. The current build still has four finishes of Pip; the proposed roster is not shipped content.
 
 ## Proposed division
 

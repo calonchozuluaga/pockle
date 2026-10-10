@@ -7,11 +7,19 @@ namespace Pockle.Runtime
     {
         public readonly string ProductId, Name, ProposedPrice, Contents;
         public string CollectionId { get; }
-        public BoxPoolDefinition Pool => ToyCatalog.TryGetBoxPool(CollectionId, out var pool) ? pool : null;
+        public string PoolId { get; }
+        public CollectionDefinition Collection => ToyCatalog.TryGetCollection(CollectionId, out var collection) ? collection : null;
+        public BoxPoolDefinition Pool => ToyCatalog.TryGetBoxPool(PoolId, out var pool) ? pool : null;
         public BoxOffer(string id, string name, string price, string contents)
             : this(id, name, price, contents, "") { }
         public BoxOffer(string id, string name, string price, string contents, string collectionId)
-        { ProductId = id; Name = name; ProposedPrice = price; Contents = contents; CollectionId = collectionId; }
+        {
+            ProductId = id; Name = name; ProposedPrice = price; Contents = contents;
+            PoolId = collectionId;
+            CollectionId = ToyCatalog.TryGetCollectionForPool(PoolId, out var mapped) ? mapped.Id : collectionId;
+        }
+        public BoxOffer(string id, string name, string price, string contents, string collectionId, string poolId)
+        { ProductId = id; Name = name; ProposedPrice = price; Contents = contents; CollectionId = collectionId; PoolId = poolId; }
     }
 
     public static class BoxCatalog

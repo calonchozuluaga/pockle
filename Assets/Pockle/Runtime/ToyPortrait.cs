@@ -9,6 +9,10 @@ namespace Pockle.Runtime
         { return Render(PipVariants.CollectibleId(variant)); }
 
         public static RenderTexture Render(string id)
+        { return Render(id, new Color(.978f, .962f, .943f)); }
+
+        /// <summary>Renders on a chosen background, so a portrait sits seamlessly on its toy's colour field (UX-032).</summary>
+        public static RenderTexture Render(string id, Color background)
         {
             var root = new GameObject("Shelf preview · " + id);
             RenderTexture texture = null;
@@ -23,7 +27,7 @@ namespace Pockle.Runtime
                 var cameraObject = new GameObject("Shelf portrait camera", typeof(Camera)); cameraObject.transform.SetParent(root.transform, false);
                 var camera = cameraObject.GetComponent<Camera>(); camera.enabled = false;
                 camera.cullingMask = 1 << 30; camera.orthographic = true; camera.orthographicSize = 1.13f;
-                camera.clearFlags = CameraClearFlags.SolidColor; camera.backgroundColor = new Color(.978f, .962f, .943f);
+                camera.clearFlags = CameraClearFlags.SolidColor; camera.backgroundColor = background;
                 camera.nearClipPlane = .1f; camera.farClipPlane = 10; camera.allowHDR = false; camera.allowMSAA = false;
                 camera.transform.localPosition = new Vector3(0, .18f, -5);
                 camera.transform.LookAt(root.transform.position + new Vector3(0, .05f, 0));

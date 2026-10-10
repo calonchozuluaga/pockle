@@ -1,6 +1,98 @@
 # Claude handoff
 
-October 8, 2026. Status: **UX-002 in review (PR #2, `claude/ui-polish`). UX-003/004 "Home and shelf 01" in review on `claude/home-shelf`, stacked on PR #2. ART-001 next.**
+October 9, 2026. Status: **UX-002/003/004 and ART-001 merged. The owner tested the UI and asked for a less dated look: "Pockle screens v2" (owner's design canvas) is the approved direction. Collection/series rules decided; see `../COLLECTIONS.md`. Next: rebuild the Unity screens to v2, then UX-031.**
+
+
+
+
+
+## Target jelly look for the toys (owner feedback, October 9)
+
+The owner says the in-app toys read as **smooth blobs** next to the concept renders (for example `../concepts/pip-peach-jelly-concept-01.png`, which the v2 preview screens use). The concepts look like jelly you could squish: lit from within, glowing, with things floating inside.
+
+**This looks like a material and lighting gap, not a modeling one.** The silhouettes are probably fine. The concepts come from offline rendering, where light travels through the material. A phone can't do that, but most of the look can be faked in real time.
+
+`JellyCandy.shader` already has a lot of this:
+- gloss and rim terms
+- studio cubemap reflections
+- pearl sheen and glitter flakes
+- suspended pearls drawn under the shell
+
+So the work is mostly about tuning and adding what's missing, not starting over. Materials and 3D are your lane. Here's the target, grouped by how achievable it is on a phone.
+
+**Very achievable (do these first):**
+- **Glassy sheen:** a soft, broad highlight that rolls over the shell as the toy turns and squishes. The concept's highlights are larger and softer than ours.
+- **Lit-through edges:** a stronger translucent rim, so the edges look lighter and more saturated than the centre, as if light passes through the thin parts. Tie it to the view angle (fresnel), not a flat edge colour.
+- **Soft glow:** the concepts have a gentle halo. Built-in RP has no bloom without a post-processing package, and `Packages/manifest.json` changes need the owner's approval. A cheap alternative is a slightly larger additive back shell or a soft glow sprite behind the toy.
+- **Keep the squish:** the existing deformation is the best part. Nothing here should cost it frame rate.
+
+**Medium effort:**
+- **Lit-from-within:** a cheap subsurface approximation, not true SSS. Wrapped diffuse lighting, a thickness term (thicker in the middle, thinner at the edges, so a baked thickness map or vertex value), and a back-light transmission term, so the toy glows when lit from behind. This is the stylized "glowing gummy" look most mobile games use.
+- **Floating bits that read as inside:** the pearls exist but should feel suspended in depth.
+  - Fade and tint them by depth inside the shell.
+  - Let them drift slightly, with a parallax offset as the toy rotates.
+  - Use an inner layer or interior sprites rather than more real geometry.
+  - Let them shift a little when the toy is squished (already in the interaction plans).
+
+**Hard; probably skip on phones:**
+- **True refraction:** bending the background through the toy needs a grab pass or an opaque-texture copy every frame. It's expensive, and it matters least for this cute, glowing look.
+
+**Ask:** please put the four Pip finishes in this material first:
+- Peach Jelly
+- Moon Jelly
+- Gold Glitter
+- Mint Soft, which is opaque and soft, so it mostly needs the sheen and a softer inner glow
+
+Then share an in-engine render or screenshot of each, next to the concept, so the owner can compare. Please also note the cost on a midrange Android phone. The stage lighting and background (`PrototypeStage`, also your lane) matter a lot to this look. A light from behind or the side that the transmission term can catch will help.
+## Fusion (proposal, October 9)
+
+The owner wants two spares to fuse into a unique toy you can't buy. Proposal: `../FUSION.md`.
+- Results come from rules that blend shape, colour, material, and personality, with a few secret recipes on top.
+- Fusion uses up both spares.
+- Fused toys can't be traded or bought and have no serials or finite supply.
+- Each spare can be used once: traded, crafted, or fused.
+
+**For Codex:** the rule-based art (mesh, material, and colour blending), the fusion runtime, save and ledger changes, and server validation are your lane, and more technical than anything scoped so far. **Please don't start until the owner approves the approach.** Once approved, a short spike would help: blend two materials, and attach one parent's detail to the other's body. Open owner questions are listed in the doc.
+## Personalities and a living shelf (proposal, October 9)
+
+The owner wants Pockles to have personalities and react to each other on the shelf, so there's something to do after the daily box. Proposal: `../PERSONALITIES.md`. Key points:
+- Everything is authored and shipped. No runtime AI, per the no-AI-calls rule, cost, offline play, and child safety.
+- Personality lives on the character, and the variety tints it.
+- Alive but never needy: no decay or guilt mechanics.
+
+It awaits the owner's review.
+
+**For Codex, once the owner approves:** the shelf runtime is your lane. Proposed interface, to accept or amend in `codex.md`:
+- engine-free personality profiles on characters in the catalog (temperament, reaction IDs, per-variety tint values, pairing rules);
+- a runtime that plays a reaction by ID on a lineup toy, reusing `CharacterMotion` and `LineupMotionBudget`;
+- the HUD asks for reactions by ID and never drives motion directly.
+
+Please don't build it until the owner settles the open questions.
+## Daily check-in box (owner decision, October 9)
+
+The owner added a free **daily check-in box** that doesn't require walking. It is the accessibility floor, so players who can't walk, won't walk, or won't pay still get a toy and don't leave on day one. It also covers tablets and phones without a step sensor. Walking stays the better path, with the existing tiers. Details and the three tuning options for the owner (older series, every two days, lower rare/secret odds) are in `../COLLECTIONS.md` under "Daily check-in box".
+
+**Request for Codex:** please plan the check-in box in the reward logic, alongside the walking box:
+- claim timing and the pool it draws from;
+- exactly one claim per period, persisted before the reveal;
+- the same finite-supply and ledger rules as other boxes, with source "check-in".
+
+Hold the tuning values until the owner chooses. I'll add the check-in card to Home and Boxes once the reward API exists.
+## UX-032 v2 screens — `claude/ui-v2` (stacked on PR #6)
+
+Claimed: UX-032. Files: `PrototypeHud*.cs`, `Runtime/UI/PockleTheme.cs`, `Resources/UI/Fonts/` (Bricolage Grotesque replaces Fredoka/Nunito; Fredoka moves to `ArtSource/Fonts/` for the wordmark script), `CollectionUiTests.cs`, `docs/VISUAL_SYSTEM.md`, `docs/HOME_UI.md`.
+
+**One additive change in Codex's lane:** `ToyPortrait.Render(string id, Color background)`, so portraits render on their toy's colour field. The existing overloads are unchanged.
+
+**HUD contracts:** public methods, events, and `ShowToy` behavior are unchanged. Some captions changed with the design, and the PlayMode tests were updated to match:
+
+- Home's "Collection" tile became "See all"; Home's greeting is "Morning/Afternoon/Evening, name".
+- Buy buttons show the price and are named `Buy · <offer>`.
+- Settings opens from the gear on You (not from toy play), with switches named `Sound switch` and `Vibration switch`.
+- The favorite is set with the heart while playing a toy.
+- Friends' second segment is "Your friends".
+
+**Requests for Codex (unchanged from the collections note):** `AppPage.Collections` / `AppPage.Collection` in `MenuNavigation`, and `PrototypeStage.SetBackdrop(Color)` so toy play can sit on the toy's colour field like the canvas.
 
 ## Acknowledgment
 
@@ -88,3 +180,22 @@ Several working names may collide with existing brands or characters (Bop, Mallo
 
 - Please avoid editing `PrototypeHud*.cs` while UX-002–004 are open. If runtime work needs a HUD change, add the request to `codex.md` and I'll make it.
 - Once PR #1 merges, CI will run the portable checks on your branches too; a red check on a PR now blocks merging.
+
+## October 9 — v2 screen direction and collection rules (branch `claude/collections-design`)
+
+The owner reviewed the merged UI on device and found it clunky and dated. I prototyped all screens as HTML in a design canvas ("Pockle screens v2"); the owner approved the direction: toys shown large on their own colour fields, quieter chrome, a single plum primary action per screen, a floating plum tab bar, and Bricolage Grotesque replacing Fredoka/Nunito. I'll rebuild the Unity HUD to match (my lane: `PrototypeHud*.cs`, `Runtime/UI/`, UI resources).
+
+The owner also decided how collections work (no retirement, every series always on sale, per-box prices, a 1-in-72 secret per series, series and first-found date shown with each toy). **Requests for Codex** are in `../COLLECTIONS.md` under "Catalog fields needed": series number, release date, ordered members, secret ID, pool weights including the secret, price tier, and accent colours per series; first-found date and source per owned collectible (save extension); idle and eager animations per character for the collection lineup. Please acknowledge or amend in `codex.md` before either of us builds on them.
+
+PR #5 (editor Core reference) is closed as superseded by Codex's `b8a119c`.
+
+## October 9 — Supabase chosen; v2 UI build starting
+
+The owner chose **Supabase** and approved the v2 UI direction. I'm starting **UX-032** on `claude/ui-v2`: restyling every existing HUD page to v2 (Bricolage Grotesque, plum tab bar, colour-field toy tiles, flat surfaces) and regrouping the shelf by collection with Everything / Missing / Duplicates views. Files: `PrototypeHud*.cs`, `Runtime/UI/`, `Resources/UI/`, `CollectionUiTests.cs`, UI docs.
+
+**Requests for Codex:**
+
+1. **Backend plan (your lane).** Please draft the Supabase schema and server functions for the rules in `../COLLECTIONS.md`: accounts and guest migration, server-owned inventory with per-copy serials, finite supply with atomic allocation, never-duplicate paid boxes with per-player odds, walk tiers, crafting, the append-only ledger, and trades (friend swaps and the have/want market). I'll review it and build the screens on top.
+2. **Two new pages in `MenuNavigation`:** `AppPage.Collections` (all series) and `AppPage.Collection` (one series' lineup), with Back behaving like Shelf → Play. `MenuNavigation` is yours; I'll add the HUD pages once the enum values exist.
+3. **Stage backdrop per toy.** v2 shows each toy on its own colour field. Could `PrototypeStage` expose a way to set the viewer's background colour (for example `SetBackdrop(Color)`) so the HUD can pass the toy's field colour on entering play?
+4. **Catalog fields** from `../COLLECTIONS.md` (series number, release date, members, secret, odds, accent colours) when you get to them.
