@@ -222,7 +222,7 @@ namespace Pockle.Runtime
                     ownedMaterials.Add(cheekMaterial);
                 }
             }
-            bubbleMaterial = CreateCandyMaterial("Suspended pearls", new Color(1f, 0.88f, 0.69f, 0.36f), 0.62f);
+            bubbleMaterial = CreateCandyMaterial("Suspended pearls", new Color(1f, 0.88f, 0.69f, 0.36f), 0.88f);
             // Draw suspended pearls before the shell so its peach tint covers them.
             bubbleMaterial.renderQueue = 2990;
             sparkleMaterial = CreateFlatMaterial("Apricot flecks", new Color(1f, 0.82f, 0.57f, 1f));
@@ -508,17 +508,18 @@ namespace Pockle.Runtime
 
         private void BuildFace()
         {
+            bool authoredPip = characterAsset != null && characterAsset.CharacterId == "pip";
             // Face is deliberately on negative Z, facing the default portrait camera.
             for (int side = -1; side <= 1; side += 2)
             {
                 int index = side < 0 ? 0 : 1;
                 Vector3 eye = characterAsset != null ? characterAsset.Eyes[index] : SurfacePoint(side * 0.225f, 0.18f, 0.034f);
                 AddAccent(side < 0 ? "Left soft eye" : "Right soft eye", eye,
-                    characterAsset != null ? new Vector3(0.092f, 0.127f, 0.042f) : new Vector3(0.068f, 0.103f, 0.041f), eyeMaterial, accentMesh, true);
+                    authoredPip ? new Vector3(.102f, .14f, .045f) : characterAsset != null ? new Vector3(.092f, .127f, .042f) : new Vector3(.068f, .103f, .041f), eyeMaterial, accentMesh, true);
                 AddAccent("Cream eye glint", characterAsset != null ? characterAsset.EyeGlints[index] : eye + new Vector3(-0.016f, 0.034f, -0.037f),
                     characterAsset != null ? new Vector3(0.020f, 0.024f, 0.012f) : new Vector3(0.018f, 0.021f, 0.011f), highlightMaterial, accentMesh, true);
                 AddAccent("Warm cheek", characterAsset != null ? characterAsset.Cheeks[index] : SurfacePoint(side * 0.355f, 0.022f, 0.022f),
-                    characterAsset != null ? new Vector3(0.15f, 0.087f, 0.018f) : new Vector3(0.075f, 0.038f, 0.024f), cheekMaterial, accentMesh, true);
+                    authoredPip ? new Vector3(.20f, .112f, .018f) : characterAsset != null ? new Vector3(.15f, .087f, .018f) : new Vector3(.075f, .038f, .024f), cheekMaterial, accentMesh, true);
             }
             var smile = new GameObject("Tiny smile", typeof(LineRenderer));
             smile.transform.SetParent(visualRoot, false);
@@ -584,7 +585,7 @@ namespace Pockle.Runtime
             {
                 Vector3[] moonPearls = { new Vector3(-.38f, -.43f, -.24f), new Vector3(.14f, -.59f, -.26f), new Vector3(.40f, -.29f, -.13f) };
                 for (int i = 0; i < moonPearls.Length; i++)
-                    AddAccent("Moon pearl " + (i + 1), moonPearls[i], Vector3.one * (.044f + i * .013f), bubbleMaterial, accentMesh, false);
+                    AddAccent("Moon pearl " + (i + 1), moonPearls[i], Vector3.one * (.067f + i * .016f), bubbleMaterial, accentMesh, false);
                 Vector3[] stars = {
                     new Vector3(-.36f, -.65f, -.26f), new Vector3(.28f, -.45f, -.30f),
                     new Vector3(.49f, -.12f, -.21f), new Vector3(-.24f, .29f, -.22f),
@@ -607,7 +608,7 @@ namespace Pockle.Runtime
             if (characterAsset != null) pearls = characterAsset.Pearls;
             for (int i = 0; i < pearls.Length; i++)
             {
-                float radius = (characterAsset != null ? 0.032f : 0.026f) + (i % 3) * 0.011f;
+                float radius = characterAsset != null ? .062f + (i % 3) * .014f : .026f + (i % 3) * .011f;
                 AddAccent("Suspended pearl " + (i + 1), pearls[i], Vector3.one * radius,
                     bubbleMaterial, accentMesh, false);
             }
@@ -660,7 +661,7 @@ namespace Pockle.Runtime
             if (characterAsset != null)
             {
                 Color shell = characterAsset.BodyColor;
-                shell.a = .60f;
+                shell.a = .44f;
                 Material authored = CreateCandyMaterial("Pip clear peach jelly shell", shell, .92f);
                 if (authored.HasProperty("_BottomColor")) authored.SetColor("_BottomColor", characterAsset.BottomColor);
                 if (authored.HasProperty("_TopColor")) authored.SetColor("_TopColor", characterAsset.TopColor);
@@ -688,6 +689,8 @@ namespace Pockle.Runtime
             SetFloat(bodyMaterial, "_StudioStrength", !soft && studioReflection != null ? 1f : 0f);
             SetFloat(bodyMaterial, "_ZWrite", soft ? 1f : 0f);
             SetFloat(bodyMaterial, "_PearlSheen", 0f);
+            SetFloat(bodyMaterial, "_Transmission", soft ? .04f : .14f);
+            SetFloat(bodyMaterial, "_EdgeLight", soft ? .12f : .15f);
             bodyMaterial.renderQueue = soft ? 2001 : 3000;
             bool moon = variant == PipVariant.MoonJelly;
             if (variant == PipVariant.GoldGlitter)
@@ -696,8 +699,8 @@ namespace Pockle.Runtime
                 SetColor(bodyMaterial, "_TopColor", new Color(1f, .94f, .58f));
                 SetColor(bodyMaterial, "_BottomColor", new Color(.82f, .46f, .08f));
                 SetColor(bodyMaterial, "_RimColor", new Color(1f, .93f, .65f));
-                SetFloat(bodyMaterial, "_Glossiness", .88f);
-                SetFloat(bodyMaterial, "_ReflectionStrength", .85f);
+                SetFloat(bodyMaterial, "_Glossiness", .90f);
+                SetFloat(bodyMaterial, "_ReflectionStrength", .90f);
                 cheekMaterial.color = new Color(1f, .35f, .30f, .55f);
             }
             else if (soft)
@@ -706,8 +709,8 @@ namespace Pockle.Runtime
                 SetColor(bodyMaterial, "_TopColor", new Color(.75f, .93f, .77f));
                 SetColor(bodyMaterial, "_BottomColor", new Color(.35f, .64f, .48f));
                 SetColor(bodyMaterial, "_RimColor", new Color(.67f, .89f, .73f));
-                SetFloat(bodyMaterial, "_Glossiness", .15f);
-                SetFloat(bodyMaterial, "_ReflectionStrength", .16f);
+                SetFloat(bodyMaterial, "_Glossiness", .38f);
+                SetFloat(bodyMaterial, "_ReflectionStrength", .4f);
                 cheekMaterial.color = new Color(.95f, .43f, .57f, .48f);
             }
             else if (moon)
@@ -716,10 +719,10 @@ namespace Pockle.Runtime
                 SetColor(bodyMaterial, "_TopColor", new Color(.77f, .92f, 1f, 1f));
                 SetColor(bodyMaterial, "_BottomColor", new Color(.35f, .40f, .82f, 1f));
                 SetColor(bodyMaterial, "_RimColor", new Color(.85f, .92f, 1f, 1f));
-                SetFloat(bodyMaterial, "_Glossiness", .58f);
-                SetFloat(bodyMaterial, "_ReflectionStrength", .62f);
+                SetFloat(bodyMaterial, "_Glossiness", .90f);
+                SetFloat(bodyMaterial, "_ReflectionStrength", .90f);
                 SetFloat(bodyMaterial, "_PearlSheen", .72f);
-                bubbleMaterial.color = new Color(.88f, .97f, 1f, .64f);
+                bubbleMaterial.color = new Color(.90f, .97f, 1f, .84f);
                 SetColor(bubbleMaterial, "_TopColor", new Color(.97f, .99f, 1f, 1f));
                 SetColor(bubbleMaterial, "_BottomColor", new Color(.62f, .81f, .95f, 1f));
                 cheekMaterial.color = new Color(.92f, .40f, .67f, .48f);
@@ -727,18 +730,18 @@ namespace Pockle.Runtime
             else
             {
                 bodyMaterial.color = characterAsset != null
-                    ? new Color(characterAsset.BodyColor.r, characterAsset.BodyColor.g, characterAsset.BodyColor.b, .60f)
+                    ? new Color(characterAsset.BodyColor.r, characterAsset.BodyColor.g, characterAsset.BodyColor.b, .44f)
                     : new Color(1f, .43f, .34f, .91f);
                 SetColor(bodyMaterial, "_TopColor", characterAsset != null ? characterAsset.TopColor : new Color(1f, .71f, .49f, 1f));
                 SetColor(bodyMaterial, "_BottomColor", characterAsset != null ? characterAsset.BottomColor : new Color(.89f, .20f, .23f, 1f));
                 SetColor(bodyMaterial, "_RimColor", new Color(1f, .86f, .67f, 1f));
-                SetFloat(bodyMaterial, "_Glossiness", characterAsset != null ? .92f : .48f);
-                SetFloat(bodyMaterial, "_ReflectionStrength", 1f);
+                SetFloat(bodyMaterial, "_Glossiness", characterAsset != null ? .93f : .48f);
+                SetFloat(bodyMaterial, "_ReflectionStrength", .95f);
                 SetFloat(bodyMaterial, "_PearlSheen", 0f);
-                bubbleMaterial.color = new Color(1f, .88f, .69f, .36f);
-                SetColor(bubbleMaterial, "_TopColor", Color.Lerp(bubbleMaterial.color, Color.white, .34f));
-                SetColor(bubbleMaterial, "_BottomColor", bubbleMaterial.color * new Color(.92f, .74f, .79f, 1f));
-                cheekMaterial.color = characterAsset != null ? new Color(1f, .30f, .26f, .62f) : new Color(1f, .42f, .40f, 1f);
+                bubbleMaterial.color = new Color(1f, .98f, .93f, 1f);
+                SetColor(bubbleMaterial, "_TopColor", new Color(1f, .99f, .97f, 1f));
+                SetColor(bubbleMaterial, "_BottomColor", new Color(.93f, .88f, .77f, 1f));
+                cheekMaterial.color = characterAsset != null ? new Color(1f, .34f, .30f, .46f) : new Color(1f, .42f, .40f, 1f);
             }
             if (visualRoot != null) visualRoot.name = "Pip · " + PipVariants.Label(variant);
             bodyMaterial.name = "Pip · " + PipVariants.Label(variant) + " shell";

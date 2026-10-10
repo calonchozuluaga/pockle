@@ -51,20 +51,25 @@ namespace Pockle.Tests
         }
 
         [Test]
-        public void AuthoredFlatBaseRemainsFixedAtMaximumSquashAndStretch()
+        public void SettledRoundedBellyRemainsFixedAtMaximumSquashAndStretch()
         {
             PipCharacterAsset asset = Load();
             int anchors = 0;
+            float contactRadius = 0;
             foreach (Vector3 vertex in asset.BodyMesh.vertices)
             {
                 if (vertex.y > -.99999f) continue;
                 anchors++;
+                float radius = new Vector2(vertex.x, vertex.z).magnitude;
+                contactRadius = Mathf.Max(contactRadius, radius);
+                Assert.That(radius, Is.LessThan(.68f));
                 Point3 deformed = JellyShape.Deform(new Point3(vertex.x, vertex.y, vertex.z), .42f, .6f, .25f, -.25f, .5f, -.5f);
                 Assert.That(deformed.X, Is.EqualTo(vertex.x).Within(.00001f));
                 Assert.That(deformed.Y, Is.EqualTo(-1f).Within(.00001f));
                 Assert.That(deformed.Z, Is.EqualTo(vertex.z).Within(.00001f));
             }
-            Assert.That(anchors, Is.GreaterThan(30));
+            Assert.That(anchors, Is.GreaterThanOrEqualTo(3));
+            Assert.That(contactRadius, Is.GreaterThan(.45f), "Pip must rest on its belly instead of a pointed pole.");
         }
     }
 }

@@ -30,6 +30,7 @@ internal static class AuthoredMeshChecks
         Check(count <= 4000, "Authored body exceeds the mobile vertex budget.");
         Check(count < 65000 && groups.Length == count && uv.Length == count * 2, "Mesh buffer dimensions mismatch.");
         Check(indices.Length > 0 && indices.Length % 3 == 0, "Malformed mesh indices.");
+        Check(indices.Length / 3 <= 6000, "Pip exceeds the existing mobile shell triangle budget.");
         Point3[] rest = new Point3[count];
         for (int i = 0; i < count; i++)
         {
@@ -38,6 +39,36 @@ internal static class AuthoredMeshChecks
             Check(groups[i] >= 0 && groups[i] < count, "Normal weld group invalid.");
         }
         foreach (float coordinate in uv) Check(!float.IsNaN(coordinate) && coordinate >= 0 && coordinate <= 1, "UV outside 0..1.");
+        int contactPoints = 0;
+        double contactRadius = 0, contactHalfWidth = 0, undersideHalfWidth = 0, bodyHalfWidth = 0;
+        foreach (Point3 vertex in rest)
+        {
+            double radius = Math.Sqrt(vertex.X * vertex.X + vertex.Z * vertex.Z);
+            bodyHalfWidth = Math.Max(bodyHalfWidth, Math.Abs(vertex.X));
+            if (vertex.Y <= -.99999f)
+            {
+                contactPoints++; contactRadius = Math.Max(contactRadius, radius);
+                contactHalfWidth = Math.Max(contactHalfWidth, Math.Abs(vertex.X));
+            }
+            if (vertex.Y < -.9f && vertex.Y > -.98f) undersideHalfWidth = Math.Max(undersideHalfWidth, Math.Abs(vertex.X));
+        }
+        Check(contactPoints >= 3 && contactRadius > .45 && contactRadius < .68,
+            "Pip needs a broad settled contact area rather than balancing on its lower pole.");
+        Check(contactHalfWidth / bodyHalfWidth > .55 && contactHalfWidth / bodyHalfWidth < .78,
+            "The resting belly must support the body while leaving room for rounded corners.");
+        Check(undersideHalfWidth > contactHalfWidth + .08 && undersideHalfWidth / bodyHalfWidth > .75,
+            "Rounded lower corners must carry the belly outward just above the resting plane.");
+        Point3 widest = rest[0];
+        double shoulderHalfWidth = 0;
+        foreach (Point3 vertex in rest)
+        {
+            if (Math.Abs(vertex.X) > Math.Abs(widest.X)) widest = vertex;
+            if (vertex.Y > .18f && vertex.Y < .28f) shoulderHalfWidth = Math.Max(shoulderHalfWidth, Math.Abs(vertex.X));
+        }
+        double widestDown = (.665 - widest.Y) / 1.665;
+        Check(widestDown >= .63 && widestDown <= .72, "Pip's widest point must sit in the lower body, not at mid-height.");
+        Check(shoulderHalfWidth / bodyHalfWidth >= .70 && shoulderHalfWidth / bodyHalfWidth <= .82,
+            "Pip needs narrow pear shoulders above its fuller lower belly.");
         Dictionary<(int, int), (int count, int direction)> edges = new Dictionary<(int, int), (int count, int direction)>();
         int[] parents = new int[count];
         for (int i = 0; i < count; i++) parents[i] = i;
@@ -73,7 +104,7 @@ internal static class AuthoredMeshChecks
                 Check(1.15 + transformed[i].Y < 3.6, "Integrated body/crown exceeds viewer framing.");
                 if (rest[i].Y == -1)
                     Check(transformed[i].X == rest[i].X && transformed[i].Y == -1 && transformed[i].Z == rest[i].Z,
-                        "Authored flat base moved.");
+                        "Authored contact patch moved.");
                 Point3 identity = JellyShape.Deform(rest[i], 0, 0, 0, 0, 0, 0);
                 Check(Math.Abs(identity.X - rest[i].X) < 1e-6 && Math.Abs(identity.Y - rest[i].Y) < 1e-6 && Math.Abs(identity.Z - rest[i].Z) < 1e-6,
                     "Reset does not recover authored rest shape.");
@@ -83,12 +114,48 @@ internal static class AuthoredMeshChecks
         }
         float[] crowns = Floats(source, "crowns"), scales = Floats(source, "crownScales");
         Check(crowns.Length == 6 && scales.Length == 6, "Crown dimensions invalid.");
+        Check(scales[0] < scales[3] && crowns[1] + scales[1] < crowns[4] + scales[4],
+            "The left crown bubble must be smaller and lower than the right bubble.");
+        Check(Math.Abs(scales[0] - scales[1]) < .015 && Math.Abs(scales[3] - scales[4]) < .015,
+            "Crown lobes must read as round bubbles rather than long ears.");
+        float[] eyes = Floats(source, "eyes"), cheeks = Floats(source, "cheeks");
+        Check(eyes[3] - eyes[0] >= .64f && eyes[1] < 0 && eyes[4] < 0, "Pip's eyes must be lower and wider apart.");
+        Check(cheeks[1] < eyes[1] - .1f && cheeks[4] < eyes[4] - .1f, "Blush belongs low on the cheeks.");
         for (int i = 0; i < 2; i++)
         {
             Point3 point = JellyShape.Deform(new Point3(crowns[i * 3], crowns[i * 3 + 1], crowns[i * 3 + 2]), 0, .6f, 0, 0, 0, 0);
             Check(1.15 + point.Y + scales[i * 3 + 1] * 1.6 < 3.6, "Authored crown exceeds viewer framing.");
         }
         Check(Floats(source, "eyes").Length == 6 && Floats(source, "mouth").Length == 39, "Facial anchors missing.");
+        foreach (string key in new[] { "eyes", "eyeGlints", "cheeks", "mouth" })
+        {
+            float[] anchors = Floats(source, key);
+            for (int i = 0; i < anchors.Length; i += 3)
+            {
+                var origin = new Point3(anchors[i], anchors[i + 1], -2f);
+                float nearest = float.PositiveInfinity;
+                for (int face = 0; face < indices.Length; face += 3)
+                    if (SurfaceRaycast.TryTriangle(origin, new Point3(0, 0, 1), rest[indices[face]], rest[indices[face + 1]], rest[indices[face + 2]], out float distance))
+                        nearest = Math.Min(nearest, distance);
+                Check(!float.IsInfinity(nearest), key + " anchor misses the rounded body.");
+                float gap = -2f + nearest - anchors[i + 2];
+                Check(gap > .005f && gap < .15f, key + " anchor is buried or floating above the rounded body.");
+            }
+        }
+        float[] pearls = Floats(source, "pearls");
+        foreach (Point3 direction in new[] { new Point3(1, 0, 0), new Point3(-1, 0, 0),
+            new Point3(0, 1, 0), new Point3(0, -1, 0), new Point3(0, 0, 1), new Point3(0, 0, -1) })
+        for (int i = 0; i < pearls.Length; i += 3)
+        {
+            var center = new Point3(pearls[i], pearls[i + 1], pearls[i + 2]);
+            float clearance = float.PositiveInfinity;
+            for (int face = 0; face < indices.Length; face += 3)
+                // Reverse winding to find the exit from inside the shell.
+                if (SurfaceRaycast.TryTriangle(center, direction, rest[indices[face + 2]], rest[indices[face + 1]], rest[indices[face]], out float distance))
+                    clearance = Math.Min(clearance, distance);
+            Check(!float.IsInfinity(clearance) && clearance > .105f,
+                "Suspended pearls need space inside the jelly, not anchors on its surface.");
+        }
         Console.WriteLine("PASS: " + assertions + " authored mesh assertions; " + count + " vertices / " + indices.Length / 3 + " triangles.");
         return assertions;
     }
