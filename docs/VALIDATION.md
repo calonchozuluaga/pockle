@@ -1,3 +1,21 @@
+## Collection runtime contracts and backend design (October 10, 2026)
+
+### Combined v2 UI and collection routes
+
+`codex/v2-collection-integration` combines Claude's `d697e12` v2/catalog snapshot, later `de285df` collection notes and PR #9 runtime contracts. All eleven portable suites passed (**549,003 assertions**). Source checks passed (**63 C# files / three profiles / five assembly definitions / 139 GUIDs / zero failures**). Fonts match their remote Git blob hashes; metadata synchronization and whole-tree whitespace passed. The unchanged packaging concept PNG is retained by its existing remote blob when publishing; it is not used by runtime or local tests.
+
+New UI PlayMode coverage is authored for Collections/Collection reachability, slot availability, shared static previews, disabled viewer backdrop changes/reset, Back/scroll and tab clearing without inventory changes. PR #9's CI completed successfully, including Unity; the combined branch needs its own Unity run. Phone visual/touch/performance and Android packaging remain distinct. See [V2_PHONE_TEST.md](V2_PHONE_TEST.md).
+
+Branch `codex/collection-backend-contracts` from verified remote main `b8a119c`. Executed all ten portable suites: **417,710 assertions**, including **42 menu/profile assertions** with Collection/Collections Back, independent scroll, main-tab reset and invalid destination rejection. Source checks passed: **57 C# files / three symbol profiles / five assembly definitions / 133 GUIDs / zero failures**. Metadata synchronization created one `.meta` and preserved all existing GUIDs. `git diff --check` passed. SDK: prepared `/workspace/.tools/dotnet/dotnet` 8.0.425; `DOTNET_CLI_HOME` and `NUGET_PACKAGES` point to writable prepared workspace directories.
+
+Authored but unrun locally: `StageBackdropTests`, covering the viewer and full-screen clear camera through a framing update, default reset, bad RGB rejection, camera isolation and destroyed-stage cleanup. Unity editor/API compilation, colour-space appearance, HUD integration, Android builds/frame time and hosted CI remain separate verification. Backend schema/function design and acceptance cases are documentation only: no SQL migration, live project, auth integration, RLS tests or concurrency execution is claimed.
+
+## Series metadata and lineup motion (October 9, 2026)
+
+Executed: **130,254 series/motion assertions**, plus 418,742 assertions across the existing suites (**548,996 total**). The expanded catalog suite now reports 1,296 assertions and material handling 9,705 because the planned catalog has ten varieties per character. Coverage includes one character per collection, at least ten members per catalog collection, Pip in Series 1, immutable membership and disclosed probabilities, positive/unique prize validation and overflow-safe totals, null release dates, UTC date boundaries, permanent collections, a deterministic 72,000-draw 1-in-72 secret fixture, all twelve idle/eager loop profiles, bounded nonfinite/extreme-time behavior, calm neutrality, zero sampling allocations, and shared animation slot limits/reuse. The existing four-Pip inventory migration and daily odds still pass unchanged.
+
+Source checks pass for **61 C# files**, three symbol profiles, five assembly definitions, and **137 GUIDs**. Four Unity PlayMode cases are authored but unrun: beta offer mapping to Pip, visibility/calming/restoration, reconfiguration/destruction, and disabled toy cleanup. Unity compiler/lifecycle execution, rendering and motion feel, actual live lineup UI integration, Android packaging, and performance remain unverified. No licensed Unity editor is available here. See [exact APIs and Claude integration guidance](SERIES_AND_MOTION_API.md).
+
 ## Editor assembly reference correction (October 9, 2026)
 
 The owner supplied a Unity Console error: `PipCharacterImporter.cs(63,18): CS0234`, because `Pockle.Editor.asmdef` referenced Runtime but not Core while the importer directly called `Pockle.Core.ToyCatalog`. Added the required direct Core reference. This is a confirmed Unity compilation failure in the previous merged build, despite the syntax/geometry checks passing.
@@ -14,6 +32,14 @@ Executed against the merged Home/shelf UI, ID integration, roster concepts, CI, 
 - CI's whole-tree whitespace check caught two trailing spaces in font-license text; removed the spaces without changing the license prose. The same whole-tree check passes after the cleanup.
 
 GitHub check-runs could not be inspected: the API returned Forbidden. Local results do not establish hosted CI success. No Unity editor/license is available in cloud, so Unity compilation, shader rendering, EditMode/PlayMode execution, Android APK builds, font/texture imports, UI layout, and device performance remain unverified. Settings → About identifies this UI as **Home and shelf 01**. Review the Home/shelf locally and use **Pockle → Character studies** in the editor for the provisional models; they remain unavailable on the ordinary Android shelf.
+
+## v2 screens 01 (UX-032, Claude)
+
+Executed: a Mono type-check of every `PrototypeHud*.cs` partial, `PockleTheme`, `SquishFeedback`/`SquishMesh`, `GuestProfile`, `BoxCatalog`, `PipVariant`, and Codex's real `Pockle.Core` sources, against hand-written Unity API stubs (names and types only, not real Unity signatures). `git diff --check` and the meta sync pass. Portable checks and the Unity suites run in CI on the pull request.
+
+Updated PlayMode tests (run in CI): shelf selection and unavailable checkout through the price button; Play round trip restoring the shelf scroll; Settings opened from You with the volume preserved when muted via the sound switch; profile name, avatar, and favorite (set with the heart while playing) persisting across a restart; Home greeting by time of day; Missing/Duplicates shelf views.
+
+Not verified until the owner tries it on a phone: how close each screen looks to the canvas, Bricolage import and weights, rounded radii from the sliced sprite, portrait colour matching its tile (linear vs. gamma colour space), the rotated box art, and layout at 320×568 and tablet sizes.
 
 ## Home and shelf 01 (UX-003/004, Claude)
 

@@ -95,6 +95,7 @@ namespace Pockle.Runtime
             hud.SetVariant(toy.Variant);
             hud.VariantChanged += SetVariant;
             hud.StoreVisibilityChanged += StoreVisibilityChanged;
+            hud.BackdropChanged += SetBackdrop;
             hud.DailyBoxRequested += OpenDailyBox;
             hud.Bind(collection);
 
@@ -376,6 +377,8 @@ namespace Pockle.Runtime
             hud.SetVariant(toy.Variant);
         }
 
+        private void SetBackdrop(Color colour) => PrototypeStage.SetBackdrop(viewCamera, colour);
+
         private void ConfigureHandling()
         {
             MaterialHandling h = toy.Handling;
@@ -490,6 +493,7 @@ namespace Pockle.Runtime
         {
             if (hud != null) hud.VariantChanged -= SetVariant;
             if (hud != null) hud.StoreVisibilityChanged -= StoreVisibilityChanged;
+            if (hud != null) hud.BackdropChanged -= SetBackdrop;
             if (hud != null) hud.DailyBoxRequested -= OpenDailyBox;
             if (hud != null) Destroy(hud.gameObject);
             if (pressClip != null) Destroy(pressClip);

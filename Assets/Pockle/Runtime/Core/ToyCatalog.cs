@@ -20,6 +20,7 @@ namespace Pockle.Core
         public string DisplayName { get; }
         public CatalogColor AccentColor { get; }
         public string LeadFinishId { get; }
+        public string IdleProfileId => Id;
         internal CharacterDefinition(string id, string name, uint accent, string lead)
         { Id = id; DisplayName = name; AccentColor = new CatalogColor(accent); LeadFinishId = lead; }
     }
@@ -43,8 +44,10 @@ namespace Pockle.Core
         public string DisplayName { get; }
         /// <summary>An asset is playable in this build; this does not establish reward eligibility.</summary>
         public bool Available { get; }
-        /// <summary>Empty for concepts that have no approved acquisition collection.</summary>
+        /// <summary>The character collection; membership does not grant art availability or reward eligibility.</summary>
         public string CollectionId { get; }
+        /// <summary>Derived from the character collection's explicit secret identity.</summary>
+        public bool IsSecret => ToyCatalog.TryGetCollection(CollectionId, out var collection) && collection.SecretId == Id;
         internal CollectibleDefinition(string id, CharacterDefinition character, FinishDefinition finish,
             string label, bool available, string collection)
         {
@@ -58,21 +61,38 @@ namespace Pockle.Core
     {
         public string CollectibleId { get; }
         public int Weight { get; }
-        internal BoxPoolEntry(string id, int weight) { CollectibleId = id; Weight = weight; }
+        public BoxPoolEntry(string id, int weight)
+        {
+            if (!ToyCatalog.IsValidId(id)) throw new ArgumentException("Invalid collectible ID.", nameof(id));
+            if (weight <= 0) throw new ArgumentOutOfRangeException(nameof(weight));
+            CollectibleId = id; Weight = weight;
+        }
     }
     public sealed class BoxPoolDefinition
     {
         public string Id { get; }
         public string DisplayName { get; }
         public IReadOnlyList<BoxPoolEntry> Entries { get; }
-        internal BoxPoolDefinition(string id, string name, params BoxPoolEntry[] entries)
-        { Id = id; DisplayName = name; Entries = Array.AsReadOnly(entries); }
+        public long TotalWeight { get; }
+        public BoxPoolDefinition(string id, string name, params BoxPoolEntry[] entries)
+        {
+            if (!ToyCatalog.IsValidId(id)) throw new ArgumentException("Invalid pool ID.", nameof(id));
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("A pool needs a name.", nameof(name));
+            if (entries == null || entries.Length == 0) throw new ArgumentException("A pool needs explicit outcomes.", nameof(entries));
+            var copy = (BoxPoolEntry[])entries.Clone();
+            var ids = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var entry in copy)
+            {
+                if (entry == null || !ids.Add(entry.CollectibleId)) throw new ArgumentException("Null or duplicate pool entry.", nameof(entries));
+                TotalWeight += entry.Weight;
+            }
+            Id = id; DisplayName = name; Entries = Array.AsReadOnly(copy);
+        }
         public bool TryChoose(float unitRoll, out string collectibleId)
         {
             collectibleId = "";
             if (!Numeric.IsFinite(unitRoll) || unitRoll < 0 || unitRoll > 1 || Entries.Count == 0) return false;
-            int total = 0; foreach (var entry in Entries) total += entry.Weight;
-            float threshold = unitRoll * total; int cumulative = 0;
+            double threshold = (double)unitRoll * TotalWeight; long cumulative = 0;
             foreach (var entry in Entries)
             {
                 cumulative += entry.Weight;
@@ -80,6 +100,8 @@ namespace Pockle.Core
             }
             collectibleId = Entries[Entries.Count - 1].CollectibleId; return true; // Inclusive RNG endpoint.
         }
+        public bool ContainsCollectible(string collectibleId)
+        { foreach (var entry in Entries) if (entry.CollectibleId == collectibleId) return true; return false; }
     }
 
     /// <summary>Immutable roster definitions. Concepts remain unavailable until their runtime art exists.</summary>
@@ -95,6 +117,8 @@ namespace Pockle.Core
         private static readonly Dictionary<string, FinishDefinition> finishesById = new Dictionary<string, FinishDefinition>(StringComparer.Ordinal);
         private static readonly Dictionary<string, CollectibleDefinition> collectiblesById = new Dictionary<string, CollectibleDefinition>(StringComparer.Ordinal);
         private static readonly Dictionary<string, BoxPoolDefinition> poolsById = new Dictionary<string, BoxPoolDefinition>(StringComparer.Ordinal);
+        private static readonly Dictionary<string, CollectionDefinition> collectionsById = new Dictionary<string, CollectionDefinition>(StringComparer.Ordinal);
+        public static IReadOnlyList<CollectionDefinition> Collections { get; }
         public static IReadOnlyList<BoxPoolDefinition> BoxPools { get; }
         public static IReadOnlyList<CharacterDefinition> Characters { get; }
         public static IReadOnlyList<FinishDefinition> Finishes { get; }
@@ -111,7 +135,8 @@ namespace Pockle.Core
                 new FinishDefinition("boucle-plush", "Bouclé Plush", "plush"),
                 new FinishDefinition("matte-vinyl", "Matte Vinyl", "firm"),
                 new FinishDefinition("gloss-vinyl", "Gloss Vinyl", "firm"),
-                new FinishDefinition("coated-metallic", "Coated Metallic", "firm-coated")
+                new FinishDefinition("coated-metallic", "Coated Metallic", "firm-coated"),
+                new FinishDefinition("glow-jelly", "Glow Jelly", "gel")
             };
             var characters = new[] {
                 new CharacterDefinition("pip", "Pip", 0xf5b89c, "clear-jelly"),
@@ -132,7 +157,6 @@ namespace Pockle.Core
             foreach (var finish in finishes) finishesById.Add(finish.Id, finish);
             var collectibles = new List<CollectibleDefinition>(characters.Length * finishes.Length);
             string[] pipLabels = { "Peach Jelly", "Moon Jelly", "Gold Glitter", "Mint Soft" };
-            string[] pipCollections = { "jelly-garden", "midnight-glow", "gold-confetti", "jelly-garden" };
             foreach (var character in characters)
             {
                 for (int index = 0; index < finishes.Length; index++)
@@ -141,7 +165,7 @@ namespace Pockle.Core
                     bool existing = character.Id == "pip" && index < legacyIds.Length;
                     string id = existing ? legacyIds[index] : character.Id + "." + finish.Id;
                     var collectible = new CollectibleDefinition(id, character, finish,
-                        existing ? pipLabels[index] : finish.DisplayName, existing, existing ? pipCollections[index] : "");
+                        existing ? pipLabels[index] : finish.DisplayName, existing, character.Id);
                     collectibles.Add(collectible); collectiblesById.Add(id, collectible);
                 }
             }
@@ -153,6 +177,19 @@ namespace Pockle.Core
             };
             BoxPools = Array.AsReadOnly(pools);
             foreach (var pool in pools) poolsById.Add(pool.Id, pool);
+            // A collection is one character with >=10 varieties. Pip belongs to Series 1;
+            // dates/full collection odds and other characters' public numbering remain unapproved.
+            var collections = new List<CollectionDefinition>(characters.Length);
+            foreach (var character in characters)
+            {
+                var members = new List<string>(finishes.Length);
+                foreach (var item in collectibles) if (item.CharacterId == character.Id) members.Add(item.Id);
+                uint field = character.Id == "pip" ? 0xf8d9c6u : 0xfaf5eeu;
+                collections.Add(new CollectionDefinition(character.Id, character.DisplayName, character.Id, members,
+                    seriesNumber: character.Id == "pip" ? 1 : 0, fieldColor: field));
+            }
+            Collections = new ReadOnlyCollection<CollectionDefinition>(collections);
+            foreach (var collection in collections) collectionsById.Add(collection.Id, collection);
         }
 
         public static bool TryGetCharacter(string? id, out CharacterDefinition character)
@@ -174,6 +211,19 @@ namespace Pockle.Core
         }
         public static bool TryGetBoxPool(string? id, out BoxPoolDefinition pool)
         { pool = null!; return id != null && poolsById.TryGetValue(id, out pool!); }
+        public static bool TryGetCollection(string? id, out CollectionDefinition collection)
+        { collection = null!; return id != null && collectionsById.TryGetValue(id, out collection!); }
+        /// <summary>Legacy beta offers are Pip sub-pools, not distinct character collections.</summary>
+        public static bool TryGetCollectionForPool(string? poolId, out CollectionDefinition collection)
+        {
+            collection = null!;
+            if (!TryGetBoxPool(poolId, out var pool) || !TryGetCollectible(pool.Entries[0].CollectibleId, out var first) ||
+                !TryGetCollection(first.CollectionId, out collection)) return false;
+            foreach (var entry in pool.Entries)
+                if (!TryGetCollectible(entry.CollectibleId, out var item) || item.CollectionId != collection.Id)
+                { collection = null!; return false; }
+            return true;
+        }
         public static bool IsDailyEligible(string? id)
         {
             if (!TryGetCollectible(id, out var collectible) || !collectible.Available) return false;

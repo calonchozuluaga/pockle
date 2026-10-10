@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: aff88af6ceb7fa8ab3247d0198544512
+guid: 1638416ba0e7911d29f783cc636556bb
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - Fredoka
+  - Bricolage Body
   fallbackFontReferences: []
   customCharacters:
   fontRenderingMode: 0

@@ -2,7 +2,7 @@
 
 ## Confirmed target
 
-The owner wants **at least 12 distinct characters, each with 8–10 material/texture varieties**. This is **96–120 collectibles**, not 12 recolors of Pip. The working production target is **12 characters × 9 finishes = 108 collectibles**, with an optional tenth glow edition per character later.
+The owner clarified the target on October 9: **at least 12 distinct characters, each with at least 10 color/texture/material varieties**. One collection is **one character**, not a finish theme. Pip is one collection in **Series 1**; Jelly Garden, Midnight Glow, and Gold Confetti are Pip varieties/themes. New collections require genuinely new characters. The minimum production plan is **12 characters × 10 varieties = 120 collectibles**.
 
 The count is confirmed direction. The character names, silhouettes, finish set, production batches, and technical budgets below are proposals for review with the owner and Claude. They are not models or collectible drops already available in the app. The current app still contains one character, Pip, in four finishes.
 
@@ -27,9 +27,9 @@ Working names are design labels, not finalized commercial names. All designs sha
 | **Mallow** | A marshmallow-shaped moon creature with an off-center crescent crest; dreamy and quiet | Satin vinyl | Keep the flat rounded base and crescent crest silhouette |
 | **Sprig** | A rounded seed capsule with a three-leaf sprout and two tiny feet; eager and optimistic | Coated metallic vinyl | Keep three thick leaf shapes, avoiding fragile thin tips |
 
-These lead materials help the first twelve designs look varied together. Each character still receives its own 8–10 finishes; the lead-material groups do not restrict a character to only jelly, plush, or vinyl.
+These lead materials help the first twelve designs look varied together. Each character still receives at least ten varieties; the lead-material groups do not restrict a character to only jelly, plush, or vinyl.
 
-## Nine finish families
+## Ten planned finish families
 
 A finish is more than a base color. It combines a surface, interior where applicable, deformation/weight behavior, sound, and optional haptics. Color palettes then make those finishes specific to each character. Reuse shader and interaction profiles, while making authored textures and details suit the model.
 
@@ -44,10 +44,11 @@ A finish is more than a base color. It combines a surface, interior where applic
 | **Matte vinyl** | Opaque satin/matte molded surface | Firm body; whole-toy tilt, rotation, lift, contact wobble and personality reactions |
 | **Gloss vinyl** | Smooth opaque shell with crisp studio highlights | Firm body and bounded landing wobble; no jelly-like elongation |
 | **Coated metallic** | Metallic-looking reflective coating over a molded body | Firm coated-toy feel; distinct contact sound; not a heavy solid-metal physics simulation |
+| **Glow jelly** | Planned lights-off tint/emission and restrained halo | Gel handling with calm motion; no implemented glow/environment behavior yet |
 
-**Optional finish 10: Glow jelly.** A lights-off edition with emission and a restrained halo. Glowing appearance does not automatically illuminate the scene; any nearby light effect needs a deliberate mobile implementation. Keep this a later material/environment experiment rather than claiming today's pearlescent Moon finish already glows.
+**Finish 10 candidate: Glow jelly.** Catalog metadata reserves the tenth variety; visual production remains a later material/environment experiment. Glowing appearance does not automatically illuminate the scene; any nearby light effect needs a deliberate mobile implementation. Today's pearlescent Moon finish does not already glow.
 
-For eight-finish characters, omit a finish that fails the silhouette/material review rather than padding the roster with an indistinguishable recolor. Additional pearlescent paint, clay-like, frosted resin, and rubber finishes can be explored after the first representative materials work well.
+If a finish fails silhouette/material review, replace it with a distinct reviewed color/material treatment so the collection still meets the ten-variety minimum. Additional pearlescent paint, clay-like, frosted resin, and rubber finishes can be explored after the first representative materials work well.
 
 ## Art and Android pipeline
 
@@ -56,7 +57,7 @@ For eight-finish characters, omit a finish that fails the silhouette/material re
 - **Gel:** reuse and improve the current studio-reflection shell, while allowing character-specific interior accents. Reactive filling and environment refraction remain separate pending features.
 - **Vinyl:** define a firm handling profile. A shared lift/gravity controller can serve all families, but jelly sag/stretch must be limited or disabled by material. Each shape needs reviewed grip anchors, contact clearance, and face deformation rules.
 - **Authoring targets to measure:** start around 3,000–6,000 triangles per active body, shared shader programs, roughly 512px material maps, and small face/filling meshes. These are proposed starting targets, not established Android performance limits. Pip currently uses 5,814 body triangles. Raise or lower budgets after profiling.
-- **Shelf:** use cached or pre-rendered thumbnails and create full viewer assets on selection. Do not eagerly render 108 live toys or allocate 108 permanent 256px RenderTextures at startup. A single 256px RGBA32 color buffer is about 256 KiB; 108 already cost roughly 27 MiB before depth buffers and other assets.
+- **Shelf:** use cached or pre-rendered thumbnails and create full viewer assets on selection. Do not eagerly render 120 live toys or allocate 120 permanent 256px RenderTextures at startup. A single 256px RGBA32 color buffer is about 256 KiB; 120 already cost roughly 30 MiB before depth buffers and other assets.
 - **Reduced motion:** provide calm reactions for every material, while keeping direct manipulation and readable character identity.
 
 ## Catalog and saved ownership
@@ -71,7 +72,7 @@ Use separate, stable definitions for:
 4. **Box offer:** explicit collectible pool and weights. An expanded catalog does not automatically change current Jelly Garden odds or make every planned toy obtainable.
 5. **Ownership:** counts keyed by stable collectible ID, separate from definitions and reward eligibility.
 
-Examples: `pip.peach-jelly`, `pip.moon-pearl`, `pip.gold-confetti`, `pip.mint-mochi`, `moss.velvet-flock`. Final keys must be agreed before shipping a save migration. Preserve the meanings and counts of all four existing Pip entries, plus pending reveals and local profile favorites/avatars. Map old indexes explicitly; do not reset inventories or give all 108 toys as starter gifts. Unknown future IDs need safe round-tripping when older clients read newer saves.
+Examples: `pip.peach-jelly`, `pip.moon-pearl`, `pip.gold-confetti`, `pip.mint-mochi`, `moss.velvet-flock`. Final keys must be agreed before shipping a save migration. Preserve the meanings and counts of all four existing Pip entries, plus pending reveals and local profile favorites/avatars. Map old indexes explicitly; do not reset inventories or give all 120 toys as starter gifts. Unknown future IDs need safe round-tripping when older clients read newer saves.
 
 The shelf and profile UI should consume catalog definitions rather than fixed arrays. Coordinate that interface with Claude before changing both the data and HUD sides.
 
@@ -80,8 +81,8 @@ The shelf and profile UI should consume catalog definitions rather than fixed ar
 - [ ] **ART-001 — Character identity sheet.** Review all 12 silhouettes, front/side/back views, face placement, and relative scale. Agree working names and shape identities before making full finish sets.
 - [ ] **ART-002 — Representative material batch.** Use Pip for gel, Moss for flock, Nook for plush/foam, and Bop for vinyl. Build the four representative models and a small set of finishes; compare appearance and touch on Android before multiplying recipes.
   - Draft models on `codex/material-toys`: Moss / Velvet Flock, Bop / Gloss Vinyl, and Nook / Oat Bouclé Plush + Lilac Mochi Foam, alongside Pip. See [study assets and review instructions](CHARACTER_STUDIES.md). Concept approval and Unity/Android review remain pending.
-- [ ] **ART-003 — Nine finish recipes.** Establish repeatable Unity materials, texture baking, interaction profiles, calm motion, feedback, and mobile budgets. Approve flock/plush and firm vinyl behavior alongside the established jelly baseline.
-- [ ] **ART-004 — Full character production.** Expand to the twelve reviewed models, then make each one's 8–10 distinct finishes. Reuse tooling and profiles while preserving character identity.
+- [ ] **ART-003 — At least ten variety recipes.** Establish repeatable Unity materials, texture baking, interaction profiles, calm motion, feedback, and mobile budgets. Approve flock/plush and firm vinyl behavior alongside the established jelly baseline.
+- [ ] **ART-004 — Full character production.** Expand to the twelve reviewed models, then make each one's ten or more distinct varieties. Reuse tooling and profiles while preserving character identity.
 - [ ] **ART-005 — Collection presentation.** Finish previews, names, collection packaging, box pools, and visual consistency. A planned catalog entry becomes an available collectible only after its assets, behavior, and acquisition rules are ready.
 
 Catalog migration and scalable UI/runtime loading are tracked separately as **UX-029–031** in `UI_UX_TASKS.md`. These art tasks are new scope, not completed content.

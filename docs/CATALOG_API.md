@@ -1,6 +1,8 @@
 # Catalog API and version-2 save migration — UX-029
 
-Merged into **`main`** from **`codex/catalog-migration`** at the owner’s request (runtime implementation `ef4fc4e`, branch head `44a564a`). This is runtime/catalog groundwork for Claude's UX-031 UI integration. It does not add new models, shaders, handling profiles, or selectable toys. There are 108 catalog definitions (12 characters × 9 finish families); **four existing Pip assets are available**, and 104 concepts remain unavailable.
+Additive series/motion follow-up: [Series and motion API](SERIES_AND_MOTION_API.md) on `codex/series-metadata-idles` adds `ToyCatalog.Collections`, numbered/date/secret/odds metadata, and visible-only idle/eager animation support. **Owner clarification: one collection is one character with at least ten varieties. Pip is Series 1.** The branch expands the planned catalog to 120 IDs; release dates, other public numbering, and full-collection odds remain unset. Save format, existing IDs, and daily pools are unchanged.
+
+Merged into **`main`** from **`codex/catalog-migration`** at the owner’s request (runtime implementation `ef4fc4e`, branch head `44a564a`). This is runtime/catalog groundwork for Claude's UX-031 UI integration. It does not add new models, shaders, handling profiles, or selectable toys. That original foundation had 108 definitions. The series/motion follow-up now plans 120 definitions (12 characters × 10 varieties); **four existing Pip assets remain available**, and 116 planned assets remain unavailable.
 
 ## Read-only definitions
 
@@ -22,7 +24,7 @@ ToyCatalog.TryGetBoxPool(collectionId, out pool)
 - Collectible: `Id`, `CharacterId`, `FinishId`, `FinishDisplayName`, `DisplayName`, `Available`, `CollectionId`.
 - Box pool: `Id`, `DisplayName`, read-only `Entries` (`CollectibleId`, positive integer `Weight`). `TryChoose(float unitRoll, out string id)` preserves existing probability boundaries. Invalid rolls return false.
 
-`Available` means playable art exists in this build. It does not mean owned, purchased, or eligible for a particular reward. Planned concepts have no approved `CollectionId`. Box pools stay explicit: Jelly Garden is Peach/Mint 50% each; Midnight Glow is Moon 100%; Gold Confetti is Gold 100%. Checkout remains unavailable. `BoxOffer.CollectionId` and `.Pool` expose the same definitions without changing existing fields/captions.
+`Available` means playable art exists in this build. It does not mean owned, purchased, or eligible for a particular reward. On the series/motion branch, `CollectionId` denotes the character collection even for planned varieties, while explicit pool membership and availability still decide reward eligibility. Legacy Pip sub-pools stay explicit: Jelly Garden is Peach/Mint 50% each; Midnight Glow is Moon 100%; Gold Confetti is Gold 100%. Checkout remains unavailable. `BoxOffer.CollectionId` maps all three to `pip`; new `.PoolId` and existing `.Pool` retain those old beta draws. See the follow-up API for the distinction between full-collection membership and sub-pool odds.
 
 Working character names are still subject to ART-001 review. Display labels can change without changing persisted IDs. IDs use case-sensitive lower-case ASCII letters, digits, `.`, `-`, and `_`, with a maximum length of 128; do not derive them from translated display labels or array positions.
 

@@ -2,19 +2,21 @@ using System.Collections.Generic;
 
 namespace Pockle.Core
 {
-    public enum AppPage { Home, Shelf, Rewards, Social, Profile, Settings, Boxes, Play }
+    public enum AppPage { Home, Shelf, Rewards, Social, Profile, Settings, Boxes, Play, Collections, Collection }
 
     /// <summary>Navigation history and per-page scroll survive visits, tabs and toy play.</summary>
     public sealed class MenuNavigation
     {
         private readonly Stack<AppPage> history = new Stack<AppPage>();
-        private readonly float[] scroll = new float[8];
+        private readonly float[] scroll = new float[System.Enum.GetValues(typeof(AppPage)).Length];
         public AppPage Current { get; private set; } = AppPage.Home;
         public float Scroll => scroll[(int)Current];
 
         public void SaveScroll(float value) { scroll[(int)Current] = Numeric.IsFinite(value) ? System.Math.Max(0, value) : 0; }
         public bool Push(AppPage next)
         {
+            if (!System.Enum.IsDefined(typeof(AppPage), next))
+                throw new System.ArgumentOutOfRangeException(nameof(next));
             if (next == Current) return false;
             history.Push(Current); Current = next; return true;
         }
