@@ -155,7 +155,7 @@ def main():
     smooth.factor = .8; smooth.iterations = 5
     bpy.ops.object.modifier_apply(modifier=smooth.name)
     reduce = body.modifiers.new("Mobile surface budget", 'DECIMATE')
-    reduce.ratio = .24
+    reduce.ratio = .232
     bpy.ops.object.modifier_apply(modifier=reduce.name)
     # Level the shallow resting centre; the surrounding belly keeps its roundover.
     import bmesh
