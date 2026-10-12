@@ -72,16 +72,22 @@ namespace Pockle.Tests
             if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null)
                 Assert.Ignore("Shelf review captures require a graphics device.");
             int oldWidth = Screen.width, oldHeight = Screen.height;
+            FullScreenMode oldMode = Screen.fullScreenMode;
             Screen.SetResolution(720, 1280, FullScreenMode.Windowed);
             yield return null; yield return null; yield return null;
             hud.ShelfPreviews.SendMessage("OnApplicationFocus", true);
             var canvas = root.GetComponentInChildren<Canvas>();
+            var scaler = canvas.GetComponent<CanvasScaler>();
+            var oldScaleMode = scaler.uiScaleMode; float oldScaleFactor = scaler.scaleFactor;
+            // Editor Game View may ignore SetResolution. The camera target and
+            // logical portrait scale still exercise the real responsive HUD.
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize; scaler.scaleFactor = 1280f / 844f;
             var cameraObject = new GameObject("Shelf UI review camera", typeof(Camera));
             var camera = cameraObject.GetComponent<Camera>(); camera.enabled = false;
             camera.clearFlags = CameraClearFlags.SolidColor; camera.backgroundColor = PrototypeStage.Background;
             camera.cullingMask = 1 << 29; camera.orthographic = true; camera.orthographicSize = 5;
             camera.nearClipPlane = .1f; camera.farClipPlane = 10;
-            var target = new RenderTexture(Screen.width, Screen.height, 24, RenderTextureFormat.ARGB32); target.Create();
+            var target = new RenderTexture(720, 1280, 24, RenderTextureFormat.ARGB32); target.Create();
             camera.targetTexture = target;
             var layers = canvas.GetComponentsInChildren<Transform>(true).ToDictionary(child => child, child => child.gameObject.layer);
             foreach (var child in layers.Keys) child.gameObject.layer = 29;
@@ -111,7 +117,8 @@ namespace Pockle.Tests
                 canvas.renderMode = RenderMode.ScreenSpaceOverlay; canvas.worldCamera = null;
                 foreach (var pair in layers) if (pair.Key != null) pair.Key.gameObject.layer = pair.Value;
                 camera.targetTexture = null; target.Release(); Object.Destroy(target); Object.Destroy(cameraObject);
-                Screen.SetResolution(oldWidth, oldHeight, FullScreenMode.Windowed);
+                scaler.uiScaleMode = oldScaleMode; scaler.scaleFactor = oldScaleFactor;
+                Screen.SetResolution(oldWidth, oldHeight, oldMode);
             }
         }
 
