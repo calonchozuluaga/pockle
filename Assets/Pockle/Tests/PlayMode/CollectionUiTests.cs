@@ -123,6 +123,13 @@ namespace Pockle.Tests
             }
         }
 
+        private static IEnumerator WaitForPreviewFrame(ShelfPreviewRuntime previews, int previousFrame)
+        {
+            float deadline = Time.realtimeSinceStartup + 2f;
+            while (previews.RenderedFrameCount <= previousFrame && Time.realtimeSinceStartup < deadline) yield return null;
+            Assert.That(previews.RenderedFrameCount, Is.GreaterThan(previousFrame), "An exposed found toy must produce a live preview frame.");
+        }
+
         private static void FocusFirstSilhouette(ScrollRect scroll)
         {
             Canvas.ForceUpdateCanvases();
@@ -176,6 +183,7 @@ namespace Pockle.Tests
             Canvas.ForceUpdateCanvases();
             yield return null; yield return null; yield return null;
             var previews = hud.ShelfPreviews;
+            yield return WaitForPreviewFrame(previews, 0);
             Assert.That(previews.ActiveCount, Is.InRange(1, ShelfPreviewRuntime.Capacity));
             Assert.That(previews.CameraCount, Is.EqualTo(1));
             Assert.That(previews.AllocatedTargetCount, Is.InRange(1, ShelfPreviewRuntime.Capacity));
@@ -220,8 +228,9 @@ namespace Pockle.Tests
             yield return null; yield return null;
             hud.enabled = false;
             Assert.That(previews.ActiveCount, Is.Zero, "Disabling the HUD must stop its preview component too.");
+            int previousFrame = previews.RenderedFrameCount;
             hud.enabled = true;
-            yield return new WaitForSecondsRealtime(.15f);
+            yield return WaitForPreviewFrame(previews, previousFrame);
             Assert.That(previews.ActiveCount, Is.GreaterThan(0));
             var targets = root.GetComponentsInChildren<RawImage>().Select(image => image.texture).OfType<RenderTexture>().ToArray();
             previews.Dispose();
