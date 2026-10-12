@@ -1,6 +1,6 @@
 ## Owner-uploaded Meshy Peach phone test (October 12, 2026)
 
-See [MESHY_PEACH_TEST.md](MESHY_PEACH_TEST.md) on `codex/meshy-peach-test`. Local conversion: 5,448 triangles / 5,410 vertices from the 64,102-triangle upload. Geometry, all 543,484 portable assertions, source/meta/whitespace checks pass (69 files / three profiles / five asmdefs / 154 GUIDs). Unity import/shader/render and Android packaging await this change's hosted run; phone acceptance/performance are unverified. Existing authored geometry/finish-reuse tests keep explicit reference art, with separate Meshy switch/render cases.
+See [MESHY_PEACH_TEST.md](MESHY_PEACH_TEST.md) on `codex/meshy-peach-test`. Local conversion: 3,845 triangles / 3,951 vertices from the 64,102-triangle upload. Geometry, all 543,484 portable assertions, source/meta/whitespace checks pass (69 files / three profiles / five asmdefs / 154 GUIDs). Unity import/shader/render and Android packaging await this change's hosted run; phone acceptance/performance are unverified. Existing authored geometry/finish-reuse tests keep explicit reference art, with separate Meshy switch/render cases.
 
 ## Animated shelf and undiscovered silhouettes (October 12, 2026)
 

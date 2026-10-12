@@ -16,7 +16,7 @@ namespace Pockle.Tests
             Assert.That(asset.IntegratedCrown, Is.True);
             Assert.That(asset.BodyMesh.isReadable, Is.True);
             Assert.That(asset.BodyMesh.triangles.Length / 3, Is.InRange(1000, 6000));
-            Assert.That(asset.BodyMesh.vertexCount, Is.LessThan(10000));
+            Assert.That(asset.BodyMesh.vertexCount, Is.LessThanOrEqualTo(4000));
             Assert.That(asset.BodyMesh.uv.Length, Is.EqualTo(asset.BodyMesh.vertexCount));
             Assert.That(asset.NormalGroups.Length, Is.EqualTo(asset.BodyMesh.vertexCount));
             Assert.That(asset.BodyMesh.bounds.min.y, Is.EqualTo(-1).Within(.00001f));

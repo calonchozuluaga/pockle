@@ -2,13 +2,13 @@
   "source_file": "Meshy_AI_Peach_Jelly_Pip_Smoot_1012213852_image-to-3d-texture.glb",
   "source_sha256": "f451c1fde7782937f69f237488be6b4297ae00c4d62b8ba08ff1aa338f46879b",
   "source_triangles": 64102,
-  "runtime_triangles": 5448,
-  "runtime_vertices": 5410,
+  "runtime_triangles": 3845,
+  "runtime_vertices": 3951,
   "texture_size": [
     2048,
     2048
   ],
-  "decimate_ratio": 0.085,
+  "decimate_ratio": 0.06,
   "coordinate_conversion": "Blender (x,y,z) to Unity (x,z,y), winding reversed; uniform scale, floor y=-1, crown y=.94",
   "source_material": "opaque textured metallic/roughness + normal maps; no transmission extension",
   "unity_material": "single-pass textured wet gloss, wrapped lighting and backlight transmission approximation; painted gold speck surface emission; no real refraction or internal pearl geometry",

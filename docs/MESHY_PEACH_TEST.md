@@ -25,7 +25,7 @@ blender -b --python tools/import-meshy-peach.py -- /path/to/the/original.glb
 python tools/sync-unity-meta.py
 ```
 
-The uploaded **64,102 triangles** become **5,448 triangles / 5,410 UV-split vertices**, with a 2048² sRGB base texture, compressed at import and mipmapped. Conversion keeps the owner's silhouette, aligns the bottom at local y=-1 and crown at y=.94, preserves UVs, and reverses winding for Unity coordinates. It does not flatten/redesign the base. Mesh/normals use existing CPU deformation and visible-shell picking. Face/filling is painted onto this mesh, so extra authored eyes, crown and pearls are omitted.
+The uploaded **64,102 triangles** become **3,845 triangles / 3,951 UV-split vertices**, with a 2048² sRGB base texture, compressed at import and mipmapped. Conversion keeps the owner's silhouette, aligns the bottom at local y=-1 and crown at y=.94, preserves UVs, and reverses winding for Unity coordinates. It does not flatten/redesign the base. Mesh/normals use existing CPU deformation and visible-shell picking. Face/filling is painted onto this mesh, so extra authored eyes, crown and pearls are omitted.
 
 `Pockle/Textured Peach Jelly` is a retained single-pass Built-in shader: roughness **.20**, transmission-light approximation **.90**, peach scattering weight **.05**, restrained moving reflections, and small surface emission on gold texture flecks. Opaque depth keeps the painted face readable. Blender's ray-traced transmission/SSS do not transfer directly; this uses wrapped light/backlight, with no scene-color grab/refraction, extra shell, package or postprocessing. Baked pearls/highlights remain surface details. Uploaded metallic/roughness and normal maps are omitted in favor of constant wet gloss and deforming mesh normals.
 
