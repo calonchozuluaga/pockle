@@ -38,6 +38,7 @@ namespace Pockle.Runtime
         }
         private readonly List<Binding> bindings = new List<Binding>();
         private readonly List<Binding> wanted = new List<Binding>(Capacity);
+        private readonly List<Binding> visibleFound = new List<Binding>(16), visibleMissing = new List<Binding>(16);
         private readonly Actor[] actors = { new Actor(), new Actor(), new Actor(), new Actor() };
         private readonly LineupMotionBudget budget = new LineupMotionBudget(Capacity);
         private readonly Vector3[] corners = new Vector3[4];
@@ -47,6 +48,7 @@ namespace Pockle.Runtime
         private float nextFrame;
         private bool disposed;
         public int ActiveCount => budget.ActiveCount;
+        public int ActiveSilhouetteCount { get { int count = 0; foreach (var actor in actors) if (actor.Binding != null && !actor.Binding.Found && actor.Slot != null) count++; return count; } }
         public int AllocatedTargetCount { get { int count = 0; foreach (var actor in actors) if (actor.Target != null) count++; return count; } }
         public int CameraCount => portraitCamera != null ? 1 : 0;
         public int RenderedFrameCount { get; private set; }
@@ -104,9 +106,15 @@ namespace Pockle.Runtime
         {
             if (disposed || viewport == null || calm || blocked || paused || focusLost)
             { InvalidateView(); return; }
-            wanted.Clear();
+            wanted.Clear(); visibleFound.Clear(); visibleMissing.Clear();
             foreach (var binding in bindings)
-                if (InsideViewport(binding)) { wanted.Add(binding); if (wanted.Count == Capacity) break; }
+                if (InsideViewport(binding)) { if (binding.Found) visibleFound.Add(binding); else visibleMissing.Add(binding); }
+            // A tall viewport can show both groups. Reserve room for the eager
+            // silhouettes rather than letting the first four found toys starve them.
+            int foundLimit = visibleMissing.Count > 0 ? Mathf.Min(2, visibleFound.Count) : Capacity;
+            for (int i = 0; i < visibleFound.Count && i < foundLimit; i++) wanted.Add(visibleFound[i]);
+            for (int i = 0; i < visibleMissing.Count && wanted.Count < Capacity; i++) wanted.Add(visibleMissing[i]);
+            for (int i = foundLimit; i < visibleFound.Count && wanted.Count < Capacity; i++) wanted.Add(visibleFound[i]);
             // Release before acquiring; a new viewport never waits behind offscreen actors.
             foreach (var actor in actors) if (actor.Binding != null && !wanted.Contains(actor.Binding)) Release(actor);
             foreach (var binding in wanted)

@@ -105,6 +105,7 @@ namespace Pockle.Tests
                 FocusFirstSilhouette(scroll);
                 for (int frame = 0; frame < 8; frame++)
                 { yield return new WaitForSecondsRealtime(.3f); CaptureShelfUi(canvas, camera, target, "silhouettes-eager-" + frame); }
+                Assert.That(hud.ShelfPreviews.ActiveSilhouetteCount, Is.GreaterThan(0), "Visible found toys must leave motion slots for the missing silhouettes.");
                 hud.SetSettings(true, false, true);
                 yield return null; CaptureShelfUi(canvas, camera, target, "motion-calm");
                 hud.GoBack(); ButtonNamed("Collection · loop").onClick.Invoke();
@@ -142,7 +143,7 @@ namespace Pockle.Tests
                 RenderTexture.active = target; image.ReadPixels(new Rect(0, 0, target.width, target.height), 0, 0); image.Apply();
                 string directory = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Application.dataPath), "test-results", "shelf-motion");
                 System.IO.Directory.CreateDirectory(directory); System.IO.File.WriteAllBytes(System.IO.Path.Combine(directory, name + ".png"), image.EncodeToPNG());
-                const int width = 480; int height = Mathf.RoundToInt((float)target.height / target.width * width);
+                const int width = 360; int height = Mathf.RoundToInt((float)target.height / target.width * width);
                 var pixels = image.GetPixels32(); var rgb = new byte[width * height * 3];
                 for (int y = 0; y < height; y++) for (int x = 0; x < width; x++)
                 {

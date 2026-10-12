@@ -16,6 +16,8 @@ The Shelf now uses Pip's ten catalog members, so Missing includes the six planne
 
 Runtime/capture run `38297552203` passed **37/37 Unity tests** (13 EditMode, 24 PlayMode, no skips) and all hosted portable/source/whitespace checks. Actual UI frames verify idles, face-free eager silhouettes and calm; Android packaging began. Follow-up before the owner test expands Shelf to ten catalog slots and makes capture resolution portrait, with tab-bar occlusion excluded from motion visibility. This newer head requires its own combined CI. Final status/evidence and main merge will be linked from PR #14.
 
+Portrait review shows both found toys and missing slots together. The pool now reserves slots for each visible group instead of letting the first four found toys starve all silhouettes. A capture assertion covers this. Compact UI log previews are 360px wide to keep all 19 frames readable through the connector; full 720×1280 PNGs remain in the artifact. No resource-cap increase.
+
 ## Active October 10 — full Pip concept/proportion pass from PR #12
 
 Owner explicitly approved implementing the eight-point "Pip render vs. concept" note in Claude's PR #12 handoff at `7521263`. Continue UX-025/030 and Pip art on `codex/pip-jelly-device-pass`, stacked on #10 in the existing isolated checkout. Main remains `b8a119c` through GitHub; shell fetch cannot reach the configured proxy. Both handoffs/coordination read. This newer silhouette brief supersedes the older material-only diagnosis.
