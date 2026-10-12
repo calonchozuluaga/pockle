@@ -1,3 +1,9 @@
+## Animated shelf and undiscovered silhouettes (October 12, 2026)
+
+UX-033 integration from main `dca3ec3`: four bounded visible actors, one camera, up to four 192px targets at 15 fps; found toys deform actual meshes, missing slots use eager face-free outlines. Ownership/playability remains gated; unknown finishes/secrets never get a face or material. Shelf is now a Core tab root. Existing boxes, Pip art and tactile physics are preserved.
+
+Passed locally: **543,484 portable assertions** across eleven suites (44 navigation/profile assertions include the real Shelf tab); source checks **68 C# files / three profiles / five assemblies / 148 GUIDs / zero failures**, metadata and whitespace. Added three Unity cases: real-mesh animation/calm/rendering/disable/pause/disposal, eager silhouettes/no grants/secret concealment, and actual UI animation capture sequences. Hosted Unity compilation/rendering and Android packaging are pending at publication. Device layout, motion feel and GPU/CPU/GC costs remain unmeasured.
+
 ## Full Pip concept pass from PR #12 (October 10, 2026)
 
 Owner approved the eight-point silhouette/material brief at `7521263`. Narrowed shoulders, lowered the widest body band, preserved a broad rounded resting belly, made asymmetric crowns rounder, lowered/widened facial anchors, enlarged contained pearls, softened upper-right reflections/edges, strengthened the pale-peach/coral gradient and widened the radial shadow. Source/FBX/runtime export agree: 2,868 logical / 3,126 exported vertices, 5,732 triangles, contact radius .632; FBX maximum error .000000270. One closed shell, existing single-pass material and six pearl objects remain within the mobile geometry budget.

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Pockle.Runtime
 {
-    /// <summary>Series browser and bounded static lineup. Planned art never substitutes an owned Pip.</summary>
+    /// <summary>Series browser and bounded animated lineup. Planned art never substitutes an owned Pip.</summary>
     public sealed partial class PrototypeHud
     {
         private string selectedCollectionId = "pip";
@@ -19,7 +19,8 @@ namespace Pockle.Runtime
         private readonly List<Button> lineupTiles = new List<Button>();
         private readonly List<Text> lineupNames = new List<Text>();
         private readonly List<Text> lineupStates = new List<Text>();
-        private readonly List<Text> lineupMysteries = new List<Text>();
+        private readonly List<CharacterSilhouetteGraphic> lineupMysteries = new List<CharacterSilhouetteGraphic>();
+        private readonly List<ShelfPreviewRuntime.Binding> lineupBindings = new List<ShelfPreviewRuntime.Binding>();
         private readonly List<RawImage> lineupPictures = new List<RawImage>();
         private Button collectionBoxes, collectionWalking;
         private Text collectionProgress, collectionNote;
@@ -81,7 +82,9 @@ namespace Pockle.Runtime
 
         private void RebuildLineup()
         {
-            // No render targets are created here: every owned playable tile shares the four shelf portraits.
+            // Recycle visible actors; the grid never owns one camera/target per collectible.
+            foreach (var binding in lineupBindings) shelfPreviews.Unregister(binding);
+            lineupBindings.Clear();
             foreach (var tile in lineupTiles) { tile.gameObject.SetActive(false); Destroy(tile.gameObject); }
             lineupTiles.Clear(); lineupNames.Clear(); lineupStates.Clear(); lineupMysteries.Clear(); lineupPictures.Clear();
             foreach (string member in SelectedCollection.Members)
@@ -90,17 +93,20 @@ namespace Pockle.Runtime
                 var tile = CreateButton("???", collectionRoot, Vector2.zero, new Vector2(100, 144), Quiet,
                     () => ShowToy(id), out _, 14, false);
                 tile.name = "Collectible · " + id;
+                var colours = tile.colors; colours.disabledColor = Color.white; tile.colors = colours;
                 lineupTiles.Add(tile);
                 var title = tile.GetComponentInChildren<Text>(); title.alignment = TextAnchor.MiddleCenter;
                 lineupNames.Add(title);
                 lineupStates.Add(Label("", tile.transform, PockleTheme.SmallSize, MutedInk, FontStyle.Normal,
                     TextAnchor.MiddleCenter, Vector2.zero, new Vector2(100, 24)));
-                lineupMysteries.Add(Label("?", tile.transform, 40, PockleTheme.FillDeep, FontStyle.Bold,
-                    TextAnchor.MiddleCenter, Vector2.zero, new Vector2(80, 80)));
+                var silhouetteRect = Rect("Undiscovered silhouette", tile.transform);
+                var silhouette = silhouetteRect.gameObject.AddComponent<CharacterSilhouetteGraphic>();
+                silhouette.color = PockleTheme.PlumSoft; lineupMysteries.Add(silhouette);
                 var portraitRect = Rect("Lineup portrait", tile.transform);
                 var picture = portraitRect.gameObject.AddComponent<RawImage>(); picture.raycastTarget = false;
                 if (PipVariants.TryFromCollectibleId(id, out var variant)) picture.texture = previews[(int)variant];
                 lineupPictures.Add(picture);
+                lineupBindings.Add(shelfPreviews.Register(picture, silhouette, id));
             }
         }
 
@@ -137,8 +143,7 @@ namespace Pockle.Runtime
                 lineupTiles[i].interactable = playable;
                 lineupNames[i].text = owned && known ? collectible.FinishDisplayName : "???";
                 lineupStates[i].text = !known || !collectible.Available ? "Coming soon" : owned ? "Yours to play" : "Not found yet";
-                lineupPictures[i].gameObject.SetActive(playable);
-                lineupMysteries[i].gameObject.SetActive(!playable);
+                shelfPreviews.SetFound(lineupBindings[i], playable);
                 lineupTiles[i].GetComponent<Image>().color = playable ? PockleTheme.FieldFor(id) : PockleTheme.Mystery;
             }
         }

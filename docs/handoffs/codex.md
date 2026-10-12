@@ -1,5 +1,13 @@
 # Codex handoff
 
+## Active October 12 — UX-033 animated shelf and silhouettes
+
+Owner asked to add shelf/lineup animation and undiscovered silhouettes before the next test, carrying forward the request to publish a pullable main build. Claimed branch `codex/animated-shelf`, isolated checkout synchronized exactly to main `dca3ec3` through GitHub because shell fetch cannot reach its inherited proxy. Read main handoffs and Claude's newest PR #13 handoff (`824cb32`); it requests real Shelf-tab navigation and defers further Pip art until phone feedback. No overlapping code PR is open. This owner-approved integration includes narrow HUD wiring without changing Claude's branch or note.
+
+Files: bounded shelf preview runtime and silhouette presentation, HUD shelf/collection/settings/lifecycle hooks, MenuNavigation Shelf tab, portable/UI/lifecycle tests, own handoff, coordination/task/API/validation/device notes. Reuse CharacterMotion and shared LineupMotionBudget; cap visible live previews and render cadence, stop hidden/paused/calm actors, reuse existing models/materials, keep unowned/planned toys unplayable and secret art hidden. Preserve box artwork, saves/rewards, existing tactile toy and Pip art. No engine/settings/packages/CI changes. Publish actual Unity render evidence and green CI before merging.
+
+Implementation ready for hosted validation: real found-toy mesh idles in a four-visible-slot pool; one camera, up to four reusable 192px targets, 15 fps captures. Missing Pip uses the actual body outline; other characters use outline-only ART-001 studies, not playable models. Generic secrets hide identity. Eager silhouettes share the same motion budget. Calm/hidden/modal/pause/focus/disabled HUD/disposal release slots and restore static fallback/rest poses. Real `MenuNavigation.SelectTab(Shelf)` replaces the HUD workaround. Boxes, static Home/avatar portraits, saved ownership, grants, tactile viewer and Pip art remain intact. 543,484 portable assertions and source/meta/whitespace checks pass locally. Three additional Unity cases and real UI capture sequences await CI. Phone appearance/frame cost remain owner checks.
+
 ## Active October 10 — full Pip concept/proportion pass from PR #12
 
 Owner explicitly approved implementing the eight-point "Pip render vs. concept" note in Claude's PR #12 handoff at `7521263`. Continue UX-025/030 and Pip art on `codex/pip-jelly-device-pass`, stacked on #10 in the existing isolated checkout. Main remains `b8a119c` through GitHub; shell fetch cannot reach the configured proxy. Both handoffs/coordination read. This newer silhouette brief supersedes the older material-only diagnosis.

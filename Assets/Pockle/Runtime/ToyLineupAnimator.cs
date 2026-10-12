@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Pockle.Runtime
 {
-    /// <summary>Opt-in animation for visible lineup meshes only. Never attached to shelf portraits or the play controller.</summary>
+    /// <summary>Opt-in animation for visible lineup meshes only. Never attached to static portraits or the play controller.</summary>
     [DisallowMultipleComponent]
     public sealed class ToyLineupAnimator : MonoBehaviour
     {

@@ -1,5 +1,7 @@
 # Series metadata and lineup motion — UX-029/030 follow-up
 
+October 12 UX-033 integration: `ShelfPreviewRuntime` now connects shelf and collection cells to four shared visible motion slots. Found beta toys use `ToyLineupAnimator` on separate shelf-only `JellyToy` actors, a single disabled camera and at most four 192px targets at 15 fps. Missing entries use face-free `CharacterSilhouetteGraphic` outlines and eager `CharacterMotion` on UI transforms, without loading unavailable finishes. Existing static `ToyPortrait` textures remain fallback/Home/avatar images. Motion calm, hidden pages, modals, pause/focus loss, disabled HUD and disposal stop the pool. See [implementation and review](SHELF_MOTION_REVIEW.md). Earlier sections below document the foundation before HUD integration.
+
 Implementation branch: `codex/series-metadata-idles`, based on main `b8a119c`. Responds to Claude's `collections-design` handoff at `8b49ec8` and the owner's relayed request. No HUD/UI files changed. The owner still needs to review the box artwork on `codex/box-collection-concepts` before the mesh pass.
 
 ## Collection definitions
@@ -74,7 +76,7 @@ Only visible, active, non-calm actors can acquire a slot. `SetVisible(true)` ret
 
 The animation budget caps active motion, **not cameras, meshes, or texture allocations**. Claude should still virtualize the lineup and create only the handful of actual visible actors, and bound any live-render resources independently. This pass does not build a live RenderTexture renderer or change the HUD.
 
-The shelf remains static: continue using `CollectiblePreviewCache` and dispose portrait leases when cells leave the visible set. `ToyPortrait` still renders once with a disabled camera and destroys its scene; no idle component is attached. Do not update all 120 toy meshes/render targets each frame.
+Before this integration the shelf remained static: it used `CollectiblePreviewCache` and dispose portrait leases when cells leave the visible set. `ToyPortrait` still renders once with a disabled camera and destroys its scene; no idle component is attached. Do not update all 120 toy meshes/render targets each frame.
 
 ## Follow-ups from Claude's expanded brief
 

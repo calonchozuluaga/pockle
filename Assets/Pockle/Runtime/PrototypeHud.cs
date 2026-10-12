@@ -92,6 +92,7 @@ namespace Pockle.Runtime
             var dragTarget = viewport.gameObject.AddComponent<Image>(); dragTarget.color = Color.clear;
             content = Rect("Collection content", viewport); content.anchorMin = new Vector2(0, 1); content.anchorMax = new Vector2(1, 1); content.pivot = new Vector2(.5f, 1);
             scroll.content = content; scroll.viewport = viewport;
+            shelfPreviews = gameObject.AddComponent<ShelfPreviewRuntime>(); shelfPreviews.Initialize(viewport);
             shelfRoot = Rect("Your shelf", content); boxesRoot = Rect("Walking and shop", content);
             homeRoot = Rect("Home hub", content); rewardsRoot = Rect("Rewards", content);
             socialRoot = Rect("Friends and discovery", content); profileRoot = Rect("Local profile", content);
@@ -193,10 +194,8 @@ namespace Pockle.Runtime
         {
             if (page == next) return;
             bool blocked = StoreVisible; SavePage();
-            // MenuNavigation's tab roots are Home, Boxes, and You. The Shelf tab is Home's shelf with history reset,
-            // which gives the same stack a tab would: Back from Shelf returns Home.
-            if (next == AppPage.Shelf) { navigator.SelectTab(AppPage.Home); navigator.Push(AppPage.Shelf); }
-            else navigator.SelectTab(next);
+            // Shelf is a real tab root; switching tabs clears the old collection history.
+            navigator.SelectTab(next);
             ApplyPage(blocked);
         }
         private void SavePage()
@@ -259,6 +258,7 @@ namespace Pockle.Runtime
         {
             soundEnabled = sound; hapticsEnabled = haptics; reducedMotionEnabled = reducedMotion;
             SquishFeedback.Calm = reducedMotion;
+            shelfPreviews?.SetCalm(reducedMotion);
             RefreshSettings();
         }
         private void BuildModal()
@@ -292,6 +292,7 @@ namespace Pockle.Runtime
         private void Update()
         {
             if (!initialized) return;
+            shelfPreviews?.SetBlocked(modal != null && modal.gameObject.activeSelf);
             if (lastScreenSize.x != Screen.width || lastScreenSize.y != Screen.height || lastSafeArea != Screen.safeArea) ApplySafeArea();
             if (lastLayoutSize != safeRoot.rect.size) AdaptLayout();
         }
@@ -309,6 +310,7 @@ namespace Pockle.Runtime
         private void AdaptLayout()
         {
             var size = safeRoot.rect.size; if (size.x < 1 || size.y < 1) return; lastLayoutSize = size;
+            shelfPreviews?.InvalidateView();
             const float gutter = PockleTheme.Gutter;
             float width = Mathf.Max(1, Mathf.Min(560, size.x - gutter * 2));
             float left = (size.x - width) / 2;
@@ -654,6 +656,8 @@ namespace Pockle.Runtime
                 100f, 0, SpriteMeshType.FullRect, new Vector4(64f, 64f, 64f, 64f));
         }
 
+        private void OnEnable() { if (shelfPreviews != null) shelfPreviews.enabled = true; }
+        private void OnDisable() { if (shelfPreviews != null) shelfPreviews.enabled = false; }
         private void OnApplicationPause(bool paused)
         { if (paused) { CommitProfile(); PlayerPrefs.Save(); } }
         private void OnApplicationFocus(bool focused)
@@ -661,6 +665,7 @@ namespace Pockle.Runtime
         private void OnDestroy()
         {
             CommitProfile();
+            shelfPreviews?.Dispose();
             if (session != null) session.Changed -= RefreshCollection;
             foreach (var preview in previews) if (preview != null) { preview.Release(); Destroy(preview); }
             if (roundedSprite != null) Destroy(roundedSprite);

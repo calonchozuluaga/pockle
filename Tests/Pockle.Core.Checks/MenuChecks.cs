@@ -56,6 +56,11 @@ internal static class MenuChecks
         menu.Push(AppPage.Collection); menu.SelectTab(AppPage.Profile);
         Assert(menu.Back() && menu.Current == AppPage.Home && !menu.Back(), "Tab change retained hidden collection history.");
 
+        menu.Push(AppPage.Collection); menu.Push(AppPage.Play); menu.SelectTab(AppPage.Shelf);
+        Assert(menu.Current == AppPage.Shelf && menu.Scroll == 127, "Shelf tab lost its remembered position.");
+        menu.SelectTab(AppPage.Shelf);
+        Assert(menu.Back() && menu.Current == AppPage.Home && !menu.Back(), "Shelf tab retained hidden collection history.");
+
         Assert(ProfileName.Normalize(null!) == "Collector" && ProfileName.Normalize(" \t\n") == "Collector", "An empty display name did not fall back.");
         Assert(ProfileName.Normalize("  Lucía 李  ") == "Lucía 李", "Non-English names or whitespace trimming broke.");
         Assert(ProfileName.Normalize("A\nB\tC\u2028D\u2029E\u202eF") == "ABCDEF", "Control/bidi characters escaped display-name normalization.");

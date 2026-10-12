@@ -12,6 +12,9 @@ namespace Pockle.Runtime
     /// </summary>
     public sealed partial class PrototypeHud
     {
+        private ShelfPreviewRuntime shelfPreviews;
+        public ShelfPreviewRuntime ShelfPreviews => shelfPreviews;
+        private readonly ShelfPreviewRuntime.Binding[] shelfBindings = new ShelfPreviewRuntime.Binding[4];
         private enum ShelfView { Everything, Missing, Duplicates }
         private ShelfView shelfView;
         private Button shelfCollections;
@@ -86,10 +89,10 @@ namespace Pockle.Runtime
                 toyTiles[i].gameObject.AddComponent<SquishFeedback>();
 
                 toyPictures[i] = Portrait(toyTiles[i], i).rectTransform;
-                // An undiscovered toy keeps its look a surprise: a soft "?" instead of its portrait.
+                // Unfound toys show the character outline, without its face or finish.
                 toyMysteries[i] = Rect("Yet to discover", toyTiles[i]);
-                var mark = Label("?", toyMysteries[i], 44, PockleTheme.FillDeep, FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
-                Stretch(mark.rectTransform);
+                var silhouette = toyMysteries[i].gameObject.AddComponent<CharacterSilhouetteGraphic>(); silhouette.color = PockleTheme.PlumSoft;
+                shelfBindings[i] = shelfPreviews.Register(toyPictures[i].GetComponent<RawImage>(), silhouette, PipVariants.CollectibleId(choice));
 
                 toyNameLabels[i] = Label(ToyName(choice), toyTiles[i], PockleTheme.SmallSize, Ink, FontStyle.Bold, TextAnchor.MiddleCenter,
                     Vector2.zero, new Vector2(150, 20));
@@ -195,8 +198,7 @@ namespace Pockle.Runtime
                 bool has = owned > 0;
                 if (has) discovered++;
                 toyButtons[i].interactable = has;
-                toyPictures[i].gameObject.SetActive(has);
-                toyMysteries[i].gameObject.SetActive(!has);
+                shelfPreviews.SetFound(shelfBindings[i], has);
                 toyFaces[i].color = has ? PockleTheme.FieldFor(PipVariants.CollectibleId((PipVariant)i)) : PockleTheme.Mystery;
                 // Blind-box rule: an undiscovered toy keeps its name a surprise.
                 toyNameLabels[i].text = has ? ToyName((PipVariant)i) : "???";
