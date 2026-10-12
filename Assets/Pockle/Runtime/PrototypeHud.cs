@@ -46,12 +46,12 @@ namespace Pockle.Runtime
         private PipVariant variant;
         private CollectionSession session;
         private readonly RenderTexture[] previews = new RenderTexture[4];
-        private readonly Button[] toyButtons = new Button[4];
-        private readonly Text[] toyCounts = new Text[4];
-        private readonly RectTransform[] toyTiles = new RectTransform[4];
-        private readonly RectTransform[] toyPlanks = new RectTransform[4];
-        private readonly RectTransform[] toyPictures = new RectTransform[4];
-        private readonly RectTransform[] toyNames = new RectTransform[4];
+        private readonly Button[] toyButtons = new Button[ShelfMembers.Count];
+        private readonly Text[] toyCounts = new Text[ShelfMembers.Count];
+        private readonly RectTransform[] toyTiles = new RectTransform[ShelfMembers.Count];
+        private readonly RectTransform[] toyPlanks = new RectTransform[ShelfMembers.Count];
+        private readonly RectTransform[] toyPictures = new RectTransform[ShelfMembers.Count];
+        private readonly RectTransform[] toyNames = new RectTransform[ShelfMembers.Count];
         private RectTransform playHintPill;
         private bool initialized;
         private const float WordmarkAspect = 824f / 295f;
@@ -104,6 +104,7 @@ namespace Pockle.Runtime
             BuildTab("Shelf", "Shelf", () => SelectTab(AppPage.Shelf), out shelfTab);
             BuildTab("Boxes", "Box", () => SelectTab(AppPage.Boxes), out boxesTab);
             BuildTab("You", "You", () => SelectTab(AppPage.Profile), out youTab);
+            shelfPreviews.SetOcclusion(navigation);
             // Play hint: a soft milk pill near the bottom, over the toy's stage.
             playHintPill = Rect("Ways to play", safeRoot); Surface(playHintPill, new Color(1, 1, 1, .55f), 20);
             playHintPill.anchorMin = playHintPill.anchorMax = playHintPill.pivot = new Vector2(.5f, 0);

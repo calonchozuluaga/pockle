@@ -41,7 +41,7 @@ namespace Pockle.Runtime
         private readonly Actor[] actors = { new Actor(), new Actor(), new Actor(), new Actor() };
         private readonly LineupMotionBudget budget = new LineupMotionBudget(Capacity);
         private readonly Vector3[] corners = new Vector3[4];
-        private RectTransform viewport;
+        private RectTransform viewport, occluder;
         private Camera portraitCamera;
         private bool calm, blocked, paused, focusLost;
         private float nextFrame;
@@ -52,6 +52,7 @@ namespace Pockle.Runtime
         public int RenderedFrameCount { get; private set; }
 
         public void Initialize(RectTransform visibleViewport) { viewport = visibleViewport; }
+        public void SetOcclusion(RectTransform overlay) { occluder = overlay; InvalidateView(); }
         public Binding Register(RawImage picture, CharacterSilhouetteGraphic silhouette, string id)
         {
             if (picture == null || silhouette == null || !ToyCatalog.TryGetCollectible(id, out var definition))
@@ -89,6 +90,12 @@ namespace Pockle.Runtime
             { Vector3 p = viewport.InverseTransformPoint(corners[i]); low = Vector3.Min(low, p); high = Vector3.Max(high, p); }
             // Require at least a quarter of a portrait so a clipped sliver doesn't take a motion slot.
             Rect visible = viewport.rect;
+            if (occluder != null && occluder.gameObject.activeInHierarchy)
+            {
+                occluder.GetWorldCorners(corners);
+                float overlayTop = viewport.InverseTransformPoint(corners[1]).y;
+                visible.yMin = Mathf.Max(visible.yMin, Mathf.Min(visible.yMax, overlayTop));
+            }
             float width = Mathf.Max(0, Mathf.Min(high.x, visible.xMax) - Mathf.Max(low.x, visible.xMin));
             float height = Mathf.Max(0, Mathf.Min(high.y, visible.yMax) - Mathf.Max(low.y, visible.yMin));
             return width * height >= (high.x - low.x) * (high.y - low.y) * .25f && width > 0 && height > 0;

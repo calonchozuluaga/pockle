@@ -71,6 +71,10 @@ namespace Pockle.Tests
         {
             if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null)
                 Assert.Ignore("Shelf review captures require a graphics device.");
+            int oldWidth = Screen.width, oldHeight = Screen.height;
+            Screen.SetResolution(720, 1280, FullScreenMode.Windowed);
+            yield return null; yield return null; yield return null;
+            hud.ShelfPreviews.SendMessage("OnApplicationFocus", true);
             var canvas = root.GetComponentInChildren<Canvas>();
             var cameraObject = new GameObject("Shelf UI review camera", typeof(Camera));
             var camera = cameraObject.GetComponent<Camera>(); camera.enabled = false;
@@ -98,7 +102,7 @@ namespace Pockle.Tests
                 hud.SetSettings(true, false, true);
                 yield return null; CaptureShelfUi(canvas, camera, target, "motion-calm");
                 hud.GoBack(); ButtonNamed("Collection · loop").onClick.Invoke();
-                yield return null; CaptureShelfUi(canvas, camera, target, "planned-loop");
+                yield return null; FocusFirstSilhouette(scroll); yield return null; CaptureShelfUi(canvas, camera, target, "planned-loop");
                 Assert.That(hud.ShelfPreviews.AllocatedTargetCount, Is.LessThanOrEqualTo(ShelfPreviewRuntime.Capacity));
                 Debug.Log("SHELF_REVIEW_CAPTURES " + SystemInfo.graphicsDeviceName);
             }
@@ -107,6 +111,7 @@ namespace Pockle.Tests
                 canvas.renderMode = RenderMode.ScreenSpaceOverlay; canvas.worldCamera = null;
                 foreach (var pair in layers) if (pair.Key != null) pair.Key.gameObject.layer = pair.Value;
                 camera.targetTexture = null; target.Release(); Object.Destroy(target); Object.Destroy(cameraObject);
+                Screen.SetResolution(oldWidth, oldHeight, FullScreenMode.Windowed);
             }
         }
 
@@ -374,6 +379,9 @@ namespace Pockle.Tests
             Assert.AreEqual(3, portraits.Length, "Only discovered toys show their rendered portrait.");
             ButtonWithText("Missing").onClick.Invoke();
             Assert.IsTrue(moon.gameObject.activeInHierarchy, "Missing shows the undiscovered toy.");
+            Assert.AreEqual(7, root.GetComponentsInChildren<CharacterSilhouetteGraphic>().Length,
+                "Missing includes Moon and six planned Pip catalog slots, without granting them.");
+            Assert.IsFalse(ButtonNamed("pip.glow-jelly · shelf toy").interactable);
             Assert.IsFalse(ButtonNamed("PEACH JELLY · shelf toy", true).gameObject.activeInHierarchy, "Missing hides owned toys.");
             ButtonWithText("Duplicates").onClick.Invoke();
             Assert.IsTrue(ButtonNamed("MINT SOFT · shelf toy", true).gameObject.activeInHierarchy, "Duplicates shows the toy you have three of.");

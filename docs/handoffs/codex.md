@@ -12,6 +12,10 @@ First integration CI `38295833237` compiled but failed UI setup: the new custom 
 
 Corrected graphic run `38296682528` compiled and passed the existing UI tests plus real-mesh/calm/pause/navigation checks. Three new fixture assertions remained: native texture check ran before the next 15 fps capture, end-of-list scroll placed silhouettes outside the viewport, and centre-pixel comparison landed on a grid gutter. Fixture now waits for rendering, centres the first missing outline and checks image variation across the screen. Eager motion begins its greeting on viewport entry. Recapture/current CI remain required.
 
+The Shelf now uses Pip's ten catalog members, so Missing includes the six planned silhouettes even on a fresh beta install. Available-owned gating still permits only the four implemented finishes; planned tiles say Coming soon. Existing inventory/filter tests cover the ten-slot shelf and prohibit playing Glow Jelly. No grant or availability change.
+
+Runtime/capture run `38297552203` passed **37/37 Unity tests** (13 EditMode, 24 PlayMode, no skips) and all hosted portable/source/whitespace checks. Actual UI frames verify idles, face-free eager silhouettes and calm; Android packaging began. Follow-up before the owner test expands Shelf to ten catalog slots and makes capture resolution portrait, with tab-bar occlusion excluded from motion visibility. This newer head requires its own combined CI. Final status/evidence and main merge will be linked from PR #14.
+
 ## Active October 10 — full Pip concept/proportion pass from PR #12
 
 Owner explicitly approved implementing the eight-point "Pip render vs. concept" note in Claude's PR #12 handoff at `7521263`. Continue UX-025/030 and Pip art on `codex/pip-jelly-device-pass`, stacked on #10 in the existing isolated checkout. Main remains `b8a119c` through GitHub; shell fetch cannot reach the configured proxy. Both handoffs/coordination read. This newer silhouette brief supersedes the older material-only diagnosis.

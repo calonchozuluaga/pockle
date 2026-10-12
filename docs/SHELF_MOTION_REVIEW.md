@@ -4,6 +4,8 @@ Build branch `codex/animated-shelf`, from main `dca3ec3`, Unity **6000.6.5f1**, 
 
 ## Behavior
 
+Pip's Shelf and Collection each show ten catalog slots: four available finishes and six planned silhouettes. Missing includes unowned planned slots, labelled Coming soon, without granting or enabling them.
+
 - Found Shelf/Collection toys breathe, gently squish and rock using the existing character profiles on real 3D meshes. The tactile viewer has its own toy and is never animated by shelf code.
 - Missing entries show a plum outline, with a short eager greeting followed by a rest beat. Names/finishes remain hidden and tiles stay unplayable. Pip uses its authored body silhouette. Planned characters use small outline-only studies based on ART-001; these are not new runtime toys or available rewards. Secrets use a generic mystery shape without exposing character art.
 - Visible cards share four motion slots. Found actors share one manually rendered camera and no more than four reusable **192×192** targets, at **15 fps**. Overflow visible cells retain a still portrait/outline. Scrolling releases departing actors before assigning replacements. Existing four 256px still portraits remain shared Home/avatar/fallback resources.
@@ -12,7 +14,7 @@ Build branch `codex/animated-shelf`, from main `dca3ec3`, Unity **6000.6.5f1**, 
 
 ## Checks before publication
 
-Local portable checks: **543,484 assertions**, including Shelf tab history. Source checks: **68 files / three symbol profiles / five assemblies / 148 GUIDs / zero failures**; metadata/whitespace. Unity tests cover real mesh changes, shared limits, calm rendering stop, pause/disable/disposal, hidden faces, eager silhouettes, no ownership changes and secret concealment. Existing profile/navigation/box/collection tests remain in the suite. Hosted results and actual visual review are pending.
+Local portable checks: **543,484 assertions**, including Shelf tab history. Source checks: **68 files / three symbol profiles / five assemblies / 148 GUIDs / zero failures**; metadata/whitespace. Unity tests cover real mesh changes, shared limits, calm rendering stop, pause/disable/disposal, hidden faces, eager silhouettes, no ownership changes and secret concealment. Existing profile/navigation/box/collection tests remain in the suite. Initial runtime head `9f8879b` passed 37/37 Unity tests with no skips in run `38297552203`; actual UI frames were decoded and reviewed. The final ten-slot Shelf and portrait-resolution capture follow-up still require their own CI. Final results/evidence are linked from [PR #14](https://github.com/calonchozuluaga/pockle/pull/14).
 
 The UI capture fixture writes full PNGs and compact CI previews to `test-results/shelf-motion/`: shelf idle frames, Pip lineup, eager silhouette frames, calm and a planned character lineup. These are real Unity UI and preview-camera renders, not concept mockups. Full captures travel in the existing test artifact without changing CI.
 
