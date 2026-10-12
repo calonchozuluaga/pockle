@@ -8,6 +8,8 @@ Files: bounded shelf preview runtime and silhouette presentation, HUD shelf/coll
 
 Implementation ready for hosted validation: real found-toy mesh idles in a four-visible-slot pool; one camera, up to four reusable 192px targets, 15 fps captures. Missing Pip uses the actual body outline; other characters use outline-only ART-001 studies, not playable models. Generic secrets hide identity. Eager silhouettes share the same motion budget. Calm/hidden/modal/pause/focus/disabled HUD/disposal release slots and restore static fallback/rest poses. Real `MenuNavigation.SelectTab(Shelf)` replaces the HUD workaround. Boxes, static Home/avatar portraits, saved ownership, grants, tactile viewer and Pip art remain intact. 543,484 portable assertions and source/meta/whitespace checks pass locally. Three additional Unity cases and real UI capture sequences await CI. Phone appearance/frame cost remain owner checks.
 
+First integration CI `38295833237` compiled but failed UI setup: the new custom graphic needs an explicit CanvasRenderer requirement. Added the requirement; no valid shelf captures from that run. Other runtime/core tests passed. Recapture and all UI/lifecycle tests must pass on the corrected head.
+
 ## Active October 10 — full Pip concept/proportion pass from PR #12
 
 Owner explicitly approved implementing the eight-point "Pip render vs. concept" note in Claude's PR #12 handoff at `7521263`. Continue UX-025/030 and Pip art on `codex/pip-jelly-device-pass`, stacked on #10 in the existing isolated checkout. Main remains `b8a119c` through GitHub; shell fetch cannot reach the configured proxy. Both handoffs/coordination read. This newer silhouette brief supersedes the older material-only diagnosis.

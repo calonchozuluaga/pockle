@@ -58,7 +58,7 @@ namespace Pockle.Runtime
                 throw new ArgumentException("A shelf preview needs a catalog ID and both presentations.");
             silhouette.Configure(definition.CharacterId, definition.IsSecret);
             var binding = new Binding { Picture = picture, Silhouette = silhouette, Id = id,
-                Profile = definition.CharacterId, Fallback = picture.texture, Phase = bindings.Count * .173f };
+                Profile = definition.IsSecret ? "pip" : definition.CharacterId, Fallback = picture.texture, Phase = bindings.Count * .173f };
             bindings.Add(binding); return binding;
         }
         public void Unregister(Binding binding)

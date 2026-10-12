@@ -85,6 +85,8 @@ namespace Pockle.Tests
             try
             {
                 ButtonWithText("Shelf").onClick.Invoke();
+                var shelfScroll = root.GetComponentsInChildren<ScrollRect>().Single();
+                shelfScroll.content.anchoredPosition = new Vector2(0, 186);
                 for (int frame = 0; frame < 8; frame++)
                 { yield return new WaitForSecondsRealtime(.3f); CaptureShelfUi(canvas, camera, target, "shelf-idle-" + frame); }
                 ButtonWithText("Browse collections").onClick.Invoke(); ButtonNamed("Collection · pip").onClick.Invoke();

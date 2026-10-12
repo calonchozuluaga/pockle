@@ -5,6 +5,7 @@ using UnityEngine.UI;
 namespace Pockle.Runtime
 {
     /// <summary>Face-free character outlines. Pip projects its real body; planned shapes follow ART-001's silhouette study.</summary>
+    [RequireComponent(typeof(RectTransform), typeof(CanvasRenderer))]
     public sealed class CharacterSilhouetteGraphic : MaskableGraphic
     {
         private Vector2[] points;
