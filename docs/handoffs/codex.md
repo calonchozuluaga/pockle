@@ -1,5 +1,15 @@
 # Codex handoff
 
+## October 12 — UX-033 merged, ready for the owner's next test
+
+[PR #14](https://github.com/calonchozuluaga/pockle/pull/14) merged to main at **1d9c1257** after final code **47093ee** passed [CI run 38301425639](https://github.com/calonchozuluaga/pockle/actions/runs/38301425639): 37/37 Unity tests (13 EditMode / 24 PlayMode, zero skips), portable/source/whitespace and Android APK packaging. Source checks: 68 files / three profiles / five assemblies / 148 GUIDs / zero failures. 543,484 portable assertions. Published code/asset tree matches the checked local tree including unchanged remote packaging PNG.
+
+Delivered: ten-slot Pip Shelf and Collection, real found-toy mesh idles, eager face-free missing silhouettes, planned Coming soon gates, reduced motion, shared four-slot/one-camera/four-target/15 fps preview pool, fair found/missing selection, tab occlusion, hidden/modal/pause/focus/disable/disposal stop, and real Shelf-tab Core history. Box artwork, existing tactile toy, Pip art, rewards/save/availability, engine/settings/packages and CI are preserved. Planned outline studies are not new available models. No change to Claude's pending PR #13 note/branch.
+
+[Actual Unity GIFs and review](https://github.com/calonchozuluaga/pockle/tree/codex/shelf-motion-review-captures/docs/reviews/shelf-motion-pass-01), [full captures](https://github.com/calonchozuluaga/pockle/actions/runs/38301425639/artifacts/11771795486), [APK](https://github.com/calonchozuluaga/pockle/actions/runs/38301425639/artifacts/11770618384). Reviewed all 19 portrait frames and both eight-frame excerpts; the eager sequence includes a rest beat and hop. This evidence branch records final results; the owner should pull main to rebuild.
+
+Phone layout/safe-area/input feel and CPU/GPU/GC/memory profiling remain owner checks. Main source notes below preserve the implementation/CI history; final status is also recorded on PR #14. Further Pip art and personalities/fusion/backend remain outside this pass.
+
 ## Active October 12 — UX-033 animated shelf and silhouettes
 
 Owner asked to add shelf/lineup animation and undiscovered silhouettes before the next test, carrying forward the request to publish a pullable main build. Claimed branch `codex/animated-shelf`, isolated checkout synchronized exactly to main `dca3ec3` through GitHub because shell fetch cannot reach its inherited proxy. Read main handoffs and Claude's newest PR #13 handoff (`824cb32`); it requests real Shelf-tab navigation and defers further Pip art until phone feedback. No overlapping code PR is open. This owner-approved integration includes narrow HUD wiring without changing Claude's branch or note.
