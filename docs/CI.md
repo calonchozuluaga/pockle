@@ -13,6 +13,8 @@ Neither Codex nor Claude can run the Unity editor, so CI on GitHub Actions is wh
 
 CI uses GameCI's `unityci/editor` Docker images, which publish `ubuntu-6000.6.5f1` Android images. The `Library` folder is cached between runs, so the first run is slow (often 20–40 minutes) and later runs are much faster.
 
+The Android cache uses the `Library-Android-import4-headless-` namespace after the native character import schema gained texture dependencies. It does not restore the older Android Library across that boundary. APK compilation explicitly uses `-nographics -job-worker-count 2`; the separate Unity test job keeps graphics enabled for actual render captures. This follows two exit-137 kills during Android editor assembly reload on PR #15. A fresh bounded build is the validation step, not a claim that the cache was conclusively the cause. No device rendering, engine version, project settings or packages are changed by these runner options.
+
 ## One-time setup: add a Unity license
 
 The Unity jobs need your Unity account's license stored as GitHub secrets. Do this once, in **GitHub → pockle → Settings → Secrets and variables → Actions → New repository secret**.
