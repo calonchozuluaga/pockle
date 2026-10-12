@@ -115,8 +115,8 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: Library
-          key: Library-Android-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
-          restore-keys: Library-Android-
+          key: Library-Android-import4-headless-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: Library-Android-import4-headless-
       - uses: game-ci/unity-builder@v4
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
@@ -129,6 +129,7 @@ jobs:
           buildName: Pockle
           versioning: None
           androidExportType: androidPackage
+          customParameters: -nographics -job-worker-count 2
       - uses: actions/upload-artifact@v4
         with:
           name: Pockle-android-${{ github.sha }}

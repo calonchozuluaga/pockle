@@ -61,6 +61,7 @@ namespace Pockle.Runtime
         public Transform VisualRoot { get { Initialize(); return visualRoot; } }
         public Renderer BodyRenderer { get; private set; }
         public bool UsesAuthoredMesh { get { return characterAsset != null; } }
+        public bool UsesMeshyPeach { get { return characterAsset != null && characterAsset.BakedSurface; } }
         public PipVariant Variant { get { Initialize(); return variant; } }
         public string CollectibleId { get { Initialize(); return collectibleId; } }
         public MaterialHandling Handling
@@ -113,6 +114,29 @@ namespace Pockle.Runtime
             string id = PipVariants.CollectibleId(choice);
             if (characterAsset != null && characterAsset.CharacterId != "pip")
             { TrySetCollectible(id); return; }
+            PipCharacterAsset selected = null;
+            if (PlayerPrefs.GetInt(PipCharacterAsset.BaselinePreference, 0) == 0)
+                CharacterArt.TryLoad(id, out selected);
+            if (selected != characterAsset)
+            {
+                Quaternion rotation = visualRoot.localRotation;
+                ReleaseVisual();
+                collectibleId = id;
+                variant = choice;
+                requestedAsset = selected;
+                initialized = false;
+                haveDeformation = false;
+                // Initialize resets the new mesh; retain the player's active raw pose.
+                float compression = previousCompression, stretch = previousStretch;
+                float tiltX = previousTiltX, tiltZ = previousTiltZ, contactX = previousContactX, contactZ = previousContactZ;
+                float pinch = previousPinch, sag = previousSag, clearance = previousClearance;
+                Vector3 axis = previousPinchAxis, grip = previousGrip;
+                Initialize();
+                visualRoot.localRotation = rotation;
+                haveDeformation = false;
+                SetDeformation(compression, stretch, tiltX, tiltZ, contactX, contactZ, pinch, axis, sag, grip, clearance);
+                return;
+            }
             if (choice == variant) return;
             variant = choice;
             collectibleId = id;
@@ -184,7 +208,7 @@ namespace Pockle.Runtime
             characterAsset = requestedAsset;
             if (characterAsset == null && PlayerPrefs.GetInt(PipCharacterAsset.BaselinePreference, 0) == 0)
             {
-                characterAsset = Resources.Load<PipCharacterAsset>(PipCharacterAsset.ResourcePath);
+                CharacterArt.TryLoad(collectibleId, out characterAsset);
                 if (characterAsset != null && (characterAsset.BodyMesh == null || !characterAsset.BodyMesh.isReadable))
                 {
                     Debug.LogWarning("Pip's authored mesh is unreadable; using procedural baseline.", this);
@@ -193,7 +217,7 @@ namespace Pockle.Runtime
                 if (characterAsset == null)
                     Debug.LogWarning("Authored Pip is unavailable. Check the .pocklemesh import errors; using the baseline.", this);
             }
-            visualRoot = new GameObject(characterAsset != null ? "Pip • authored peach jelly" : "Pip • procedural baseline").transform;
+            visualRoot = new GameObject(UsesMeshyPeach ? "Pip • Meshy Peach phone test" : characterAsset != null ? "Pip • authored peach jelly" : "Pip • procedural baseline").transform;
             visualRoot.SetParent(transform, false);
             if (characterAsset != null) studioReflection = StudioReflection.Create();
             bodyMaterial = CreateBodyMaterial();
@@ -233,12 +257,15 @@ namespace Pockle.Runtime
 
             if (characterAsset != null) BuildAuthoredBody();
             else BuildBody();
-            accentMesh = BuildSphere("Shared accent sphere", characterAsset != null ? 16 : 12, characterAsset != null ? 12 : 10);
-            sparkleMesh = BuildSparkle();
-            starMesh = BuildStar();
-            BuildFace();
-            BuildCrown();
-            BuildSuspendedAccents();
+            if (!UsesMeshyPeach)
+            {
+                accentMesh = BuildSphere("Shared accent sphere", characterAsset != null ? 16 : 12, characterAsset != null ? 12 : 10);
+                sparkleMesh = BuildSparkle();
+                starMesh = BuildStar();
+                BuildFace();
+                BuildCrown();
+                BuildSuspendedAccents();
+            }
 
             var touchCollider = GetComponent<SphereCollider>();
             if (touchCollider == null) touchCollider = gameObject.AddComponent<SphereCollider>();
@@ -352,9 +379,12 @@ namespace Pockle.Runtime
                 if (accent.IsSurface) accent.Transform.localRotation = featureRotation;
             }
 
-            for (int i = 0; i < mouthRest.Length; i++)
-                mouthPositions[i] = Deform(mouthRest[i], compression, stretch, tiltX, tiltZ, contactX, contactZ, directional, suspension);
-            mouth.SetPositions(mouthPositions);
+            if (mouth != null)
+            {
+                for (int i = 0; i < mouthRest.Length; i++)
+                    mouthPositions[i] = Deform(mouthRest[i], compression, stretch, tiltX, tiltZ, contactX, contactZ, directional, suspension);
+                mouth.SetPositions(mouthPositions);
+            }
         }
 
         private static float SafeClamp(float value, float minimum, float maximum)
@@ -645,6 +675,15 @@ namespace Pockle.Runtime
 
         private Material CreateBodyMaterial()
         {
+            if (UsesMeshyPeach)
+            {
+                Shader shader = Shader.Find("Pockle/Textured Peach Jelly");
+                if (shader == null || !shader.isSupported) shader = Shader.Find("Unlit/Texture");
+                var textured = new Material(shader) { name = "Meshy Peach · wet textured jelly", mainTexture = characterAsset.BaseColorTexture };
+                if (textured.HasProperty("_StudioCube")) textured.SetTexture("_StudioCube", studioReflection);
+                ownedMaterials.Add(textured);
+                return textured;
+            }
             if (characterAsset != null && characterAsset.CharacterId != "pip")
             {
                 Shader studyShader = Shader.Find("Pockle/Solid Toy");
@@ -675,6 +714,7 @@ namespace Pockle.Runtime
 
         private void ApplyVariantMaterial()
         {
+            if (UsesMeshyPeach) return; // Baked face/palette and its own mobile material recipe.
             if (characterAsset != null && characterAsset.CharacterId != "pip")
             {
                 ApplyStudyMaterial();
@@ -897,6 +937,7 @@ namespace Pockle.Runtime
             visualRoot = null;
             studioReflection = null;
             BodyRenderer = null;
+            mouth = null;
         }
 
         private void OnDestroy() { ReleaseVisual(); }

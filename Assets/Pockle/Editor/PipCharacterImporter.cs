@@ -11,7 +11,7 @@ namespace Pockle.Editor
     /// Imports Blender's explicit Unity-coordinate mesh and face anchors into native
     /// Unity assets. FBX is supplied for DCC interchange; runtime uses this native mesh.
     /// </summary>
-    [ScriptedImporter(3, "pocklemesh")]
+    [ScriptedImporter(4, "pocklemesh")]
     public sealed class PipCharacterImporter : ScriptedImporter
     {
         [Serializable]
@@ -21,6 +21,8 @@ namespace Pockle.Editor
             public string name;
             public string characterId;
             public bool integratedCrown;
+            public bool bakedSurface;
+            public string baseColorTexturePath;
             public float[] positions;
             public int[] triangles;
             public float[] uv;
@@ -63,6 +65,18 @@ namespace Pockle.Editor
             if (!Pockle.Core.ToyCatalog.TryGetCharacter(asset.CharacterId, out _))
                 throw new InvalidDataException("Unknown character ID.");
             asset.IntegratedCrown = source.integratedCrown;
+            asset.BakedSurface = source.bakedSurface;
+            if (source.bakedSurface)
+            {
+                if (string.IsNullOrEmpty(source.baseColorTexturePath) ||
+                    !source.baseColorTexturePath.StartsWith("Assets/Pockle/", StringComparison.Ordinal) ||
+                    source.baseColorTexturePath.Contains(".."))
+                    throw new InvalidDataException("Invalid baked character texture path.");
+                context.DependsOnSourceAsset(source.baseColorTexturePath);
+                asset.BaseColorTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(source.baseColorTexturePath);
+                if (asset.BaseColorTexture == null)
+                    throw new InvalidDataException("Baked character texture is missing.");
+            }
             asset.NormalGroups = source.normalGroups;
             asset.Eyes = Triples(source.eyes, 2, "eyes");
             asset.EyeGlints = Triples(source.eyeGlints, 2, "eye glints");
@@ -127,9 +141,18 @@ namespace Pockle.Editor
         [MenuItem("Pockle/Character/Use authored Pip")]
         private static void UseAuthored()
         {
+            PlayerPrefs.SetInt(PipCharacterAsset.MeshyPreference, 0);
             PlayerPrefs.SetInt(PipCharacterAsset.BaselinePreference, 0);
             PlayerPrefs.Save();
             Debug.Log("Authored Pip selected for the next Play session.");
+        }
+
+        [MenuItem("Pockle/Character/Use Meshy Peach phone test")]
+        private static void UseMeshy()
+        {
+            PlayerPrefs.SetInt(PipCharacterAsset.MeshyPreference, 1);
+            SelectVariant(PipVariant.PeachJelly);
+            Debug.Log("Meshy Peach selected. Android test builds use it by default when Peach Jelly is played.");
         }
 
         [MenuItem("Pockle/Character/Use procedural baseline")]

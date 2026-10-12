@@ -10,6 +10,8 @@ namespace Pockle.Tests
     /// <summary>Real Unity render evidence, kept in the existing CI test-results artifact.</summary>
     public sealed class PipJellyCaptureTests
     {
+        private bool hadMeshy;
+        private int meshy;
         private GameObject stage, toyObject;
         private RenderTexture target;
         private Color ambient;
@@ -22,6 +24,9 @@ namespace Pockle.Tests
         public void SaveSettings()
         {
             ambient = RenderSettings.ambientLight; ambientMode = RenderSettings.ambientMode; fog = RenderSettings.fog;
+            hadMeshy = PlayerPrefs.HasKey(PipCharacterAsset.MeshyPreference);
+            meshy = PlayerPrefs.GetInt(PipCharacterAsset.MeshyPreference);
+            PlayerPrefs.SetInt(PipCharacterAsset.MeshyPreference, 0);
             hadBaseline = PlayerPrefs.HasKey(PipCharacterAsset.BaselinePreference);
             hadVariant = PlayerPrefs.HasKey(PipVariants.Preference);
             baseline = PlayerPrefs.GetInt(PipCharacterAsset.BaselinePreference);
@@ -36,6 +41,8 @@ namespace Pockle.Tests
             if (stage != null) Object.Destroy(stage);
             if (toyObject != null) Object.Destroy(toyObject);
             if (target != null) { target.Release(); Object.Destroy(target); }
+            if (hadMeshy) PlayerPrefs.SetInt(PipCharacterAsset.MeshyPreference, meshy);
+            else PlayerPrefs.DeleteKey(PipCharacterAsset.MeshyPreference);
             if (hadBaseline) PlayerPrefs.SetInt(PipCharacterAsset.BaselinePreference, baseline);
             else PlayerPrefs.DeleteKey(PipCharacterAsset.BaselinePreference);
             if (hadVariant) PlayerPrefs.SetInt(PipVariants.Preference, variant);
@@ -93,6 +100,46 @@ namespace Pockle.Tests
             camera.backgroundColor = PockleTheme.FieldFor(PipVariants.CollectibleId(PipVariant.PeachJelly));
             Capture(camera, Path.Combine(directory, "PeachJelly-grip.png"), 2.15f);
             Debug.Log("PIP_JELLY_CAPTURES " + directory + " · " + SystemInfo.graphicsDeviceName);
+        }
+
+        [UnityTest]
+        public IEnumerator MeshyPeachRendersFrontTurnAndGripWithItsPaintedFace()
+        {
+            if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null)
+                Assert.Ignore("A graphics device is required for Unity review captures.");
+            PlayerPrefs.SetInt(PipCharacterAsset.MeshyPreference, 1);
+            PrototypeStage.Create(out Camera camera, out Transform mount, out _, out _, out _);
+            stage = camera.transform.parent.gameObject;
+            toyObject = new GameObject("Captured owner Meshy Peach");
+            toyObject.transform.SetParent(mount, false);
+            var toy = toyObject.AddComponent<JellyToy>();
+            Assert.That(toy.UsesMeshyPeach, Is.True);
+            Assert.That(toy.BodyRenderer.sharedMaterial.shader.name, Is.EqualTo("Pockle/Textured Peach Jelly"));
+            Assert.That(toy.BodyRenderer.sharedMaterial.shader.isSupported, Is.True);
+            foreach (Transform child in stage.GetComponentsInChildren<Transform>(true)) child.gameObject.layer = 31;
+            camera.cullingMask = 1 << 31;
+            camera.enabled = false;
+            camera.backgroundColor = PrototypeStage.Background;
+            target = new RenderTexture(720,960,24,RenderTextureFormat.ARGB32);
+            target.Create();
+            string directory = Path.Combine(Path.GetDirectoryName(Application.dataPath),"test-results","meshy-peach");
+            Directory.CreateDirectory(directory);
+            yield return null;
+            Assert.That(toy.RaycastBody(new Ray(mount.position + new Vector3(0,-.4f,-3),Vector3.forward),out _), Is.True);
+            Capture(camera,Path.Combine(directory,"MeshyPeach-front.png"));
+            toyObject.transform.localRotation = Quaternion.Euler(0,-35,0);
+            Capture(camera,Path.Combine(directory,"MeshyPeach-quarter.png"));
+            toyObject.transform.localRotation = Quaternion.identity;
+            toy.SetDeformation(.18f,.3f,.15f,-.15f,.2f,-.2f,.22f,new Vector3(1,1,.1f));
+            Assert.That(toy.RaycastBody(new Ray(mount.position + new Vector3(0,-.4f,-3),Vector3.forward),out _), Is.True);
+            Capture(camera,Path.Combine(directory,"MeshyPeach-grip.png"),2.15f);
+            toy.ResetToy();
+            PlayerPrefs.SetInt(PipCharacterAsset.MeshyPreference,0);
+            toy.SetVariant(PipVariant.PeachJelly);
+            foreach (Transform child in toyObject.GetComponentsInChildren<Transform>(true)) child.gameObject.layer = 31;
+            yield return null;
+            Capture(camera,Path.Combine(directory,"AuthoredPeach-reference.png"));
+            Debug.Log("MESHY_PEACH_CAPTURES " + directory + " · " + SystemInfo.graphicsDeviceName);
         }
 
         private void Capture(Camera camera, string path, float framing = 1.6f)
