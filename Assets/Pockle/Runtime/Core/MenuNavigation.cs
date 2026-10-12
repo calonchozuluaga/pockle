@@ -22,7 +22,7 @@ namespace Pockle.Core
         }
         public void SelectTab(AppPage tab)
         {
-            if (tab != AppPage.Home && tab != AppPage.Boxes && tab != AppPage.Profile)
+            if (tab != AppPage.Home && tab != AppPage.Shelf && tab != AppPage.Boxes && tab != AppPage.Profile)
                 throw new System.ArgumentException("Not a main navigation destination.");
             if (Current == tab) return;
             history.Clear();

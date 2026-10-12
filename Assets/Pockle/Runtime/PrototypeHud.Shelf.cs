@@ -8,22 +8,27 @@ namespace Pockle.Runtime
     /// <summary>
     /// v2 Shelf (UX-032): Everything / Missing / Duplicates views, then one section per character collection
     /// (newest series first) with its progress and a grid of toy tiles on their colour fields.
-    /// Only Pip (Series 1) has playable art today, so there is one section.
+    /// Pip (Series 1) has ten catalog slots: four playable finishes and six planned silhouettes.
     /// </summary>
     public sealed partial class PrototypeHud
     {
+        private static System.Collections.Generic.IReadOnlyList<string> ShelfMembers => ToyCatalog.TryGetCollection("pip", out var pip)
+            ? pip.Members : throw new System.InvalidOperationException("Pip collection is missing.");
+        private ShelfPreviewRuntime shelfPreviews;
+        public ShelfPreviewRuntime ShelfPreviews => shelfPreviews;
+        private readonly ShelfPreviewRuntime.Binding[] shelfBindings = new ShelfPreviewRuntime.Binding[ShelfMembers.Count];
         private enum ShelfView { Everything, Missing, Duplicates }
         private ShelfView shelfView;
         private Button shelfCollections;
         private RectTransform shelfViews, shelfSection, shelfEmpty;
         private Text shelfSectionName, shelfSectionSeries, shelfSectionProgress, shelfEmptyText;
         private readonly Image[] shelfViewFaces = new Image[3];
-        private readonly RectTransform[] toyMysteries = new RectTransform[4];
-        private readonly RectTransform[] toyCountBadges = new RectTransform[4];
-        private readonly Text[] toyCountBadgeLabels = new Text[4];
-        private readonly RectTransform[] toyFavoriteBadges = new RectTransform[4];
-        private readonly Text[] toyNameLabels = new Text[4];
-        private readonly Image[] toyFaces = new Image[4];
+        private readonly RectTransform[] toyMysteries = new RectTransform[ShelfMembers.Count];
+        private readonly RectTransform[] toyCountBadges = new RectTransform[ShelfMembers.Count];
+        private readonly Text[] toyCountBadgeLabels = new Text[ShelfMembers.Count];
+        private readonly RectTransform[] toyFavoriteBadges = new RectTransform[ShelfMembers.Count];
+        private readonly Text[] toyNameLabels = new Text[ShelfMembers.Count];
+        private readonly Image[] toyFaces = new Image[ShelfMembers.Count];
 
         /// <summary>Display name from the catalog ("Moon Jelly"); falls back to the legacy label in title case.</summary>
         private static string ToyName(PipVariant variant)
@@ -74,24 +79,27 @@ namespace Pockle.Runtime
 
             for (int i = 0; i < toyTiles.Length; i++)
             {
-                PipVariant choice = (PipVariant)i;
-                toyTiles[i] = Rect(PipVariants.Label(choice) + " · shelf toy", shelfRoot);
-                toyFaces[i] = Surface(toyTiles[i], PockleTheme.FieldFor(PipVariants.CollectibleId(choice)), PockleTheme.TileRadius);
+                string id = ShelfMembers[i];
+                bool legacy = PipVariants.TryFromCollectibleId(id, out var choice);
+                toyTiles[i] = Rect((legacy ? PipVariants.Label(choice) : id) + " · shelf toy", shelfRoot);
+                toyFaces[i] = Surface(toyTiles[i], legacy ? PockleTheme.FieldFor(id) : PockleTheme.Mystery, PockleTheme.TileRadius);
                 toyFaces[i].raycastTarget = true;
                 toyButtons[i] = toyTiles[i].gameObject.AddComponent<Button>(); toyButtons[i].targetGraphic = toyFaces[i];
                 var colours = toyButtons[i].colors;
                 colours.pressedColor = new Color(.92f, .9f, .91f); colours.disabledColor = Color.white; colours.fadeDuration = .08f;
                 toyButtons[i].colors = colours;
-                toyButtons[i].onClick.AddListener(() => ShowToy(choice));
+                toyButtons[i].onClick.AddListener(() => ShowToy(id));
                 toyTiles[i].gameObject.AddComponent<SquishFeedback>();
 
-                toyPictures[i] = Portrait(toyTiles[i], i).rectTransform;
-                // An undiscovered toy keeps its look a surprise: a soft "?" instead of its portrait.
+                var pictureRect = Rect("Portrait", toyTiles[i]);
+                var picture = pictureRect.gameObject.AddComponent<RawImage>(); picture.raycastTarget = false;
+                picture.texture = legacy ? previews[(int)choice] : null; toyPictures[i] = pictureRect;
+                // Unfound toys show the character outline, without its face or finish.
                 toyMysteries[i] = Rect("Yet to discover", toyTiles[i]);
-                var mark = Label("?", toyMysteries[i], 44, PockleTheme.FillDeep, FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
-                Stretch(mark.rectTransform);
+                var silhouette = toyMysteries[i].gameObject.AddComponent<CharacterSilhouetteGraphic>(); silhouette.color = PockleTheme.PlumSoft;
+                shelfBindings[i] = shelfPreviews.Register(picture, silhouette, id);
 
-                toyNameLabels[i] = Label(ToyName(choice), toyTiles[i], PockleTheme.SmallSize, Ink, FontStyle.Bold, TextAnchor.MiddleCenter,
+                toyNameLabels[i] = Label(legacy ? ToyName(choice) : "Coming soon", toyTiles[i], PockleTheme.SmallSize, Ink, FontStyle.Bold, TextAnchor.MiddleCenter,
                     Vector2.zero, new Vector2(150, 20));
                 toyNames[i] = toyNameLabels[i].rectTransform;
                 toyCounts[i] = Label("", toyTiles[i], PockleTheme.SmallSize, MutedInk, FontStyle.Normal, TextAnchor.MiddleCenter,
@@ -118,7 +126,7 @@ namespace Pockle.Runtime
 
         private bool ShowOnShelf(int index)
         {
-            int owned = Owned((PipVariant)index);
+            int owned = session != null ? session.GetOwnedCount(ShelfMembers[index]) : 0;
             switch (shelfView)
             {
                 case ShelfView.Missing: return owned == 0;
@@ -182,7 +190,7 @@ namespace Pockle.Runtime
         {
             if (session == null) return "";
             CollectionTotals(out int distinct, out int total);
-            return total + (total == 1 ? " toy" : " toys") + " · " + distinct + " of " + PipVariants.Count + " Pip finishes found";
+            return total + (total == 1 ? " toy" : " toys") + " · " + FoundCount(ToyCatalog.Collections[0]) + " of " + ShelfMembers.Count + " Pip finishes found";
         }
 
         private void RefreshShelf()
@@ -191,20 +199,22 @@ namespace Pockle.Runtime
             int discovered = 0;
             for (int i = 0; i < toyTiles.Length; i++)
             {
-                int owned = Owned((PipVariant)i);
+                string id = ShelfMembers[i];
+                int owned = session.GetOwnedCount(id);
                 bool has = owned > 0;
+                bool available = ToyCatalog.TryGetCollectible(id, out var definition) && definition.Available;
+                bool playable = session.TryGetPlayableVariant(id, out var choice);
                 if (has) discovered++;
-                toyButtons[i].interactable = has;
-                toyPictures[i].gameObject.SetActive(has);
-                toyMysteries[i].gameObject.SetActive(!has);
-                toyFaces[i].color = has ? PockleTheme.FieldFor(PipVariants.CollectibleId((PipVariant)i)) : PockleTheme.Mystery;
+                toyButtons[i].interactable = playable;
+                shelfPreviews.SetFound(shelfBindings[i], playable);
+                toyFaces[i].color = playable ? PockleTheme.FieldFor(id) : PockleTheme.Mystery;
                 // Blind-box rule: an undiscovered toy keeps its name a surprise.
-                toyNameLabels[i].text = has ? ToyName((PipVariant)i) : "???";
+                toyNameLabels[i].text = has ? definition.FinishDisplayName : available ? "???" : "Coming soon";
                 toyNameLabels[i].color = has ? Ink : MutedInk;
                 toyCounts[i].text = owned > 1 ? owned + " on your shelf" : has ? "Yours to play with" : "Yet to discover";
                 toyCountBadges[i].gameObject.SetActive(owned > 1);
                 toyCountBadgeLabels[i].text = "×" + Mathf.Min(owned, 99);
-                toyFavoriteBadges[i].gameObject.SetActive(has && profile != null && profile.FavoriteId == PipVariants.CollectibleId((PipVariant)i));
+                toyFavoriteBadges[i].gameObject.SetActive(has && profile != null && profile.FavoriteId == id);
             }
             shelfSectionProgress.text = discovered + " of " + toyTiles.Length + " discovered";
             for (int i = 0; i < 3; i++)
@@ -213,7 +223,7 @@ namespace Pockle.Runtime
                 shelfViewFaces[i].color = selected ? Paper : new Color(1, 1, 1, 0);
                 shelfViewFaces[i].GetComponentInChildren<Text>().color = selected ? Ink : MutedInk;
             }
-            shelfEmptyText.text = shelfView == ShelfView.Missing ? "You've found every Pip finish. Nice shelf!" : "No duplicates here yet. Spares come from walking boxes.";
+            shelfEmptyText.text = shelfView == ShelfView.Missing ? "You've found every finish in this collection. Nice shelf!" : "No duplicates here yet. Spares come from walking boxes.";
             if (page == AppPage.Shelf && subtitle != null) subtitle.text = ShelfLine();
         }
 

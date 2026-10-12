@@ -67,6 +67,211 @@ namespace Pockle.Tests
         }
 
         [UnityTest]
+        public IEnumerator ShelfAndLineupRenderForReview()
+        {
+            if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null)
+                Assert.Ignore("Shelf review captures require a graphics device.");
+            int oldWidth = Screen.width, oldHeight = Screen.height;
+            FullScreenMode oldMode = Screen.fullScreenMode;
+            Screen.SetResolution(720, 1280, FullScreenMode.Windowed);
+            yield return null; yield return null; yield return null;
+            hud.ShelfPreviews.SendMessage("OnApplicationFocus", true);
+            var canvas = root.GetComponentInChildren<Canvas>();
+            var scaler = canvas.GetComponent<CanvasScaler>();
+            var oldScaleMode = scaler.uiScaleMode; float oldScaleFactor = scaler.scaleFactor;
+            // Editor Game View may ignore SetResolution. The camera target and
+            // logical portrait scale still exercise the real responsive HUD.
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize; scaler.scaleFactor = 1280f / 844f;
+            var cameraObject = new GameObject("Shelf UI review camera", typeof(Camera));
+            var camera = cameraObject.GetComponent<Camera>(); camera.enabled = false;
+            camera.clearFlags = CameraClearFlags.SolidColor; camera.backgroundColor = PrototypeStage.Background;
+            camera.cullingMask = 1 << 29; camera.orthographic = true; camera.orthographicSize = 5;
+            camera.nearClipPlane = .1f; camera.farClipPlane = 10;
+            var target = new RenderTexture(720, 1280, 24, RenderTextureFormat.ARGB32); target.Create();
+            camera.targetTexture = target;
+            var layers = canvas.GetComponentsInChildren<Transform>(true).ToDictionary(child => child, child => child.gameObject.layer);
+            foreach (var child in layers.Keys) child.gameObject.layer = 29;
+            canvas.renderMode = RenderMode.ScreenSpaceCamera; canvas.worldCamera = camera; canvas.planeDistance = 1;
+            try
+            {
+                ButtonWithText("Shelf").onClick.Invoke();
+                var shelfScroll = root.GetComponentsInChildren<ScrollRect>().Single();
+                shelfScroll.content.anchoredPosition = new Vector2(0, 186);
+                for (int frame = 0; frame < 8; frame++)
+                { yield return new WaitForSecondsRealtime(.3f); CaptureShelfUi(canvas, camera, target, "shelf-idle-" + frame); }
+                ButtonWithText("Browse collections").onClick.Invoke(); ButtonNamed("Collection · pip").onClick.Invoke();
+                yield return new WaitForSecondsRealtime(.2f); CaptureShelfUi(canvas, camera, target, "pip-lineup");
+                var scroll = root.GetComponentsInChildren<ScrollRect>().Single();
+                FocusFirstSilhouette(scroll);
+                for (int frame = 0; frame < 8; frame++)
+                { yield return new WaitForSecondsRealtime(.3f); CaptureShelfUi(canvas, camera, target, "silhouettes-eager-" + frame); }
+                Assert.That(hud.ShelfPreviews.ActiveSilhouetteCount, Is.GreaterThan(0), "Visible found toys must leave motion slots for the missing silhouettes.");
+                hud.SetSettings(true, false, true);
+                yield return null; CaptureShelfUi(canvas, camera, target, "motion-calm");
+                hud.GoBack(); ButtonNamed("Collection · loop").onClick.Invoke();
+                yield return null; FocusFirstSilhouette(scroll); yield return null; CaptureShelfUi(canvas, camera, target, "planned-loop");
+                Assert.That(hud.ShelfPreviews.AllocatedTargetCount, Is.LessThanOrEqualTo(ShelfPreviewRuntime.Capacity));
+                Debug.Log("SHELF_REVIEW_CAPTURES " + SystemInfo.graphicsDeviceName);
+            }
+            finally
+            {
+                canvas.renderMode = RenderMode.ScreenSpaceOverlay; canvas.worldCamera = null;
+                foreach (var pair in layers) if (pair.Key != null) pair.Key.gameObject.layer = pair.Value;
+                camera.targetTexture = null; target.Release(); Object.Destroy(target); Object.Destroy(cameraObject);
+                scaler.uiScaleMode = oldScaleMode; scaler.scaleFactor = oldScaleFactor;
+                Screen.SetResolution(oldWidth, oldHeight, oldMode);
+            }
+        }
+
+        private static IEnumerator WaitForPreviewFrame(ShelfPreviewRuntime previews, int previousFrame)
+        {
+            float deadline = Time.realtimeSinceStartup + 2f;
+            while (previews.RenderedFrameCount <= previousFrame && Time.realtimeSinceStartup < deadline) yield return null;
+            Assert.That(previews.RenderedFrameCount, Is.GreaterThan(previousFrame), "An exposed found toy must produce a live preview frame.");
+        }
+
+        private static void FocusFirstSilhouette(ScrollRect scroll)
+        {
+            Canvas.ForceUpdateCanvases();
+            var outline = scroll.content.GetComponentsInChildren<CharacterSilhouetteGraphic>().First();
+            var bounds = RectTransformUtility.CalculateRelativeRectTransformBounds(scroll.content, outline.rectTransform);
+            scroll.content.anchoredPosition = new Vector2(0, Mathf.Clamp(-bounds.center.y - scroll.viewport.rect.height * .5f,
+                0, Mathf.Max(0, scroll.content.rect.height - scroll.viewport.rect.height)));
+        }
+
+        private static void CaptureShelfUi(Canvas canvas, Camera camera, RenderTexture target, string name)
+        {
+            foreach (Transform child in canvas.GetComponentsInChildren<Transform>(true)) child.gameObject.layer = 29;
+            Canvas.ForceUpdateCanvases(); camera.Render();
+            var previous = RenderTexture.active;
+            var image = new Texture2D(target.width, target.height, TextureFormat.RGB24, false);
+            try
+            {
+                RenderTexture.active = target; image.ReadPixels(new Rect(0, 0, target.width, target.height), 0, 0); image.Apply();
+                string directory = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Application.dataPath), "test-results", "shelf-motion");
+                System.IO.Directory.CreateDirectory(directory); System.IO.File.WriteAllBytes(System.IO.Path.Combine(directory, name + ".png"), image.EncodeToPNG());
+                const int width = 360; int height = Mathf.RoundToInt((float)target.height / target.width * width);
+                var pixels = image.GetPixels32(); var rgb = new byte[width * height * 3];
+                for (int y = 0; y < height; y++) for (int x = 0; x < width; x++)
+                {
+                    int sx = x * target.width / width, sy = target.height - 1 - y * target.height / height;
+                    Color32 pixel = pixels[sy * target.width + sx]; int index = (y * width + x) * 3;
+                    rgb[index] = pixel.r; rgb[index + 1] = pixel.g; rgb[index + 2] = pixel.b;
+                }
+                using (var output = new System.IO.MemoryStream())
+                {
+                    using (var gzip = new System.IO.Compression.GZipStream(output, System.IO.Compression.CompressionLevel.Fastest, true)) gzip.Write(rgb, 0, rgb.Length);
+                    Debug.Log("SHELF_REVIEW_PREVIEW " + name + " " + width + " " + height + " " + System.Convert.ToBase64String(output.ToArray()));
+                }
+                // The screen centre can be a grid gutter. Sample the full UI rather than
+                // rejecting a valid capture because two background pixels match.
+                var background = pixels[0]; bool varied = false;
+                for (int i = 0; i < pixels.Length; i += Mathf.Max(1, pixels.Length / 1024))
+                    if (Mathf.Abs(pixels[i].r - background.r) + Mathf.Abs(pixels[i].g - background.g) + Mathf.Abs(pixels[i].b - background.b) > 30)
+                    { varied = true; break; }
+                Assert.IsTrue(varied, "UI review capture is empty.");
+            }
+            finally { RenderTexture.active = previous; Object.Destroy(image); }
+        }
+
+        [UnityTest]
+        public IEnumerator AnimatedShelfUsesRealMeshesAndStopsForCalmNavigationAndPause()
+        {
+            ButtonWithText("Shelf").onClick.Invoke();
+            var scroll = root.GetComponentsInChildren<ScrollRect>().Single();
+            scroll.content.anchoredPosition = new Vector2(0, 186);
+            Canvas.ForceUpdateCanvases();
+            yield return null; yield return null; yield return null;
+            var previews = hud.ShelfPreviews;
+            yield return WaitForPreviewFrame(previews, 0);
+            Assert.That(previews.ActiveCount, Is.InRange(1, ShelfPreviewRuntime.Capacity));
+            Assert.That(previews.CameraCount, Is.EqualTo(1));
+            Assert.That(previews.AllocatedTargetCount, Is.InRange(1, ShelfPreviewRuntime.Capacity));
+            var animator = root.GetComponentsInChildren<ToyLineupAnimator>().First(actor => actor.IsAnimating);
+            var mesh = animator.GetComponent<JellyToy>().BodyRenderer.GetComponent<MeshFilter>().sharedMesh;
+            var before = mesh.vertices;
+            yield return new WaitForSecondsRealtime(.3f);
+            var after = mesh.vertices;
+            Assert.IsTrue(before.Where((vertex, index) => Vector3.SqrMagnitude(vertex - after[index]) > 1e-10f).Any(),
+                "Found toys must deform their actual mesh, not just move a still portrait.");
+            int frames = previews.RenderedFrameCount;
+            hud.SetSettings(true, false, true);
+            yield return new WaitForSecondsRealtime(.2f);
+            Assert.That(previews.ActiveCount, Is.Zero);
+            Assert.That(previews.RenderedFrameCount, Is.EqualTo(frames), "Motion calm must stop live rendering.");
+            Assert.IsFalse(root.GetComponentsInChildren<ToyLineupAnimator>().Any(actor => actor.IsAnimating));
+            hud.SetSettings(true, false, false);
+            yield return null; yield return null;
+            Assert.That(previews.ActiveCount, Is.GreaterThan(0));
+            previews.SendMessage("OnApplicationPause", true);
+            Assert.That(previews.ActiveCount, Is.Zero);
+            previews.SendMessage("OnApplicationPause", false);
+            yield return null; yield return null;
+            Assert.That(previews.ActiveCount, Is.GreaterThan(0));
+            var cover = new GameObject("Whole viewport occlusion", typeof(RectTransform));
+            var coverRect = cover.GetComponent<RectTransform>(); coverRect.SetParent(scroll.viewport, false);
+            coverRect.anchorMin = Vector2.zero; coverRect.anchorMax = Vector2.one; coverRect.offsetMin = coverRect.offsetMax = Vector2.zero;
+            previews.SetOcclusion(coverRect);
+            yield return null;
+            Assert.That(previews.ActiveCount, Is.Zero, "Covered toy cards must not animate.");
+            frames = previews.RenderedFrameCount;
+            yield return new WaitForSecondsRealtime(.1f);
+            Assert.That(previews.RenderedFrameCount, Is.EqualTo(frames));
+            previews.SetOcclusion(root.GetComponentsInChildren<RectTransform>().Single(rect => rect.name == "Navigation"));
+            Object.Destroy(cover);
+            yield return null; yield return null;
+            Assert.That(previews.ActiveCount, Is.GreaterThan(0));
+            ButtonWithText("Boxes").onClick.Invoke();
+            yield return null;
+            Assert.That(previews.ActiveCount, Is.Zero, "Leaving the shelf must release every actor.");
+            ButtonWithText("Shelf").onClick.Invoke();
+            yield return null; yield return null;
+            hud.enabled = false;
+            Assert.That(previews.ActiveCount, Is.Zero, "Disabling the HUD must stop its preview component too.");
+            int previousFrame = previews.RenderedFrameCount;
+            hud.enabled = true;
+            yield return WaitForPreviewFrame(previews, previousFrame);
+            Assert.That(previews.ActiveCount, Is.GreaterThan(0));
+            var targets = root.GetComponentsInChildren<RawImage>().Select(image => image.texture).OfType<RenderTexture>().ToArray();
+            previews.Dispose();
+            Assert.That(previews.ActiveCount, Is.Zero);
+            Assert.That(previews.AllocatedTargetCount, Is.Zero);
+            Assert.That(previews.CameraCount, Is.Zero);
+            Assert.IsTrue(targets.Any(target => !target.IsCreated()), "Disposal must release native live targets.");
+        }
+
+        [UnityTest]
+        public IEnumerator MissingLineupHasEagerSilhouettesWithoutFacesOrOwnershipChanges()
+        {
+            var inventory = session.OwnedCounts.ToDictionary(pair => pair.Key, pair => pair.Value);
+            ButtonWithText("Browse collections").onClick.Invoke(); ButtonNamed("Collection · pip").onClick.Invoke();
+            var missing = ButtonNamed("Collectible · pip.glow-jelly");
+            Assert.IsFalse(missing.interactable);
+            var outline = missing.GetComponentInChildren<CharacterSilhouetteGraphic>();
+            Assert.That(outline.CharacterId, Is.EqualTo("pip"));
+            Assert.IsFalse(missing.GetComponentsInChildren<RawImage>().Any(), "A missing toy must expose no rendered face or finish.");
+            var scroll = root.GetComponentsInChildren<ScrollRect>().Single();
+            Canvas.ForceUpdateCanvases();
+            FocusFirstSilhouette(scroll);
+            yield return null; yield return null;
+            var silhouettes = root.GetComponentsInChildren<CharacterSilhouetteGraphic>();
+            var positions = silhouettes.Select(graphic => graphic.rectTransform.anchoredPosition).ToArray();
+            yield return new WaitForSecondsRealtime(.35f);
+            Assert.That(hud.ShelfPreviews.ActiveCount, Is.InRange(1, ShelfPreviewRuntime.Capacity));
+            Assert.IsTrue(silhouettes.Where((graphic, index) => Vector2.Distance(graphic.rectTransform.anchoredPosition, positions[index]) > .01f).Any(),
+                "Visible missing silhouettes should play the eager greeting.");
+            hud.SetSettings(true, false, true);
+            var calmPositions = silhouettes.Select(graphic => graphic.rectTransform.anchoredPosition).ToArray();
+            yield return new WaitForSecondsRealtime(.2f);
+            Assert.That(hud.ShelfPreviews.ActiveCount, Is.Zero);
+            Assert.IsTrue(silhouettes.Select((graphic, index) => graphic.rectTransform.anchoredPosition == calmPositions[index]).All(value => value));
+            outline.Configure("sprig", secret: true);
+            Assert.IsTrue(outline.ConcealsSecret, "Secret placeholders must not use the secret's character outline.");
+            Assert.IsFalse(hud.ShowToy("pip.glow-jelly"));
+            CollectionAssert.AreEquivalent(inventory, session.OwnedCounts);
+        }
+
+        [UnityTest]
         public IEnumerator ShelfSelectionAndUnavailableCheckoutDoNotGrantToys()
         {
             Assert.AreEqual(AppPage.Home, hud.CurrentPage);
@@ -197,7 +402,7 @@ namespace Pockle.Tests
             Assert.IsTrue(VisibleText("3 of 4 finishes · 5 toys on your shelf"));
             ButtonWithText("See all").onClick.Invoke();
             yield return null; Canvas.ForceUpdateCanvases();
-            Assert.IsTrue(VisibleText("3 of 4 discovered"));
+            Assert.IsTrue(VisibleText("3 of 10 discovered"));
             Assert.IsTrue(VisibleText("???"), "An undiscovered toy must keep its name a surprise.");
             Assert.IsFalse(VisibleText("Moon Jelly"), "An undiscovered toy's name must not be shown.");
             var moon = root.GetComponentsInChildren<Button>().Single(button => button.name == "MOON JELLY · shelf toy");
@@ -207,6 +412,9 @@ namespace Pockle.Tests
             Assert.AreEqual(3, portraits.Length, "Only discovered toys show their rendered portrait.");
             ButtonWithText("Missing").onClick.Invoke();
             Assert.IsTrue(moon.gameObject.activeInHierarchy, "Missing shows the undiscovered toy.");
+            Assert.AreEqual(7, root.GetComponentsInChildren<CharacterSilhouetteGraphic>().Length,
+                "Missing includes Moon and six planned Pip catalog slots, without granting them.");
+            Assert.IsFalse(ButtonNamed("pip.glow-jelly · shelf toy").interactable);
             Assert.IsFalse(ButtonNamed("PEACH JELLY · shelf toy", true).gameObject.activeInHierarchy, "Missing hides owned toys.");
             ButtonWithText("Duplicates").onClick.Invoke();
             Assert.IsTrue(ButtonNamed("MINT SOFT · shelf toy", true).gameObject.activeInHierarchy, "Duplicates shows the toy you have three of.");
