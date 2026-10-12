@@ -171,6 +171,9 @@ namespace Pockle.Tests
         public IEnumerator AnimatedShelfUsesRealMeshesAndStopsForCalmNavigationAndPause()
         {
             ButtonWithText("Shelf").onClick.Invoke();
+            var scroll = root.GetComponentsInChildren<ScrollRect>().Single();
+            scroll.content.anchoredPosition = new Vector2(0, 186);
+            Canvas.ForceUpdateCanvases();
             yield return null; yield return null; yield return null;
             var previews = hud.ShelfPreviews;
             Assert.That(previews.ActiveCount, Is.InRange(1, ShelfPreviewRuntime.Capacity));
@@ -195,6 +198,19 @@ namespace Pockle.Tests
             previews.SendMessage("OnApplicationPause", true);
             Assert.That(previews.ActiveCount, Is.Zero);
             previews.SendMessage("OnApplicationPause", false);
+            yield return null; yield return null;
+            Assert.That(previews.ActiveCount, Is.GreaterThan(0));
+            var cover = new GameObject("Whole viewport occlusion", typeof(RectTransform));
+            var coverRect = cover.GetComponent<RectTransform>(); coverRect.SetParent(scroll.viewport, false);
+            coverRect.anchorMin = Vector2.zero; coverRect.anchorMax = Vector2.one; coverRect.offsetMin = coverRect.offsetMax = Vector2.zero;
+            previews.SetOcclusion(coverRect);
+            yield return null;
+            Assert.That(previews.ActiveCount, Is.Zero, "Covered toy cards must not animate.");
+            frames = previews.RenderedFrameCount;
+            yield return new WaitForSecondsRealtime(.1f);
+            Assert.That(previews.RenderedFrameCount, Is.EqualTo(frames));
+            previews.SetOcclusion(root.GetComponentsInChildren<RectTransform>().Single(rect => rect.name == "Navigation"));
+            Object.Destroy(cover);
             yield return null; yield return null;
             Assert.That(previews.ActiveCount, Is.GreaterThan(0));
             ButtonWithText("Boxes").onClick.Invoke();
@@ -377,7 +393,7 @@ namespace Pockle.Tests
             Assert.IsTrue(VisibleText("3 of 4 finishes · 5 toys on your shelf"));
             ButtonWithText("See all").onClick.Invoke();
             yield return null; Canvas.ForceUpdateCanvases();
-            Assert.IsTrue(VisibleText("3 of 4 discovered"));
+            Assert.IsTrue(VisibleText("3 of 10 discovered"));
             Assert.IsTrue(VisibleText("???"), "An undiscovered toy must keep its name a surprise.");
             Assert.IsFalse(VisibleText("Moon Jelly"), "An undiscovered toy's name must not be shown.");
             var moon = root.GetComponentsInChildren<Button>().Single(button => button.name == "MOON JELLY · shelf toy");

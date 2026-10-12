@@ -18,6 +18,8 @@ Runtime/capture run `38297552203` passed **37/37 Unity tests** (13 EditMode, 24 
 
 Portrait review shows both found toys and missing slots together. The pool now reserves slots for each visible group instead of letting the first four found toys starve all silhouettes. A capture assertion covers this. Compact UI log previews are 360px wide to keep all 19 frames readable through the connector; full 720×1280 PNGs remain in the artifact. No resource-cap increase.
 
+Ten-slot/mixed-group run `38300042964` produced all 19 actual portrait captures and passed the new mixed-group/calm/privacy capture assertions. Two old fixture expectations remained: 3 of 4 discovery count instead of 3 of 10, and expecting visible actors before scrolling the landscape cards above the tab bar. Updated the count and scroll precondition; added a full-viewport occlusion test that requires zero motion/render calls. Production runtime unchanged by this fixture-only follow-up. Final complete CI remains the merge gate.
+
 ## Active October 10 — full Pip concept/proportion pass from PR #12
 
 Owner explicitly approved implementing the eight-point "Pip render vs. concept" note in Claude's PR #12 handoff at `7521263`. Continue UX-025/030 and Pip art on `codex/pip-jelly-device-pass`, stacked on #10 in the existing isolated checkout. Main remains `b8a119c` through GitHub; shell fetch cannot reach the configured proxy. Both handoffs/coordination read. This newer silhouette brief supersedes the older material-only diagnosis.
