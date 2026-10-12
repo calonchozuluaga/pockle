@@ -7,8 +7,12 @@ namespace Pockle.Runtime
     {
         public const string ResourcePath = "Pip/Pip";
         public const string BaselinePreference = "pockle.prototype.proceduralPip";
+        public const string MeshyResourcePath = "Pip/Meshy/Peach";
+        public const string MeshyPreference = "pockle.prototype.meshyPeach";
         public string CharacterId = "pip";
         public Mesh BodyMesh;
+        public bool BakedSurface;
+        public Texture2D BaseColorTexture;
         public bool IntegratedCrown;
         public int[] NormalGroups;
         public Vector3[] Eyes;

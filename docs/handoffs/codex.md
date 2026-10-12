@@ -1,5 +1,11 @@
 # Codex handoff
 
+## Active October 12 — owner-uploaded Meshy Peach phone test
+
+Owner asked to add their uploaded Peach Jelly GLB to Unity for a phone test after reviewing Blender transmission/roughness/SSS previews. Claimed UX-025/030 and ART-002 on `codex/meshy-peach-test`, isolated checkout synchronized to main `1d9c1257` (exact source tree `2923c772`). Main handoffs and Claude's PR #13 note (`824cb329`) read. This new owner request authorizes the Peach comparison despite the prior request to wait for art feedback.
+
+Files: Meshy conversion script and owner-source provenance, reduced native Peach mesh and base texture, `PipCharacterAsset`/importer, `CharacterArt`, `JellyToy`, a Built-in mobile textured jelly shader/retention material, editor comparison menu, geometry/import/deformation/switching/render tests, and own handoff/validation/device notes. Meshy Peach is the default Peach art in this test branch; normal shelf/play access and existing gel interaction remain. Other Pip finishes use the prior authored art. Preserve boxes, animated shelf/silhouettes, catalog IDs, saved inventory, rewards, settings/packages/engine and Claude's branch/handoff. No runtime GLB package or offline refraction dependency. Reduce the uploaded 64,102 triangles to the existing mobile budget, retain its painted face/filling, and approximate wet gloss/transmission/SSS locally. Actual Unity captures and Android CI packaging required; phone performance/visual acceptance remain owner checks.
+
 ## Active October 12 — UX-033 animated shelf and silhouettes
 
 Owner asked to add shelf/lineup animation and undiscovered silhouettes before the next test, carrying forward the request to publish a pullable main build. Claimed branch `codex/animated-shelf`, isolated checkout synchronized exactly to main `dca3ec3` through GitHub because shell fetch cannot reach its inherited proxy. Read main handoffs and Claude's newest PR #13 handoff (`824cb32`); it requests real Shelf-tab navigation and defers further Pip art until phone feedback. No overlapping code PR is open. This owner-approved integration includes narrow HUD wiring without changing Claude's branch or note.
