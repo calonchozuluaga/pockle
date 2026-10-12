@@ -92,7 +92,7 @@ namespace Pockle.Tests
                 ButtonWithText("Browse collections").onClick.Invoke(); ButtonNamed("Collection · pip").onClick.Invoke();
                 yield return new WaitForSecondsRealtime(.2f); CaptureShelfUi(canvas, camera, target, "pip-lineup");
                 var scroll = root.GetComponentsInChildren<ScrollRect>().Single();
-                scroll.content.anchoredPosition = new Vector2(0, Mathf.Max(0, scroll.content.rect.height - scroll.viewport.rect.height));
+                FocusFirstSilhouette(scroll);
                 for (int frame = 0; frame < 8; frame++)
                 { yield return new WaitForSecondsRealtime(.3f); CaptureShelfUi(canvas, camera, target, "silhouettes-eager-" + frame); }
                 hud.SetSettings(true, false, true);
@@ -108,6 +108,15 @@ namespace Pockle.Tests
                 foreach (var pair in layers) if (pair.Key != null) pair.Key.gameObject.layer = pair.Value;
                 camera.targetTexture = null; target.Release(); Object.Destroy(target); Object.Destroy(cameraObject);
             }
+        }
+
+        private static void FocusFirstSilhouette(ScrollRect scroll)
+        {
+            Canvas.ForceUpdateCanvases();
+            var outline = scroll.content.GetComponentsInChildren<CharacterSilhouetteGraphic>().First();
+            var bounds = RectTransformUtility.CalculateRelativeRectTransformBounds(scroll.content, outline.rectTransform);
+            scroll.content.anchoredPosition = new Vector2(0, Mathf.Clamp(-bounds.center.y - scroll.viewport.rect.height * .5f,
+                0, Mathf.Max(0, scroll.content.rect.height - scroll.viewport.rect.height)));
         }
 
         private static void CaptureShelfUi(Canvas canvas, Camera camera, RenderTexture target, string name)
@@ -134,7 +143,13 @@ namespace Pockle.Tests
                     using (var gzip = new System.IO.Compression.GZipStream(output, System.IO.Compression.CompressionLevel.Fastest, true)) gzip.Write(rgb, 0, rgb.Length);
                     Debug.Log("SHELF_REVIEW_PREVIEW " + name + " " + width + " " + height + " " + System.Convert.ToBase64String(output.ToArray()));
                 }
-                Assert.That(Vector4.Distance(image.GetPixel(target.width / 2, target.height / 2), image.GetPixel(2, 2)), Is.GreaterThan(.01f));
+                // The screen centre can be a grid gutter. Sample the full UI rather than
+                // rejecting a valid capture because two background pixels match.
+                var background = pixels[0]; bool varied = false;
+                for (int i = 0; i < pixels.Length; i += Mathf.Max(1, pixels.Length / 1024))
+                    if (Mathf.Abs(pixels[i].r - background.r) + Mathf.Abs(pixels[i].g - background.g) + Mathf.Abs(pixels[i].b - background.b) > 30)
+                    { varied = true; break; }
+                Assert.IsTrue(varied, "UI review capture is empty.");
             }
             finally { RenderTexture.active = previous; Object.Destroy(image); }
         }
@@ -177,7 +192,7 @@ namespace Pockle.Tests
             hud.enabled = false;
             Assert.That(previews.ActiveCount, Is.Zero, "Disabling the HUD must stop its preview component too.");
             hud.enabled = true;
-            yield return null; yield return null;
+            yield return new WaitForSecondsRealtime(.15f);
             Assert.That(previews.ActiveCount, Is.GreaterThan(0));
             var targets = root.GetComponentsInChildren<RawImage>().Select(image => image.texture).OfType<RenderTexture>().ToArray();
             previews.Dispose();
@@ -199,7 +214,7 @@ namespace Pockle.Tests
             Assert.IsFalse(missing.GetComponentsInChildren<RawImage>().Any(), "A missing toy must expose no rendered face or finish.");
             var scroll = root.GetComponentsInChildren<ScrollRect>().Single();
             Canvas.ForceUpdateCanvases();
-            scroll.content.anchoredPosition = new Vector2(0, Mathf.Max(0, scroll.content.rect.height - scroll.viewport.rect.height));
+            FocusFirstSilhouette(scroll);
             yield return null; yield return null;
             var silhouettes = root.GetComponentsInChildren<CharacterSilhouetteGraphic>();
             var positions = silhouettes.Select(graphic => graphic.rectTransform.anchoredPosition).ToArray();

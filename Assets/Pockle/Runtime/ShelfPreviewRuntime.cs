@@ -112,7 +112,7 @@ namespace Pockle.Runtime
             {
                 if (actor.Binding == null || actor.Binding.Found) continue;
                 actor.Elapsed += Time.unscaledDeltaTime;
-                var pose = CharacterMotion.Sample(actor.Binding.Profile, actor.Elapsed, eager: true, phaseOffset: actor.Binding.Phase);
+                var pose = CharacterMotion.Sample(actor.Binding.Profile, actor.Elapsed, eager: true, phaseOffset: Array.IndexOf(actors, actor) * .075f);
                 var rect = actor.Binding.Silhouette.rectTransform;
                 rect.anchoredPosition = actor.RestPosition + Vector2.up * (pose.Height * rect.rect.height * .45f);
                 rect.localScale = Vector3.Scale(actor.RestScale, new Vector3(1 + pose.Compression * .5f,
