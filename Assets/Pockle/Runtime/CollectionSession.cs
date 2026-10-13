@@ -59,7 +59,23 @@ namespace Pockle.Runtime
             tracker = new AndroidWalkingTracker();
             if (!readOnlySave) tracker.ResumeIfAllowed();
             Persist();
+            if (!Application.isBatchMode) TryApplyOwnerFoxTestGrant();
         }
+
+        public const string FoxTestGrantKey = "pockle.owner-test.fox-grant.v1";
+        /// <summary>Temporary owner test configuration; remove FoxOwnerTestGrant.txt before public distribution.</summary>
+        public bool TryApplyOwnerFoxTestGrant()
+        {
+            if (Progress == null || readOnlySave || PlayerPrefs.GetInt(FoxTestGrantKey, 0) == 1) return false;
+            var configuration = Resources.Load<TextAsset>("FoxOwnerTestGrant");
+            if (configuration == null || configuration.text.Trim() != "enabled") return false;
+            bool granted = Progress.EnsureFoxTestCopy();
+            Persist(); // Durable inventory first, then the one-time marker, then any UI refresh.
+            PlayerPrefs.SetInt(FoxTestGrantKey, 1); PlayerPrefs.Save();
+            Changed?.Invoke();
+            return granted;
+        }
+        public bool IsOwnedAndPlayable(string id) => IsOwnedAndAvailable(id) && CharacterArt.TryLoad(id, out _);
 
         private static CollectionSave LegacySnapshot(CollectionSave source) => new CollectionSave {
             Counts = source.Counts, Day = source.Day, Steps = source.Steps, Claimed = source.Claimed,

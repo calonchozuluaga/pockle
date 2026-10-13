@@ -139,7 +139,7 @@ namespace Pockle.Runtime
                 string id = selected.Members[i];
                 bool owned = session != null && session.GetOwnedCount(id) > 0;
                 bool known = ToyCatalog.TryGetCollectible(id, out var collectible);
-                bool playable = session != null && session.TryGetPlayableVariant(id, out _);
+                bool playable = session != null && session.IsOwnedAndPlayable(id);
                 lineupTiles[i].interactable = playable;
                 lineupNames[i].text = owned && known ? collectible.FinishDisplayName : "???";
                 lineupStates[i].text = !known || !collectible.Available ? "Coming soon" : owned ? "Yours to play" : "Not found yet";

@@ -203,7 +203,7 @@ namespace Pockle.Runtime
                 int owned = session.GetOwnedCount(id);
                 bool has = owned > 0;
                 bool available = ToyCatalog.TryGetCollectible(id, out var definition) && definition.Available;
-                bool playable = session.TryGetPlayableVariant(id, out var choice);
+                bool playable = session.IsOwnedAndPlayable(id);
                 if (has) discovered++;
                 toyButtons[i].interactable = playable;
                 shelfPreviews.SetFound(shelfBindings[i], playable);

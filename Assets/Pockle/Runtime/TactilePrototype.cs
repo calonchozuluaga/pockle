@@ -94,6 +94,7 @@ namespace Pockle.Runtime
             hud.SetSettings(soundEnabled, hapticsEnabled, reducedMotion);
             hud.SetVariant(toy.Variant);
             hud.VariantChanged += SetVariant;
+            hud.CollectibleChanged += SelectCollectible;
             hud.StoreVisibilityChanged += StoreVisibilityChanged;
             hud.BackdropChanged += SetBackdrop;
             hud.DailyBoxRequested += OpenDailyBox;
@@ -489,9 +490,12 @@ namespace Pockle.Runtime
         private void OnApplicationPause(bool paused) { if (paused) { ReleasePointer(false); ClearMotion(); } }
         private void OnApplicationFocus(bool focused) { if (!focused) { ReleasePointer(false); ClearMotion(); } }
         private void OnDisable() { ReleasePointer(false); ClearMotion(); }
+        private void SelectCollectible(string id) { TryPlayCollectible(id); }
+
         private void OnDestroy()
         {
             if (hud != null) hud.VariantChanged -= SetVariant;
+            if (hud != null) hud.CollectibleChanged -= SelectCollectible;
             if (hud != null) hud.StoreVisibilityChanged -= StoreVisibilityChanged;
             if (hud != null) hud.BackdropChanged -= SetBackdrop;
             if (hud != null) hud.DailyBoxRequested -= OpenDailyBox;

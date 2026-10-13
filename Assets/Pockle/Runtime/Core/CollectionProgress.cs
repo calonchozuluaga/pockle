@@ -129,6 +129,14 @@ namespace Pockle.Core
             if (string.IsNullOrEmpty(expectedId) || expectedId != Save.PendingRevealId) return false;
             Save.PendingRevealId = ""; Save.PendingReveal = -1; return true;
         }
+        /// <summary>Owner-requested local test copy; never adds duplicates or changes box/reveal state.</summary>
+        public bool EnsureFoxTestCopy()
+        {
+            if (GetOwnedCount(ToyCatalog.FoxId) > 0) return false;
+            counts[ToyCatalog.FoxId] = 1;
+            SynchronizeInventory();
+            return true;
+        }
         private static int BoundedCount(int count) => Math.Max(0, Math.Min(9999, count));
         private static CollectionSave StarterSave()
         {

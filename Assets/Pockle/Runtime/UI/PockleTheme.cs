@@ -62,6 +62,7 @@ namespace Pockle.Runtime
                 case "pip.gold-confetti": return FieldGold;
                 case "pip.mint-mochi": return FieldMint;
                 case "pip.peach-jelly": return FieldPeach;
+                case Pockle.Core.ToyCatalog.FoxId: return new Color(1f, .878f, .796f);
                 default: return Mystery;
             }
         }

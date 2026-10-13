@@ -21,6 +21,10 @@ namespace Pockle.Runtime
         private GuestProfile profile;
         public bool StoreVisible => page != AppPage.Play || modal != null && modal.gameObject.activeSelf;
         public event Action<PipVariant> VariantChanged;
+        public event Action<string> CollectibleChanged;
+        private string selectedCollectibleId = ToyCatalog.PeachId;
+        private string SelectedToyName => selectedCollectibleId == ToyCatalog.FoxId ? "Fox · Gloss Vinyl" : ToyName(variant);
+        private string SelectedSeriesLine => selectedCollectibleId == ToyCatalog.FoxId ? "Fox collection" : SeriesLine(variant);
         public event Action<bool> StoreVisibilityChanged;
         public event Action DailyBoxRequested;
         public event Action<Color> BackdropChanged;
@@ -131,10 +135,11 @@ namespace Pockle.Runtime
         public void SetVariant(PipVariant choice)
         {
             variant = PipVariants.FromSaved((int)choice);
+            selectedCollectibleId = PipVariants.CollectibleId(variant);
             if (page == AppPage.Play)
             {
-                heading.text = ToyName(variant); subtitle.text = SeriesLine(variant); RefreshFavoriteToggle();
-                BackdropChanged?.Invoke(PockleTheme.FieldFor(PipVariants.CollectibleId(variant)));
+                heading.text = SelectedToyName; subtitle.text = SelectedSeriesLine; RefreshFavoriteToggle();
+                BackdropChanged?.Invoke(PockleTheme.FieldFor(selectedCollectibleId));
             }
         }
         public void ShowToy(PipVariant choice)
@@ -148,8 +153,15 @@ namespace Pockle.Runtime
         /// <summary>Plays an owned collectible by stable catalog ID. Unknown, planned, or unowned IDs do nothing.</summary>
         public bool ShowToy(string collectibleId)
         {
-            if (session == null || !session.TryGetPlayableVariant(collectibleId, out var choice) || Owned(choice) <= 0) return false;
-            ShowToy(choice);
+            if (session == null || !session.IsOwnedAndPlayable(collectibleId)) return false;
+            if (PipVariants.TryFromCollectibleId(collectibleId, out var choice)) ShowToy(choice);
+            else
+            {
+                selectedCollectibleId = collectibleId;
+                if (page != AppPage.Shelf && page != AppPage.Collection && page != AppPage.Play) Navigate(AppPage.Shelf);
+                Navigate(AppPage.Play);
+                CollectibleChanged?.Invoke(collectibleId);
+            }
             return page == AppPage.Play;
         }
 
@@ -241,7 +253,7 @@ namespace Pockle.Runtime
                 case AppPage.Collections: heading.text = "Collections"; subtitle.text = "Meet the little characters for your shelf."; break;
                 case AppPage.Collection:
                     heading.text = SelectedCollection.DisplayName; subtitle.text = CollectionCaption(SelectedCollection); break;
-                default: heading.text = ToyName(variant); subtitle.text = SeriesLine(variant); break;
+                default: heading.text = SelectedToyName; subtitle.text = SelectedSeriesLine; break;
             }
             RefreshFavoriteToggle(); RefreshAvatarButton();
             StyleTab(homeTab, page == AppPage.Home || page == AppPage.Rewards || page == AppPage.Social);
@@ -252,7 +264,7 @@ namespace Pockle.Runtime
             RefreshShelf(); RefreshProfile(); RefreshSettings(); RefreshWalkingCard(); RefreshHome(); RefreshCollections();
             content.anchoredPosition = new Vector2(0, navigator.Scroll);
             if (lastLayoutSize.x > 0) AdaptLayout();
-            BackdropChanged?.Invoke(play ? PockleTheme.FieldFor(PipVariants.CollectibleId(variant)) : PrototypeStage.Background);
+            BackdropChanged?.Invoke(play ? PockleTheme.FieldFor(selectedCollectibleId) : PrototypeStage.Background);
             if (wasBlocked != StoreVisible) StoreVisibilityChanged?.Invoke(StoreVisible);
         }
         public void SetSettings(bool sound, bool haptics, bool reducedMotion)
@@ -615,14 +627,14 @@ namespace Pockle.Runtime
         private void ToggleFavorite()
         {
             if (profile == null) return;
-            profile.SetFavorite(variant);
+            profile.SetFavorite(selectedCollectibleId);
             RefreshFavoriteToggle(); RefreshShelf(); RefreshProfile();
         }
 
         private void RefreshFavoriteToggle()
         {
             if (favoriteGlyph == null || profile == null) return;
-            bool favorite = profile.FavoriteId == PipVariants.CollectibleId(variant);
+            bool favorite = profile.FavoriteId == selectedCollectibleId;
             favoriteGlyph.color = favorite ? PockleTheme.Heart : MutedInk;
         }
 

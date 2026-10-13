@@ -10,8 +10,20 @@ internal static class CatalogChecks
     private static readonly JsonSerializerOptions Json = new JsonSerializerOptions { IncludeFields = true };
     public static void Run()
     {
-        Definitions(); Migration(); FutureIdentity(); ProfileReferences(); PreviewBudget();
+        Definitions(); FoxOwnerGrant(); Migration(); FutureIdentity(); ProfileReferences(); PreviewBudget();
         Console.WriteLine("PASS: " + checks + " catalog assertions (definitions, legacy migration, unknown IDs, profiles, bounded preview lifetimes).");
+    }
+    private static void FoxOwnerGrant()
+    {
+        var progress = new CollectionProgress(null, 20734);
+        progress.Save.Steps = 521;
+        progress.Save.PendingRevealId = ToyCatalog.MoonId;
+        Assert(progress.EnsureFoxTestCopy() && progress.GetOwnedCount(ToyCatalog.FoxId) == 1, "Fox owner grant failed.");
+        Assert(!progress.EnsureFoxTestCopy(), "Restart added a duplicate Fox.");
+        var restored = new CollectionProgress(JsonSerializer.Deserialize<CollectionSave>(JsonSerializer.Serialize(progress.Save, Json), Json), 20734);
+        Assert(restored.GetOwnedCount(ToyCatalog.FoxId) == 1 && !restored.EnsureFoxTestCopy(), "Persisted Fox grant duplicated.");
+        Assert(restored.Save.Steps == 521 && restored.Save.PendingRevealId == ToyCatalog.MoonId, "Fox grant altered walking or pending reveal.");
+        for (int i = 0; i < 4; i++) Assert(restored.GetOwnedCount(ToyCatalog.LegacyCollectibleId(i)) == 1, "Fox grant changed an existing toy.");
     }
     private static void Definitions()
     {
