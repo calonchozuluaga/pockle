@@ -116,7 +116,7 @@ jobs:
         with:
           path: Library
           key: Library-Android-import4-headless-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
-          restore-keys: Library-Android-import4-headless-
+          # Reuse only an exact asset cache; changed sources need a fresh import.
       - uses: game-ci/unity-builder@v4
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
