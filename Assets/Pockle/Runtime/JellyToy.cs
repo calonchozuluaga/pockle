@@ -61,7 +61,8 @@ namespace Pockle.Runtime
         public Transform VisualRoot { get { Initialize(); return visualRoot; } }
         public Renderer BodyRenderer { get; private set; }
         public bool UsesAuthoredMesh { get { return characterAsset != null; } }
-        public bool UsesMeshyPeach { get { return characterAsset != null && characterAsset.BakedSurface; } }
+        public bool UsesMeshyPeach { get { return HasBakedSurface && characterAsset.CharacterId == "pip"; } }
+        private bool HasBakedSurface => characterAsset != null && characterAsset.BakedSurface;
         public PipVariant Variant { get { Initialize(); return variant; } }
         public string CollectibleId { get { Initialize(); return collectibleId; } }
         public MaterialHandling Handling
@@ -217,7 +218,7 @@ namespace Pockle.Runtime
                 if (characterAsset == null)
                     Debug.LogWarning("Authored Pip is unavailable. Check the .pocklemesh import errors; using the baseline.", this);
             }
-            visualRoot = new GameObject(UsesMeshyPeach ? "Pip • Meshy Peach phone test" : characterAsset != null ? "Pip • authored peach jelly" : "Pip • procedural baseline").transform;
+            visualRoot = new GameObject(UsesMeshyPeach ? "Pip • Meshy Peach phone test" : characterAsset != null ? characterAsset.name : "Pip • procedural baseline").transform;
             visualRoot.SetParent(transform, false);
             if (characterAsset != null) studioReflection = StudioReflection.Create();
             bodyMaterial = CreateBodyMaterial();
@@ -257,7 +258,7 @@ namespace Pockle.Runtime
 
             if (characterAsset != null) BuildAuthoredBody();
             else BuildBody();
-            if (!UsesMeshyPeach)
+            if (!HasBakedSurface)
             {
                 accentMesh = BuildSphere("Shared accent sphere", characterAsset != null ? 16 : 12, characterAsset != null ? 12 : 10);
                 sparkleMesh = BuildSparkle();
@@ -675,6 +676,15 @@ namespace Pockle.Runtime
 
         private Material CreateBodyMaterial()
         {
+            if (HasBakedSurface && !UsesMeshyPeach)
+            {
+                var template = Resources.Load<Material>("Characters/Fox/FoxVinyl");
+                var vinyl = template != null ? new Material(template) : new Material(Shader.Find("Standard"));
+                vinyl.name = "Fox · textured vinyl";
+                vinyl.mainTexture = characterAsset.BaseColorTexture;
+                ownedMaterials.Add(vinyl);
+                return vinyl;
+            }
             if (UsesMeshyPeach)
             {
                 Shader shader = Shader.Find("Pockle/Textured Peach Jelly");
@@ -714,7 +724,7 @@ namespace Pockle.Runtime
 
         private void ApplyVariantMaterial()
         {
-            if (UsesMeshyPeach) return; // Baked face/palette and its own mobile material recipe.
+            if (HasBakedSurface) return; // Preserve baked face/palette and the textured material recipe.
             if (characterAsset != null && characterAsset.CharacterId != "pip")
             {
                 ApplyStudyMaterial();

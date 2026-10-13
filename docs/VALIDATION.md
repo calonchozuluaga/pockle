@@ -166,3 +166,5 @@ Install the target's Unity build support through Hub. Android requires its suppo
 Verified: pinned Unity 6000.6.5f1 batch import and script compilation; material/prefab creation; converted mesh/paint inspected in a Blender render; required portable and source checks; whitespace. Not verified: Unity rendered appearance, EditMode/PlayMode suites, Android build, phone appearance/performance and tactile interaction.
 
 See `FOX_MODEL_IMPORT.md`.
+
+October 13 Fox collection validation: Unity 6000.6.5f1 imported the native runtime asset (20,009 vertices / 30,000 triangles); full PlayMode suite 29/29 passed, including Fox browser/no-grant and model/material/switching checks; full EditMode suite 16/16 passed; portable Core checks and source checks passed; whitespace passed on the branch. Android build and phone visuals/performance remain unverified. An initial no-graphics UI run crashed during portrait rendering; the graphics-enabled suite passed after correcting the new test to use visible buttons.

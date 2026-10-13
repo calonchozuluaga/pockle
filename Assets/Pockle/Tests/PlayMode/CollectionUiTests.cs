@@ -444,7 +444,7 @@ namespace Pockle.Tests
             {
                 ButtonWithText("Browse collections").onClick.Invoke();
                 Assert.AreEqual(AppPage.Collections, hud.CurrentPage);
-                Assert.AreEqual(12, root.GetComponentsInChildren<Button>().Count(button => button.name.StartsWith("Collection · ")));
+                Assert.AreEqual(ToyCatalog.Collections.Count, root.GetComponentsInChildren<Button>().Count(button => button.name.StartsWith("Collection · ")));
                 var scroll = root.GetComponentsInChildren<ScrollRect>().Single();
                 scroll.content.anchoredPosition = new Vector2(0, 90);
                 ButtonNamed("Collection · pip").onClick.Invoke();

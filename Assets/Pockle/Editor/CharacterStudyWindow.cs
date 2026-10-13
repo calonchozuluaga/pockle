@@ -15,6 +15,7 @@ namespace Pockle.Editor
             EditorGUILayout.LabelField("The current HUD still labels the viewer Pip.");
             using (new EditorGUI.DisabledScope(!EditorApplication.isPlaying))
             {
+                if (GUILayout.Button("Preview Fox · Gloss Vinyl")) Preview(Pockle.Core.ToyCatalog.FoxId);
                 if (GUILayout.Button("Preview Moss · Velvet Flock")) Preview(CharacterArt.MossStudyId);
                 if (GUILayout.Button("Preview Bop · Gloss Vinyl")) Preview(CharacterArt.BopStudyId);
                 if (GUILayout.Button("Preview Nook · Oat Bouclé Plush")) Preview(CharacterArt.NookPlushStudyId);

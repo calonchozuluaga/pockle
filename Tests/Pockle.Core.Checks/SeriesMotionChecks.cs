@@ -14,7 +14,7 @@ internal static class SeriesMotionChecks
 
     private static void Metadata()
     {
-        Assert(ToyCatalog.Collections.Count == 12, "Collections are not one per distinct character.");
+        Assert(ToyCatalog.Collections.Count == 13, "Collections are not one per distinct character.");
         foreach (var series in ToyCatalog.Collections)
         {
             Assert(ToyCatalog.TryGetCollection(series.Id, out var found) && ReferenceEquals(found, series), "Collection lookup differs from presentation.");
@@ -134,7 +134,7 @@ internal static class SeriesMotionChecks
             if (character.LeadFinishId.Contains("vinyl") || character.LeadFinishId == "coated-metallic")
                 Assert(sample.Compression == 0 && sample.Stretch == 0, "Firm lead character received jelly breathing.");
         }
-        Assert(signatures.Count == 12, "Distinct personalities collapsed into the same motion.");
+        Assert(signatures.Count == 13, "Distinct personalities collapsed into the same motion.");
         Neutral(CharacterMotion.Sample("unknown", 1)); Neutral(CharacterMotion.Sample(null, 1));
         // Warm up the static definitions and JIT before measuring the frame path.
         for (int i = 0; i < 1000; i++) CharacterMotion.Sample("pip", i / 60d);

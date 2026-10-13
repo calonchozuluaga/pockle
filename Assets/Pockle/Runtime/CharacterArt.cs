@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Pockle.Runtime
 {
-    /// <summary>Explicit art registry. Model studies are loadable for review, but remain unavailable in the production catalog.</summary>
+    /// <summary>Explicit art registry for available toys and editor model studies; art loading never grants ownership.</summary>
     public static class CharacterArt
     {
         public const string MossStudyId = "moss.velvet-flock";
@@ -12,7 +12,7 @@ namespace Pockle.Runtime
         public const string NookFoamStudyId = "nook.mochi-foam";
 
         public static bool IsStudy(string id)
-        { return id == MossStudyId || id == BopStudyId || id == NookPlushStudyId || id == NookFoamStudyId; }
+        { return id == ToyCatalog.FoxId || id == MossStudyId || id == BopStudyId || id == NookPlushStudyId || id == NookFoamStudyId; }
 
         public static bool TryLoad(string id, out PipCharacterAsset asset)
         {
@@ -32,6 +32,7 @@ namespace Pockle.Runtime
                     // The reviewed authored model remains a safe fallback on import failure.
                 }
             }
+            else if (id == ToyCatalog.FoxId) path = "Characters/Fox/Fox";
             else if (id == MossStudyId) path = "Characters/Moss/Moss";
             else if (id == BopStudyId) path = "Characters/Bop/Bop";
             else if (id == NookPlushStudyId || id == NookFoamStudyId) path = "Characters/Nook/Nook";
