@@ -160,3 +160,9 @@ Install the target's Unity build support through Hub. Android requires its suppo
 - Transparency is a lightweight material approximation, without refraction or physically correct subsurface scattering. The authored crown no longer overlaps a separate shell. Inspect internal accent sorting, reflections, and blush on target hardware. Rotate through front, side, and back and confirm bright studio highlights move across the wet shell. There must be no pink materials, missing cubemap, or blown-out white toy on Android. The cubemap uses RGBAHalf where supported and RGBA32 otherwise; that fallback is not yet device-tested.
 - Haptics are basic vibration, not tuned iOS/Android native patterns.
 - Saved data consists of comfort preferences and the selected comparison variant. Inventory, edition issuance, and the collecting loop belong to later milestones.
+
+## October 13 — Fox art review import (ART-002 / UX-030)
+
+Verified: pinned Unity 6000.6.5f1 batch import and script compilation; material/prefab creation; converted mesh/paint inspected in a Blender render; required portable and source checks; whitespace. Not verified: Unity rendered appearance, EditMode/PlayMode suites, Android build, phone appearance/performance and tactile interaction.
+
+See `FOX_MODEL_IMPORT.md`.

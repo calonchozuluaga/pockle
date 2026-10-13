@@ -126,3 +126,5 @@ The owner clarified **one collection per distinct character, with at least ten c
 Use this file as the task checklist. Each implementation should name its task ID, update its status, and record relevant evidence in `VALIDATION.md`. Prototype capabilities above are already available; unchecked tasks describe the remaining finished-game work, not features currently promised by the app.
 
 For the proposed Codex/Claude work split and repository handoffs, see [agent coordination](AGENT_COORDINATION.md). Assignments remain proposed until each assistant acknowledges its task and file ownership.
+
+October 13, ART-002 / UX-030: owner fox uploaded and imported as a separate review prefab on `codex/fox-model-import`; 30,000 triangles, original UV paint, editable vinyl material. Unity import/compile and portable checks passed. Catalog/playable integration and phone validation remain pending. See [fox import](FOX_MODEL_IMPORT.md).
