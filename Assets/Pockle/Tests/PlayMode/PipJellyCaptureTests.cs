@@ -127,12 +127,14 @@ namespace Pockle.Tests
             yield return null;
             Assert.That(toy.RaycastBody(new Ray(mount.position + new Vector3(0,-.4f,-3),Vector3.forward),out _), Is.True);
             Capture(camera,Path.Combine(directory,"MeshyPeach-front.png"));
+            Capture(camera,Path.Combine(directory,"MeshyPeach-face-closeup.png"), .70f);
             toyObject.transform.localRotation = Quaternion.Euler(0,-35,0);
             Capture(camera,Path.Combine(directory,"MeshyPeach-quarter.png"));
             toyObject.transform.localRotation = Quaternion.identity;
             toy.SetDeformation(.18f,.3f,.15f,-.15f,.2f,-.2f,.22f,new Vector3(1,1,.1f));
             Assert.That(toy.RaycastBody(new Ray(mount.position + new Vector3(0,-.4f,-3),Vector3.forward),out _), Is.True);
             Capture(camera,Path.Combine(directory,"MeshyPeach-grip.png"),2.15f);
+            Capture(camera,Path.Combine(directory,"MeshyPeach-grip-closeup.png"), .90f);
             toy.ResetToy();
             PlayerPrefs.SetInt(PipCharacterAsset.MeshyPreference,0);
             toy.SetVariant(PipVariant.PeachJelly);
