@@ -1,6 +1,6 @@
 # Fusion (proposal)
 
-October 9, 2026. **Proposal for the owner's review.** Owner direction: two spare toys can combine into a unique toy you can't buy, and the result depends on what you mix. Design by Claude; the art generation and runtime are Codex's lane (see "Who builds what"). This builds on [PERSONALITIES.md](PERSONALITIES.md) and the rules in [COLLECTIONS.md](COLLECTIONS.md).
+October 9, 2026. **Screens approved by the owner on October 12** ("Fuse spares" and "Fusion reveal"); the UI is built in UX-038 against a preview-only service. The fusion runtime is still to be built. Originally a proposal. Owner direction: two spare toys can combine into a unique toy you can't buy, and the result depends on what you mix. Design by Claude; the art generation and runtime are Codex's lane (see "Who builds what"). This builds on [PERSONALITIES.md](PERSONALITIES.md) and the rules in [COLLECTIONS.md](COLLECTIONS.md).
 
 ## The idea
 
@@ -42,6 +42,9 @@ Everything else stays the same:
 
 ## Open questions for the owner
 
+The approved screens settle how fusion looks and how spares are picked. The rules below are still the owner's call. Until then the UI follows these placeholders: the same pair always makes the same result, and personality is the first spare's mood with a lean toward the second's.
+
+
 1. Can a fused toy be fused again?
 2. How does personality blend: does one parent win, does it land in between, or is it a mix with a random lean?
 3. How many secret recipes for a first pass?
@@ -55,6 +58,9 @@ Everything else stays the same:
 - **Legal:** fusion uses no money and its results can't be traded, which keeps it away from loot-box concerns. Still include it in the legal review of the box mechanics (`COLLECTIONS.md`).
 
 ## Who builds what
+
+As built (UX-038): the HUD calls `IFusionService` (`Runtime/FusionService.cs`). The default `PreviewOnlyFusion` uses nothing, so the reveal says "Preview" and Add to shelf is disabled. The fused picture is a stand-in, made by blending the two parents' portraits. Codex's service must persist the fused toy before the reveal and never use a last copy.
+
 
 | Part | Owner |
 | --- | --- |

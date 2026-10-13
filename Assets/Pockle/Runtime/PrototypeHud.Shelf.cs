@@ -19,7 +19,6 @@ namespace Pockle.Runtime
         private readonly ShelfPreviewRuntime.Binding[] shelfBindings = new ShelfPreviewRuntime.Binding[ShelfMembers.Count];
         private enum ShelfView { Everything, Missing, Duplicates }
         private ShelfView shelfView;
-        private Button shelfCollections;
         private RectTransform shelfViews, shelfSection, shelfEmpty;
         private Text shelfSectionName, shelfSectionSeries, shelfSectionProgress, shelfEmptyText;
         private readonly Image[] shelfViewFaces = new Image[3];
@@ -48,8 +47,6 @@ namespace Pockle.Runtime
 
         private void BuildShelf()
         {
-            shelfCollections = RowButton("Browse collections", "Who's inside each collection?", "Shelf", shelfRoot,
-                () => Navigate(AppPage.Collections), out _, true);
             // Each portrait is rendered once, on its toy's colour field, and shared by every screen.
             for (int i = 0; i < previews.Length; i++)
             {
@@ -137,8 +134,8 @@ namespace Pockle.Runtime
 
         private float LayoutShelf(float width)
         {
-            LeftLabel(shelfCollections.GetComponent<RectTransform>(), Vector2.zero, new Vector2(width, 60));
-            float y = 74;
+            // The living shelf comes first; every toy's tile follows under "All your toys".
+            float y = LayoutLivingShelf(width, 0);
             TopCentered(shelfViews, new Vector2(0, -y), new Vector2(width, 48));
             float segment = (width - 8 - 8) / 3;
             for (int i = 0; i < 3; i++)
@@ -185,14 +182,6 @@ namespace Pockle.Runtime
             return y + 8;
         }
 
-        /// <summary>The line under "Your shelf": how many toys and how many finishes discovered.</summary>
-        private string ShelfLine()
-        {
-            if (session == null) return "";
-            CollectionTotals(out int distinct, out int total);
-            return total + (total == 1 ? " toy" : " toys") + " · " + FoundCount(ToyCatalog.Collections[0]) + " of " + ShelfMembers.Count + " Pip finishes found";
-        }
-
         private void RefreshShelf()
         {
             if (session == null || shelfSectionProgress == null) return;
@@ -224,14 +213,14 @@ namespace Pockle.Runtime
                 shelfViewFaces[i].GetComponentInChildren<Text>().color = selected ? Ink : MutedInk;
             }
             shelfEmptyText.text = shelfView == ShelfView.Missing ? "You've found every finish in this collection. Nice shelf!" : "No duplicates here yet. Spares come from walking boxes.";
-            if (page == AppPage.Shelf && subtitle != null) subtitle.text = ShelfLine();
+            if (page == AppPage.Shelf && subtitle != null) subtitle.text = ShelfMood();
         }
 
         private void RefreshCollection()
         {
             if (session == null) return;
             RefreshShelf(); RefreshHome(); RefreshProfile(); RefreshSettings(); RefreshWalkingCard();
-            RefreshCollections();
+            RefreshCollections(); RefreshLivingShelf(); RefreshPersonality(); RefreshFusion();
             if (page == AppPage.Shelf && lastLayoutSize.x > 0) AdaptLayout(); // Missing/Duplicates views change with ownership.
         }
     }

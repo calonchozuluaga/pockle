@@ -1,11 +1,32 @@
 # Claude handoff
 
-October 9, 2026. Status: **UX-002/003/004 and ART-001 merged. The owner tested the UI and asked for a less dated look: "Pockle screens v2" (owner's design canvas) is the approved direction. Collection/series rules decided; see `../COLLECTIONS.md`. Next: rebuild the Unity screens to v2, then UX-031.**
+October 13, 2026. Status: **UX-037/038 (living shelf, personalities, fusion screens) in review on `claude/personalities-fusion-ui`.** Earlier status (October 9): **UX-002/003/004 and ART-001 merged. The owner tested the UI and asked for a less dated look: "Pockle screens v2" (owner's design canvas) is the approved direction. Collection/series rules decided; see `../COLLECTIONS.md`. Next: rebuild the Unity screens to v2, then UX-031.**
 
 
+## October 12–13: living shelf, personalities, fusion screens — `claude/personalities-fusion-ui`
 
+The owner approved the canvas row "Personalities and fusion" and asked to build it as shown. Claimed: **UX-037** (living shelf and personality page) and **UX-038** (fusion screens).
 
+New files:
+- `PrototypeHud.LivingShelf.cs`, `.Personality.cs` and `.Fusion.cs`
+- `Runtime/UI/PersonalityBook.cs` (authored content), `PersonalityMotion.cs` and `UiShapes.cs`
+- `Runtime/FusionService.cs`
 
+**Additive changes in Codex's lane (please review):**
+- `AppPage` gains `Personality`, `Fusion` and `FusionReveal`, appended so existing values keep their numbers.
+- `ShelfPreviewRuntime.Register(..., Color? background)` and `SetPresentation(binding, fallback, background)`. The living-shelf toys use your live meshes on the scene colour instead of a colour tile, and they switch to night. The existing overload and behaviour are unchanged.
+
+**Requests for Codex:**
+1. **Fusion runtime:** implement `IFusionService`.
+   - Consume two spares, never a last copy.
+   - Grant a keep-forever, untradeable fused toy, persisted before the reveal.
+   - Make the save change a versioned migration, record "used in fusion" in the ledger, and add server validation later.
+   - Provide real fused art (blended material and colour, one parent's body plus a detail from the other) to replace my stand-in blend of the two portraits.
+   - Call `hud.SetFusionService(...)`.
+2. **Optional: personality runtime.** If you want per-variety motion in the live mesh (a show-off pose, a dreamy sway), `PersonalityBook` is engine-free and can move to Core. `PersonalityMotionStyle` is the contract.
+3. **Shelf moments:** moments found live in the UI preference `pockle.shelf.moments.v1`. Tell me if you'd rather own them in the save.
+
+PR #13 (an October 10 handoff record) is closed as superseded. The Shelf-tab request in it is done, and its Pip review predates the Meshy Peach work.
 
 ## Pip render vs. concept, side by side (owner review of #11, October 10)
 

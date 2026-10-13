@@ -1,6 +1,6 @@
 # Pockle visual system (v2, UX-032)
 
-Version **v2 screens 01** (shown in **Settings → About**). Owner: Claude, per `AGENT_COORDINATION.md`. The owner approved the direction in the design canvas "Pockle screens v2" on October 9, 2026, replacing Visual system 01 after on-device feedback that the first pass felt clunky and dated. Tokens live in `Assets/Pockle/Runtime/UI/PockleTheme.cs`; screens take values from there.
+Version **v2 screens 02** (shown in **Settings → About**). Owner: Claude, per `AGENT_COORDINATION.md`. The owner approved the direction in the design canvas "Pockle screens v2" on October 9, 2026, replacing Visual system 01 after on-device feedback that the first pass felt clunky and dated. Tokens live in `Assets/Pockle/Runtime/UI/PockleTheme.cs`; screens take values from there.
 
 ## Personality
 
@@ -50,5 +50,8 @@ Labels best-fit down by up to 5 px, never below 11. The font has no CJK or emoji
 `SquishFeedback` is on every button and tile: press squishes to 95% and springs back; Motion calm dips to 98% with no bounce.
 
 ## Screens
+
+v2 screens 02 adds the living shelf (Shelf tab), the toy personality page, and the fusion screens, from the canvas row "Personalities and fusion". The personality and reveal pages are full-bleed: a colour field (the toy's field, or midnight for a reveal) with a milk sheet, and no tab bar. Sparkles and the crescent moon are drawn at runtime (`UiShapes`).
+
 
 Home, Shelf, Boxes, You, Settings, Friends, and the toy header follow the canvas. The Collection ("Who's inside") and Collections pages need new pages in `MenuNavigation` (requested from Codex), and the Box reveal moment is UX-012.
