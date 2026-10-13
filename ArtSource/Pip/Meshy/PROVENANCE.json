@@ -1,10 +1,10 @@
 {
-  "source_file": "Meshy_AI_Peach_Jelly_Pip_Smoot_1012213852_image-to-3d-texture.glb",
-  "source_sha256": "f451c1fde7782937f69f237488be6b4297ae00c4d62b8ba08ff1aa338f46879b",
-  "source_triangles": 64102,
-  "welded_source_duplicates": 4011,
-  "runtime_triangles": 3846,
-  "runtime_vertices": 2594,
+  "source_file": "Meshy_AI_Peach_Jelly_Pip_Clean_1013030857_image-to-3d-texture.glb",
+  "source_sha256": "6300ebc9c09bb3f09147ca7844862234c663dbeca5a665d38969be5fcc1b704c",
+  "source_triangles": 52266,
+  "welded_source_duplicates": 3901,
+  "runtime_triangles": 3134,
+  "runtime_vertices": 2055,
   "open_edges": 0,
   "texture_size": [
     2048,
