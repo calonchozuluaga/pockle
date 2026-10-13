@@ -1,18 +1,18 @@
-# Peach Jelly phone texture repair
+# Clean Peach phone test
 
-Unity **6000.6.5f1**, Built-in RP. Repair branch: `codex/peach-texture-seams`, based on main `c83c6030`. Boxes, animated shelf and silhouettes are included.
+Preparing the owner's new clean Peach upload on `codex/peach-clean-v2`, based on main `3c7b071d`. Unity **6000.6.5f1**, Built-in RP. This version keeps the uploaded simple paint and fuller 3D body, without the earlier pearls or gold flecks.
 
-The owner reported light cracks across the eyes/body on phone. The repair welds the surface before mesh reduction and rebakes the original paint onto padded texture sections. The result stays within the existing phone budget. Shader and handling remain the same.
+The existing seam-safe conversion produces a closed mesh within the phone budget. Native asset and texture GUIDs are retained. Existing seam/import/grip/reset/switch/render checks cover the replacement.
 
-After this repair passes Unity/Android checks and merges:
+After green Unity/Android checks and merge:
 
 ```sh
 git switch main
 git pull --ff-only origin main
 ```
 
-Rebuild/install with your existing Unity Android settings. Open **Shelf → Pip → Peach Jelly** and check the eyes/mouth at rest, while turning, stretching and lifting. Switch Peach → Moon → Peach and check that the pose still resets normally. Keep the existing collection save.
+Rebuild/install using your existing Unity Android settings. Open **Shelf → Pip → Peach Jelly**. Check eye/smile clarity at rest and while turning/stretching/lifting, the resting base, and Peach → Moon → Peach switching. Keep the existing collection save.
 
-Local portable/source/whitespace checks pass. Offline paint comparisons and closed surface checks pass. Hosted Unity tests, closeup renders and Android packaging are pending. Owner phone confirmation remains pending.
+Required local portable/source/whitespace checks pass. Hosted Unity renders/tests, Android packaging and owner phone review are pending.
 
-Earlier import/material and test-build history: [PR #15](https://github.com/calonchozuluaga/pockle/pull/15) and [previous device notes](https://github.com/calonchozuluaga/pockle/blob/c83c60309f90bf7ae13fbc5c80b96f4d37cd5699/docs/MESHY_PEACH_TEST.md). Current status: [PR #16](https://github.com/calonchozuluaga/pockle/pull/16).
+[Previous seam repair and phone-build history: PR #16](https://github.com/calonchozuluaga/pockle/pull/16).
