@@ -24,7 +24,8 @@ namespace Pockle.Tests
         private static bool IsIntKey(int index) => index == 1 || index == 2;
         private readonly string[] previousProfile = new string[5];
         private readonly bool[] hadProfile = new bool[5];
-        private bool hadVolume;
+        private bool hadVolume, hadMoments;
+        private string previousMoments;
         private float previousVolume, observedVolume;
 
         [UnitySetUp]
@@ -41,6 +42,8 @@ namespace Pockle.Tests
             }
             hadVolume = PlayerPrefs.HasKey("pockle.prototype.soundVolume"); previousVolume = PlayerPrefs.GetFloat("pockle.prototype.soundVolume");
             PlayerPrefs.DeleteKey("pockle.prototype.soundVolume");
+            hadMoments = PlayerPrefs.HasKey(PrototypeHud.MomentsKey); previousMoments = PlayerPrefs.GetString(PrototypeHud.MomentsKey);
+            PlayerPrefs.DeleteKey(PrototypeHud.MomentsKey);
             root = new GameObject("Collection UI test");
             session = root.AddComponent<CollectionSession>(); session.Initialize();
             hud = root.AddComponent<PrototypeHud>();
@@ -63,6 +66,7 @@ namespace Pockle.Tests
                 else PlayerPrefs.SetString(profileKeys[i], previousProfile[i]);
             }
             if (hadVolume) PlayerPrefs.SetFloat("pockle.prototype.soundVolume", previousVolume); else PlayerPrefs.DeleteKey("pockle.prototype.soundVolume");
+            if (hadMoments) PlayerPrefs.SetString(PrototypeHud.MomentsKey, previousMoments); else PlayerPrefs.DeleteKey(PrototypeHud.MomentsKey);
             PlayerPrefs.Save();
         }
 
@@ -99,7 +103,7 @@ namespace Pockle.Tests
                 shelfScroll.content.anchoredPosition = new Vector2(0, 186);
                 for (int frame = 0; frame < 8; frame++)
                 { yield return new WaitForSecondsRealtime(.3f); CaptureShelfUi(canvas, camera, target, "shelf-idle-" + frame); }
-                ButtonWithText("Browse collections").onClick.Invoke(); ButtonNamed("Collection · pip").onClick.Invoke();
+                ButtonWithText("All collections").onClick.Invoke(); ButtonNamed("Collection · pip").onClick.Invoke();
                 yield return new WaitForSecondsRealtime(.2f); CaptureShelfUi(canvas, camera, target, "pip-lineup");
                 var scroll = root.GetComponentsInChildren<ScrollRect>().Single();
                 FocusFirstSilhouette(scroll);
@@ -276,7 +280,7 @@ namespace Pockle.Tests
         {
             Assert.AreEqual(AppPage.Home, hud.CurrentPage);
             ButtonWithText("See all").onClick.Invoke();
-            var portraits = root.GetComponentsInChildren<RawImage>().Where(image => image.texture is RenderTexture).ToArray();
+            var portraits = ShelfTilePortraits();
             Assert.AreEqual(4, portraits.Length, "Shelf must show four separate rendered toys.");
             Assert.IsTrue(portraits.All(image => ((RenderTexture)image.texture).IsCreated()));
             PipVariant selected = PipVariant.PeachJelly;
@@ -408,7 +412,7 @@ namespace Pockle.Tests
             var moon = root.GetComponentsInChildren<Button>().Single(button => button.name == "MOON JELLY · shelf toy");
             Assert.IsFalse(moon.interactable, "An undiscovered toy cannot be played.");
             Assert.IsTrue(VisibleText("×3"), "Duplicates show a count badge.");
-            var portraits = root.GetComponentsInChildren<RawImage>().Where(image => image.texture is RenderTexture).ToArray();
+            var portraits = ShelfTilePortraits();
             Assert.AreEqual(3, portraits.Length, "Only discovered toys show their rendered portrait.");
             ButtonWithText("Missing").onClick.Invoke();
             Assert.IsTrue(moon.gameObject.activeInHierarchy, "Missing shows the undiscovered toy.");
@@ -495,6 +499,91 @@ namespace Pockle.Tests
                 RenderSettings.fog = oldFog;
             }
             yield return null;
+        }
+
+        /// <summary>Rendered portraits on the shelf's toy tiles (not the living-shelf scene above them).</summary>
+        [UnityTest]
+        public IEnumerator LivingShelfShowsMomentsAndOpensAPersonality()
+        {
+            var inventory = session.OwnedCounts.ToDictionary(pair => pair.Key, pair => pair.Value);
+            ButtonWithText("Shelf").onClick.Invoke();
+            ButtonNamed("Shelf time · day").onClick.Invoke();
+            yield return null;
+            // Gold and Moon share the top shelf; Peach and Mint the bottom, as on the approved canvas.
+            Assert.IsTrue(VisibleText("Gold Glitter shows off for Moon Jelly"));
+            Assert.IsTrue(VisibleText("Two Pips say hi"));
+            ButtonNamed("Shelf time · night").onClick.Invoke();
+            yield return null;
+            Assert.IsTrue(VisibleText("Moon Jelly stays up stargazing"));
+            Assert.IsTrue(VisibleText("Peach and Mint nod off together"));
+            Assert.IsTrue(VisibleText("4 of 12 shelf moments found"), "Seen moments are remembered.");
+            ButtonNamed("Shelf toy · " + ToyCatalog.GoldId).onClick.Invoke();
+            Assert.AreEqual(AppPage.Personality, hud.CurrentPage);
+            Assert.IsTrue(VisibleText("Gold Glitter"));
+            Assert.IsTrue(VisibleText("Strikes a pose"));
+            Assert.IsTrue(VisibleText("Shows off for Moon"), "A found moment names its shelf friend.");
+            Assert.IsTrue(VisibleText("Not found yet"), "Unfound moments stay a surprise.");
+            ButtonWithText("Play with Gold Glitter").onClick.Invoke();
+            Assert.AreEqual(AppPage.Play, hud.CurrentPage);
+            hud.GoBack(); Assert.AreEqual(AppPage.Personality, hud.CurrentPage);
+            hud.GoBack(); Assert.AreEqual(AppPage.Shelf, hud.CurrentPage);
+            // A restart keeps the moments that were found.
+            Object.Destroy(root); yield return null;
+            root = new GameObject("Restarted moments test");
+            session = root.AddComponent<CollectionSession>(); session.Initialize();
+            hud = root.AddComponent<PrototypeHud>(); hud.Initialize(_ => { }, _ => { }, _ => { }); hud.Bind(session);
+            yield return null;
+            ButtonWithText("Shelf").onClick.Invoke();
+            Assert.IsTrue(root.GetComponentsInChildren<Text>().Any(text => text.text.EndsWith(" of 12 shelf moments found") && !text.text.StartsWith("0 ")));
+            CollectionAssert.AreEquivalent(inventory, session.OwnedCounts, "Personalities never change the inventory.");
+        }
+
+        [UnityTest]
+        public IEnumerator FusionPreviewShowsTheResultWithoutUsingSpares()
+        {
+            Object.Destroy(root); yield return null;
+            var save = new CollectionSave { Version = CollectionProgress.SaveVersion, Day = CollectionSession.Today,
+                Inventory = new System.Collections.Generic.List<OwnedCollectible> {
+                    new OwnedCollectible(ToyCatalog.PeachId, 2), new OwnedCollectible(ToyCatalog.MoonId, 3),
+                    new OwnedCollectible(ToyCatalog.GoldId, 2), new OwnedCollectible(ToyCatalog.MintId, 1) } };
+            PlayerPrefs.SetString(SaveKey, JsonUtility.ToJson(save));
+            root = new GameObject("Fusion preview test");
+            session = root.AddComponent<CollectionSession>(); session.Initialize();
+            hud = root.AddComponent<PrototypeHud>(); hud.Initialize(_ => { }, _ => { }, _ => { }); hud.Bind(session);
+            yield return null;
+            var inventory = session.OwnedCounts.ToDictionary(pair => pair.Key, pair => pair.Value);
+            ButtonWithText("Shelf").onClick.Invoke();
+            ButtonWithText("Fuse spares").onClick.Invoke();
+            Assert.AreEqual(AppPage.Fusion, hud.CurrentPage);
+            var fuse = ButtonNamed("Fuse");
+            Assert.IsFalse(fuse.interactable, "Fusing needs two spares.");
+            Assert.IsFalse(root.GetComponentsInChildren<Button>().Any(button => button.name == "Spare · " + ToyCatalog.MintId),
+                "A single copy is never offered as a spare.");
+            ButtonNamed("Spare · " + ToyCatalog.GoldId).onClick.Invoke();
+            Assert.IsFalse(ButtonNamed("Spare · " + ToyCatalog.GoldId).interactable, "Gold's only spare is already in a slot.");
+            ButtonNamed("Spare · " + ToyCatalog.MoonId).onClick.Invoke();
+            Assert.IsTrue(fuse.interactable);
+            Assert.IsTrue(VisibleText("This pair hides a secret recipe"));
+            ButtonNamed("Fusion slot · Spare 1").onClick.Invoke();
+            ButtonNamed("Spare · " + ToyCatalog.PeachId).onClick.Invoke();
+            Assert.IsFalse(VisibleText("This pair hides a secret recipe"));
+            fuse.onClick.Invoke();
+            yield return null;
+            Assert.AreEqual(AppPage.FusionReveal, hud.CurrentPage);
+            Assert.IsTrue(VisibleText("Dusk Pip"));
+            Assert.IsTrue(VisibleText("Moon blue to peach"));
+            Assert.IsTrue(VisibleText("Curious, a bit dreamy"));
+            Assert.IsTrue(VisibleText("Preview: fusion isn't switched on yet, so your spares weren't used."));
+            Assert.IsFalse(ButtonWithText("Add to shelf").interactable, "A preview can't add a toy to the shelf.");
+            CollectionAssert.AreEquivalent(inventory, session.OwnedCounts, "A fusion preview must never use or grant toys.");
+            ButtonWithText("Fuse again").onClick.Invoke();
+            Assert.AreEqual(AppPage.Fusion, hud.CurrentPage);
+        }
+
+        private RawImage[] ShelfTilePortraits()
+        {
+            return root.GetComponentsInChildren<Button>().Where(button => button.name.EndsWith(" · shelf toy"))
+                .SelectMany(button => button.GetComponentsInChildren<RawImage>()).Where(image => image.texture is RenderTexture).ToArray();
         }
 
         private bool VisibleText(string value)

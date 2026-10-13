@@ -2,6 +2,27 @@
 
 See [MESHY_PEACH_TEST.md](MESHY_PEACH_TEST.md) on `codex/meshy-peach-test`. Local conversion: 3,845 triangles / 3,951 vertices from the 64,102-triangle upload. Geometry, all 543,484 portable assertions, source/meta/whitespace checks pass (69 files / three profiles / five asmdefs / 154 GUIDs). Code `79cc98bb` passed **41/41 Unity tests** (15 EditMode + 26 PlayMode; no skips), import/shader and actual render captures in [CI 38315430626](https://github.com/calonchozuluaga/pockle/actions/runs/38315430626). Android packaging is now being requested through the repo's `build-apk` label; final status is on [PR #15](https://github.com/calonchozuluaga/pockle/pull/15). Phone acceptance/performance are unverified. Existing authored geometry/finish-reuse tests keep explicit reference art, with separate Meshy switch/render cases.
 
+
+## v2 screens 02: living shelf, personalities, fusion (UX-037/038, Claude)
+
+**Executed:** a Mono type-check against hand-written Unity API stubs, covering:
+- every HUD partial;
+- the new `PersonalityBook`, `PersonalityMotion`, `UiShapes` and `FusionService`;
+- Codex's real `Pockle.Core` sources.
+
+It checks names and types only, not real Unity signatures. `git diff --check` and the meta sync also pass. CI runs the portable checks and the Unity suites on the pull request.
+
+**New PlayMode tests (run in CI):**
+- **Living shelf:** the day and night moments for the default four Pips; four of twelve moments recorded and kept across a restart; the personality page with reactions, a found shelf friend and an unfound one; Play and Back from the personality page.
+- **Fusion preview:** a last copy is never offered; a spare already in a slot can't be picked again; the secret-recipe hint appears and clears; the reveal shows its traits and the preview note, with Add to shelf disabled; the inventory is unchanged.
+- **Existing tests:** the shelf-tile portrait counts now look only at the tiles, not the scene. The shelf now opens collections from the header's "All collections" button.
+
+**Not verified until the owner tries it on a phone:**
+- How the scene looks: toy bases sitting on the shelves, plank overlap, and the night colours.
+- Personality motion feel, and the voice chirp.
+- The stand-in fused picture.
+- Full-bleed pages under a notch.
+
 ## Animated shelf and undiscovered silhouettes (October 12, 2026)
 
 UX-033 integration from main `dca3ec3`: four bounded visible actors, one camera, up to four 192px targets at 15 fps; found toys deform actual meshes, missing slots use eager face-free outlines. Ownership/playability remains gated; unknown finishes/secrets never get a face or material. Shelf is now a Core tab root. Existing boxes, Pip art and tactile physics are preserved.
