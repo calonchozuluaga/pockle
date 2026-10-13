@@ -95,6 +95,28 @@ namespace Pockle.Tests
         }
 
         [UnityTest]
+        public IEnumerator MeshyTextureSeamsStayClosedDuringGripLiftAndReset()
+        {
+            PlayerPrefs.SetInt(PipCharacterAsset.MeshyPreference, 1);
+            root = new GameObject("Meshy seam regression");
+            var toy = root.AddComponent<JellyToy>();
+            var asset = Resources.Load<PipCharacterAsset>(PipCharacterAsset.MeshyResourcePath);
+            var mesh = toy.BodyRenderer.GetComponent<MeshFilter>().sharedMesh;
+            for (int pose = 0; pose < 4; pose++)
+            {
+                if (pose == 0 || pose == 3) toy.ResetToy();
+                else toy.SetDeformation(.18f, .3f, .15f, -.15f, .2f, -.2f, .22f,
+                    new Vector3(1, 1, .1f), pose == 2 ? .3f : 0,
+                    new Vector3(.2f, .3f, -.5f), .4f);
+                Vector3[] vertices = mesh.vertices;
+                for (int i = 0; i < vertices.Length; i++)
+                    Assert.That(vertices[i], Is.EqualTo(vertices[asset.NormalGroups[i]]),
+                        "Paint boundaries must not open during pose " + pose);
+                yield return null;
+            }
+        }
+
+        [UnityTest]
         public IEnumerator MeshyPeachDefaultsOnAndSwitchesBackWithoutLosingTheActivePose()
         {
             PlayerPrefs.DeleteKey(PipCharacterAsset.MeshyPreference);
