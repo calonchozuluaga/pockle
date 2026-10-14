@@ -231,3 +231,11 @@ Portable checks passed (14 new assertions cover all Pip finishes, restart, exist
 Pip grant APK: final Android build and StepCounter/six JNI packaging passed; install -r succeeded, preserving app data. Initial launch logged UnityFoldingFeaturesWrapper duplicate-init exception; a fresh force-stop/relaunch was issued. Phone disconnected before on-device grant count could be confirmed. Grant code/test passes and runs on next successful launch; device ownership/visual confirmation remains pending.
 
 Pip award confirmed after phone reconnect: collection card Complete, 10 of 10; detail 10 of 10 found; Starlight Glow tile Yours to play and secret banner You found Starlight Glow. Observed directly in device screenshots. Prior pending on-device ownership confirmation is resolved.
+
+## October 14 — Fox art set and updated tail model
+
+Latest owner Fox v2 imported and reduced from 251,754 to 30,000 triangles, 20,141 UV-split vertices; stable runtime/paint identities retained. All ten finish renders inspected upright. Fox art-set tests passed: five unique world maps bind correctly, cross-collection selection is rejected, cover/box resources load, native lid opens and calm motion limits it. Isolated PlayMode 44/46 passed (only the two previously recorded old Claude UI fixtures); EditMode 17/17 passed. Required portable/source checks passed: 108 C# files across 3 profiles, 257 GUIDs. Whitespace check passed for changed assets/source/docs.
+
+Cover original is exactly 2172×724 (3:1), visually inspected without text/overlays. Four new Fox paintings complement the existing Fox Hollow and each has a 128px baked reflection cube. Actual 1,253-triangle box exported to GLB with three opening tracks and native Unity FBX/prefab with a 1.958s clip; closed/open 1024px RGBA renders inspected and transparent corner alpha=0 independently checked. Source .blend retained. Final owner-local Android APK builds, StepCounter/six JNI entry points packaged. Five-world picker and separate cover integration remain Claude's work; facial/tail/limb rigs and device frame-time/release acceptance are not claimed complete.
+
+Four Christmas turnaround concepts were generated with imagegen, inspected and saved separately in ArtSource/ChristmasConcepts. They are image references for the owner's Meshy work, not imported runtime models or tested animation rigs.

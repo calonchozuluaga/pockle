@@ -15,11 +15,18 @@ namespace Pockle.Runtime
         private readonly Color liningColor = new Color(1f, .94f, .84f);
         private Transform lidHinge, leftFlap, rightFlap;
         private bool initialized;
+        private NativeCollectionBox nativeBox;
 
-        public void Initialize()
+        public void Initialize() => Initialize("pip");
+        public void Initialize(string collectionId)
         {
             if (initialized) return;
             initialized = true;
+            if(collectionId=="fox")
+            {
+                var prefab=Resources.Load<GameObject>("Boxes/FoxCollectionBox");
+                if(prefab!=null){nativeBox=Instantiate(prefab,transform,false).GetComponent<NativeCollectionBox>();nativeBox.Initialize();return;}
+            }
             Shader shader = Shader.Find("Pockle/Reveal Box");
             if (shader == null || !shader.isSupported) shader = Shader.Find("Pockle/Soft Accent");
             printed = new Material(shader) { name = "Jelly Garden · printed carton", color = Color.white };
@@ -58,6 +65,7 @@ namespace Pockle.Runtime
         public void ApplyPose(RevealPose pose, bool reducedMotion)
         {
             Initialize();
+            if(nativeBox!=null){nativeBox.ApplyPose(pose,reducedMotion);return;}
             float angle = pose.Opening * (reducedMotion ? 18f : 108f);
             lidHinge.localRotation = Quaternion.Euler(angle, 0f, 0f);
             leftFlap.localRotation = Quaternion.Euler(0f, 0f, angle * .88f);

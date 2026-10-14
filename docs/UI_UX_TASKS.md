@@ -154,3 +154,5 @@ October 14 — UX-030/033, ART-002: Axolotl plush is the fourteenth collection. 
 UX-025/030/033, ART-002 — owner confirmed all ten Pip finishes on approved latest shared shape/face. Moon/Gold/Mint now use it; six remaining finish materials implemented. Owned IDs/rewards preserved; render/test/build verification in LATEST_PIP_COLLECTION.md.
 
 Owner-approved Pip special: glow slot is now Starlight Glow · Ultra rare, stable ID pip.glow-jelly, collection secret identity. Existing secret UI badge/concealment uses this metadata. Shared approved mesh and aqua glow/iridescent material retained; no inventory grant, box odds or reward pool changes.
+
+ART-005 / UX-033 / UX-039 Fox art set: five distinct worlds, separate text-free 3:1 cover and opening-ready 3D box + PNG renders implemented locally on codex/fox-art-set. Owner's Fox v2 tail replacement applied to all ten finishes with stable IDs/GUIDs. Claude's five-world picker/cover integration and model-specific facial/tail animation are still pending. Every collection must meet COLLECTION_ART_STANDARD.md, including nine common + one rare within ten and mandatory eye/mouth/idle/touch/sound-expression support.

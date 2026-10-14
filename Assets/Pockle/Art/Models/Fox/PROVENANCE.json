@@ -1,15 +1,15 @@
 {
-  "source_file": "Meshy_AI_vinyl_toy_red_fox_3d_1013171234_image-to-3d-texture.glb",
-  "source_sha256": "d662b9215581676e44f815f89b49e9a937144a20862a3ee5de7437aafdeac814",
-  "source_triangles": 1943990,
+  "source_file": "Meshy_AI_vinyl_toy_red_fox_v2_1014202109_image-to-3d-texture.glb",
+  "source_sha256": "2755f70202d3ee817e46879c6fc715c5ea8ca854925a665b84649a33758bf95d",
+  "source_triangles": 251754,
   "runtime_triangles": 30000,
-  "runtime_vertices_before_uv_splits": 14998,
-  "welded_source_duplicates": 27689,
+  "runtime_vertices_before_uv_splits": 15000,
+  "welded_source_duplicates": 10370,
   "texture_size": [
     2048,
     2048
   ],
   "conversion": "Weld, decimate to approximately 30000 triangles, source UVs and base-color texture retained",
-  "material": "Base color preserved; review material uses opaque nonmetallic vinyl, roughness 0.4. Original packed metallic/roughness and normal maps archived separately; available for future material tuning.",
+  "material": "Base color preserved; review material uses opaque soft plush, roughness 0.25. Original packed metallic/roughness and normal maps archived separately; available for future material tuning.",
   "status": "Separate art review asset; not assigned to a catalog ID or available in inventory; Unity and phone review pending"
 }

@@ -52,17 +52,26 @@ namespace Pockle.Runtime
 
         }
 
-        public bool SetWorld(StageWorld world, string id)
+        public string EnvironmentId { get; private set; }
+        public bool SetEnvironment(string worldId, string id)
+        {
+            if (!ToyCatalog.TryGetCollectible(id,out var toy) || !ToyCatalog.TryGetCollection(toy.CollectionId,out var collection)) return false;
+            foreach(var world in collection.Worlds)
+                if(world.Id == worldId) return SetWorld(StageWorld.Home,id,worldId);
+            return false;
+        }
+        public bool SetWorld(StageWorld world, string id) => SetWorld(world,id,null);
+        private bool SetWorld(StageWorld world, string id, string environmentId)
         {
             if (!Enum.IsDefined(typeof(StageWorld), world) || !ToyCatalog.TryGetCollectible(id, out var toy)) return false;
-            if (World == world && collectibleId == id && scenery != null) return true;
-            World = world; collectibleId = id;
+            if (World == world && collectibleId == id && EnvironmentId == environmentId && scenery != null) return true;
+            World = world; collectibleId = id; EnvironmentId = environmentId;
             gradientPlane.gameObject.SetActive(true);
             HomeWorld = ToyCatalog.TryGetCollection(toy.CollectionId, out var collection) ? collection.HomeWorld : "studio";
             ClearScenery(); elapsed = 0;
             scenery = new GameObject("Stage world · " + world).transform;
             scenery.SetParent(transform.parent, false);
-            bool hollow = world == StageWorld.Home && HomeWorld == "fox-hollow";
+            bool hollow = world == StageWorld.Home && HomeWorld == "fox-hollow" && (environmentId == null || environmentId == "fox-hollow" || environmentId == "fox-autumn-orchard");
             Color rim = new Color(.91f,.857f,.79f), top = new Color(1,.985f,.957f);
             if (hollow)
             {
@@ -106,7 +115,10 @@ namespace Pockle.Runtime
                     i%3==0 ? .035f : .018f,i%3==0 ? .065f : .025f,new Color(.92f,.86f,1),4);
                 Ring("Lavender luminous rim",1.21f,.152f,new Color(.83f,.72f,1),.035f);
             }
-            paintedWorld=PaintedWorldAsset.Load(World,HomeWorld);
+            paintedWorld=environmentId==null?PaintedWorldAsset.Load(World,HomeWorld):Resources.Load<PaintedWorldAsset>("Worlds/"+environmentId);
+            if(environmentId=="fox-snowy-den"){rim=new Color(.64f,.72f,.82f);top=new Color(.92f,.96f,1);}
+            if(environmentId=="fox-riverbank"){rim=new Color(.42f,.62f,.57f);top=new Color(.83f,.95f,.90f);}
+            if(environmentId=="fox-aurora-grove"){rim=new Color(.39f,.30f,.60f);top=new Color(.62f,.50f,.80f);}
             if(paintedWorld!=null)
             {
                 // The image replaces duplicate scenery cards; drifting leaves remain a small optional effect.
@@ -114,7 +126,7 @@ namespace Pockle.Runtime
             }
             backgroundMaterial.SetFloat("_UseTexture",paintedWorld!=null?1:0);
             backgroundMaterial.mainTexture=paintedWorld!=null?paintedWorld.Background:null;
-            backgroundMaterial.SetFloat("_Pan",World==StageWorld.Midnight?.62f:.5f);
+            backgroundMaterial.SetFloat("_Pan",World==StageWorld.Midnight||environmentId=="fox-aurora-grove"?.62f:.5f);
             if(reflectionProbe==null)
             {
                 var probeObject=new GameObject("Baked world reflection probe",typeof(ReflectionProbe));

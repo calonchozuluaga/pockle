@@ -25,6 +25,12 @@ namespace Pockle.Runtime
             var environment = viewer == null ? null : viewer.GetComponent<ToyStageEnvironment>();
             return environment != null && environment.SetWorld(world, collectibleId);
         }
+        public static bool SetEnvironment(Camera viewer, string worldId, string collectibleId)
+        {
+            var environment = viewer == null ? null : viewer.GetComponent<ToyStageEnvironment>();
+            return environment != null && environment.SetEnvironment(worldId, collectibleId);
+        }
+
         public static bool SetLight(StageLight light) => SetLight(Camera.main, light);
         public static bool SetLight(Camera viewer, StageLight light)
         {

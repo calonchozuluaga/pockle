@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fox art-review conversion: weld, reduce to 30000 triangles, and rebake paint.
+"""Fox art-review conversion: weld, reduce to 30000 triangles, and retain source paint.
 Run: blender -b --python tools/import-meshy-fox.py -- /path/to/owner.glb
 The original upload stays outside Assets; Unity needs no GLB package.
 """
@@ -66,7 +66,7 @@ for poly in o.data.polygons:
 principled = next(n for n in material.node_tree.nodes if n.type == 'BSDF_PRINCIPLED')
 material.node_tree.links.new(texture.outputs['Color'], principled.inputs['Base Color'])
 principled.inputs['Metallic'].default_value = 0
-principled.inputs['Roughness'].default_value = .4
+principled.inputs['Roughness'].default_value = .25
 bpy.ops.export_scene.fbx(filepath=str(folder / 'Fox.fbx'), use_selection=True,
                         object_types={'MESH'}, add_leaf_bones=False, axis_forward='-Z', axis_up='Y')
 triangles = sum(len(p.vertices)-2 for p in o.data.polygons)
@@ -80,8 +80,8 @@ provenance = {
     'welded_source_duplicates': welded_count,
     'texture_size': [2048, 2048],
     'conversion': 'Weld, decimate to approximately 30000 triangles, source UVs and base-color texture retained',
-    'material': 'Base color preserved; review material uses opaque nonmetallic vinyl, roughness 0.4. Original packed metallic/roughness and normal maps archived separately; available for future material tuning.',
-    'status': 'Separate art review asset; not assigned to a catalog ID or available in inventory; Unity and phone review pending'
+    'material': 'Base color preserved; review material uses opaque gloss vinyl, roughness 0.25. Original packed metallic/roughness and normal maps archived separately; available for future material tuning.',
+    'status': 'Owner-approved Fox v2 tail replacement; build native runtime mesh with FoxCollectionBuild, preserving all collectible identities'
 }
 (folder / 'PROVENANCE.json').write_text(json.dumps(provenance, indent=2)+'\n')
 print('FOX_EXPORT', json.dumps(provenance))

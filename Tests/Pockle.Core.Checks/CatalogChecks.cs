@@ -10,8 +10,17 @@ internal static class CatalogChecks
     private static readonly JsonSerializerOptions Json = new JsonSerializerOptions { IncludeFields = true };
     public static void Run()
     {
-        PipFinishGrant(); StageMetadata(); Definitions(); FoxOwnerGrant(); FoxFinishGrant(); Migration(); FutureIdentity(); ProfileReferences(); PreviewBudget();
+        CollectionArt(); PipFinishGrant(); StageMetadata(); Definitions(); FoxOwnerGrant(); FoxFinishGrant(); Migration(); FutureIdentity(); ProfileReferences(); PreviewBudget();
         Console.WriteLine("PASS: " + checks + " catalog assertions (definitions, legacy migration, unknown IDs, profiles, bounded preview lifetimes).");
+    }
+    private static void CollectionArt()
+    {
+        ToyCatalog.TryGetCollection("fox",out var collection);
+        Assert(collection.Members.Count == 10 && collection.HasSecret, "Fox needs ten toys including one rare.");
+        Assert(collection.Members.Count(id => ToyCatalog.TryGetCollectible(id,out var toy) && toy.IsSecret) == 1, "Fox rare must occupy one of ten slots.");
+        Assert(collection.Worlds.Count == 5 && collection.Worlds.Select(w => w.Id).Distinct().Count() == 5, "Fox needs five unique worlds.");
+        Assert(collection.HomeWorld == collection.Worlds[0].Id, "First collection world must be home.");
+        Assert(collection.CoverArt == "Collections/Fox/Cover" && collection.BoxArt == "UI/Boxes/Collection-fox" && collection.BoxModel == "Boxes/FoxCollectionBox", "Fox art paths missing.");
     }
     private static void PipFinishGrant()
     {

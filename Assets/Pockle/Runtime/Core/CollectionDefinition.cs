@@ -16,6 +16,14 @@ namespace Pockle.Core
         { CollectibleId = entry.CollectibleId; Weight = entry.Weight; TotalWeight = total; IsSecret = CollectibleId == secretId; }
     }
 
+    public sealed class CollectionWorldDefinition
+    {
+        public string Id { get; }
+        public string DisplayName { get; }
+        public string EnvironmentArt => "Worlds/" + Id;
+        public CollectionWorldDefinition(string id, string name) { Id = id; DisplayName = name; }
+    }
+
     /// <summary>Read-only series presentation, separate from asset availability and ownership.</summary>
     public sealed class CollectionDefinition
     {
@@ -38,7 +46,12 @@ namespace Pockle.Core
         public bool HasApprovedOdds => Pool != null;
         public string ProductId { get; }
         public string BoxPriceTier { get; }
-        public string HomeWorld => CharacterId == "fox" ? "fox-hollow" : "studio";
+        public string HomeWorld => Worlds.Count > 0 ? Worlds[0].Id : "studio";
+        public IReadOnlyList<CollectionWorldDefinition> Worlds { get; }
+        public string CoverArt => Id == "fox" ? "Collections/Fox/Cover" : "";
+        public string BoxArt => Id == "fox" ? "UI/Boxes/Collection-fox" : "";
+        public string BoxModel => Id == "fox" ? "Boxes/FoxCollectionBox" : "";
+        public CatalogColor AccentColor => new CatalogColor(Id == "fox" ? 0xec7951u : Id == "pip" ? 0xe8508au : Id == "axolotl" ? 0xf493b5u : 0x49344cu);
         public CatalogColor FieldColor { get; }
         public CatalogColor InkColor { get; }
 
@@ -85,6 +98,13 @@ namespace Pockle.Core
             SeriesNumber = seriesNumber; ReleaseDateUtc = releaseDateUtc; RetireDateUtc = retireDateUtc;
             SecretId = secretId; ProductId = productId; BoxPriceTier = boxPriceTier;
             FieldColor = new CatalogColor(fieldColor); InkColor = new CatalogColor(inkColor);
+            Worlds = Id == "fox" ? Array.AsReadOnly(new[] {
+                new CollectionWorldDefinition("fox-hollow", "Fox Hollow"),
+                new CollectionWorldDefinition("fox-riverbank", "Misty Riverbank"),
+                new CollectionWorldDefinition("fox-autumn-orchard", "Autumn Orchard"),
+                new CollectionWorldDefinition("fox-snowy-den", "Snowy Den"),
+                new CollectionWorldDefinition("fox-aurora-grove", "Aurora Grove")
+            }) : Array.AsReadOnly(Array.Empty<CollectionWorldDefinition>());
             Members = Array.AsReadOnly(copy); Odds = Array.AsReadOnly(odds);
         }
 

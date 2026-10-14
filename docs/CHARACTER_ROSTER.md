@@ -90,3 +90,5 @@ Catalog migration and scalable UI/runtime loading are tracked separately as **UX
 ## Proposed collaboration
 
 Codex can own catalog/save migration, material interaction profiles, Unity runtime integration, and validation. Claude can refine the character/material concepts and collection presentation alongside the proposed UI lane. This extends the earlier proposed split; Claude's model/art scope and exact file ownership still need acknowledgment in their handoff. Avoid both editing the same HUD or generated character assets concurrently.
+
+October 14 refinement: each production collection contains exactly ten Pockles: nine common and one rare included. Required collection art is specified in COLLECTION_ART_STANDARD.md.

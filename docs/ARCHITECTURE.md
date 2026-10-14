@@ -37,3 +37,5 @@ UX-039: `ToyStageEnvironment` owns bounded procedural scenery, background gradie
 Painted world images use `PaintedWorldAsset` plus precomputed reflection cubes (`PaintedWorldImport.Build`). `ToyGlowAura` owns two additive light-spill cards; it is independent of toy deformation and inventory. See [PAINTED_WORLDS.md](PAINTED_WORLDS.md).
 
 Owner beta test builds can enable `PipOwnerTestGrant.txt`: CollectionSession runs a one-time missing-Pip grant, persists inventory before its separate marker and HUD notification. Existing counts, daily rewards and pending reveals remain intact. Remove/disable the resource before public distribution.
+
+Fox art-set contracts: CollectionDefinition has ordered Worlds (Id, DisplayName, EnvironmentArt), independent CoverArt/BoxArt/BoxModel paths and AccentColor/InkColor. SetEnvironment validates world membership against the chosen toy. NativeCollectionBox samples an authored hinged-carton clip against RevealPose; default Pip MysteryBox remains procedural. Full asset requirements and mandatory expression/idle support are in COLLECTION_ART_STANDARD.md.
