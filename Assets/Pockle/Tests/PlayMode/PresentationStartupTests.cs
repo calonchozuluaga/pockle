@@ -45,7 +45,7 @@ namespace Pockle.Tests
 
             carton = new GameObject("Startup test carton");
             var box = carton.AddComponent<MysteryBox>();
-            box.Initialize(); box.Initialize();
+            box.Initialize("legacy"); box.Initialize("legacy");
             Assert.That(carton.GetComponentsInChildren<Collider>(), Is.Empty);
             Transform floor = carton.transform.Find("Carton floor");
             Assert.That(floor, Is.Not.Null);

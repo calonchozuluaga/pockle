@@ -15,6 +15,10 @@ internal static class CatalogChecks
     }
     private static void CollectionArt()
     {
+        ToyCatalog.TryGetCollection("pip",out var pip);
+        Assert(pip.Members.Count == 10 && pip.SecretId == ToyCatalog.PipSpecialId, "Pip rare and ten finishes must survive art changes.");
+        Assert(pip.Worlds.Count == 5 && pip.Worlds.Select(w => w.Id).Distinct().Count() == 5, "Pip needs five unique worlds.");
+        Assert(pip.CoverArt == "Collections/Pip/Cover" && pip.BoxArt == "UI/Boxes/Collection-pip" && pip.BoxModel == "Boxes/PipCollectionBox", "Pip art paths missing.");
         ToyCatalog.TryGetCollection("fox",out var collection);
         Assert(collection.Members.Count == 10 && collection.HasSecret, "Fox needs ten toys including one rare.");
         Assert(collection.Members.Count(id => ToyCatalog.TryGetCollectible(id,out var toy) && toy.IsSecret) == 1, "Fox rare must occupy one of ten slots.");
@@ -39,7 +43,7 @@ internal static class CatalogChecks
     private static void StageMetadata()
     {
         foreach(var collection in ToyCatalog.Collections)
-            Assert(collection.HomeWorld == (collection.CharacterId == "fox" ? "fox-hollow" : "studio"), "Collection home world fallback changed.");
+            Assert(collection.HomeWorld == (collection.CharacterId == "fox" ? "fox-hollow" : collection.CharacterId == "pip" ? "pip-jelly-garden" : "studio"), "Collection home world fallback changed.");
         foreach(var toy in ToyCatalog.Collectibles)
         {
             var c=toy.SwatchColor;

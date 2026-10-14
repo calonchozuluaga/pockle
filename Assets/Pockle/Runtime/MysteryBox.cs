@@ -22,9 +22,9 @@ namespace Pockle.Runtime
         {
             if (initialized) return;
             initialized = true;
-            if(collectionId=="fox")
+            if(ToyCatalog.TryGetCollection(collectionId, out var collection) && collection.BoxModel.Length > 0)
             {
-                var prefab=Resources.Load<GameObject>("Boxes/FoxCollectionBox");
+                var prefab=Resources.Load<GameObject>(collection.BoxModel);
                 if(prefab!=null){nativeBox=Instantiate(prefab,transform,false).GetComponent<NativeCollectionBox>();nativeBox.Initialize();return;}
             }
             Shader shader = Shader.Find("Pockle/Reveal Box");

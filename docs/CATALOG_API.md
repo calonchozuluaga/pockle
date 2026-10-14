@@ -123,3 +123,6 @@ Review in Unity with a copy of an existing local save: confirm counts and daily 
 October 14 latest Pip finish integration: 14 characters, 140 slots, 21 available finishes (10 Pip + 10 Fox + uploaded Axolotl plush). Legacy Pip IDs/pool weights unchanged; availability does not grant ownership. No new full-series prices/odds/secrets. All Pip art uses the approved latest model.
 
 October 14 Fox art-set additions: CollectionDefinition.Worlds is an ordered immutable list of CollectionWorldDefinition { Id, DisplayName, EnvironmentArt }; first is Home. CoverArt is an independent 3:1 illustration resource path. BoxArt and BoxModel refer to the render and opening-ready model. AccentColor/InkColor are approved palette metadata. Fox supplies five worlds and complete art; others remain pending. Art metadata does not approve reward pools, odds or paid purchase availability.
+
+
+October 14 — Pip HomeWorld is pip-jelly-garden; Worlds exposes five unique environments. CoverArt=Collections/Pip/Cover, BoxArt=UI/Boxes/Collection-pip, BoxModel=Boxes/PipCollectionBox. Cover is distinct from Home background; no inventory or odds changes.

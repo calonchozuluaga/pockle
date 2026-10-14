@@ -48,9 +48,9 @@ namespace Pockle.Core
         public string BoxPriceTier { get; }
         public string HomeWorld => Worlds.Count > 0 ? Worlds[0].Id : "studio";
         public IReadOnlyList<CollectionWorldDefinition> Worlds { get; }
-        public string CoverArt => Id == "fox" ? "Collections/Fox/Cover" : "";
-        public string BoxArt => Id == "fox" ? "UI/Boxes/Collection-fox" : "";
-        public string BoxModel => Id == "fox" ? "Boxes/FoxCollectionBox" : "";
+        public string CoverArt => Id == "fox" ? "Collections/Fox/Cover" : Id == "pip" ? "Collections/Pip/Cover" : "";
+        public string BoxArt => Id == "fox" ? "UI/Boxes/Collection-fox" : Id == "pip" ? "UI/Boxes/Collection-pip" : "";
+        public string BoxModel => Id == "fox" ? "Boxes/FoxCollectionBox" : Id == "pip" ? "Boxes/PipCollectionBox" : "";
         public CatalogColor AccentColor => new CatalogColor(Id == "fox" ? 0xec7951u : Id == "pip" ? 0xe8508au : Id == "axolotl" ? 0xf493b5u : 0x49344cu);
         public CatalogColor FieldColor { get; }
         public CatalogColor InkColor { get; }
@@ -104,6 +104,12 @@ namespace Pockle.Core
                 new CollectionWorldDefinition("fox-autumn-orchard", "Autumn Orchard"),
                 new CollectionWorldDefinition("fox-snowy-den", "Snowy Den"),
                 new CollectionWorldDefinition("fox-aurora-grove", "Aurora Grove")
+            }) : Id == "pip" ? Array.AsReadOnly(new[] {
+                new CollectionWorldDefinition("pip-jelly-garden", "Peach Jelly Garden"),
+                new CollectionWorldDefinition("pip-mint-spring", "Mint Spring"),
+                new CollectionWorldDefinition("pip-pearl-lagoon", "Pearl Lagoon"),
+                new CollectionWorldDefinition("pip-confetti-meadow", "Golden Meadow"),
+                new CollectionWorldDefinition("pip-starlight-grove", "Starlight Grove")
             }) : Array.AsReadOnly(Array.Empty<CollectionWorldDefinition>());
             Members = Array.AsReadOnly(copy); Odds = Array.AsReadOnly(odds);
         }

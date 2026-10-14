@@ -105,3 +105,14 @@ Owner packaging correction: match pockle-folded-box-concepts-02, with prominent 
 Final surprise-box revision is applied locally: brand-first Pockle front/lid, unknown Fox '?' silhouette and side pattern, no revealed-toy cover on the packaging. Resources/Boxes/FoxFront.png / FoxSide.png / FoxLid.png are flat print maps. Actual model rebuilt to 874 triangles; PNGs refreshed at the same Collection-fox paths, so your new UI picks them up. Native opening API/resources unchanged; both targeted art-set tests passed after revision. Cover remains independent. Three print textures packed in ArtSource/FoxBox/FoxCollectionBox.blend. Builds/Pockle-Fox-Art-Set.apk updated with latest owner's local UI and all prior inventory grants; final device installation recorded below.
 
 Final Fox mystery-box revision saved as d3d21bb; final APK installed with install -r Success, preserving inventory. Initial launch exited; a subsequent cold launch succeeded and process 20585 was confirmed. Device visuals/frame time and broader new Claude UI still require owner review. Christmas sheets are separate files in ArtSource/ChristmasConcepts, branch codex/christmas-concepts cf31a40. Full art-set docs and mandatory animation standard are retained; no main merge or GitHub push.
+
+
+## ART-005 / UX-033 / UX-039 Pip art set — October 14
+Claimed on codex/pip-art-set. Pip worlds/cover/native carton, catalog and loaders, editor importers, runtime tests and docs. Claude UI preserved.
+
+Pip art ready: catalog HomeWorld pip-jelly-garden, Worlds five unique environments, CoverArt Collections/Pip/Cover, BoxArt UI/Boxes/Collection-pip, BoxModel Boxes/PipCollectionBox. Default reveal loads native carton. Request for Claude: consume catalog Worlds and distinct CoverArt; box-first UI finds PNG automatically. Change hardcoded Pip BannerWorld to catalog HomeWorld. UI files untouched.
+
+
+Pip art set (October 14, codex/pip-art-set): Unity 6000.6.5f1 imports succeeded, native 1.958s opening/13 renderers; targeted PlayMode 8/8 passed (Pip/Fox art set, legacy presentation fallback, latest Pip collection). Required portable checks passed, source checks passed before final baked assets; final source/whitespace checks recorded below. Cover 2172×724, box PNGs 1024×1024 RGBA with transparent edges inspected. All five paintings and box prints/renders visually inspected. No phone update or combined UI/hosted CI verification in this task. Claude UI five-world picker and separate cover hookup pending; assets and metadata applied locally.
+
+Final Pip art checks: targeted Unity PlayMode 8/8 passed; portable Core checks passed; source checks 109 C# files / 290 asset GUIDs, zero failures; git diff --cached --check passed. Phone build/install, combined UI and hosted CI not run. Branch codex/pip-art-set retained for review; no main merge.

@@ -156,3 +156,6 @@ UX-025/030/033, ART-002 — owner confirmed all ten Pip finishes on approved lat
 Owner-approved Pip special: glow slot is now Starlight Glow · Ultra rare, stable ID pip.glow-jelly, collection secret identity. Existing secret UI badge/concealment uses this metadata. Shared approved mesh and aqua glow/iridescent material retained; no inventory grant, box odds or reward pool changes.
 
 ART-005 / UX-033 / UX-039 Fox art set: five distinct worlds, separate text-free 3:1 cover and opening-ready 3D box + PNG renders implemented locally on codex/fox-art-set. Owner's Fox v2 tail replacement applied to all ten finishes with stable IDs/GUIDs. Claude's five-world picker/cover integration and model-specific facial/tail animation are still pending. Every collection must meet COLLECTION_ART_STANDARD.md, including nine common + one rare within ten and mandatory eye/mouth/idle/touch/sound-expression support.
+
+
+October 14 — ART-005 / UX-033 / UX-039 Pip art set implemented locally on codex/pip-art-set: five unique painted worlds/reflection maps, text-free 3:1 cover and native opening-ready mystery carton with transparent PNGs. Claude five-world/cover UI hookup and phone visual acceptance remain pending.
