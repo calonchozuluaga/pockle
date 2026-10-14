@@ -39,7 +39,7 @@ namespace Pockle.Tests
                 Assert.That(material.GetFloat("_Happy"), Is.Zero); Assert.That(material.GetFloat("_Surprise"), Is.Zero);
                 Assert.That(material.GetFloat("_Blink"), Is.Zero);
                 toy.SetVariant(PipVariant.MoonJelly);
-                Assert.That(toy.VisualRoot.GetComponent<PeachExpressionDriver>(), Is.Null, "Unapproved Pip finish gained Peach facial animation.");
+                Assert.That(toy.VisualRoot.GetComponent<PeachExpressionDriver>(), Is.Not.Null, "Latest shared Pip face must retain its expression driver.");
             }
             finally
             {

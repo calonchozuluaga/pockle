@@ -136,8 +136,8 @@ namespace Pockle.Tests
             for (int i = 0; i < 3; i++)
             {
                 toy.SetVariant(PipVariant.MoonJelly);
-                Assert.That(toy.UsesMeshyPeach, Is.False);
-                Assert.That(toy.BodyRenderer.sharedMaterial.shader.name, Is.EqualTo("Pockle/Jelly Candy"));
+                Assert.That(toy.UsesMeshyPeach, Is.True);
+                Assert.That(toy.BodyRenderer.sharedMaterial.shader.name, Is.EqualTo("Pockle/Textured Peach Jelly"));
                 toy.SetVariant(PipVariant.PeachJelly);
                 Assert.That(toy.UsesMeshyPeach, Is.True);
                 Assert.That(toy.RaycastBody(ray, out _), Is.True);
@@ -148,8 +148,8 @@ namespace Pockle.Tests
                 yield return null;
                 Assert.That(toy.GetComponentsInChildren<MeshRenderer>().Length, Is.EqualTo(13));
             }
-            Assert.That(originalMesh == null, Is.True);
-            Assert.That(originalMaterial == null, Is.True);
+            Assert.That(toy.BodyRenderer.GetComponent<MeshFilter>().sharedMesh, Is.SameAs(originalMesh), "Finish switching must reuse the approved model mesh.");
+            Assert.That(toy.BodyRenderer.sharedMaterial, Is.SameAs(originalMaterial));
             PlayerPrefs.SetInt(PipCharacterAsset.MeshyPreference, 0);
             toy.SetVariant(PipVariant.PeachJelly);
             Assert.That(toy.UsesMeshyPeach, Is.False, "The prior authored comparison remains selectable.");

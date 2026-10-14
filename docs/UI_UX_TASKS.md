@@ -138,3 +138,5 @@ October 14 — UX-030/033, ART-002: Axolotl plush is the fourteenth collection. 
 ART-002 / UX-030 — single-color maki sushi base authored for owner shape review. Cream material, shared UVs, editable .blend + GLB/FBX, 11,998 triangles. No new runtime collection yet. See SUSHI_BASE.md.
 
 October 13, UX-025/030 and ART-002: approved Peach gains blink/squint/lifted reactions, more reflective translucent material, and real interior pearls/flecks on `codex/peach-expressions`. Fixed Unity renders inspected and 28 PlayMode tests pass. Phone acceptance/performance pending; other Pips untouched. See [Peach expressions](PEACH_EXPRESSIONS.md).
+
+UX-025/030/033, ART-002 — owner confirmed all ten Pip finishes on approved latest shared shape/face. Moon/Gold/Mint now use it; six remaining finish materials implemented. Owned IDs/rewards preserved; render/test/build verification in LATEST_PIP_COLLECTION.md.

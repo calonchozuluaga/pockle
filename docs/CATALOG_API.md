@@ -121,3 +121,5 @@ C# source/asset checks pass for 49 files across default/Editor/Android symbol pr
 Review in Unity with a copy of an existing local save: confirm counts and daily state, pending reveal resumption, profile mapping, one successful daily grant, and unchanged legacy UI/controller behavior. Update Claude's UI test key backup first, then run the PlayMode suite and inspect warnings. Run portrait-cache rendering/lifetime checks when Claude integrates visible-item leases.
 
 Fox collection extension (October 13): 13 characters, 130 collectible slots, five available art assets. `fox.gloss-vinyl` belongs to `fox`; the nine other fox finish IDs remain unavailable. Availability is not ownership or reward eligibility; Fox has no approved box pool or release metadata. Legacy Pip enum mappings remain unchanged.
+
+October 14 latest Pip finish integration: 14 characters, 140 slots, 21 available finishes (10 Pip + 10 Fox + uploaded Axolotl plush). Legacy Pip IDs/pool weights unchanged; availability does not grant ownership. No new full-series prices/odds/secrets. All Pip art uses the approved latest model.

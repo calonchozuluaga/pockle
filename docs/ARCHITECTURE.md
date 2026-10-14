@@ -33,3 +33,5 @@ Fox uses a native `PipCharacterAsset` plus readable mesh subasset at `Resources/
 October 14 material/art extension: Fox finishes share one native readable mesh/paint with local shader recipes and per-ID special metadata; Axolotl has one separate native plush mesh/paint. CharacterArt authorizes only registered finish IDs. Engine-free catalog/inventory retain old IDs and add no new save schema. See FOX_FINISHES.md and AXOLOTL_IMPORT.md.
 
 Approved Meshy Peach alone uses `PeachExpression` (engine-free timing) and `PeachExpressionDriver` (material uniforms). Local shader eye/mouth deformation preserves the imported neutral mesh/paint and follows CPU face centres. `TexturedPeachJelly` renders two transparent shell passes over twelve shared-mesh interior accents; dark face pigment and reflected highlights retain opacity.
+
+October 14 latest Pip collection: all ten Pip IDs resolve to the approved baked model via CharacterArt. Local finish recipes share the source paint, UVs and mesh; legacy selectors still preserve IDs. Undiscovered silhouette projects that same model. See LATEST_PIP_COLLECTION.md.

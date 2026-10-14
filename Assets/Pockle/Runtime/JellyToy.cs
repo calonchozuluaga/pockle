@@ -142,7 +142,7 @@ namespace Pockle.Runtime
                 SetDeformation(compression, stretch, tiltX, tiltZ, contactX, contactZ, pinch, axis, sag, grip, clearance);
                 return;
             }
-            if (choice == variant) return;
+            if (choice == variant && collectibleId == id) return;
             variant = choice;
             collectibleId = id;
             ApplyVariantMaterial();
@@ -278,6 +278,8 @@ namespace Pockle.Runtime
             {
                 accentMesh = BuildSphere("Peach interior pearl mesh", 12, 10);
                 sparkleMesh = BuildSparkle();
+                starMesh = BuildStar();
+                silverMaterial.renderQueue = 2990;
                 bubbleMaterial = CreateCandyMaterial("Peach interior cream pearls", new Color(1f, .91f, .78f, 1f), .82f);
                 SetFloat(bubbleMaterial, "_ZWrite", 1f);
                 SetColor(bubbleMaterial, "_TopColor", new Color(1f,.97f,.87f,1f));
@@ -285,6 +287,7 @@ namespace Pockle.Runtime
                 SetColor(bubbleMaterial, "_RimColor", new Color(1f,.99f,.9f,1f));
                 bubbleMaterial.renderQueue = 2990;
                 sparkleMaterial.renderQueue = 2990;
+                ApplyVariantMaterial();
                 BuildSuspendedAccents();
                 if (bodyMaterial.HasProperty("_Blink"))
                 {
@@ -321,7 +324,7 @@ namespace Pockle.Runtime
             float sag = 0f, Vector3 grip = default(Vector3), float clearance = 0f)
         {
             Initialize();
-            if (ToyCatalog.IsFoxCollectible(collectibleId))
+            if (ToyCatalog.IsFoxCollectible(collectibleId) || UsesMeshyPeach && Handling == MaterialHandling.Firm)
                 compression = stretch = tiltX = tiltZ = pinch = sag = 0f;
             // Match the portable shape's safe range so feature scale follows its shell,
             // including when a spring briefly overshoots zero on release.
@@ -692,6 +695,7 @@ namespace Pockle.Runtime
             if (characterAsset != null && characterAsset.CharacterId != "pip") return;
             // Glitter is shaded as dense microflakes; opaque soft gel hides filling.
             // Neither needs extra interior objects or per-flake draw calls.
+            if (UsesMeshyPeach && !PipVariants.TryFromCollectibleId(collectibleId,out _)) return;
             if (variant == PipVariant.GoldGlitter || variant == PipVariant.MintSoft) return;
             if (variant == PipVariant.MoonJelly)
             {
@@ -810,7 +814,16 @@ namespace Pockle.Runtime
 
         private void ApplyVariantMaterial()
         {
-            if (HasBakedSurface) return; // Preserve baked face/palette and the textured material recipe.
+            if (UsesMeshyPeach)
+            {
+                PipFinishMaterial.Apply(bodyMaterial, collectibleId);
+                bool moonFinish = collectibleId == Pockle.Core.ToyCatalog.MoonId;
+                SetColor(bubbleMaterial, "_Color", moonFinish ? new Color(.88f,.96f,1f,1f) : new Color(1f,.91f,.78f,1f));
+                SetColor(bubbleMaterial, "_TopColor", moonFinish ? Color.white : new Color(1f,.97f,.87f,1f));
+                SetColor(bubbleMaterial, "_BottomColor", moonFinish ? new Color(.55f,.74f,.93f,1f) : new Color(.75f,.83f,.84f,1f));
+                return;
+            }
+            if (HasBakedSurface) return; // Other imported characters keep their own recipes.
             if (characterAsset != null && characterAsset.CharacterId != "pip")
             {
                 ApplyStudyMaterial();

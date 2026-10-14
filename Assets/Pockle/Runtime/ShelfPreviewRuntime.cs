@@ -72,7 +72,7 @@ namespace Pockle.Runtime
         public void SetFound(Binding binding, bool found)
         {
             found = found && ToyCatalog.TryGetCollectible(binding.Id, out var definition) && definition.Available &&
-                PipVariants.TryFromCollectibleId(binding.Id, out _);
+                CharacterArt.TryLoad(binding.Id, out _);
             if (binding.Found != found)
             { foreach (var actor in actors) if (actor.Binding == binding) Release(actor); binding.Found = found; }
             binding.Picture.gameObject.SetActive(found);
@@ -157,7 +157,8 @@ namespace Pockle.Runtime
                 actor.Toy = toyObject.AddComponent<JellyToy>(); actor.Toy.Initialize();
                 actor.Animator = toyObject.AddComponent<ToyLineupAnimator>();
             }
-            actor.Root.SetActive(true); actor.Toy.SetVariant(PipVariants.TryFromCollectibleId(binding.Id, out var choice) ? choice : PipVariant.PeachJelly);
+            actor.Root.SetActive(true);
+            if (!actor.Toy.TrySetCollectible(binding.Id)) { Release(actor); return; }
             foreach (Transform child in actor.Root.GetComponentsInChildren<Transform>(true)) child.gameObject.layer = 30;
             actor.Animator.Configure(actor.Toy, budget, phaseOffset: binding.Phase);
             actor.Animator.SetVisible(true);

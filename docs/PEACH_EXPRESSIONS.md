@@ -13,3 +13,5 @@ Cost: shell grows from one pass to two, with twelve interior renderers sharing t
 Not verified: Android shader build and phone performance/appearance. A new APK is needed to include the changes. No inventory/save/settings/package changes in this Peach topic.
 
 Final checks: Unity 6000.6.5f1 PlayMode 28/28 and EditMode 16/16 passed; portable/source checks passed; fixed captures inspected. Other Pip models and uploaded source mesh/paint unchanged. Android build/device frame time remains pending.
+
+October 14 update: owner approved the latest Pip shape for all ten finishes. The expression driver and painted face now extend to the shared collection model, with finish-specific materials and filling. Earlier Peach-only scope is superseded by LATEST_PIP_COLLECTION.md.

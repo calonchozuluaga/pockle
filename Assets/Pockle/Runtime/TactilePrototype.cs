@@ -202,8 +202,8 @@ namespace Pockle.Runtime
             }
         }
 
-        private string PlayHint => ToyCatalog.IsFoxCollectible(toy.CollectibleId)
-            ? "Drag Fox or the plate to turn." : toy.CollectibleId == ToyCatalog.AxolotlId
+        private string PlayHint => toy.Handling == MaterialHandling.Firm
+            ? ToyCatalog.IsFoxCollectible(toy.CollectibleId) ? "Drag Fox or the plate to turn." : "Drag Pip or the plate to turn." : toy.CollectibleId == ToyCatalog.AxolotlId
                 ? "Press Axolotl gently. Turn the plate." : "Lift Pip. Pinch to stretch. Turn the plate.";
 
         private void BeginPointer(int id, Vector2 position)
@@ -224,7 +224,7 @@ namespace Pockle.Runtime
             if (!hitToy && !hitPlate) return;
             var target = hitToy && (!hitPlate || Vector3.Distance(ray.origin, toyPoint) <= plateHit.distance)
                 ? PointerTarget.Toy : PointerTarget.Plate;
-            if (ToyCatalog.IsFoxCollectible(toy.CollectibleId)) target = PointerTarget.Plate;
+            if (toy.Handling == MaterialHandling.Firm) target = PointerTarget.Plate;
             if (!gesture.TryBegin(id, target)) return;
             pointerStart = pointerPrevious = position;
             liftStart = visibleLift;

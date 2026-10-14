@@ -18,7 +18,8 @@ namespace Pockle.Runtime
             CharacterId = characterId; ConcealsSecret = secret; raycastTarget = false;
             if (!secret && (characterId == "pip" || characterId == "fox"))
             {
-                var asset = Resources.Load<PipCharacterAsset>(characterId == "fox" ? "Characters/Fox/Fox" : PipCharacterAsset.ResourcePath);
+                var asset = Resources.Load<PipCharacterAsset>(characterId == "fox" ? "Characters/Fox/Fox" : PipCharacterAsset.MeshyResourcePath);
+                if (asset == null && characterId == "pip") asset = Resources.Load<PipCharacterAsset>(PipCharacterAsset.ResourcePath);
                 if (asset != null && asset.BodyMesh != null && asset.BodyMesh.isReadable)
                 {
                     var vertices = asset.BodyMesh.vertices; points = new Vector2[vertices.Length];

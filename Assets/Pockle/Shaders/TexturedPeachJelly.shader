@@ -2,6 +2,15 @@ Shader "Pockle/Textured Peach Jelly"
 {
     Properties
     {
+        _FinishTint ("Collection tint", Color) = (1,1,1,1)
+        _TintStrength ("Collection tint amount", Range(0,1)) = 0
+        _GlitterStrength ("Glitter flakes", Range(0,1)) = 0
+        _PearlSheen ("Pearl sheen", Range(0,1)) = 0
+        _Fuzz ("Velvet pile", Range(0,1)) = 0
+        _Metallic ("Metal coating", Range(0,1)) = 0
+        _Iridescence ("Iridescence", Range(0,1)) = 0
+        _Glow ("Inner glow", Range(0,1)) = 0
+        _ZWrite ("Opaque finish depth", Float) = 0
         _MainTex ("Owner painted Peach", 2D) = "white" {}
         _StudioCube ("Studio reflections", Cube) = "black" {}
         _Roughness ("Wet roughness", Range(0.08,0.4)) = 0.16
@@ -27,7 +36,8 @@ Shader "Pockle/Textured Peach Jelly"
         samplerCUBE _StudioCube;
         half _Roughness, _ReflectionStrength, _Opacity, _Transmission, _Subsurface, _SpeckEmission;
         half _Blink, _Happy, _Surprise;
-        half4 _SubsurfaceColor;
+        half4 _SubsurfaceColor, _FinishTint;
+        half _TintStrength, _GlitterStrength, _PearlSheen, _Fuzz, _Metallic, _Iridescence, _Glow;
         float4 _LeftEye, _RightEye, _Mouth;
         struct appdata { float4 vertex : POSITION; float3 normal : NORMAL; float2 uv : TEXCOORD0; };
         struct v2f { float4 vertex : SV_POSITION; float3 world : TEXCOORD0; half3 normal : TEXCOORD1; float2 uv : TEXCOORD2; float3 local : TEXCOORD3; };
@@ -55,14 +65,31 @@ Shader "Pockle/Textured Peach Jelly"
             o.normal = UnityObjectToWorldNormal(v.normal); o.uv = v.uv;
             return o;
         }
+        half FacePigment(v2f i, half3 paint)
+        {
+            half brightness=max(paint.r,max(paint.g,paint.b));
+            half face=saturate(Region(i.local.xy,_LeftEye)+Region(i.local.xy,_RightEye)+Region(i.local.xy,_Mouth))*smoothstep(.45,.62,-i.local.z);
+            return face*(1-smoothstep(.15,.45,brightness));
+        }
+        half3 FinishPaint(v2f i,half3 paint)
+        {
+            half brightness=max(paint.r,max(paint.g,paint.b));
+            half luminance=dot(paint,half3(.299,.587,.114));
+            half minimum=min(paint.r,min(paint.g,paint.b));
+            half whiteHighlight=smoothstep(.90,.98,brightness)*(1-smoothstep(.04,.15,brightness-minimum));
+            return lerp(paint,_FinishTint.rgb*(.55+.45*luminance),_TintStrength*(1-FacePigment(i,paint))*(1-whiteHighlight));
+        }
         fixed4 fragBack(v2f i) : SV_Target
         {
             half3 paint = tex2D(_MainTex,i.uv).rgb;
-            return fixed4(paint*.8, _Opacity*.16);
+            clip(.999-_Opacity);
+            return fixed4(FinishPaint(i,paint)*.8, _Opacity*.16);
         }
         fixed4 fragFront(v2f i) : SV_Target
         {
             half3 paint = tex2D(_MainTex,i.uv).rgb;
+            half pigment = FacePigment(i,paint);
+            paint = FinishPaint(i,paint);
             half3 n = normalize(i.normal);
             half3 view = normalize(_WorldSpaceCameraPos.xyz-i.world);
             half3 key = normalize(half3(.64,.70,-.66));
@@ -84,10 +111,17 @@ Shader "Pockle/Textured Peach Jelly"
             half gold = smoothstep(.55,.8,paint.r)*smoothstep(.45,.65,paint.g)
                 *(1-smoothstep(.16,.3,paint.b))*smoothstep(.68,.86,paint.g/max(paint.r,.001));
             color += half3(1,.65,.16)*gold*_SpeckEmission;
+            half noise = frac(sin(dot(floor(i.local*100),float3(127.1,311.7,74.7)))*43758.5453);
+            color += _GlitterStrength*smoothstep(.98,.997,noise)*(.3+.7*softbox)*half3(1,.81,.31)*(1-pigment);
+            half3 pearl = .5+.5*cos(half3(0,2,4)+facing*6);
+            color += _PearlSheen*pearl*(.05+.12*rim)*(1-pigment);
+            color *= 1 - _Fuzz*(noise-.5)*.10*(1-pigment);
+            color += _Fuzz*rim*half3(.10,.08,.12)*(1-pigment);
+            color += _Metallic*studio*_FinishTint.rgb*.45*(1-pigment);
+            half3 iridescent=.5+.5*cos(half3(.5,2.4,4.4)+facing*9+i.local.y*1.8);
+            color=lerp(color,color*.7+iridescent*.35,_Iridescence*(.25+.75*rim)*(1-pigment));
+            color += _Glow*paint*(.045+.13*rim)*(1-pigment);
             // Dark painted eyes/mouth remain readable; the rest is a translucent shell.
-            half face = saturate(Region(i.local.xy,_LeftEye)+Region(i.local.xy,_RightEye)+Region(i.local.xy,_Mouth))
-                * smoothstep(.45,.62,-i.local.z);
-            half pigment = face*(1-smoothstep(.15,.45,brightness));
             half alpha = lerp(saturate(_Opacity+.22*rim),.98,pigment);
             half reflectedAlpha = _ReflectionStrength*(max(studio.r,max(studio.g,studio.b))*.55+softbox*.65);
             alpha = max(alpha,saturate(reflectedAlpha));
@@ -106,7 +140,7 @@ Shader "Pockle/Textured Peach Jelly"
         }
         Pass
         {
-            Name "JellyFront" ZWrite Off Cull Back
+            Name "JellyFront" ZWrite [_ZWrite] Cull Back
             Blend SrcAlpha OneMinusSrcAlpha
             CGPROGRAM
             #pragma vertex vert

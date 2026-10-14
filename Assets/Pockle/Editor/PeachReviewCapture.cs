@@ -18,7 +18,12 @@ namespace Pockle.Editor
             Capture("surprised", 0, 0, 1, 0);
             Capture("turned", 0, 0, 0, 35);
         }
-        private static void Capture(string name, float blink, float happy, float surprise, float yaw)
+        public static void Collection()
+        {
+            foreach (var item in ToyCatalog.Collectibles)
+                if (item.CharacterId == "pip") Capture(item.Id,0,0,0,0,item.Id);
+        }
+        private static void Capture(string name, float blink, float happy, float surprise, float yaw, string id = ToyCatalog.PeachId)
         {
             Directory.CreateDirectory(Folder);
             bool hadPreference = PlayerPrefs.HasKey(PipCharacterAsset.MeshyPreference);
@@ -31,7 +36,7 @@ namespace Pockle.Editor
             {
                 root.transform.position = new Vector3(1000, 0, 0);
                 root.transform.rotation = Quaternion.Euler(0, yaw, 0);
-                var toy = root.AddComponent<JellyToy>(); toy.Initialize(); toy.TrySetCollectible(ToyCatalog.PeachId);
+                var toy = root.AddComponent<JellyToy>(); toy.Initialize(); toy.TrySetCollectible(id);
                 foreach (Transform t in root.GetComponentsInChildren<Transform>()) t.gameObject.layer = 30;
                 var material = toy.BodyRenderer.sharedMaterial;
                 if (material.HasProperty("_Blink"))

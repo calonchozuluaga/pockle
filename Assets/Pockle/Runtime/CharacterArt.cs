@@ -19,16 +19,16 @@ namespace Pockle.Runtime
             asset = null;
             if (!ToyCatalog.TryGetCollectible(id, out var definition)) return false;
             string path;
-            if (ToyCatalog.TryGetLegacyIndex(id, out _))
+            if (definition.CharacterId == "pip")
             {
                 path = PipCharacterAsset.ResourcePath;
-                if (id == PipVariants.CollectibleId(PipVariant.PeachJelly) &&
-                    PlayerPrefs.GetInt(PipCharacterAsset.MeshyPreference, 1) != 0)
+                if (PlayerPrefs.GetInt(PipCharacterAsset.MeshyPreference, 1) != 0 || !ToyCatalog.TryGetLegacyIndex(id,out _))
                 {
                     asset = Resources.Load<PipCharacterAsset>(PipCharacterAsset.MeshyResourcePath);
                     if (asset != null && asset.CharacterId == "pip" && asset.BakedSurface &&
                         asset.BaseColorTexture != null && asset.BodyMesh != null && asset.BodyMesh.isReadable)
                         return true;
+                    if (!ToyCatalog.TryGetLegacyIndex(id,out _)) return false;
                     // The reviewed authored model remains a safe fallback on import failure.
                 }
             }

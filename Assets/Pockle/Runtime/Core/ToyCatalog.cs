@@ -172,7 +172,7 @@ namespace Pockle.Core
                     bool existing = character.Id == "pip" && index < legacyIds.Length;
                     string id = existing ? legacyIds[index] : character.Id + "." + finish.Id;
                     var collectible = new CollectibleDefinition(id, character, finish,
-                        existing ? pipLabels[index] : character.Id == "fox" ? foxLabels[index] : finish.DisplayName, existing || character.Id == "fox" || id == AxolotlId, character.Id);
+                        existing ? pipLabels[index] : character.Id == "fox" ? foxLabels[index] : finish.DisplayName, character.Id == "pip" || character.Id == "fox" || id == AxolotlId, character.Id);
                     collectibles.Add(collectible); collectiblesById.Add(id, collectible);
                 }
             }

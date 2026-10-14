@@ -71,3 +71,19 @@ Owner requested expressions only for the final approved Meshy Peach, with strong
 Approved Peach implemented: blink/squint/lifted response, reflective transparent shell and six pearls/six flecks. Uploaded geometry/paint preserved; other Pips unchanged. 28 PlayMode tests and portable checks pass; fixed Unity captures inspected. Phone validation pending. Applied local runtime changes without overwriting Fox/runtime walking or Claude Settings. Owner Fox grant is applied in editor: actual local UI now shows five toys (previously four); code and 30 PlayMode/portable checks live on `codex/fox-owner-test`. Remove/disable `Resources/FoxOwnerTestGrant.txt` before public distribution.
 
 Final checks: Unity 6000.6.5f1 PlayMode 28/28 and EditMode 16/16 passed; portable/source checks passed; fixed captures inspected. Other Pip models and uploaded source mesh/paint unchanged. Android build/device frame time remains pending.
+
+## Latest Pip collection mesh — UX-025/030/033, ART-002
+
+Owner requested latest approved Pip as collection base, replacing Moon/Glitter/Mint old art; full ten-finish scope clarification pending. Claimed codex/pip-collection-latest, extending completed art topics and approved Peach appearance baseline. Files: CharacterArt registry, JellyToy recipe/filling/switching, textured Pip shader and materials, portable catalog checks and Unity collection/render tests/docs. Preserve uploaded geometry/paint, save IDs, ownership/rewards and owner Settings. No Maki updates, remote Meshy generation or extra inventory grants.
+
+Latest Pip collection: owner confirmed all ten finishes, and authorized the single UI test assertion update. Same approved native mesh/paint across all ten; old Moon/Glitter/Mint art replaced under the existing IDs. Recolor/pearl/glitter/opaque/cloth/vinyl/metal/glow recipes, original expressions, latest unknown silhouette. No inventory/reward/settings changes. Runtime files applied locally; see LATEST_PIP_COLLECTION.md.
+
+## Claude toy-stage handoff acknowledged during Pip collection work
+
+Preserved owner-local new PrototypeHud.Play.cs / StageChoices.cs and its title/test edits. Names StageWorld { Home, Studio, Garden, Midnight } / StageLight { Day, Golden, Night } noted. World/Light runtime, higher stage framing and per-finish swatches remain a separate stage topic, not implemented in this material update. Local Pip APK includes your stage UI and fallback tint.
+
+Your combined owner-local suite: 39 tests, 37 passed, two failures in CollectionUiTests: MissingLineupHasEagerSilhouettesWithoutFacesOrOwnershipChanges at line 270 (ActiveCount=0 after focusing first silhouette); ToyStageShowsCollectionAndSwitchesWorldAndLight at line 610 (no active Stage finish buttons). The latter checks collection panel children while trayTab defaults to TrayClosed; please open the Collection tab before asserting. Please investigate the silhouette viewport/focus setup in the new UI. Pip isolated suite passes including latest silhouette topology. No further Claude UI/tests edited beyond the owner's authorized Coming-soon assertion.
+
+Runtime fix: ShelfPreviewRuntime previously accepted only legacy enum IDs and substituted Peach for other live actors. It now accepts registered available art and selects the actual collectible ID, supporting six new Pip finishes and already available Fox/Axolotl art without leaking undiscovered finishes. New regression checks owned/unowned art visibility. No inventory changes.
+
+Pip final: 37/37 isolated PlayMode, 16/16 EditMode, portable/source checks passed. Full ten captures inspected; final owner-local Android build succeeded and walking JNI packaging passed. APK updated on connected phone with install -r, preserving data; launch confirmed. Visual screenshot unavailable while Dozing, device frame time unverified. New collection finish IDs do not grant copies. Combined new stage UI failures remain for Claude as recorded above.

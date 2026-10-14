@@ -453,7 +453,7 @@ namespace Pockle.Tests
                 Assert.AreEqual(10, slots.Length);
                 Assert.AreEqual(4, slots.Count(button => button.interactable));
                 Assert.IsFalse(ButtonNamed("Collectible · pip.glow-jelly").interactable);
-                Assert.IsTrue(VisibleText("Coming soon"));
+                Assert.IsTrue(VisibleText("???"), "Available but unowned Pip finishes remain undiscovered.");
                 var textures = root.GetComponentsInChildren<RawImage>().Where(image => image.texture is RenderTexture)
                     .Select(image => image.texture).Distinct().ToArray();
                 Assert.AreEqual(4, textures.Length, "Lineup must reuse the shelf portraits, not allocate ten live cameras.");
