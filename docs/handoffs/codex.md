@@ -6,75 +6,45 @@ Owner uploaded a new Peach model after the seam repair. Preparing `codex/peach-c
 
 [Previous seam repair and verification: PR #16](https://github.com/calonchozuluaga/pockle/pull/16). [Previous coordination history](https://github.com/calonchozuluaga/pockle/blob/3c7b071d1ee853997ddcc0d88a56e7631967dfbf/docs/handoffs/codex.md).
 
-## Fox upload import — ART-002, UX-030 (October 13)
+## October 13 — Fox collection
 
-Claimed on `codex/fox-model-import` from latest origin/main. Files: fox conversion tool, Assets/Pockle/Art/Models/Fox, art source provenance, import notes and validation. Import as separate review model, preserve uploaded paint; no catalog identity assigned yet. Unity/phone verification pending. Owner local edits and Claude UI branch stay in their original checkout.
+Implemented on `codex/fox-collection` in the attached isolated worktree; collection/runtime/check files copied to this local project for Unity use. Fox is collection/character `fox`; uploaded art is `fox.gloss-vinyl`, with nine planned finish slots. No inventory grants or box-pool changes. Unity 6000.6.5f1: 29 PlayMode and 16 EditMode tests passed; portable/source/branch whitespace checks passed. Android/phone review pending. Existing local settings and Claude UI edits preserved; owner approved the one collection-count test assertion update. See `docs/FOX_MODEL_IMPORT.md`.
 
-Fox import completed: native FBX, original paint, editable Standard vinyl material and review prefab. Preserved original maps in ArtSource/Fox. Unity 6000.6.5f1 import/compile, portable/source checks and whitespace passed; Blender preview inspected. Unity visual/phone/tactile tests pending. See `../FOX_MODEL_IMPORT.md`. Additive review assets also copied to owner local checkout for Unity inspection.
+## Latest Claude handoff — walking repair (UX-010/011)
 
-Source checker updated to recognize Unity reserved Built-in shader GUID used by Standard. No settings/package changes are included.
+Implemented on `codex/walking-plugin-fix`, with walking files copied into the local project. Old APK lacks StepCounter; exported Unity default library Gradle comments out the legacy Java source path. Explicit build.gradle fixes compilation, inherits SDK settings, and retains JNI entry points. Rebuilt previous exported APK passes the new DEX/API packaging checker; original APK fails it. `CollectionSession.WalkingFailed` is ready for your UI cleanup; development status includes exception type, log includes full exception. 17 EditMode and required portable/source checks pass. No connected phone, so logcat and actual step progress remain pending. Rebuild the current Unity project for all current C#/Fox/UI changes. Settings cleanup left untouched. Add `python3 tools/check-walking-apk.py <built.apk>` after CI packaging. See `docs/WALKING_PLUGIN_REPAIR.md`.
 
-## Fox collection — UX-029/030/033, ART-002 (October 13)
+Review: appended personality/fusion navigation and optional shelf backdrop API accepted; shelf moments can stay in the local UI preference for beta. Older Pip shape notes are superseded by clean owner-uploaded Peach. Fusion runtime/save/ledger/art remains pending separately.
 
-Owner requested a new collection for the imported fox. Claimed branch `codex/fox-collection`, extending the isolated import branch. Files: Core catalog/motion, runtime art registry/JellyToy, editor fox review/runtime asset generator, Resources/Characters/Fox, portable and Unity tests, docs. Existing collection HUD is catalog driven; no concurrent edits to Claude HUD. Default display name Fox pending owner input. Preserve legacy saves and reward pools; original Gloss Vinyl is available art, other finish slots planned. No automatic inventory grants.
-
-Fox collection catalog/runtime built and portable checks pass. Eight related Unity runtime tests passed (Fox, existing character studies and Pip variants). Original artwork uses a firm Standard vinyl material, no added Pip face/crowns. Request for Claude: CollectionUiTests has a hardcoded twelve-card assertion; use `ToyCatalog.Collections.Count`. Generic owned non-Pip navigation still calls `TryGetPlayableVariant`; future HUD ID-selection support must call `TryPlayCollectible(id)` and preserve the selected ID in title/backdrop/profile. Fox discovery/reward decisions are not invented in this change.
-
-Owner explicitly approved updating the single twelve-card UI test assertion to use catalog count. No other existing Claude UI/test code changed.
-
-October 13 Fox collection validation: Unity 6000.6.5f1 imported the native runtime asset (20,009 vertices / 30,000 triangles); full PlayMode suite 29/29 passed, including Fox browser/no-grant and model/material/switching checks; full EditMode suite 16/16 passed; portable Core checks and source checks passed; whitespace passed on the branch. Android build and phone visuals/performance remain unverified. An initial no-graphics UI run crashed during portrait rendering; the graphics-enabled suite passed after correcting the new test to use visible buttons.
+Walking fix validation on isolated main-based branch: 17/17 EditMode and 27/27 PlayMode tests passed; rebuilt previous exported APK contains JNI class/API and ACTIVITY_RECOGNITION. Current local C#/Fox/UI needs a fresh Unity build for phone testing. No phone connected. Details in `docs/WALKING_PLUGIN_REPAIR.md`.
 
 ## Owner Fox test grant — UX-029/030/033
 
 Claimed on `codex/fox-owner-test`. Owner explicitly authorized a one-time local Fox award and necessary owned-HUD selection changes, preserving Claude Settings. Files: Core inventory, CollectionSession, temporary FoxOwnerTestGrant resource, HUD main/Shelf/Collections and theme, TactilePrototype, grant tests. Inventory persisted before refresh, existing saves/rewards preserved. Test grant resource must be disabled/removed before public distribution.
 
-## Fox orientation and rigid controls — UX-025/030/033
+## Approved Peach expressions and visible filling — October 13
 
-Owner screenshot shows nose-down Fox plus incorrect Pip lift/stretch guidance. Claimed `codex/fox-orientation-handling`, extending the Fox test branch. Correct the native asset's import basis in place (preserve GUID), verify front-facing upright render, enforce rigid turn-only input and update per-toy guidance. User's earlier authorization for necessary Fox HUD changes applies; preserve Claude Settings and local Peach/walking changes. Files: FoxCollectionBuild/runtime Fox asset, handling/input, guidance/HUD hint, focused tests and docs.
+Implemented and applied locally from `codex/peach-expressions`: short blink, squint on compression, lifted expression; stronger moving reflections and transparent shell over six cream pearls/six gold flecks. Approved mesh/paint and other Pips unchanged. Unity 6000.6.5f1: 28/28 PlayMode and 16/16 EditMode tests passed; portable/source checks and fixed renders passed/inspected. New APK/device frame time unverified. See `docs/PEACH_EXPRESSIONS.md` and `docs/captures/peach-expressions/`.
+
+Fox owner test award also applied to actual editor save (UI verified five toys, up from four). Grant and owned-ID HUD selection are on `codex/fox-owner-test`, 30 PlayMode tests passed. Resource `FoxOwnerTestGrant.txt` awards once on non-batch startup, preserves existing counts/steps/pending reveal, and must be disabled before public distribution. Owner explicitly approved the necessary HUD changes; Claude Settings cleanup preserved.
 
 ## Fox orientation and rigid controls — UX-025/030/033
 
 `codex/fox-orientation-handling`: repaired native Fox mesh basis in place, preserving stable asset identity; owner local project updated without overwriting Peach, walking, Settings or other HUD changes. Fox body/plate drags turn only; play hint says “Drag Fox or the plate to turn.” No lift, stretch, squish or sag. Unity front render inspected upright. Regression/check results recorded after completion; phone rebuild pending.
 
-Fox fix verification: Unity 30/30 PlayMode tests passed (including rigid vertices); combined local portable and source checks passed. Corrected front render saved in `docs/captures/fox-orientation/upright.png`. Phone rebuild pending.
-
-## Approved Fox material collection — UX-025/030/033
-
-Owner approved ten concept-sheet finishes and one copy of each for phone testing. Claimed on `codex/fox-material-collection`, extending the Fox orientation/grant branch. Files: catalog, Fox finish recipes/shader/runtime, CharacterArt registry, idempotent inventory grant/session, Fox tests/checks, editor captures and docs. Preserve existing save IDs, upright shape, Pip/Peach, walking and Claude Settings/HUD. Aurora is special metadata; public reward odds/purchases unchanged. Axolotl import remains authorized next.
+Fox fix saved as `codex/fox-orientation-handling`: Unity 30/30 PlayMode tests, combined local portable/source checks passed. Upright front render inspected. Phone rebuild pending.
 
 October 14 Fox finish implementation: all ten existing Fox slot IDs are available and named from the approved concept. Aurora is fox.glow-jelly / secret identity, no odds/pool/pricing changes. New independent finishes marker fills only missing copies; persists before UI. Necessary Fox HUD title/backdrop changes under earlier owner authorization, Settings preserved. See FOX_FINISHES.md. Axolotl import remains authorized next.
 
-Fox finishes final validation: 32/32 Unity PlayMode tests passed; required portable/source checks passed. Owner-local Android APK build succeeded, final log /private/tmp/fox-phone-release.log. Final APK is Builds/Pockle-Fox-Finishes.apk. No phone connected.
-
-## Axolotl plush import — UX-030/033, ART-002
-
-Owner approved uploaded axolotl as a new collection, after Fox materials. Claimed `codex/axolotl-plush` extending the completed Fox branch. Files: converter, model/paint/native asset, catalog/art registry and generic baked material/title routing, import/play tests and docs. Preserve all existing IDs, phone settings and Claude Settings. No additional Axolotl inventory grant authorized or box policy changes.
+Fox finishes saved on codex/fox-material-collection at 9a231a2. Unity 32/32 PlayMode and portable/source checks passed; final owner-local APK built and StepCounter packaging check passed. File: Builds/Pockle-Fox-Finishes.apk; grant runs on next app launch. No connected phone.
 
 Axolotl implementation applied locally: 30,000 triangles / 48,940 UV-split vertices, uploaded paint retained, native upright plush asset and catalog entry. Generic titles support the new collection; Settings unchanged. No Axolotl grant or reward-pool changes. See AXOLOTL_IMPORT.md.
 
-Axolotl validation: native upright render inspected, 33/33 Unity PlayMode tests and required portable/source checks passed. Owner local combined Fox build previously passed 35/35 tests. New combined Android build pending completion; device remains disconnected.
-
 Final owner test APK: Builds/Pockle-Fox-Axolotl.apk (37 MB), current local Peach/walking/Claude Settings plus Fox finishes and Axolotl. Android build and JNI packaging passed. Fox-only Builds/Pockle-Fox-Finishes.apk also retained. No device connected.
 
-Final combined owner snapshot verification: 36/36 PlayMode tests passed (Fox finishes + Axolotl + Peach/walking/Claude UI); isolated collection branch 16/16 EditMode passed. Required portable/source checks and branch whitespace passed. APK build and six JNI methods passed; phone appearance, frame time and sensor behavior unverified.
+Final phone preview: Builds/Pockle-Fox-Axolotl.apk (37 MB). Combined snapshot passed 36/36 PlayMode tests; collection branch 16/16 EditMode and required portable/source/whitespace checks passed. Android build and walking JNI packaging passed. No phone connected; Fox awards run on app startup. Axolotl import is on codex/axolotl-plush; Fox finish topic on codex/fox-material-collection at 9a231a2.
 
-## Single-color sushi base — ART-002 / UX-030
-
-Owner requested a blank single-color sushi squishy base and selected a maki roll with shallow rice/filling relief. Claimed `codex/sushi-base`, extending finished Axolotl/Fox topics, files: tools/build-sushi-base.py, ArtSource/SushiBase/, models/SushiBase.glb, rendered preview and art notes. Local Blender authoring fallback because Node is present but npm/Meshy CLI is unavailable. One pale cream material, one connected smooth mesh, reusable UVs; no variants, face, catalog/inventory, Unity runtime or project settings edits.
-
-Sushi base completed for shape review: local Blender fallback, one connected cream skin, UVs, GLB/FBX and editable authoring source. 6,001 vertices / 11,998 triangles, zero non-manifold edges. Three-quarter/top/front renders inspected; GLB metadata independently validated. No paid task, Unity/catalog/UI/Settings or inventory edits. See SUSHI_BASE.md.
-
-## Approved Peach expressions and translucent gloss — UX-025/030, ART-002
-
-Owner requested expressions only for the final approved Meshy Peach, with stronger reflections and transparency to see contents. Claimed `codex/peach-expressions` from latest main. Files: TexturedPeachJelly shader, JellyToy/Peach expression driver, portable expression logic/checks, Unity tests and captures, docs. Preserve the uploaded mesh and paint; other Pip models untouched. Fox owner grant remains on `codex/fox-owner-test` and has been copied into local project (30 PlayMode tests passed); local save award verification still pending.
-
-Approved Peach implemented: blink/squint/lifted response, reflective transparent shell and six pearls/six flecks. Uploaded geometry/paint preserved; other Pips unchanged. 28 PlayMode tests and portable checks pass; fixed Unity captures inspected. Phone validation pending. Applied local runtime changes without overwriting Fox/runtime walking or Claude Settings. Owner Fox grant is applied in editor: actual local UI now shows five toys (previously four); code and 30 PlayMode/portable checks live on `codex/fox-owner-test`. Remove/disable `Resources/FoxOwnerTestGrant.txt` before public distribution.
-
-Final checks: Unity 6000.6.5f1 PlayMode 28/28 and EditMode 16/16 passed; portable/source checks passed; fixed captures inspected. Other Pip models and uploaded source mesh/paint unchanged. Android build/device frame time remains pending.
-
-## Latest Pip collection mesh — UX-025/030/033, ART-002
-
-Owner requested latest approved Pip as collection base, replacing Moon/Glitter/Mint old art; full ten-finish scope clarification pending. Claimed codex/pip-collection-latest, extending completed art topics and approved Peach appearance baseline. Files: CharacterArt registry, JellyToy recipe/filling/switching, textured Pip shader and materials, portable catalog checks and Unity collection/render tests/docs. Preserve uploaded geometry/paint, save IDs, ownership/rewards and owner Settings. No Maki updates, remote Meshy generation or extra inventory grants.
+Owner-selected single-color maki base completed on codex/sushi-base, deliverables copied locally to models/SushiBase.glb/.fbx and ArtSource/SushiBase/SushiBase.blend. One connected cream skin, 11,998 triangles, reusable UVs, no face/paint variants or runtime changes. Local Blender fallback, no Meshy task/credits. See SUSHI_BASE.md.
 
 Latest Pip collection: owner confirmed all ten finishes, and authorized the single UI test assertion update. Same approved native mesh/paint across all ten; old Moon/Glitter/Mint art replaced under the existing IDs. Recolor/pearl/glitter/opaque/cloth/vinyl/metal/glow recipes, original expressions, latest unknown silhouette. No inventory/reward/settings changes. Runtime files applied locally; see LATEST_PIP_COLLECTION.md.
 
@@ -88,10 +58,8 @@ Runtime fix: ShelfPreviewRuntime previously accepted only legacy enum IDs and su
 
 Pip final: 37/37 isolated PlayMode, 16/16 EditMode, portable/source checks passed. Full ten captures inspected; final owner-local Android build succeeded and walking JNI packaging passed. APK updated on connected phone with install -r, preserving data; launch confirmed. Visual screenshot unavailable while Dozing, device frame time unverified. New collection finish IDs do not grant copies. Combined new stage UI failures remain for Claude as recorded above.
 
-## Pip special identity — UX-030/033
-
-Owner asked to designate one existing finish as ultra rare/special. Claim codex/pip-special: select glow slot as Starlight Glow · Ultra rare, mark collection secret ID, preserve saved ID/model/material and existing box pools/ownership. Files: catalog, portable secret metadata checks and docs; no Claude UI edits (existing secret badge consumes catalog).
+Latest Pip topic saved as codex/pip-collection-latest at c769fa2 (approved Peach baseline incorporated separately). Final APK installed successfully as a data-preserving update; no automatic new Pip awards. Owner-local Claude stage UI preserved; two combined UI test failures are recorded for Claude, no merge performed.
 
 Owner-approved Pip special: glow slot is now Starlight Glow · Ultra rare, stable ID pip.glow-jelly, collection secret identity. Existing secret UI badge/concealment uses this metadata. Shared approved mesh and aqua glow/iridescent material retained; no inventory grant, box odds or reward pool changes.
 
-Pip special metadata: Starlight Glow (pip.glow-jelly) is the one Pip ultra-rare/secret. Portable checks validate identity, uniqueness, preserved legacy IDs and unchanged pools; source/whitespace checks passed. Android catalog/badge build succeeded. Material/model unchanged; no new drop probability or ownership grant.
+Pip special saved on codex/pip-special at 7ca84bc. Starlight Glow · Ultra rare marks pip.glow-jelly as the single Pip secret slot; existing badge/concealment picks it up. Portable/source/whitespace and Android build passed; existing model/material/save/reward pools unchanged. Updated APK retains prior stage UI limitations recorded above.

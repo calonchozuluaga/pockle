@@ -2,6 +2,27 @@
 
 See [MESHY_PEACH_TEST.md](MESHY_PEACH_TEST.md) on `codex/meshy-peach-test`. Local conversion: 3,845 triangles / 3,951 vertices from the 64,102-triangle upload. Geometry, all 543,484 portable assertions, source/meta/whitespace checks pass (69 files / three profiles / five asmdefs / 154 GUIDs). Code `79cc98bb` passed **41/41 Unity tests** (15 EditMode + 26 PlayMode; no skips), import/shader and actual render captures in [CI 38315430626](https://github.com/calonchozuluaga/pockle/actions/runs/38315430626). Android packaging is now being requested through the repo's `build-apk` label; final status is on [PR #15](https://github.com/calonchozuluaga/pockle/pull/15). Phone acceptance/performance are unverified. Existing authored geometry/finish-reuse tests keep explicit reference art, with separate Meshy switch/render cases.
 
+
+## v2 screens 02: living shelf, personalities, fusion (UX-037/038, Claude)
+
+**Executed:** a Mono type-check against hand-written Unity API stubs, covering:
+- every HUD partial;
+- the new `PersonalityBook`, `PersonalityMotion`, `UiShapes` and `FusionService`;
+- Codex's real `Pockle.Core` sources.
+
+It checks names and types only, not real Unity signatures. `git diff --check` and the meta sync also pass. CI runs the portable checks and the Unity suites on the pull request.
+
+**New PlayMode tests (run in CI):**
+- **Living shelf:** the day and night moments for the default four Pips; four of twelve moments recorded and kept across a restart; the personality page with reactions, a found shelf friend and an unfound one; Play and Back from the personality page.
+- **Fusion preview:** a last copy is never offered; a spare already in a slot can't be picked again; the secret-recipe hint appears and clears; the reveal shows its traits and the preview note, with Add to shelf disabled; the inventory is unchanged.
+- **Existing tests:** the shelf-tile portrait counts now look only at the tiles, not the scene. The shelf now opens collections from the header's "All collections" button.
+
+**Not verified until the owner tries it on a phone:**
+- How the scene looks: toy bases sitting on the shelves, plank overlap, and the night colours.
+- Personality motion feel, and the voice chirp.
+- The stand-in fused picture.
+- Full-bleed pages under a notch.
+
 ## Animated shelf and undiscovered silhouettes (October 12, 2026)
 
 UX-033 integration from main `dca3ec3`: four bounded visible actors, one camera, up to four 192px targets at 15 fps; found toys deform actual meshes, missing slots use eager face-free outlines. Ownership/playability remains gated; unknown finishes/secrets never get a face or material. Shelf is now a Core tab root. Existing boxes, Pip art and tactile physics are preserved.
@@ -161,36 +182,32 @@ Install the target's Unity build support through Hub. Android requires its suppo
 - Haptics are basic vibration, not tuned iOS/Android native patterns.
 - Saved data consists of comfort preferences and the selected comparison variant. Inventory, edition issuance, and the collecting loop belong to later milestones.
 
-## October 13 — Fox art review import (ART-002 / UX-030)
+## October 13 — Fox collection
 
-Verified: pinned Unity 6000.6.5f1 batch import and script compilation; material/prefab creation; converted mesh/paint inspected in a Blender render; required portable and source checks; whitespace. Not verified: Unity rendered appearance, EditMode/PlayMode suites, Android build, phone appearance/performance and tactile interaction.
+Implemented on `codex/fox-collection` in the attached isolated worktree; collection/runtime/check files copied to this local project for Unity use. Fox is collection/character `fox`; uploaded art is `fox.gloss-vinyl`, with nine planned finish slots. No inventory grants or box-pool changes. Unity 6000.6.5f1: 29 PlayMode and 16 EditMode tests passed; portable/source/branch whitespace checks passed. Android/phone review pending. Existing local settings and Claude UI edits preserved; owner approved the one collection-count test assertion update. See `docs/FOX_MODEL_IMPORT.md`.
 
-See `FOX_MODEL_IMPORT.md`.
+Walking fix validation on isolated main-based branch: 17/17 EditMode and 27/27 PlayMode tests passed; rebuilt previous exported APK contains JNI class/API and ACTIVITY_RECOGNITION. Current local C#/Fox/UI needs a fresh Unity build for phone testing. No phone connected. Details in `docs/WALKING_PLUGIN_REPAIR.md`.
 
-October 13 Fox collection validation: Unity 6000.6.5f1 imported the native runtime asset (20,009 vertices / 30,000 triangles); full PlayMode suite 29/29 passed, including Fox browser/no-grant and model/material/switching checks; full EditMode suite 16/16 passed; portable Core checks and source checks passed; whitespace passed on the branch. Android build and phone visuals/performance remain unverified. An initial no-graphics UI run crashed during portrait rendering; the graphics-enabled suite passed after correcting the new test to use visible buttons.
+## Approved Peach expressions and visible filling — October 13
+
+Implemented and applied locally from `codex/peach-expressions`: short blink, squint on compression, lifted expression; stronger moving reflections and transparent shell over six cream pearls/six gold flecks. Approved mesh/paint and other Pips unchanged. Unity 6000.6.5f1: 28/28 PlayMode and 16/16 EditMode tests passed; portable/source checks and fixed renders passed/inspected. New APK/device frame time unverified. See `docs/PEACH_EXPRESSIONS.md` and `docs/captures/peach-expressions/`.
+
+Fox owner test award also applied to actual editor save (UI verified five toys, up from four). Grant and owned-ID HUD selection are on `codex/fox-owner-test`, 30 PlayMode tests passed. Resource `FoxOwnerTestGrant.txt` awards once on non-batch startup, preserves existing counts/steps/pending reveal, and must be disabled before public distribution. Owner explicitly approved the necessary HUD changes; Claude Settings cleanup preserved.
 
 Fox orientation correction: imported FBX root axis transform now retained, with front facing the viewer. Corrected mesh applied in place, preserving asset GUID/subasset identity. Unity fixed render inspected upright; Fox is turn-only and deformation inputs leave vertices unchanged. Phone build review pending.
 
-Fox fix verification: Unity 30/30 PlayMode tests passed (including rigid vertices); combined local portable and source checks passed. Corrected front render saved in `docs/captures/fox-orientation/upright.png`. Phone rebuild pending.
+Fox fix saved as `codex/fox-orientation-handling`: Unity 30/30 PlayMode tests, combined local portable/source checks passed. Upright front render inspected. Phone rebuild pending.
 
 October 14 Fox finishes: all ten Unity material renders inspected, portable/source checks pass. Unity finish and save/grant regressions passed; final result recorded below. Android APK built successfully from owner local snapshot, StepCounter and six JNI entry points verified in DEX. No phone connected; on-device visuals/performance and step tracking pending.
 
-Fox finishes final validation: 32/32 Unity PlayMode tests passed; required portable/source checks passed. Owner-local Android APK build succeeded, final log /private/tmp/fox-phone-release.log. Final APK is Builds/Pockle-Fox-Finishes.apk. No phone connected.
-
-Axolotl validation: native upright render inspected, 33/33 Unity PlayMode tests and required portable/source checks passed. Owner local combined Fox build previously passed 35/35 tests. New combined Android build pending completion; device remains disconnected.
+Fox finishes saved on codex/fox-material-collection at 9a231a2. Unity 32/32 PlayMode and portable/source checks passed; final owner-local APK built and StepCounter packaging check passed. File: Builds/Pockle-Fox-Finishes.apk; grant runs on next app launch. No connected phone.
 
 Final combined Android preview: Builds/Pockle-Fox-Axolotl.apk built successfully from the current owner local snapshot. StepCounter plus all six JNI methods verified. Fox finishes award on startup; Axolotl collection import included. No phone connected for installation or visuals. Final combined Unity suite result recorded below.
 
-Final combined owner snapshot verification: 36/36 PlayMode tests passed (Fox finishes + Axolotl + Peach/walking/Claude UI); isolated collection branch 16/16 EditMode passed. Required portable/source checks and branch whitespace passed. APK build and six JNI methods passed; phone appearance, frame time and sensor behavior unverified.
+Final phone preview: Builds/Pockle-Fox-Axolotl.apk (37 MB). Combined snapshot passed 36/36 PlayMode tests; collection branch 16/16 EditMode and required portable/source/whitespace checks passed. Android build and walking JNI packaging passed. No phone connected; Fox awards run on app startup. Axolotl import is on codex/axolotl-plush; Fox finish topic on codex/fox-material-collection at 9a231a2.
 
-Sushi base art verification: Blender manifold/component and material/UV checks passed; independent GLB JSON check confirms one mesh, one cream material, no painted textures, 11,998 triangles and TEXCOORD_0. All three actual model renders inspected. No Unity integration or phone behavior asserted.
-
-October 13 — approved Peach: fixed Unity 6000.6.5f1 captures inspected (neutral, blink, squint, lifted, turn) and full PlayMode suite 28/28 passed. Portable expression checks pass; approved mesh/paint preserved. Android shader build and phone performance/appearance remain unverified. See `PEACH_EXPRESSIONS.md`.
-
-Final checks: Unity 6000.6.5f1 PlayMode 28/28 and EditMode 16/16 passed; portable/source checks passed; fixed captures inspected. Other Pip models and uploaded source mesh/paint unchanged. Android build/device frame time remains pending.
+Sushi base: local Blender geometry/UV/material checks and independent GLB metadata checks passed; three views inspected. 11,998 triangles, one cream material, zero textures. Unity/phone integration pending.
 
 October 14 latest Pip collection validation: isolated topic suite 37/37 PlayMode passed (all ten repeated finish switches, original mesh/paint, actual latest silhouette topology, real Moon star geometry, owned/unowned new-finish shelf routing, fallback/picking/grip/seams); 16/16 EditMode passed. Portable and source checks passed. All ten actual Unity renders inspected. Android build from current owner local snapshot succeeded, walking class/all six JNI methods present. Current snapshot includes Claude's new stage UI and has two recorded UI test failures (37/39 passed); see Codex handoff. Those tests are not reported green and no merge performed.
 
 APK `Builds/Pockle-Pip-Collection.apk` installed on owner phone using `adb install -r` without uninstall/data reset, app launched and process/log activity confirmed. A screenshot attempt while device was Dozing returned black and was discarded; phone visuals/frame time/sensor behavior are not verified. Existing inventory/reward IDs unchanged; six newly available Pip finishes were not awarded automatically.
-
-Pip special metadata: Starlight Glow (pip.glow-jelly) is the one Pip ultra-rare/secret. Portable checks validate identity, uniqueness, preserved legacy IDs and unchanged pools; source/whitespace checks passed. Android catalog/badge build succeeded. Material/model unchanged; no new drop probability or ownership grant.

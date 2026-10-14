@@ -113,6 +113,14 @@ The owner clarified **one collection per distinct character, with at least ten c
 - [ ] **UX-034 — Walk tiers and crafting.** Daily box from the newest series that upgrades at longer step goals; craft a missing toy from same-series spares. Acceptance: tier odds are shown before opening; crafting spends exactly the stated spares once and records "Crafted"; depends on dependable walking (UX-010) for higher tiers. Trading follows accounts and a backend (UX-013, UX-016–019).
 - [ ] **UX-035 — Finite editions, never-duplicate paid boxes, and the public ledger.** Edition sizes and serial numbers per copy; paid boxes draw only toys you don't own and close once the regular set is complete; sold-out states; an append-only ledger with an opt-in public view. Acceptance: supply can't go negative under concurrent purchases; every copy has one serial and a complete history. Depends on the backend choice.
 - [ ] **UX-036 — Trading: friend swaps and open market.** Spares only, one-for-one, no currency; open-market "have / want" listings matched by the server with both items swapped at once. Acceptance: you can never trade your only copy; interrupted trades never lose or duplicate a toy; reporting, blocking, and rate limits exist. Depends on accounts and UX-035.
+- [ ] **UX-037 — Living shelf and toy personalities.** Owner-approved screens (October 12): the Shelf tab opens on a scene of up to four owned toys on two shelves, idling in character, with a Day/Night switch, authored pair moments (12 for the four Pips), and moments found. Tapping a toy opens its personality page (nature, tint, reactions, shelf friends, voice, Play). Acceptance: content is authored, not generated; motion stops in Motion calm; personalities never change inventory or odds.
+  - In review on `claude/personalities-fusion-ui`.
+- [ ] **UX-038 — Fusion screens.** Owner-approved "Fuse spares" and "Fusion reveal" (October 12): pick two spares (never a last copy), see what they'd make, secret-recipe hint, reveal with traits. Acceptance: the HUD only calls `IFusionService`; the preview-only default uses nothing and says so. Runtime, save, ledger and fused art: Codex.
+
+- [ ] **UX-039 — Toy stage: worlds, light, collection.** Owner-approved canvas row "Toy stage" (October 14). The play screen shows a "<Collection> collection · N of M" header pill (opens the collection), a "COLLECTION · SERIES · NO." eyebrow over the finish name, a separate rarity badge, and a bottom tray with Collection (member dots; tap an owned one to swap), World (the collection's home world, Studio, Jelly Garden, Midnight) and Light (Daylight, Golden hour, Night lamp). HUD: Claude (`PrototypeHud.Play.cs`, `UI/StageChoices.cs`). Worlds, plates, lights and night glow: Codex, via `WorldChanged`/`LightChanged`. Acceptance: the tray never covers the plate while closed; choices persist; Motion calm unaffected; no inventory change.
+
+- [ ] **UX-040 — Social layer (proposal).** Canvas row "Social layer" (October 14), awaiting owner review: Home feed (Following / Everyone) with preset reactions, other players' profiles (follow, badges, shelf, spares), find collectors, your profile with showcase and milestones, badges, trades (swaps and have/want market), and share cards. Needs accounts and a server (UX-013, UX-016–019); no free-text messaging in the first pass.
+  - UI in review on `claude/personalities-fusion-ui`; fusion runtime not started.
 
 ## Suggested work order
 
@@ -127,17 +135,21 @@ Use this file as the task checklist. Each implementation should name its task ID
 
 For the proposed Codex/Claude work split and repository handoffs, see [agent coordination](AGENT_COORDINATION.md). Assignments remain proposed until each assistant acknowledges its task and file ownership.
 
-October 13, ART-002 / UX-030: owner fox uploaded and imported as a separate review prefab on `codex/fox-model-import`; 30,000 triangles, original UV paint, editable vinyl material. Unity import/compile and portable checks passed. Catalog/playable integration and phone validation remain pending. See [fox import](FOX_MODEL_IMPORT.md).
+## October 13 — Fox collection
 
-October 13 — UX-029/030/033, ART-002: Fox added as the thirteenth character collection on `codex/fox-collection`, with `fox.gloss-vinyl` runtime art and nine planned varieties. Box pools, legacy IDs and saves unchanged. Runtime and browse tests recorded in `FOX_MODEL_IMPORT.md`; phone review pending.
+Implemented on `codex/fox-collection` in the attached isolated worktree; collection/runtime/check files copied to this local project for Unity use. Fox is collection/character `fox`; uploaded art is `fox.gloss-vinyl`, with nine planned finish slots. No inventory grants or box-pool changes. Unity 6000.6.5f1: 29 PlayMode and 16 EditMode tests passed; portable/source/branch whitespace checks passed. Android/phone review pending. Existing local settings and Claude UI edits preserved; owner approved the one collection-count test assertion update. See `docs/FOX_MODEL_IMPORT.md`.
+
+Walking fix validation on isolated main-based branch: 17/17 EditMode and 27/27 PlayMode tests passed; rebuilt previous exported APK contains JNI class/API and ACTIVITY_RECOGNITION. Current local C#/Fox/UI needs a fresh Unity build for phone testing. No phone connected. Details in `docs/WALKING_PLUGIN_REPAIR.md`.
+
+## Approved Peach expressions and visible filling — October 13
+
+Implemented and applied locally from `codex/peach-expressions`: short blink, squint on compression, lifted expression; stronger moving reflections and transparent shell over six cream pearls/six gold flecks. Approved mesh/paint and other Pips unchanged. Unity 6000.6.5f1: 28/28 PlayMode and 16/16 EditMode tests passed; portable/source checks and fixed renders passed/inspected. New APK/device frame time unverified. See `docs/PEACH_EXPRESSIONS.md` and `docs/captures/peach-expressions/`.
+
+Fox owner test award also applied to actual editor save (UI verified five toys, up from four). Grant and owned-ID HUD selection are on `codex/fox-owner-test`, 30 PlayMode tests passed. Resource `FoxOwnerTestGrant.txt` awards once on non-batch startup, preserves existing counts/steps/pending reveal, and must be disabled before public distribution. Owner explicitly approved the necessary HUD changes; Claude Settings cleanup preserved.
 
 UX-025/030/033: ten approved Fox finishes available; Aurora special metadata, owner test grants and per-finish HUD selection implemented. Phone APK prepared; device review pending. See FOX_FINISHES.md.
 
 October 14 — UX-030/033, ART-002: Axolotl plush is the fourteenth collection. Uploaded art playable by stable ID; nine finish concepts unimplemented. Unity front render upright inspected; owner local assets applied. Device review pending. See AXOLOTL_IMPORT.md.
-
-ART-002 / UX-030 — single-color maki sushi base authored for owner shape review. Cream material, shared UVs, editable .blend + GLB/FBX, 11,998 triangles. No new runtime collection yet. See SUSHI_BASE.md.
-
-October 13, UX-025/030 and ART-002: approved Peach gains blink/squint/lifted reactions, more reflective translucent material, and real interior pearls/flecks on `codex/peach-expressions`. Fixed Unity renders inspected and 28 PlayMode tests pass. Phone acceptance/performance pending; other Pips untouched. See [Peach expressions](PEACH_EXPRESSIONS.md).
 
 UX-025/030/033, ART-002 — owner confirmed all ten Pip finishes on approved latest shared shape/face. Moon/Gold/Mint now use it; six remaining finish materials implemented. Owned IDs/rewards preserved; render/test/build verification in LATEST_PIP_COLLECTION.md.
 

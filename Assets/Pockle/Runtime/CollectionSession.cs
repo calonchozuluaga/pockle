@@ -19,6 +19,8 @@ namespace Pockle.Runtime
         public int GetOwnedCount(string id) => Progress.GetOwnedCount(id);
         public string PendingRevealId => Progress.Save.PendingRevealId;
         public bool IsReadOnlySave => readOnlySave;
+        /// <summary>Plugin startup/read failed; false for disabled permission, missing sensor or editor preview.</summary>
+        public bool WalkingFailed => tracker != null && tracker.Failed;
         private bool readOnlySave;
         private AndroidWalkingTracker tracker;
         private float nextPoll;

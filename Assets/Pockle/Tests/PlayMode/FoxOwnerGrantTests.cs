@@ -57,7 +57,8 @@ namespace Pockle.Tests
             Assert.That(tile.interactable, Is.True);
             tile.onClick.Invoke(); Assert.That(hud.CurrentPage, Is.EqualTo(AppPage.Play));
             Assert.That(selected, Is.EqualTo(ToyCatalog.FoxId));
-            Assert.That(root.GetComponentsInChildren<Text>().Any(t => t.text == "Fox · Classic"), Is.True);
+            // The stage titles the finish; the collection sits in the header pill and eyebrow (owner-approved toy stage).
+            Assert.That(root.GetComponentsInChildren<Text>().Any(t => t.text == "Classic"), Is.True);
             Assert.That(hud.ShowToy("fox.clear-jelly"), Is.False);
         }
     }

@@ -28,10 +28,6 @@ The editor menu configures the prototype's scene and presentation defaults. Buil
 
 The owner’s current collecting direction is daily walking-unlocked boxes or optional paid boxes, with collection-themed packaging. Hardware steps and local daily rewards are implemented for testing; location verification, store billing, and authoritative inventory remain future work. The next viewer experiments are lights-off glow and internal stars/pearls that lag during squeeze/stretch and settle after release. Trading, evolution, and edition registries are outside the simplified initial release.
 
-Fox uses a native `PipCharacterAsset` plus readable mesh subasset at `Resources/Characters/Fox/Fox.asset`, generated from the owner FBX by `FoxCollectionBuild`. Its base-colour texture retains the uploaded UVs; a Resources Standard vinyl material keeps the shader in player dependencies. Baked non-Pip surfaces preserve their painted features and use firm handling rather than the Peach jelly shader.
-
 October 14 material/art extension: Fox finishes share one native readable mesh/paint with local shader recipes and per-ID special metadata; Axolotl has one separate native plush mesh/paint. CharacterArt authorizes only registered finish IDs. Engine-free catalog/inventory retain old IDs and add no new save schema. See FOX_FINISHES.md and AXOLOTL_IMPORT.md.
-
-Approved Meshy Peach alone uses `PeachExpression` (engine-free timing) and `PeachExpressionDriver` (material uniforms). Local shader eye/mouth deformation preserves the imported neutral mesh/paint and follows CPU face centres. `TexturedPeachJelly` renders two transparent shell passes over twelve shared-mesh interior accents; dark face pigment and reflected highlights retain opacity.
 
 October 14 latest Pip collection: all ten Pip IDs resolve to the approved baked model via CharacterArt. Local finish recipes share the source paint, UVs and mesh; legacy selectors still preserve IDs. Undiscovered silhouette projects that same model. See LATEST_PIP_COLLECTION.md.

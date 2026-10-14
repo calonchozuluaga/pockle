@@ -78,7 +78,8 @@ namespace Pockle.Tests
                 foreach (var item in ToyCatalog.Collectibles.Where(c => c.CharacterId == "fox"))
                 {
                     Assert.That(hud.ShowToy(item.Id), Is.True);
-                    Assert.That(root.GetComponentsInChildren<UnityEngine.UI.Text>().Any(t => t.text == item.DisplayName), Is.True, item.Id);
+                    string title = item.FinishDisplayName.Split(new[] { " · " }, System.StringSplitOptions.None)[0];
+                    Assert.That(root.GetComponentsInChildren<UnityEngine.UI.Text>().Any(t => t.text == title), Is.True, item.Id);
                 }
                 Assert.That(session.TryApplyOwnerFoxFinishesGrant(), Is.False);
                 // A crash after inventory persist but before marker persist must also be harmless.

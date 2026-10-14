@@ -1,11 +1,32 @@
 # Claude handoff
 
-October 9, 2026. Status: **UX-002/003/004 and ART-001 merged. The owner tested the UI and asked for a less dated look: "Pockle screens v2" (owner's design canvas) is the approved direction. Collection/series rules decided; see `../COLLECTIONS.md`. Next: rebuild the Unity screens to v2, then UX-031.**
+October 13, 2026. Status: **UX-037/038 (living shelf, personalities, fusion screens) in review on `claude/personalities-fusion-ui`.** Earlier status (October 9): **UX-002/003/004 and ART-001 merged. The owner tested the UI and asked for a less dated look: "Pockle screens v2" (owner's design canvas) is the approved direction. Collection/series rules decided; see `../COLLECTIONS.md`. Next: rebuild the Unity screens to v2, then UX-031.**
 
 
+## October 12–13: living shelf, personalities, fusion screens — `claude/personalities-fusion-ui`
 
+The owner approved the canvas row "Personalities and fusion" and asked to build it as shown. Claimed: **UX-037** (living shelf and personality page) and **UX-038** (fusion screens).
 
+New files:
+- `PrototypeHud.LivingShelf.cs`, `.Personality.cs` and `.Fusion.cs`
+- `Runtime/UI/PersonalityBook.cs` (authored content), `PersonalityMotion.cs` and `UiShapes.cs`
+- `Runtime/FusionService.cs`
 
+**Additive changes in Codex's lane (please review):**
+- `AppPage` gains `Personality`, `Fusion` and `FusionReveal`, appended so existing values keep their numbers.
+- `ShelfPreviewRuntime.Register(..., Color? background)` and `SetPresentation(binding, fallback, background)`. The living-shelf toys use your live meshes on the scene colour instead of a colour tile, and they switch to night. The existing overload and behaviour are unchanged.
+
+**Requests for Codex:**
+1. **Fusion runtime:** implement `IFusionService`.
+   - Consume two spares, never a last copy.
+   - Grant a keep-forever, untradeable fused toy, persisted before the reveal.
+   - Make the save change a versioned migration, record "used in fusion" in the ledger, and add server validation later.
+   - Provide real fused art (blended material and colour, one parent's body plus a detail from the other) to replace my stand-in blend of the two portraits.
+   - Call `hud.SetFusionService(...)`.
+2. **Optional: personality runtime.** If you want per-variety motion in the live mesh (a show-off pose, a dreamy sway), `PersonalityBook` is engine-free and can move to Core. `PersonalityMotionStyle` is the contract.
+3. **Shelf moments:** moments found live in the UI preference `pockle.shelf.moments.v1`. Tell me if you'd rather own them in the save.
+
+PR #13 (an October 10 handoff record) is closed as superseded. The Shelf-tab request in it is done, and its Pip review predates the Meshy Peach work.
 
 ## Pip render vs. concept, side by side (owner review of #11, October 10)
 
@@ -222,3 +243,50 @@ The owner chose **Supabase** and approved the v2 UI direction. I'm starting **UX
 2. **Two new pages in `MenuNavigation`:** `AppPage.Collections` (all series) and `AppPage.Collection` (one series' lineup), with Back behaving like Shelf → Play. `MenuNavigation` is yours; I'll add the HUD pages once the enum values exist.
 3. **Stage backdrop per toy.** v2 shows each toy on its own colour field. Could `PrototypeStage` expose a way to set the viewer's background colour (for example `SetBackdrop(Color)`) so the HUD can pass the toy's field colour on entering play?
 4. **Catalog fields** from `../COLLECTIONS.md` (series number, release date, members, secret, odds, accent colours) when you get to them.
+
+## October 13 — Walking is broken on the owner's phone (request for Codex)
+
+**What the owner sees:** on the phone build, Boxes and Settings say "Step tracking is unavailable on this device." Steps never count.
+
+**Why that message points at the plugin:** `AndroidWalkingTracker.ResumeIfAllowed` only shows it from its `catch` block. That means the permission check passed, but creating `studio.pockle.walking.StepCounter` (or calling `start()`) threw. A missing permission or a missing sensor shows a different message.
+
+**Likely cause (not confirmed on device):** `Assets/Plugins/Android/PockleWalking.androidlib` is an old Eclipse-style library (`project.properties` with `android.library=true`, no `build.gradle`). As far as I know, Unity 6 only builds `.androidlib` folders that have a `build.gradle`. If so, `StepCounter.java` is never compiled into the APK, and the constructor throws `ClassNotFoundException`. VALIDATION.md only records compiling the Java in the cloud. Packaging and on-device step counting were never checked.
+
+**Please:**
+1. Confirm the cause: in Unity's Android Logcat, filter for `Pockle step counter`. The warning logs the exception type.
+2. Fix the plugin so the class ships. Probably add a `build.gradle` (`com.android.library`, the `studio.pockle.walking` namespace, Java sources in `src`) and drop `project.properties`. Alternatively, move the Java into `Assets/Plugins/Android/` as loose source.
+3. Verify on the owner's phone that the status reads "Keep Pockle running while you walk…" and the daily box progress moves. Record the result in VALIDATION.md.
+4. Optional: put the exception type in `Status` in development builds, so the next failure is readable from a screenshot.
+
+**My side (UI, coming with the Settings cleanup):** when tracking has failed, Boxes and Settings will hide "Enable walking", which does nothing in that state, and show a calmer line instead. To do that I need a way to tell "failed" apart from "not enabled yet". Could you expose something like `CollectionSession.WalkingFailed` (bool), or an enum state, rather than me matching status strings?
+
+**Heads-up about this folder:** we're both working in the owner's local checkout (`claude/personalities-fusion-ui`). My uncommitted change here is `Assets/Pockle/Runtime/PrototypeHud.Settings.cs` (Settings cleanup, build label "v2 screens 03") plus this note. Please leave that file alone and don't commit it as part of your work. I'll commit it to PR #18 once the owner signs off.
+
+## October 14 — Toy stage: worlds, lighting, collection (request for Codex; owner approved)
+
+The owner approved the "Toy stage" row in the design canvas (boards "Toy stage" and "Stage: collection drawer"). The play screen gets a collection pill in the header, a series/number eyebrow above the finish name, a separate rarity badge, and a bottom tray with three tabs: **Collection** (the 10 finish dots, tap an owned finish to swap), **World**, and **Light**. I'm building all of the HUD side now in the owner's local project.
+
+**Claimed (Claude), in this folder:** `PrototypeHud.cs`, `PrototypeHud.Play*.cs` (new), `PrototypeHud.Collections.cs`, `Runtime/UI/*`, and `CollectionUiTests.cs`. Your recent owner-approved HUD edits (selected collectible ID, Fox titles and backdrop) are kept as they are. From here, please send any HUD change through `codex.md` so we don't both edit these files at once.
+
+**Requests for Codex (stage, your lane):**
+1. A world API on the stage. Something like `PrototypeStage.SetWorld(StageWorld world)` with `StageWorld { Studio, Home, Garden, Midnight }`, where Home is the toy's own collection world. Each world sets:
+   - the background (gradient or skybox),
+   - simple low-cost scenery (Fox hollow: pine silhouettes, falling leaves; Garden: pink hills, gummy flowers; Midnight: stars and a moon),
+   - and the plate: wood stump, milk dish, pink jelly dish, or a glowing lavender ring.
+   Keep it phone-cheap: flat or unlit cards and particles, no real-time shadows beyond today's blob shadow.
+2. A lighting API, something like `PrototypeStage.SetLight(StageLight light)` with `{ Day, Golden, Night }`: key light colour and angle, ambient, and shadow strength. At Night, glow finishes (`fox.glow-jelly`) should emit softly.
+3. Collection worlds come from the catalog: a `HomeWorld` field per collection (Fox collection → Fox hollow). Other collections can fall back to Studio until they get art.
+4. Remember the last world and light per player (a local preference is fine for beta).
+
+The HUD will call these through events (`WorldChanged`, `LightChanged`) the way it already uses `BackdropChanged`. Until your API lands, the tray will only switch the backdrop colour. Reply in `codex.md` with the final names and I'll wire them up.
+
+Also please push your local branches (`codex/fox-material-collection`, `codex/axolotl-plush`, `codex/walking-plugin-fix`, `codex/fox-owner-test`) to GitHub so the work isn't only in the owner's folder, and so CI can run on it.
+
+**Update, Oct 14 (toy stage built, in the owner's local folder, uncommitted):**
+- The world and light types now exist in `Runtime/UI/StageChoices.cs`: `StageWorld { Home, Studio, Garden, Midnight }` and `StageLight { Day, Golden, Night }`. Please use these rather than defining your own.
+- The HUD raises `PrototypeHud.WorldChanged` and `LightChanged`, and keeps sending `BackdropChanged` with a fallback tint.
+- New players start in Studio with Daylight, so today's look is unchanged until they choose otherwise.
+- **Framing request:** please frame the toy and plate a little higher. The closed tray is 56 px tall at the bottom (12 px margin), and an open tray reaches about 200 px.
+- **Your tests:** I changed one assertion each in `FoxOwnerGrantTests` and `FoxFinishesTests`. The play title is now the finish name ("Classic"); the collection moves to the header pill and the eyebrow.
+- **Request:** a per-finish swatch colour in the catalog, so the collection dots can show each finish. For now they use the character's accent colour.
+- Unity tests have **not** been run on these changes. The HUD type-checks with a real C# compiler against Unity stand-ins.
