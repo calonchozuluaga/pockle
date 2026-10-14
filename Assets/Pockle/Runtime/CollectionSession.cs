@@ -61,7 +61,7 @@ namespace Pockle.Runtime
             tracker = new AndroidWalkingTracker();
             if (!readOnlySave) tracker.ResumeIfAllowed();
             Persist();
-            if (!Application.isBatchMode) { TryApplyOwnerFoxTestGrant(); TryApplyOwnerFoxFinishesGrant(); }
+            if (!Application.isBatchMode) { TryApplyOwnerFoxTestGrant(); TryApplyOwnerFoxFinishesGrant(); TryApplyOwnerPipFinishesGrant(); }
         }
 
         public const string FoxTestGrantKey = "pockle.owner-test.fox-grant.v1";
@@ -86,6 +86,23 @@ namespace Pockle.Runtime
             bool granted = Progress.EnsureFoxFinishTestCopies();
             Persist(); // Inventory precedes grant marker and HUD refresh, including after interrupted startup.
             PlayerPrefs.SetInt(FoxFinishesGrantKey, 1); PlayerPrefs.Save();
+            Changed?.Invoke();
+            return granted;
+        }
+        public const string PipFinishesGrantKey = "pockle.owner-test.pip-finishes.v1";
+        /// <summary>Temporary owner-only beta grant; disable PipOwnerTestGrant before public distribution.</summary>
+        public bool TryApplyOwnerPipFinishesGrant()
+        {
+            if (Progress == null || readOnlySave || PlayerPrefs.GetInt(PipFinishesGrantKey, 0) == 1) return false;
+            var configuration = Resources.Load<TextAsset>("PipOwnerTestGrant");
+            if (configuration == null || configuration.text.Trim() != "enabled") return false;
+            bool granted = Progress.EnsurePipFinishTestCopies();
+            Persist(); // Inventory must be durable before the marker and any collection refresh.
+            PlayerPrefs.SetInt(PipFinishesGrantKey, 1); PlayerPrefs.Save();
+            int found = 0;
+            foreach (var toy in ToyCatalog.Collectibles)
+                if (toy.CharacterId == "pip" && Progress.GetOwnedCount(toy.Id) > 0) found++;
+            Debug.Log("Pockle owner test: Pip finishes saved (" + found + "/10).");
             Changed?.Invoke();
             return granted;
         }

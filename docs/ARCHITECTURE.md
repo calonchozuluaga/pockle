@@ -35,3 +35,5 @@ October 14 latest Pip collection: all ten Pip IDs resolve to the approved baked 
 UX-039: `ToyStageEnvironment` owns bounded procedural scenery, background gradient and stage lighting. `TactilePrototype` consumes the existing HUD WorldChanged/LightChanged events and reapplies the chosen look after selection. Catalog `HomeWorld` and per-finish `SwatchColor` are engine-free presentation metadata. See [TOY_STAGE_RUNTIME.md](TOY_STAGE_RUNTIME.md).
 
 Painted world images use `PaintedWorldAsset` plus precomputed reflection cubes (`PaintedWorldImport.Build`). `ToyGlowAura` owns two additive light-spill cards; it is independent of toy deformation and inventory. See [PAINTED_WORLDS.md](PAINTED_WORLDS.md).
+
+Owner beta test builds can enable `PipOwnerTestGrant.txt`: CollectionSession runs a one-time missing-Pip grant, persists inventory before its separate marker and HUD notification. Existing counts, daily rewards and pending reveals remain intact. Remove/disable the resource before public distribution.

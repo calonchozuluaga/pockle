@@ -10,8 +10,22 @@ internal static class CatalogChecks
     private static readonly JsonSerializerOptions Json = new JsonSerializerOptions { IncludeFields = true };
     public static void Run()
     {
-        StageMetadata(); Definitions(); FoxOwnerGrant(); FoxFinishGrant(); Migration(); FutureIdentity(); ProfileReferences(); PreviewBudget();
+        PipFinishGrant(); StageMetadata(); Definitions(); FoxOwnerGrant(); FoxFinishGrant(); Migration(); FutureIdentity(); ProfileReferences(); PreviewBudget();
         Console.WriteLine("PASS: " + checks + " catalog assertions (definitions, legacy migration, unknown IDs, profiles, bounded preview lifetimes).");
+    }
+    private static void PipFinishGrant()
+    {
+        var saved = new CollectionSave { Version = CollectionProgress.SaveVersion,
+            Inventory = new List<OwnedCollectible> { new OwnedCollectible(ToyCatalog.PeachId, 3), new OwnedCollectible(ToyCatalog.FoxId, 2) } };
+        var progress = new CollectionProgress(saved, 20734);
+        progress.Save.Steps = 521; progress.Save.PendingRevealId = ToyCatalog.MoonId;
+        Assert(progress.EnsurePipFinishTestCopies(), "Missing Pip test copies were not granted.");
+        var restored = RoundTrip(progress, 20734);
+        Assert(!restored.EnsurePipFinishTestCopies(), "Restart duplicated Pip test copies.");
+        foreach(var toy in ToyCatalog.Collectibles.Where(c => c.CharacterId == "pip"))
+            Assert(restored.GetOwnedCount(toy.Id) == (toy.Id == ToyCatalog.PeachId ? 3 : 1), "Pip test grant changed existing duplicates or omitted a finish.");
+        Assert(restored.GetOwnedCount(ToyCatalog.FoxId) == 2, "Pip grant altered Fox copies.");
+        Assert(restored.Save.Steps == 521 && restored.Save.PendingRevealId == ToyCatalog.MoonId, "Pip grant altered reward state.");
     }
     private static void StageMetadata()
     {
