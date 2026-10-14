@@ -732,7 +732,14 @@ namespace Pockle.Runtime
         {
             if (HasBakedSurface && !UsesMeshyPeach)
             {
-                var vinyl = FoxFinishMaterial.Create(collectibleId, characterAsset.BaseColorTexture, studioReflection);
+                Material vinyl;
+                if (ToyCatalog.IsFoxCollectible(collectibleId)) vinyl = FoxFinishMaterial.Create(collectibleId, characterAsset.BaseColorTexture, studioReflection);
+                else
+                {
+                    var template = Resources.Load<Material>("Characters/Axolotl/AxolotlPlush");
+                    if (template == null) throw new System.InvalidOperationException("Axolotl plush material missing.");
+                    vinyl = new Material(template) { mainTexture = characterAsset.BaseColorTexture };
+                }
                 ownedMaterials.Add(vinyl);
                 return vinyl;
             }

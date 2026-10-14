@@ -113,6 +113,7 @@ namespace Pockle.Core
         public const string GoldId = "pip.gold-confetti";
         public const string MintId = "pip.mint-mochi";
         public const string FoxId = "fox.gloss-vinyl";
+        public const string AxolotlId = "axolotl.boucle-plush";
         public const string FoxAuroraId = "fox.glow-jelly";
         public static bool IsFoxCollectible(string id) => TryGetCollectible(id, out var toy) && toy.CharacterId == "fox";
         private static readonly string[] legacyIds = { PeachId, MoonId, GoldId, MintId };
@@ -154,7 +155,8 @@ namespace Pockle.Core
                 new CharacterDefinition("rolo", "Rolo", 0x96bbc7, "matte-vinyl"),
                 new CharacterDefinition("mallow", "Mallow", 0xd3c5e5, "matte-vinyl"),
                 new CharacterDefinition("sprig", "Sprig", 0xaecba0, "coated-metallic"),
-                new CharacterDefinition("fox", "Fox", 0xec7951, "gloss-vinyl")
+                new CharacterDefinition("fox", "Fox", 0xec7951, "gloss-vinyl"),
+                new CharacterDefinition("axolotl", "Axolotl", 0xeeb2cb, "boucle-plush")
             };
             Characters = Array.AsReadOnly(characters); Finishes = Array.AsReadOnly(finishes);
             foreach (var character in characters) charactersById.Add(character.Id, character);
@@ -170,7 +172,7 @@ namespace Pockle.Core
                     bool existing = character.Id == "pip" && index < legacyIds.Length;
                     string id = existing ? legacyIds[index] : character.Id + "." + finish.Id;
                     var collectible = new CollectibleDefinition(id, character, finish,
-                        existing ? pipLabels[index] : character.Id == "fox" ? foxLabels[index] : finish.DisplayName, existing || character.Id == "fox", character.Id);
+                        existing ? pipLabels[index] : character.Id == "fox" ? foxLabels[index] : finish.DisplayName, existing || character.Id == "fox" || id == AxolotlId, character.Id);
                     collectibles.Add(collectible); collectiblesById.Add(id, collectible);
                 }
             }

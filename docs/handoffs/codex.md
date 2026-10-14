@@ -45,3 +45,15 @@ Owner approved ten concept-sheet finishes and one copy of each for phone testing
 October 14 Fox finish implementation: all ten existing Fox slot IDs are available and named from the approved concept. Aurora is fox.glow-jelly / secret identity, no odds/pool/pricing changes. New independent finishes marker fills only missing copies; persists before UI. Necessary Fox HUD title/backdrop changes under earlier owner authorization, Settings preserved. See FOX_FINISHES.md. Axolotl import remains authorized next.
 
 Fox finishes final validation: 32/32 Unity PlayMode tests passed; required portable/source checks passed. Owner-local Android APK build succeeded, final log /private/tmp/fox-phone-release.log. Final APK is Builds/Pockle-Fox-Finishes.apk. No phone connected.
+
+## Axolotl plush import — UX-030/033, ART-002
+
+Owner approved uploaded axolotl as a new collection, after Fox materials. Claimed `codex/axolotl-plush` extending the completed Fox branch. Files: converter, model/paint/native asset, catalog/art registry and generic baked material/title routing, import/play tests and docs. Preserve all existing IDs, phone settings and Claude Settings. No additional Axolotl inventory grant authorized or box policy changes.
+
+Axolotl implementation applied locally: 30,000 triangles / 48,940 UV-split vertices, uploaded paint retained, native upright plush asset and catalog entry. Generic titles support the new collection; Settings unchanged. No Axolotl grant or reward-pool changes. See AXOLOTL_IMPORT.md.
+
+Axolotl validation: native upright render inspected, 33/33 Unity PlayMode tests and required portable/source checks passed. Owner local combined Fox build previously passed 35/35 tests. New combined Android build pending completion; device remains disconnected.
+
+Final owner test APK: Builds/Pockle-Fox-Axolotl.apk (37 MB), current local Peach/walking/Claude Settings plus Fox finishes and Axolotl. Android build and JNI packaging passed. Fox-only Builds/Pockle-Fox-Finishes.apk also retained. No device connected.
+
+Final combined owner snapshot verification: 36/36 PlayMode tests passed (Fox finishes + Axolotl + Peach/walking/Claude UI); isolated collection branch 16/16 EditMode passed. Required portable/source checks and branch whitespace passed. APK build and six JNI methods passed; phone appearance, frame time and sensor behavior unverified.

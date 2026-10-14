@@ -202,7 +202,8 @@ namespace Pockle.Runtime
         }
 
         private string PlayHint => ToyCatalog.IsFoxCollectible(toy.CollectibleId)
-            ? "Drag Fox or the plate to turn." : "Lift Pip. Pinch to stretch. Turn the plate.";
+            ? "Drag Fox or the plate to turn." : toy.CollectibleId == ToyCatalog.AxolotlId
+                ? "Press Axolotl gently. Turn the plate." : "Lift Pip. Pinch to stretch. Turn the plate.";
 
         private void BeginPointer(int id, Vector2 position)
         {
@@ -237,7 +238,7 @@ namespace Pockle.Runtime
                 contactZ = Mathf.Clamp(localContact.z, -0.8f, 0.8f);
                 compression.Target = 0.23f;
                 Play(pressClip);
-                hud.SetStatus("Drag up to lift. Add a finger to stretch.");
+                hud.SetStatus(toy.CollectibleId == ToyCatalog.AxolotlId ? "Hold and move Axolotl. Gently squeeze." : "Drag up to lift. Add a finger to stretch.");
             }
             else hud.SetStatus(PlayHint);
         }

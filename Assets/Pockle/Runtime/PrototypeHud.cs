@@ -23,8 +23,8 @@ namespace Pockle.Runtime
         public event Action<PipVariant> VariantChanged;
         public event Action<string> CollectibleChanged;
         private string selectedCollectibleId = ToyCatalog.PeachId;
-        private string SelectedToyName => ToyCatalog.IsFoxCollectible(selectedCollectibleId) && ToyCatalog.TryGetCollectible(selectedCollectibleId, out var selected) ? selected.DisplayName : ToyName(variant);
-        private string SelectedSeriesLine => ToyCatalog.IsFoxCollectible(selectedCollectibleId) ? "Fox collection" : SeriesLine(variant);
+        private string SelectedToyName => !ToyCatalog.TryGetLegacyIndex(selectedCollectibleId, out _) && ToyCatalog.TryGetCollectible(selectedCollectibleId, out var selected) ? selected.DisplayName : ToyName(variant);
+        private string SelectedSeriesLine => !ToyCatalog.TryGetLegacyIndex(selectedCollectibleId, out _) && ToyCatalog.TryGetCollectible(selectedCollectibleId, out var selected) && ToyCatalog.TryGetCollection(selected.CollectionId, out var group) ? group.DisplayName + " collection" : SeriesLine(variant);
         public event Action<bool> StoreVisibilityChanged;
         public event Action DailyBoxRequested;
         public event Action<Color> BackdropChanged;

@@ -44,9 +44,9 @@ internal static class CatalogChecks
     }
     private static void Definitions()
     {
-        Assert(ToyCatalog.Characters.Count == 13 && ToyCatalog.Finishes.Count == 10 && ToyCatalog.Collectibles.Count == 130, "Roster is not thirteen distinct characters with ten finishes.");
-        Assert(ToyCatalog.Collectibles.Select(c => c.Id).Distinct(StringComparer.Ordinal).Count() == 130, "Collectible IDs collide.");
-        Assert(ToyCatalog.Collectibles.Count(c => c.Available) == 14, "Planned art was marked playable.");
+        Assert(ToyCatalog.Characters.Count == 14 && ToyCatalog.Finishes.Count == 10 && ToyCatalog.Collectibles.Count == 140, "Roster is not fourteen distinct characters with ten finishes.");
+        Assert(ToyCatalog.Collectibles.Select(c => c.Id).Distinct(StringComparer.Ordinal).Count() == 140, "Collectible IDs collide.");
+        Assert(ToyCatalog.Collectibles.Count(c => c.Available) == 15, "Planned art was marked playable.");
         foreach (var definition in ToyCatalog.Collectibles)
         {
             Assert(ToyCatalog.IsValidId(definition.Id), "Catalog has an invalid persistence ID.");
@@ -63,6 +63,8 @@ internal static class CatalogChecks
         Assert(ToyCatalog.Collectibles.Count(c => c.CharacterId == "fox" && c.Available) == 10, "Planned fox finishes became available.");
         Assert(!ToyCatalog.TryGetLegacyIndex(ToyCatalog.FoxId, out _) && !ToyCatalog.IsDailyEligible(ToyCatalog.FoxId), "Fox changed legacy identity or walking rewards.");
         Assert(!fox.HasApprovedOdds && !fox.HasPublishedSchedule && fox.SeriesNumber == 0, "Fox acquired unapproved release or reward metadata.");
+        Assert(ToyCatalog.TryGetCollectible(ToyCatalog.AxolotlId, out var axolotl) && axolotl.Available && axolotl.CharacterId == "axolotl", "Axolotl plush art missing from catalog.");
+        Assert(ToyCatalog.Collectibles.Count(c => c.CharacterId == "axolotl" && c.Available) == 1 && !ToyCatalog.IsDailyEligible(ToyCatalog.AxolotlId), "Unapproved Axolotl art/reward eligibility enabled.");
         string[] oldIds = { "pip.peach-jelly", "pip.moon-pearl", "pip.gold-confetti", "pip.mint-mochi" };
         for (int i = 0; i < oldIds.Length; i++)
         {
@@ -85,7 +87,7 @@ internal static class CatalogChecks
             Assert(ToyCatalog.TryGetCollectionForPool(box.Id, out var collection) && collection.Id == "pip" && box.Entries.All(e => ToyCatalog.TryGetCollectible(e.CollectibleId, out var item) && item.Available && item.CollectionId == collection.Id), "Legacy Pip sub-pool includes an unapproved/mismatched concept.");
         bool immutable = false;
         try { ((IList<CollectibleDefinition>)ToyCatalog.Collectibles).Clear(); } catch (NotSupportedException) { immutable = true; }
-        Assert(immutable && ToyCatalog.Collectibles.Count == 130, "A HUD consumer mutated the shared catalog.");
+        Assert(immutable && ToyCatalog.Collectibles.Count == 140, "A HUD consumer mutated the shared catalog.");
     }
     private static void Migration()
     {

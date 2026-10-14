@@ -49,7 +49,8 @@ namespace Pockle.Core
             new CharacterIdleDefinition("rolo", "Firm robot nod and scan", 5.2f, 4f, 0, 4, 7, 0, .025f),
             new CharacterIdleDefinition("mallow", "Moon sway and quiet peek", 6.2f, 5f, 0, 1, 3, 3, .04f),
             new CharacterIdleDefinition("sprig", "Seed bob and sprout-like sway", 4.9f, 3.9f, 0, 3, 4, 2, .065f),
-            new CharacterIdleDefinition("fox", "Alert fox glance and gentle rock", 4.7f, 3.7f, 0, 2, 8, 1, .045f)
+            new CharacterIdleDefinition("fox", "Alert fox glance and gentle rock", 4.7f, 3.7f, 0, 2, 8, 1, .045f),
+            new CharacterIdleDefinition("axolotl", "Soft plush sway", 5.8f, 4.2f, 0, 1, 5, .5f, .025f)
         };
         private static readonly Dictionary<string, CharacterIdleDefinition> byId = BuildLookup();
         public static IReadOnlyList<CharacterIdleDefinition> Profiles { get; } = Array.AsReadOnly(profiles);

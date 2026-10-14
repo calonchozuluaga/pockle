@@ -59,6 +59,7 @@ namespace Pockle.Runtime
             if (Pockle.Core.ToyCatalog.IsFoxCollectible(collectibleId)) return new Color(1f, .878f, .796f);
             switch (collectibleId)
             {
+                case Pockle.Core.ToyCatalog.AxolotlId: return new Color(.97f, .82f, .87f);
                 case "pip.moon-pearl": return FieldMoon;
                 case "pip.gold-confetti": return FieldGold;
                 case "pip.mint-mochi": return FieldMint;

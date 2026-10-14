@@ -132,3 +132,5 @@ October 13, ART-002 / UX-030: owner fox uploaded and imported as a separate revi
 October 13 — UX-029/030/033, ART-002: Fox added as the thirteenth character collection on `codex/fox-collection`, with `fox.gloss-vinyl` runtime art and nine planned varieties. Box pools, legacy IDs and saves unchanged. Runtime and browse tests recorded in `FOX_MODEL_IMPORT.md`; phone review pending.
 
 UX-025/030/033: ten approved Fox finishes available; Aurora special metadata, owner test grants and per-finish HUD selection implemented. Phone APK prepared; device review pending. See FOX_FINISHES.md.
+
+October 14 — UX-030/033, ART-002: Axolotl plush is the fourteenth collection. Uploaded art playable by stable ID; nine finish concepts unimplemented. Unity front render upright inspected; owner local assets applied. Device review pending. See AXOLOTL_IMPORT.md.

@@ -1,0 +1,15 @@
+{
+  "source_file": "Meshy_AI_fuzzy_axolotl_plush_3_1014140915_image-to-3d-texture.glb",
+  "source_sha256": "7f0a49e1dbc2c03afb8e961cc9367df8bc9a9ded7f83f68186a89b15010e0663",
+  "source_triangles": 3864118,
+  "runtime_triangles": 30000,
+  "runtime_vertices_before_uv_splits": 14082,
+  "welded_source_duplicates": 269937,
+  "texture_size": [
+    2048,
+    2048
+  ],
+  "conversion": "Weld, decimate to approximately 30000 triangles, source UVs and base-color texture retained",
+  "material": "Base color preserved; review material uses opaque soft plush, roughness 0.85. Original packed metallic/roughness and normal maps archived separately; available for future material tuning.",
+  "status": "Separate art review asset; not assigned to a catalog ID or available in inventory; Unity and phone review pending"
+}

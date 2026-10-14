@@ -12,7 +12,7 @@ namespace Pockle.Runtime
         public const string NookFoamStudyId = "nook.mochi-foam";
 
         public static bool IsStudy(string id)
-        { return id == ToyCatalog.FoxId || id == MossStudyId || id == BopStudyId || id == NookPlushStudyId || id == NookFoamStudyId; }
+        { return id == ToyCatalog.AxolotlId || id == ToyCatalog.FoxId || id == MossStudyId || id == BopStudyId || id == NookPlushStudyId || id == NookFoamStudyId; }
 
         public static bool TryLoad(string id, out PipCharacterAsset asset)
         {
@@ -32,6 +32,7 @@ namespace Pockle.Runtime
                     // The reviewed authored model remains a safe fallback on import failure.
                 }
             }
+            else if (id == ToyCatalog.AxolotlId) path = "Characters/Axolotl/Axolotl";
             else if (ToyCatalog.IsFoxCollectible(id)) path = "Characters/Fox/Fox";
             else if (id == MossStudyId) path = "Characters/Moss/Moss";
             else if (id == BopStudyId) path = "Characters/Bop/Bop";
