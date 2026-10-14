@@ -6,10 +6,10 @@
   "runtime_vertices_before_uv_splits": 15000,
   "welded_source_duplicates": 10370,
   "texture_size": [
-    2048,
-    2048
+    65536,
+    4292935692
   ],
   "conversion": "Weld, decimate to approximately 30000 triangles, source UVs and base-color texture retained",
-  "material": "Base color preserved; review material uses opaque soft plush, roughness 0.25. Original packed metallic/roughness and normal maps archived separately; available for future material tuning.",
-  "status": "Separate art review asset; not assigned to a catalog ID or available in inventory; Unity and phone review pending"
+  "material": "Owner source paint retained; gloss vinyl preview roughness 0.25; all ten runtime finish recipes share the updated mesh.",
+  "status": "Owner-approved Fox v2 tail replacement, native Unity runtime rebuilt with existing stable identity."
 }
