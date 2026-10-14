@@ -204,8 +204,8 @@ AnimationClip:
   m_SampleRate: 24
   m_WrapMode: 0
   m_Bounds:
-    m_Center: {x: 0, y: 0.0025279047, z: 0.024051823}
-    m_Extent: {x: 0.009552883, y: 0.010103046, z: 0.007669244}
+    m_Center: {x: 0, y: 0.0027764393, z: 0.024801536}
+    m_Extent: {x: 0.008902883, y: 0.011101567, z: 0.008418957}
   m_ClipBindingConstant:
     genericBindings: []
     pptrCurveMapping: []

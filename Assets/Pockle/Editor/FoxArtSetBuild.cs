@@ -8,7 +8,7 @@ namespace Pockle.Editor
     {
         public static void Build()
         {
-            foreach(string path in new[]{"Assets/Pockle/Resources/Collections/Fox/Cover.png","Assets/Pockle/Resources/UI/Boxes/Collection-fox.png","Assets/Pockle/Resources/UI/Boxes/Collection-fox-open.png"})
+            foreach(string path in new[]{"Assets/Pockle/Resources/Collections/Fox/Cover.png","Assets/Pockle/Resources/UI/Boxes/Collection-fox.png","Assets/Pockle/Resources/UI/Boxes/Collection-fox-open.png","Assets/Pockle/Resources/Boxes/FoxFront.png","Assets/Pockle/Resources/Boxes/FoxSide.png","Assets/Pockle/Resources/Boxes/FoxLid.png"})
             {
                 var textureImporter=(TextureImporter)AssetImporter.GetAtPath(path);
                 textureImporter.textureType=TextureImporterType.Default;textureImporter.textureShape=TextureImporterShape.Texture2D;
@@ -20,18 +20,17 @@ namespace Pockle.Editor
             importer.materialImportMode=ModelImporterMaterialImportMode.None;importer.importAnimation=true;importer.animationType=ModelImporterAnimationType.Legacy;
             importer.SaveAndReimport();
             const string folder="Assets/Pockle/Resources/Boxes";
-            var paper=Material(folder+"/FoxPaper.mat",new Color(.96f,.89f,.76f),null);
-            var ink=Material(folder+"/FoxInk.mat",new Color(.10f,.22f,.15f),null);
-            var accent=Material(folder+"/FoxAccent.mat",new Color(.77f,.24f,.09f),null);
-            var forest=Material(folder+"/FoxForest.mat",Color.white,AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Pockle/Resources/Worlds/fox-hollow.png"));
-            var cover=Material(folder+"/FoxCover.mat",Color.white,AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Pockle/Resources/Collections/Fox/Cover.png"));
+            var paper=Material(folder+"/FoxPaper.mat",new Color(1,.84f,.74f),null);
+            var front=Material(folder+"/FoxFront.mat",Color.white,AssetDatabase.LoadAssetAtPath<Texture2D>(folder+"/FoxFront.png"));
+            var side=Material(folder+"/FoxSide.mat",Color.white,AssetDatabase.LoadAssetAtPath<Texture2D>(folder+"/FoxSide.png"));
+            var lid=Material(folder+"/FoxLid.mat",Color.white,AssetDatabase.LoadAssetAtPath<Texture2D>(folder+"/FoxLid.png"));
             var model=AssetDatabase.LoadAssetAtPath<GameObject>(modelPath);var instance=UnityEngine.Object.Instantiate(model);instance.name="FoxCollectionBox";
             try
             {
                 foreach(var renderer in instance.GetComponentsInChildren<Renderer>())
                 {
                     string name=renderer.name;
-                    renderer.sharedMaterial=name.Contains("forest print")?forest:name.Contains("cover print")?cover:name=="Printed FOX"?accent:name.StartsWith("Printed ")?ink:paper;
+                    renderer.sharedMaterial=name.Contains("mystery print")?front:name.Contains("pattern print")?side:name.Contains("brand print")?lid:paper;
                 }
                 AnimationClip imported=null;
                 foreach(var asset in AssetDatabase.LoadAllAssetsAtPath(modelPath))if(asset is AnimationClip clip&&!clip.name.StartsWith("__")){imported=clip;break;}

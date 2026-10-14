@@ -32,6 +32,6 @@ Material:
     m_Floats:
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.96, g: 0.89, b: 0.76, a: 1}
+    - _Color: {r: 1, g: 0.84, b: 0.74, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

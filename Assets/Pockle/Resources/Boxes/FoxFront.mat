@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: FoxForest
+  m_Name: FoxFront
   m_Shader: {fileID: 4800000, guid: 2cc18c7201923dbef5cfe1ae11523593, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -25,7 +25,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 5f1843ef438cc22211b8c0da9bdca097, type: 3}
+        m_Texture: {fileID: 2800000, guid: fc70bdb3a68994a16b1239f4d3cd7064, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []

@@ -14,11 +14,12 @@ scene.world=bpy.data.worlds.new('FoxBox studio');scene.world.color=(.3,.3,.3);sc
 objects=[]
 def material(name,color):
  m=bpy.data.materials.new(name);m.diffuse_color=(*color,1);m.use_nodes=True;n=m.node_tree.nodes.get('Principled BSDF');n.inputs['Base Color'].default_value=(*color,1);n.inputs['Roughness'].default_value=.65;return m
-paper=material('FoxBox · ivory paper',(.96,.89,.76));ink=material('FoxBox · woodland ink',(.10,.22,.15));copper=material('FoxBox · apricot accent',(.77,.24,.09))
+paper=material('FoxBox · ivory paper',(1,.84,.74));ink=material('FoxBox · woodland ink',(.10,.22,.15));copper=material('FoxBox · apricot accent',(.77,.24,.09))
 def image_material(name,path):
  m=material(name,(1,1,1));n=m.node_tree.nodes.new('ShaderNodeTexImage');n.image=bpy.data.images.load(str(path));m.node_tree.links.new(n.outputs['Color'],m.node_tree.nodes.get('Principled BSDF').inputs['Base Color']);return m
-cover=image_material('FoxBox · original collection illustration',ROOT/'Assets/Pockle/Resources/Collections/Fox/Cover.png')
-forest=image_material('FoxBox · forest sides',ROOT/'Assets/Pockle/Resources/Worlds/fox-hollow.png')
+front=image_material('FoxBox · mystery front',ROOT/'Assets/Pockle/Resources/Boxes/FoxFront.png')
+side=image_material('FoxBox · mystery pattern',ROOT/'Assets/Pockle/Resources/Boxes/FoxSide.png')
+lidprint=image_material('FoxBox · branded lid',ROOT/'Assets/Pockle/Resources/Boxes/FoxLid.png')
 root=bpy.data.objects.new('FoxCollectionBox',None);scene.collection.objects.link(root);objects.append(root)
 def cube(name,location,dimensions,mat,parent=root):
  bpy.ops.mesh.primitive_cube_add(size=1,location=location);o=bpy.context.object;o.name=name;o.dimensions=dimensions;bpy.ops.object.transform_apply(location=False,rotation=False,scale=True);o.data.materials.append(mat)
@@ -32,22 +33,18 @@ def quad(name,verts,mat,parent=root):
  uv=mesh.uv_layers.new(name='UVMap')
  for loop,coord in zip(uv.data,[(0,0),(1,0),(1,1),(0,1)]):loop.uv=coord
  objects.append(o);return o
-W=1.85;D=1.5;H=1.65
+W=1.72;D=1.65;H=1.65
 cube('Carton floor',(0,0,.018),(W,D,.036),paper)
 cube('Front paper wall',(0,-D/2,H/2),(W,.025,H),paper)
 cube('Back paper wall',(0,D/2,H/2),(W,.025,H),paper)
 cube('Left paper wall',(-W/2,0,H/2),(.025,D,H),paper)
 cube('Right paper wall',(W/2,0,H/2),(.025,D,H),paper)
-quad('Front cover print',[(-.87,-.766,.12),(.87,-.766,.12),(.87,-.766,.70),(-.87,-.766,.70)],cover)
-quad('Left forest print',[(-.943,.70,.12),(-.943,-.70,.12),(-.943,-.70,1.53),(-.943,.70,1.53)],forest)
-quad('Right forest print',[(.943,-.70,.12),(.943,.70,.12),(.943,.70,1.53),(.943,-.70,1.53)],forest)
-def text(body,size,z,mat):
- curve=bpy.data.curves.new('Printed '+body,'FONT');curve.body=body;curve.size=size;curve.align_x='CENTER';curve.extrude=0;curve.resolution_u=3
- o=bpy.data.objects.new('Printed '+body,curve);scene.collection.objects.link(o);o.location=(0,-.768,z);o.rotation_euler=(math.pi/2,0,0);o.parent=root;curve.materials.append(mat);objects.append(o)
- bpy.ops.object.select_all(action='DESELECT');o.select_set(True);bpy.context.view_layer.objects.active=o;bpy.ops.object.convert(target='MESH')
-text('POCKLE',.24,1.25,ink);text('FOX',.22,.94,copper);text('WOODLAND COLLECTION',.064,.82,ink)
+quad('Front mystery print',[(-W/2+.015,-D/2-.016,.015),(W/2-.015,-D/2-.016,.015),(W/2-.015,-D/2-.016,H-.015),(-W/2+.015,-D/2-.016,H-.015)],front)
+quad('Left pattern print',[(-W/2-.016,D/2-.015,.015),(-W/2-.016,-D/2+.015,.015),(-W/2-.016,-D/2+.015,H-.015),(-W/2-.016,D/2-.015,H-.015)],side)
+quad('Right pattern print',[(W/2+.016,-D/2+.015,.015),(W/2+.016,D/2-.015,.015),(W/2+.016,D/2-.015,H-.015),(W/2+.016,-D/2+.015,H-.015)],side)
+quad('Back pattern print',[(W/2-.015,D/2+.016,.015),(-W/2+.015,D/2+.016,.015),(-W/2+.015,D/2+.016,H-.015),(W/2-.015,D/2+.016,H-.015)],side)
 lid=empty('FoxBox_LidHinge',(0,D/2,H+.015));cube('Printed folding lid',(0,-D/2,0),(W+.025,D+.015,.025),paper,lid)
-quad('Lid forest print',[(-W/2,-D,.017),(W/2,-D,.017),(W/2,0,.017),(-W/2,0,.017)],forest,lid)
+quad('Lid brand print',[(-W/2,-D,.017),(W/2,-D,.017),(W/2,0,.017),(-W/2,0,.017)],lidprint,lid)
 left=empty('FoxBox_LeftFlapHinge',(-W/2,0,H));right=empty('FoxBox_RightFlapHinge',(W/2,0,H))
 cube('Left dust flap',(.21,0,0),(.42,D-.08,.018),paper,left);cube('Right dust flap',(-.21,0,0),(.42,D-.08,.018),paper,right)
 scene.frame_start=1;scene.frame_end=48;scene.render.fps=24
@@ -71,7 +68,7 @@ bpy.ops.object.camera_add(location=(3,-4,2.8));camera=bpy.context.object;camera.
 scene.render.image_settings.file_format='PNG';scene.render.image_settings.color_mode='RGBA'
 scene.render.filepath=str(PNG/'Collection-fox.png');bpy.ops.render.render(write_still=True)
 scene.frame_set(48);camera.data.ortho_scale=4.9;camera.rotation_euler=(Vector((0,0,1.45))-camera.location).to_track_quat('-Z','Y').to_euler();scene.render.filepath=str(PNG/'Collection-fox-open.png');bpy.ops.render.render(write_still=True)
-scene.frame_set(1);camera.data.ortho_scale=3.35;camera.rotation_euler=(Vector((0,0,.85))-camera.location).to_track_quat('-Z','Y').to_euler();bpy.ops.wm.save_as_mainfile(filepath=str(SOURCE/'FoxCollectionBox.blend'))
+scene.frame_set(1);camera.data.ortho_scale=3.35;camera.rotation_euler=(Vector((0,0,.85))-camera.location).to_track_quat('-Z','Y').to_euler();bpy.ops.file.pack_all();bpy.ops.wm.save_as_mainfile(filepath=str(SOURCE/'FoxCollectionBox.blend'))
 triangles=sum(sum(len(p.vertices)-2 for p in o.data.polygons) for o in objects if o.type=='MESH')
 (SOURCE/'README.md').write_text('Opening-ready original Fox carton. Source: FoxCollectionBox.blend; GLB: models/FoxCollectionBox.glb; Unity FBX: Resources/Boxes/FoxCollectionBox.fbx. Frame 1 closed, 48 open; 24 fps. Lid and two dust flaps have independent real hinges. Product PNG renders come from the same geometry/materials. '+str(triangles)+' triangles.\n')
 print('FOX_BOX_BUILT',triangles,'triangles',len(objects),'objects')

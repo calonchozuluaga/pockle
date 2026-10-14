@@ -16,3 +16,7 @@ Claude owns the collection/toy screens and consumes catalog resource paths. Code
 ## Required expression and animation support
 
 Every toy needs eye and mouth expression controls, including blink and expression changes, and a subtle character-specific idle: Pip hops and sways; Fox hops and moves its tail; Axolotl waves or shakes. Touch reactions and later toy sounds must be able to trigger a matching facial expression. Include an expression parameter/animation-event interface so later audio can drive emotion or mouth activity without rebuilding the character. Keep details attached to the toy's mesh, retain rig or morph-target source, and provide neutral poses and calm-motion alternatives. No per-touch network/AI. New illustrations are concepts, not evidence that the corresponding 3D rig/animations already exist. Sound assets themselves remain future work.
+
+## Surprise-box packaging direction
+
+Owner's packaging reference is docs/packaging/pockle-folded-box-concepts-02.png. Use the recognizable Pockle wordmark prominently at the top/front and on the lid, an anonymous toy silhouette with a question mark to tease the contents, and colorful collection-specific motifs around the carton. It should read as a real blind surprise toy box. Keep the revealed character cover illustration separate from the mystery packaging. Use printed panel textures on the actual hinged box geometry so collection/walk PNGs and opening animation share the same design.
