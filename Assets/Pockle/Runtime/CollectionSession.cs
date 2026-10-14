@@ -61,7 +61,7 @@ namespace Pockle.Runtime
             tracker = new AndroidWalkingTracker();
             if (!readOnlySave) tracker.ResumeIfAllowed();
             Persist();
-            if (!Application.isBatchMode) { TryApplyOwnerFoxTestGrant(); TryApplyOwnerFoxFinishesGrant(); TryApplyOwnerPipFinishesGrant(); }
+            if (!Application.isBatchMode) { TryApplyOwnerFoxTestGrant(); TryApplyOwnerFoxFinishesGrant(); TryApplyOwnerPipFinishesGrant(); TryApplyOwnerAxolotlFinishesGrant(); }
         }
 
         public const string FoxTestGrantKey = "pockle.owner-test.fox-grant.v1";
@@ -103,6 +103,23 @@ namespace Pockle.Runtime
             foreach (var toy in ToyCatalog.Collectibles)
                 if (toy.CharacterId == "pip" && Progress.GetOwnedCount(toy.Id) > 0) found++;
             Debug.Log("Pockle owner test: Pip finishes saved (" + found + "/10).");
+            Changed?.Invoke();
+            return granted;
+        }
+        public const string AxolotlFinishesGrantKey = "pockle.owner-test.axolotl-finishes.v1";
+        /// <summary>Temporary owner-only beta grant; disable AxolotlOwnerTestGrant before public distribution.</summary>
+        public bool TryApplyOwnerAxolotlFinishesGrant()
+        {
+            if (Progress == null || readOnlySave || PlayerPrefs.GetInt(AxolotlFinishesGrantKey, 0) == 1) return false;
+            var configuration = Resources.Load<TextAsset>("AxolotlOwnerTestGrant");
+            if (configuration == null || configuration.text.Trim() != "enabled") return false;
+            bool granted = Progress.EnsureAxolotlFinishTestCopies();
+            Persist(); // Inventory must be durable before the marker and any collection refresh.
+            PlayerPrefs.SetInt(AxolotlFinishesGrantKey, 1); PlayerPrefs.Save();
+            int found = 0;
+            foreach (var toy in ToyCatalog.Collectibles)
+                if (toy.CharacterId == "axolotl" && Progress.GetOwnedCount(toy.Id) > 0) found++;
+            Debug.Log("Pockle owner test: Axolotl finishes saved (" + found + "/10).");
             Changed?.Invoke();
             return granted;
         }

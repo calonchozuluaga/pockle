@@ -20,7 +20,7 @@ internal static class SeriesMotionChecks
             Assert(ToyCatalog.TryGetCollection(series.Id, out var found) && ReferenceEquals(found, series), "Collection lookup differs from presentation.");
             Assert(series.SeriesNumber == (series.CharacterId == "pip" ? 1 : 0) && series.ReleaseDateUtc == null && series.RetireDateUtc == null, "Pip Series 1 was not preserved, or a date/other public series number was invented.");
             Assert(!series.HasPublishedSchedule && !series.IsReleasedAt(Utc(2026, 10, 9)), "Unscheduled prototype masqueraded as a public release.");
-            Assert(series.HasSecret == (series.CharacterId == "fox" || series.CharacterId == "pip") && series.Odds.All(o => !o.IsSecret), "Existing regular figures acquired secret status.");
+            Assert(series.HasSecret == (series.CharacterId == "fox" || series.CharacterId == "pip" || series.CharacterId == "axolotl") && series.Odds.All(o => !o.IsSecret), "Existing regular figures acquired secret status.");
             Assert(series.Members.Count >= 10 && series.Members.All(id => ToyCatalog.TryGetCollectible(id, out var item) && item.CharacterId == series.CharacterId && item.CollectionId == series.Id), "Collection lacks ten varieties or mixes distinct characters.");
             Assert(!series.HasApprovedOdds && series.Pool == null && series.Odds.Count == 0, "A draft collection invented full-series draw odds.");
             Assert(series.ProductId.Length == 0 && series.BoxPriceTier.Length == 0, "Unapproved full-collection pricing was invented.");
@@ -29,7 +29,7 @@ internal static class SeriesMotionChecks
             Assert(!series.TryGetOdds("future.toy", out _) && !series.TryGetOdds(null, out _), "Unknown identity received display odds.");
         }
         Assert(!ToyCatalog.TryGetCollection(null, out _) && !ToyCatalog.TryGetCollection("jelly-garden", out _), "Legacy variant theme was treated as a character collection.");
-        Assert(ToyCatalog.Collectibles.Count(c => c.IsSecret) == 2 && ToyCatalog.Collectibles.Where(c => c.IsSecret).All(c => c.Id == ToyCatalog.FoxAuroraId || c.Id == ToyCatalog.PipSpecialId), "A prototype collectible was silently made secret.");
+        Assert(ToyCatalog.Collectibles.Count(c => c.IsSecret) == 3 && ToyCatalog.Collectibles.Where(c => c.IsSecret).All(c => c.Id == ToyCatalog.FoxAuroraId || c.Id == ToyCatalog.PipSpecialId || c.Id == ToyCatalog.AxolotlSpecialId), "A prototype collectible was silently made secret.");
         Assert(ToyCatalog.TryGetCollection("pip", out var pip) && pip.SeriesNumber == 1 &&
             pip.Members.Contains(ToyCatalog.PeachId) && pip.Members.Contains(ToyCatalog.MoonId) && pip.Members.Contains(ToyCatalog.GoldId),
             "Existing Pip finishes did not join one Series 1 collection.");

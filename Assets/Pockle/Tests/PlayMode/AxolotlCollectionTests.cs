@@ -26,7 +26,7 @@ namespace Pockle.Tests {
     foreach(var v in toy.BodyRenderer.GetComponent<MeshFilter>().sharedMesh.vertices) Assert.That(float.IsNaN(v.x)||float.IsInfinity(v.y),Is.False);
     Assert.That(toy.TrySetCollectible(ToyCatalog.FoxAuroraId),Is.True);
     Assert.That(toy.TrySetCollectible(ToyCatalog.AxolotlId),Is.True);
-    Assert.That(toy.TrySetCollectible("axolotl.clear-jelly"),Is.False);
+    Assert.That(toy.TrySetCollectible("axolotl.clear-jelly"),Is.True);
     var fresh=new CollectionProgress(null,CollectionSession.Today);
     Assert.That(fresh.GetOwnedCount(ToyCatalog.AxolotlId),Is.Zero);
     fresh.EnsureFoxFinishTestCopies(); Assert.That(fresh.GetOwnedCount(ToyCatalog.AxolotlId),Is.Zero);

@@ -58,8 +58,9 @@ namespace Pockle.Runtime
         private Vector3 previousGrip;
         public float DeformedTop { get; private set; }
         private PeachExpressionDriver peachExpression;
+        private AxolotlExpressionDriver axolotlExpression;
         public void SetExpressionContext(float pressure, float liftedHeight)
-        { if (peachExpression != null) peachExpression.SetContext(pressure, liftedHeight); }
+        { if (peachExpression != null) peachExpression.SetContext(pressure, liftedHeight); if (axolotlExpression != null) axolotlExpression.SetContext(pressure, liftedHeight); }
 
         public Transform VisualRoot { get { Initialize(); return visualRoot; } }
         public Renderer BodyRenderer { get; private set; }
@@ -767,11 +768,14 @@ namespace Pockle.Runtime
                 if (ToyCatalog.IsFoxCollectible(collectibleId)) vinyl = FoxFinishMaterial.Create(collectibleId, characterAsset.BaseColorTexture, studioReflection);
                 else
                 {
-                    var template = Resources.Load<Material>("Characters/Axolotl/AxolotlPlush");
-                    if (template == null) throw new System.InvalidOperationException("Axolotl plush material missing.");
-                    vinyl = new Material(template) { mainTexture = characterAsset.BaseColorTexture };
+                    vinyl = AxolotlFinishMaterial.Create(collectibleId, characterAsset.BaseColorTexture, studioReflection);
                 }
                 ownedMaterials.Add(vinyl);
+                if (characterAsset.CharacterId == "axolotl")
+                {
+                    axolotlExpression = visualRoot.gameObject.AddComponent<AxolotlExpressionDriver>();
+                    axolotlExpression.Initialize(vinyl);
+                }
                 return vinyl;
             }
             if (UsesMeshyPeach)
@@ -1034,6 +1038,7 @@ namespace Pockle.Runtime
         private void ReleaseVisual()
         {
             peachExpression = null;
+            axolotlExpression = null;
             if (visualRoot != null)
             { visualRoot.gameObject.SetActive(false); Destroy(visualRoot.gameObject); }
             for (int i = 0; i < ownedMeshes.Count; i++)

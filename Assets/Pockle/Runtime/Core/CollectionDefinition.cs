@@ -48,9 +48,9 @@ namespace Pockle.Core
         public string BoxPriceTier { get; }
         public string HomeWorld => Worlds.Count > 0 ? Worlds[0].Id : "studio";
         public IReadOnlyList<CollectionWorldDefinition> Worlds { get; }
-        public string CoverArt => Id == "fox" ? "Collections/Fox/Cover" : Id == "pip" ? "Collections/Pip/Cover" : "";
-        public string BoxArt => Id == "fox" ? "UI/Boxes/Collection-fox" : Id == "pip" ? "UI/Boxes/Collection-pip" : "";
-        public string BoxModel => Id == "fox" ? "Boxes/FoxCollectionBox" : Id == "pip" ? "Boxes/PipCollectionBox" : "";
+        public string CoverArt => Id == "fox" ? "Collections/Fox/Cover" : Id == "pip" ? "Collections/Pip/Cover" : Id == "axolotl" ? "Collections/Axolotl/Cover" : "";
+        public string BoxArt => Id == "fox" ? "UI/Boxes/Collection-fox" : Id == "pip" ? "UI/Boxes/Collection-pip" : Id == "axolotl" ? "UI/Boxes/Collection-axolotl" : "";
+        public string BoxModel => Id == "fox" ? "Boxes/FoxCollectionBox" : Id == "pip" ? "Boxes/PipCollectionBox" : Id == "axolotl" ? "Boxes/AxolotlCollectionBox" : "";
         public CatalogColor AccentColor => new CatalogColor(Id == "fox" ? 0xec7951u : Id == "pip" ? 0xe8508au : Id == "axolotl" ? 0xf493b5u : 0x49344cu);
         public CatalogColor FieldColor { get; }
         public CatalogColor InkColor { get; }
@@ -110,6 +110,12 @@ namespace Pockle.Core
                 new CollectionWorldDefinition("pip-pearl-lagoon", "Pearl Lagoon"),
                 new CollectionWorldDefinition("pip-confetti-meadow", "Golden Meadow"),
                 new CollectionWorldDefinition("pip-starlight-grove", "Starlight Grove")
+            }) : Id == "axolotl" ? Array.AsReadOnly(new[] {
+                new CollectionWorldDefinition("axolotl-blossom-pond", "Blossom Pond"),
+                new CollectionWorldDefinition("axolotl-mint-creek", "Mint Creek"),
+                new CollectionWorldDefinition("axolotl-pearl-cove", "Pearl Cove"),
+                new CollectionWorldDefinition("axolotl-sunset-marsh", "Sunset Marsh"),
+                new CollectionWorldDefinition("axolotl-biolume-lagoon", "Biolume Lagoon")
             }) : Array.AsReadOnly(Array.Empty<CollectionWorldDefinition>());
             Members = Array.AsReadOnly(copy); Odds = Array.AsReadOnly(odds);
         }

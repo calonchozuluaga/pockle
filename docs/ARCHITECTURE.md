@@ -42,3 +42,6 @@ Fox art-set contracts: CollectionDefinition has ordered Worlds (Id, DisplayName,
 
 
 October 14 — Pip now supplies five collection-specific painted worlds and separate cover/box resources. MysteryBox resolves catalog BoxModel for both Pip and Fox, retaining procedural fallback; native clips support calm motion. See PIP_ART_SET.md.
+
+
+October 14 — Axolotl ten finishes share approved art via AxolotlFinishMaterial and local AxolotlExpressionDriver. Five worlds and native carton are catalog-resolved. Durable owner-only test grant precedes marker/UI refresh. See AXOLOTL_ART_SET.md.

@@ -157,6 +157,16 @@ namespace Pockle.Core
             if (changed) SynchronizeInventory();
             return changed;
         }
+        /// <summary>Owner-requested Axolotl copies; preserve existing duplicates and reward state.</summary>
+        public bool EnsureAxolotlFinishTestCopies()
+        {
+            bool changed = false;
+            foreach (var toy in ToyCatalog.Collectibles)
+                if (toy.CharacterId == "axolotl" && toy.Available && GetOwnedCount(toy.Id) == 0)
+                { counts[toy.Id] = 1; changed = true; }
+            if (changed) SynchronizeInventory();
+            return changed;
+        }
         private static int BoundedCount(int count) => Math.Max(0, Math.Min(9999, count));
         private static CollectionSave StarterSave()
         {

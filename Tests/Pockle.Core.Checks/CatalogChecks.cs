@@ -10,7 +10,7 @@ internal static class CatalogChecks
     private static readonly JsonSerializerOptions Json = new JsonSerializerOptions { IncludeFields = true };
     public static void Run()
     {
-        CollectionArt(); PipFinishGrant(); StageMetadata(); Definitions(); FoxOwnerGrant(); FoxFinishGrant(); Migration(); FutureIdentity(); ProfileReferences(); PreviewBudget();
+        CollectionArt(); PipFinishGrant(); AxolotlFinishGrant(); StageMetadata(); Definitions(); FoxOwnerGrant(); FoxFinishGrant(); Migration(); FutureIdentity(); ProfileReferences(); PreviewBudget();
         Console.WriteLine("PASS: " + checks + " catalog assertions (definitions, legacy migration, unknown IDs, profiles, bounded preview lifetimes).");
     }
     private static void CollectionArt()
@@ -19,6 +19,11 @@ internal static class CatalogChecks
         Assert(pip.Members.Count == 10 && pip.SecretId == ToyCatalog.PipSpecialId, "Pip rare and ten finishes must survive art changes.");
         Assert(pip.Worlds.Count == 5 && pip.Worlds.Select(w => w.Id).Distinct().Count() == 5, "Pip needs five unique worlds.");
         Assert(pip.CoverArt == "Collections/Pip/Cover" && pip.BoxArt == "UI/Boxes/Collection-pip" && pip.BoxModel == "Boxes/PipCollectionBox", "Pip art paths missing.");
+        ToyCatalog.TryGetCollection("axolotl",out var axo);
+        Assert(axo.Members.Count == 10 && axo.SecretId == ToyCatalog.AxolotlSpecialId, "Axolotl requires ten finishes with one rare.");
+        Assert(axo.Members.Count(id => ToyCatalog.TryGetCollectible(id,out var toy) && toy.IsSecret) == 1, "Axolotl must have exactly one rare.");
+        Assert(axo.Worlds.Count == 5 && axo.Worlds.Select(w => w.Id).Distinct().Count() == 5, "Axolotl needs five worlds.");
+        Assert(axo.CoverArt == "Collections/Axolotl/Cover" && axo.BoxArt == "UI/Boxes/Collection-axolotl" && axo.BoxModel == "Boxes/AxolotlCollectionBox", "Axolotl art paths missing.");
         ToyCatalog.TryGetCollection("fox",out var collection);
         Assert(collection.Members.Count == 10 && collection.HasSecret, "Fox needs ten toys including one rare.");
         Assert(collection.Members.Count(id => ToyCatalog.TryGetCollectible(id,out var toy) && toy.IsSecret) == 1, "Fox rare must occupy one of ten slots.");
@@ -40,10 +45,24 @@ internal static class CatalogChecks
         Assert(restored.GetOwnedCount(ToyCatalog.FoxId) == 2, "Pip grant altered Fox copies.");
         Assert(restored.Save.Steps == 521 && restored.Save.PendingRevealId == ToyCatalog.MoonId, "Pip grant altered reward state.");
     }
+    private static void AxolotlFinishGrant()
+    {
+        var saved = new CollectionSave { Version = CollectionProgress.SaveVersion,
+            Inventory = new List<OwnedCollectible> { new OwnedCollectible(ToyCatalog.AxolotlId, 3), new OwnedCollectible(ToyCatalog.FoxId, 2) } };
+        var progress = new CollectionProgress(saved, 20734);
+        progress.Save.Steps = 521; progress.Save.PendingRevealId = ToyCatalog.MoonId;
+        Assert(progress.EnsureAxolotlFinishTestCopies(), "Missing Axolotl test copies were not granted.");
+        var restored = RoundTrip(progress, 20734);
+        Assert(!restored.EnsureAxolotlFinishTestCopies(), "Restart duplicated Axolotl test copies.");
+        foreach(var toy in ToyCatalog.Collectibles.Where(c => c.CharacterId == "axolotl"))
+            Assert(restored.GetOwnedCount(toy.Id) == (toy.Id == ToyCatalog.AxolotlId ? 3 : 1), "Axolotl test grant changed existing duplicates or omitted a finish.");
+        Assert(restored.GetOwnedCount(ToyCatalog.FoxId) == 2, "Axolotl grant altered Fox copies.");
+        Assert(restored.Save.Steps == 521 && restored.Save.PendingRevealId == ToyCatalog.MoonId, "Axolotl grant altered reward state.");
+    }
     private static void StageMetadata()
     {
         foreach(var collection in ToyCatalog.Collections)
-            Assert(collection.HomeWorld == (collection.CharacterId == "fox" ? "fox-hollow" : collection.CharacterId == "pip" ? "pip-jelly-garden" : "studio"), "Collection home world fallback changed.");
+            Assert(collection.HomeWorld == (collection.CharacterId == "fox" ? "fox-hollow" : collection.CharacterId == "pip" ? "pip-jelly-garden" : collection.CharacterId == "axolotl" ? "axolotl-blossom-pond" : "studio"), "Collection home world fallback changed.");
         foreach(var toy in ToyCatalog.Collectibles)
         {
             var c=toy.SwatchColor;
@@ -86,7 +105,7 @@ internal static class CatalogChecks
     {
         Assert(ToyCatalog.Characters.Count == 14 && ToyCatalog.Finishes.Count == 10 && ToyCatalog.Collectibles.Count == 140, "Roster is not fourteen distinct characters with ten finishes.");
         Assert(ToyCatalog.Collectibles.Select(c => c.Id).Distinct(StringComparer.Ordinal).Count() == 140, "Collectible IDs collide.");
-        Assert(ToyCatalog.Collectibles.Count(c => c.Available) == 21, "Planned art was marked playable.");
+        Assert(ToyCatalog.Collectibles.Count(c => c.Available) == 30, "Planned art was marked playable.");
         foreach (var definition in ToyCatalog.Collectibles)
         {
             Assert(ToyCatalog.IsValidId(definition.Id), "Catalog has an invalid persistence ID.");
@@ -104,7 +123,7 @@ internal static class CatalogChecks
         Assert(!ToyCatalog.TryGetLegacyIndex(ToyCatalog.FoxId, out _) && !ToyCatalog.IsDailyEligible(ToyCatalog.FoxId), "Fox changed legacy identity or walking rewards.");
         Assert(!fox.HasApprovedOdds && !fox.HasPublishedSchedule && fox.SeriesNumber == 0, "Fox acquired unapproved release or reward metadata.");
         Assert(ToyCatalog.TryGetCollectible(ToyCatalog.AxolotlId, out var axolotl) && axolotl.Available && axolotl.CharacterId == "axolotl", "Axolotl plush art missing from catalog.");
-        Assert(ToyCatalog.Collectibles.Count(c => c.CharacterId == "axolotl" && c.Available) == 1 && !ToyCatalog.IsDailyEligible(ToyCatalog.AxolotlId), "Unapproved Axolotl art/reward eligibility enabled.");
+        Assert(ToyCatalog.Collectibles.Count(c => c.CharacterId == "axolotl" && c.Available) == 10 && !ToyCatalog.IsDailyEligible(ToyCatalog.AxolotlId), "Unapproved Axolotl art/reward eligibility enabled.");
         Assert(ToyCatalog.Collectibles.Count(c => c.CharacterId == "pip" && c.Available) == 10, "Latest Pip collection is incomplete.");
         Assert(ToyCatalog.TryGetCollectible(ToyCatalog.PipSpecialId, out var pipSpecial) && pipSpecial.IsSecret && pipSpecial.FinishDisplayName == "Starlight Glow · Ultra rare", "Pip special designation missing.");
         Assert(!ToyCatalog.IsDailyEligible(ToyCatalog.PipSpecialId) && ToyCatalog.BoxPools.All(p => !p.ContainsCollectible(ToyCatalog.PipSpecialId)), "Special designation invented draw odds.");

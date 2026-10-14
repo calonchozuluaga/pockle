@@ -126,3 +126,6 @@ October 14 Fox art-set additions: CollectionDefinition.Worlds is an ordered immu
 
 
 October 14 — Pip HomeWorld is pip-jelly-garden; Worlds exposes five unique environments. CoverArt=Collections/Pip/Cover, BoxArt=UI/Boxes/Collection-pip, BoxModel=Boxes/PipCollectionBox. Cover is distinct from Home background; no inventory or odds changes.
+
+
+October 14 — Axolotl now has ten available members with AxolotlSpecialId axolotl.glow-jelly. HomeWorld axolotl-blossom-pond, Worlds five, CoverArt Collections/Axolotl/Cover, BoxArt UI/Boxes/Collection-axolotl, BoxModel Boxes/AxolotlCollectionBox. Availability and test grants do not approve box pools.

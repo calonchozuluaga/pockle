@@ -71,7 +71,7 @@ namespace Pockle.Tests
                     Assert.That(hit.point.y,Is.EqualTo(.15f).Within(.001f));
                 }
                 Assert.That(PrototypeStage.SetWorld(camera,StageWorld.Home,ToyCatalog.PeachId),Is.True);
-                Assert.That(environment.HomeWorld,Is.EqualTo("studio"));
+                Assert.That(environment.HomeWorld,Is.EqualTo("pip-jelly-garden"));
                 Assert.That(root.GetComponentsInChildren<Transform>().Any(t=>t.name=="Falling leaf"&&t.gameObject.activeInHierarchy),Is.False);
                 Assert.That(PrototypeStage.SetWorld(camera,(StageWorld)99,ToyCatalog.FoxId),Is.False);
             }

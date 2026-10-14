@@ -8,7 +8,7 @@ namespace Pockle.Editor
         [MenuItem("Pockle/Art/Build painted world reflection maps")]
         public static void Build()
         {
-            foreach(string name in new[]{"fox-hollow","jelly-garden","moonlit-pond","fox-riverbank","fox-autumn-orchard","fox-snowy-den","fox-aurora-grove","pip-jelly-garden","pip-mint-spring","pip-pearl-lagoon","pip-confetti-meadow","pip-starlight-grove"})
+            foreach(string name in new[]{"fox-hollow","jelly-garden","moonlit-pond","fox-riverbank","fox-autumn-orchard","fox-snowy-den","fox-aurora-grove","pip-jelly-garden","pip-mint-spring","pip-pearl-lagoon","pip-confetti-meadow","pip-starlight-grove","axolotl-blossom-pond","axolotl-mint-creek","axolotl-pearl-cove","axolotl-sunset-marsh","axolotl-biolume-lagoon"})
             {
                 string prefix="Assets/Pockle/Resources/Worlds/"+name;
                 var importer=(TextureImporter)AssetImporter.GetAtPath(prefix+".png");

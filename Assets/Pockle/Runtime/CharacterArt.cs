@@ -32,7 +32,7 @@ namespace Pockle.Runtime
                     // The reviewed authored model remains a safe fallback on import failure.
                 }
             }
-            else if (id == ToyCatalog.AxolotlId) path = "Characters/Axolotl/Axolotl";
+            else if (definition.CharacterId == "axolotl" && definition.Available) path = "Characters/Axolotl/Axolotl";
             else if (ToyCatalog.IsFoxCollectible(id)) path = "Characters/Fox/Fox";
             else if (id == MossStudyId) path = "Characters/Moss/Moss";
             else if (id == BopStudyId) path = "Characters/Bop/Bop";
