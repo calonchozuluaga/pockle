@@ -134,3 +134,5 @@ October 13 — UX-029/030/033, ART-002: Fox added as the thirteenth character co
 UX-025/030/033: ten approved Fox finishes available; Aurora special metadata, owner test grants and per-finish HUD selection implemented. Phone APK prepared; device review pending. See FOX_FINISHES.md.
 
 October 14 — UX-030/033, ART-002: Axolotl plush is the fourteenth collection. Uploaded art playable by stable ID; nine finish concepts unimplemented. Unity front render upright inspected; owner local assets applied. Device review pending. See AXOLOTL_IMPORT.md.
+
+ART-002 / UX-030 — single-color maki sushi base authored for owner shape review. Cream material, shared UVs, editable .blend + GLB/FBX, 11,998 triangles. No new runtime collection yet. See SUSHI_BASE.md.

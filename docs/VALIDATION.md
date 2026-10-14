@@ -182,3 +182,5 @@ Axolotl validation: native upright render inspected, 33/33 Unity PlayMode tests 
 Final combined Android preview: Builds/Pockle-Fox-Axolotl.apk built successfully from the current owner local snapshot. StepCounter plus all six JNI methods verified. Fox finishes award on startup; Axolotl collection import included. No phone connected for installation or visuals. Final combined Unity suite result recorded below.
 
 Final combined owner snapshot verification: 36/36 PlayMode tests passed (Fox finishes + Axolotl + Peach/walking/Claude UI); isolated collection branch 16/16 EditMode passed. Required portable/source checks and branch whitespace passed. APK build and six JNI methods passed; phone appearance, frame time and sensor behavior unverified.
+
+Sushi base art verification: Blender manifold/component and material/UV checks passed; independent GLB JSON check confirms one mesh, one cream material, no painted textures, 11,998 triangles and TEXCOORD_0. All three actual model renders inspected. No Unity integration or phone behavior asserted.

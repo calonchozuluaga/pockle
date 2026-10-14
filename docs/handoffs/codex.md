@@ -57,3 +57,9 @@ Axolotl validation: native upright render inspected, 33/33 Unity PlayMode tests 
 Final owner test APK: Builds/Pockle-Fox-Axolotl.apk (37 MB), current local Peach/walking/Claude Settings plus Fox finishes and Axolotl. Android build and JNI packaging passed. Fox-only Builds/Pockle-Fox-Finishes.apk also retained. No device connected.
 
 Final combined owner snapshot verification: 36/36 PlayMode tests passed (Fox finishes + Axolotl + Peach/walking/Claude UI); isolated collection branch 16/16 EditMode passed. Required portable/source checks and branch whitespace passed. APK build and six JNI methods passed; phone appearance, frame time and sensor behavior unverified.
+
+## Single-color sushi base — ART-002 / UX-030
+
+Owner requested a blank single-color sushi squishy base and selected a maki roll with shallow rice/filling relief. Claimed `codex/sushi-base`, extending finished Axolotl/Fox topics, files: tools/build-sushi-base.py, ArtSource/SushiBase/, models/SushiBase.glb, rendered preview and art notes. Local Blender authoring fallback because Node is present but npm/Meshy CLI is unavailable. One pale cream material, one connected smooth mesh, reusable UVs; no variants, face, catalog/inventory, Unity runtime or project settings edits.
+
+Sushi base completed for shape review: local Blender fallback, one connected cream skin, UVs, GLB/FBX and editable authoring source. 6,001 vertices / 11,998 triangles, zero non-manifold edges. Three-quarter/top/front renders inspected; GLB metadata independently validated. No paid task, Unity/catalog/UI/Settings or inventory edits. See SUSHI_BASE.md.
