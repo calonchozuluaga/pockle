@@ -215,3 +215,5 @@ APK `Builds/Pockle-Pip-Collection.apk` installed on owner phone using `adb insta
 ## October 14 — UX-039 toy-stage runtime
 
 Unity 6000.6.5f1: 40/42 combined PlayMode tests passed. Both new world/light regression tests passed; remaining failures are the previously reported Claude MissingLineup and closed-tray finish-dot tests. EditMode 17/17 passed. Required portable checks passed (including 155 new catalog assertions); source checks passed for 100 files, 3 symbol profiles, 210 GUIDs. Four world renders inspected, Garden overlapping-card depth corrected and recaptured cleanly. Final Android development build succeeded: Builds/Pockle-Toy-Stage.apk. UI tests/combined CI are not green; owner device visuals and frame time are not verified. No engine, package or owner Android settings changed.
+
+UX-039 APK: StepCounter and all six JNI methods packaged; data-preserving phone install succeeded, running app/activity confirmed. No phone visual/frame-time verification claimed.
