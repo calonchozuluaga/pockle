@@ -114,6 +114,7 @@ namespace Pockle.Core
         public const string MintId = "pip.mint-mochi";
         public const string FoxId = "fox.gloss-vinyl";
         public const string AxolotlId = "axolotl.boucle-plush";
+        public const string PipSpecialId = "pip.glow-jelly";
         public const string FoxAuroraId = "fox.glow-jelly";
         public static bool IsFoxCollectible(string id) => TryGetCollectible(id, out var toy) && toy.CharacterId == "fox";
         private static readonly string[] legacyIds = { PeachId, MoonId, GoldId, MintId };
@@ -172,7 +173,7 @@ namespace Pockle.Core
                     bool existing = character.Id == "pip" && index < legacyIds.Length;
                     string id = existing ? legacyIds[index] : character.Id + "." + finish.Id;
                     var collectible = new CollectibleDefinition(id, character, finish,
-                        existing ? pipLabels[index] : character.Id == "fox" ? foxLabels[index] : finish.DisplayName, character.Id == "pip" || character.Id == "fox" || id == AxolotlId, character.Id);
+                        existing ? pipLabels[index] : id == PipSpecialId ? "Starlight Glow · Ultra rare" : character.Id == "fox" ? foxLabels[index] : finish.DisplayName, character.Id == "pip" || character.Id == "fox" || id == AxolotlId, character.Id);
                     collectibles.Add(collectible); collectiblesById.Add(id, collectible);
                 }
             }
@@ -193,7 +194,7 @@ namespace Pockle.Core
                 foreach (var item in collectibles) if (item.CharacterId == character.Id) members.Add(item.Id);
                 uint field = character.Id == "pip" ? 0xf8d9c6u : character.Id == "fox" ? 0xffe0cbu : 0xfaf5eeu;
                 collections.Add(new CollectionDefinition(character.Id, character.DisplayName, character.Id, members,
-                    seriesNumber: character.Id == "pip" ? 1 : 0, secretId: character.Id == "fox" ? FoxAuroraId : "", fieldColor: field));
+                    seriesNumber: character.Id == "pip" ? 1 : 0, secretId: character.Id == "fox" ? FoxAuroraId : character.Id == "pip" ? PipSpecialId : "", fieldColor: field));
             }
             Collections = new ReadOnlyCollection<CollectionDefinition>(collections);
             foreach (var collection in collections) collectionsById.Add(collection.Id, collection);

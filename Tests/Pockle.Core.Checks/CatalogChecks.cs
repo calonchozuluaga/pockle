@@ -66,6 +66,9 @@ internal static class CatalogChecks
         Assert(ToyCatalog.TryGetCollectible(ToyCatalog.AxolotlId, out var axolotl) && axolotl.Available && axolotl.CharacterId == "axolotl", "Axolotl plush art missing from catalog.");
         Assert(ToyCatalog.Collectibles.Count(c => c.CharacterId == "axolotl" && c.Available) == 1 && !ToyCatalog.IsDailyEligible(ToyCatalog.AxolotlId), "Unapproved Axolotl art/reward eligibility enabled.");
         Assert(ToyCatalog.Collectibles.Count(c => c.CharacterId == "pip" && c.Available) == 10, "Latest Pip collection is incomplete.");
+        Assert(ToyCatalog.TryGetCollectible(ToyCatalog.PipSpecialId, out var pipSpecial) && pipSpecial.IsSecret && pipSpecial.FinishDisplayName == "Starlight Glow · Ultra rare", "Pip special designation missing.");
+        Assert(!ToyCatalog.IsDailyEligible(ToyCatalog.PipSpecialId) && ToyCatalog.BoxPools.All(p => !p.ContainsCollectible(ToyCatalog.PipSpecialId)), "Special designation invented draw odds.");
+        Assert(ToyCatalog.Collectibles.Count(c => c.CharacterId == "pip" && c.IsSecret) == 1, "Pip must have exactly one special finish.");
         string[] oldIds = { "pip.peach-jelly", "pip.moon-pearl", "pip.gold-confetti", "pip.mint-mochi" };
         for (int i = 0; i < oldIds.Length; i++)
         {

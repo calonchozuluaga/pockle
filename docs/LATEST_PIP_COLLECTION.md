@@ -11,3 +11,5 @@ Legacy finish switching reuses the same runtime mesh and material while clearing
 Actual Unity renders are in `docs/captures/latest-pip-collection/`. The Android preview is `Builds/Pockle-Pip-Collection.apk`; it snapshots the owner project including Peach/Fox/Axolotl/walking/Claude UI updates without overwriting owner ProjectSettings. Existing owned Moon/Gold/Mint update automatically. New finishes remain undiscovered until awarded through a future explicit grant/reward policy.
 
 Validation results are recorded in VALIDATION.md. Device appearance/frame time, sensor behavior and public reward eligibility remain separate from editor render/build tests. Maki is left for the owner's Meshy pass.
+
+Owner-approved Pip special: glow slot is now Starlight Glow · Ultra rare, stable ID pip.glow-jelly, collection secret identity. Existing secret UI badge/concealment uses this metadata. Shared approved mesh and aqua glow/iridescent material retained; no inventory grant, box odds or reward pool changes.

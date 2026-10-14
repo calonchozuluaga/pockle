@@ -87,3 +87,11 @@ Your combined owner-local suite: 39 tests, 37 passed, two failures in Collection
 Runtime fix: ShelfPreviewRuntime previously accepted only legacy enum IDs and substituted Peach for other live actors. It now accepts registered available art and selects the actual collectible ID, supporting six new Pip finishes and already available Fox/Axolotl art without leaking undiscovered finishes. New regression checks owned/unowned art visibility. No inventory changes.
 
 Pip final: 37/37 isolated PlayMode, 16/16 EditMode, portable/source checks passed. Full ten captures inspected; final owner-local Android build succeeded and walking JNI packaging passed. APK updated on connected phone with install -r, preserving data; launch confirmed. Visual screenshot unavailable while Dozing, device frame time unverified. New collection finish IDs do not grant copies. Combined new stage UI failures remain for Claude as recorded above.
+
+## Pip special identity — UX-030/033
+
+Owner asked to designate one existing finish as ultra rare/special. Claim codex/pip-special: select glow slot as Starlight Glow · Ultra rare, mark collection secret ID, preserve saved ID/model/material and existing box pools/ownership. Files: catalog, portable secret metadata checks and docs; no Claude UI edits (existing secret badge consumes catalog).
+
+Owner-approved Pip special: glow slot is now Starlight Glow · Ultra rare, stable ID pip.glow-jelly, collection secret identity. Existing secret UI badge/concealment uses this metadata. Shared approved mesh and aqua glow/iridescent material retained; no inventory grant, box odds or reward pool changes.
+
+Pip special metadata: Starlight Glow (pip.glow-jelly) is the one Pip ultra-rare/secret. Portable checks validate identity, uniqueness, preserved legacy IDs and unchanged pools; source/whitespace checks passed. Android catalog/badge build succeeded. Material/model unchanged; no new drop probability or ownership grant.
