@@ -57,6 +57,9 @@ namespace Pockle.Runtime
         private float previousSag, previousClearance;
         private Vector3 previousGrip;
         public float DeformedTop { get; private set; }
+        private PeachExpressionDriver peachExpression;
+        public void SetExpressionContext(float pressure, float liftedHeight)
+        { if (peachExpression != null) peachExpression.SetContext(pressure, liftedHeight); }
 
         public Transform VisualRoot { get { Initialize(); return visualRoot; } }
         public Renderer BodyRenderer { get; private set; }
@@ -271,6 +274,25 @@ namespace Pockle.Runtime
                 BuildSuspendedAccents();
             }
 
+            if (UsesMeshyPeach)
+            {
+                accentMesh = BuildSphere("Peach interior pearl mesh", 12, 10);
+                sparkleMesh = BuildSparkle();
+                bubbleMaterial = CreateCandyMaterial("Peach interior cream pearls", new Color(1f, .91f, .78f, 1f), .82f);
+                SetFloat(bubbleMaterial, "_ZWrite", 1f);
+                SetColor(bubbleMaterial, "_TopColor", new Color(1f,.97f,.87f,1f));
+                SetColor(bubbleMaterial, "_BottomColor", new Color(.75f,.83f,.84f,1f));
+                SetColor(bubbleMaterial, "_RimColor", new Color(1f,.99f,.9f,1f));
+                bubbleMaterial.renderQueue = 2990;
+                sparkleMaterial.renderQueue = 2990;
+                BuildSuspendedAccents();
+                if (bodyMaterial.HasProperty("_Blink"))
+                {
+                    peachExpression = visualRoot.gameObject.AddComponent<PeachExpressionDriver>();
+                    peachExpression.Initialize(bodyMaterial);
+                }
+            }
+
             var touchCollider = GetComponent<SphereCollider>();
             if (touchCollider == null) touchCollider = gameObject.AddComponent<SphereCollider>();
             touchCollider.center = Vector3.zero;
@@ -365,6 +387,11 @@ namespace Pockle.Runtime
             visualRoot.localPosition = Vector3.up * rockLift;
             DeformedTop += rockLift;
 
+            if (peachExpression != null)
+                peachExpression.SetCenters(
+                    Deform(new Vector3(-.284f, -.06f, -.73f), compression, stretch, tiltX, tiltZ, contactX, contactZ, directional, suspension),
+                    Deform(new Vector3(.32f, -.06f, -.73f), compression, stretch, tiltX, tiltZ, contactX, contactZ, directional, suspension),
+                    Deform(new Vector3(.02f, -.125f, -.79f), compression, stretch, tiltX, tiltZ, contactX, contactZ, directional, suspension));
             RebuildNormals();
             bodyMesh.vertices = vertices;
             bodyMesh.normals = normals;
@@ -749,6 +776,7 @@ namespace Pockle.Runtime
                 if (shader == null || !shader.isSupported) shader = Shader.Find("Unlit/Texture");
                 var textured = new Material(shader) { name = "Meshy Peach · wet textured jelly", mainTexture = characterAsset.BaseColorTexture };
                 if (textured.HasProperty("_StudioCube")) textured.SetTexture("_StudioCube", studioReflection);
+                textured.renderQueue = 3000;
                 ownedMaterials.Add(textured);
                 return textured;
             }
@@ -992,6 +1020,7 @@ namespace Pockle.Runtime
 
         private void ReleaseVisual()
         {
+            peachExpression = null;
             if (visualRoot != null)
             { visualRoot.gameObject.SetActive(false); Destroy(visualRoot.gameObject); }
             for (int i = 0; i < ownedMeshes.Count; i++)

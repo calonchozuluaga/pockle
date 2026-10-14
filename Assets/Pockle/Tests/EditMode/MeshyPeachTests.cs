@@ -65,7 +65,9 @@ namespace Pockle.Tests
             Assert.That(material, Is.Not.Null);
             Assert.That(material.shader.name, Is.EqualTo("Pockle/Textured Peach Jelly"));
             Assert.That(material.GetFloat("_Transmission"), Is.EqualTo(.90).Within(.00001));
-            Assert.That(material.GetFloat("_Roughness"), Is.EqualTo(.20).Within(.00001));
+            Assert.That(material.GetFloat("_Roughness"), Is.LessThan(.20f), "Approved Peach needs a wetter reflection.");
+            Assert.That(material.GetFloat("_Opacity"), Is.LessThan(1f), "The shell must reveal interior contents.");
+            Assert.That(material.GetFloat("_ReflectionStrength"), Is.GreaterThan(.6f));
             Assert.That(material.GetFloat("_Subsurface"), Is.EqualTo(.05).Within(.00001));
         }
     }

@@ -27,6 +27,7 @@ internal static class Program
             CatalogChecks.Run();
             MaterialHandlingChecks.Run();
             SeriesMotionChecks.Run();
+            PeachExpressionChecks.Run();
             return 0;
         }
         catch (Exception exception)

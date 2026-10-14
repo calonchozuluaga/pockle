@@ -19,5 +19,6 @@
     <Compile Include="CatalogChecks.cs" />
     <Compile Include="MaterialHandlingChecks.cs" />
     <Compile Include="SeriesMotionChecks.cs" />
+    <Compile Include="PeachExpressionChecks.cs" />
   </ItemGroup>
 </Project>

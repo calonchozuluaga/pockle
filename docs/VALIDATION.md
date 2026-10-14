@@ -184,3 +184,7 @@ Final combined Android preview: Builds/Pockle-Fox-Axolotl.apk built successfully
 Final combined owner snapshot verification: 36/36 PlayMode tests passed (Fox finishes + Axolotl + Peach/walking/Claude UI); isolated collection branch 16/16 EditMode passed. Required portable/source checks and branch whitespace passed. APK build and six JNI methods passed; phone appearance, frame time and sensor behavior unverified.
 
 Sushi base art verification: Blender manifold/component and material/UV checks passed; independent GLB JSON check confirms one mesh, one cream material, no painted textures, 11,998 triangles and TEXCOORD_0. All three actual model renders inspected. No Unity integration or phone behavior asserted.
+
+October 13 — approved Peach: fixed Unity 6000.6.5f1 captures inspected (neutral, blink, squint, lifted, turn) and full PlayMode suite 28/28 passed. Portable expression checks pass; approved mesh/paint preserved. Android shader build and phone performance/appearance remain unverified. See `PEACH_EXPRESSIONS.md`.
+
+Final checks: Unity 6000.6.5f1 PlayMode 28/28 and EditMode 16/16 passed; portable/source checks passed; fixed captures inspected. Other Pip models and uploaded source mesh/paint unchanged. Android build/device frame time remains pending.

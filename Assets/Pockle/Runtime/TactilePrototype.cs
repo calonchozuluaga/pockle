@@ -172,6 +172,7 @@ namespace Pockle.Runtime
             float hanging = reducedMotion || revealing ? 0f : Mathf.Max(0f, sag.Value);
             float clearance = revealing ? 0f : lift.Value;
             float p = reducedMotion ? pinch.Target : pinch.Value;
+            toy.SetExpressionContext(squash, held && !revealing ? lift.Value : 0f);
             toy.SetDeformation(squash, elongation, tx, tz, contactX, contactZ, p, pinchAxis, hanging, gripPoint, clearance);
             ApplyLift();
             if (hanging > 0f && visibleLift < clearance - .0001f)

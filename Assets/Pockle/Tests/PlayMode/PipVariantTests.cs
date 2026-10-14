@@ -125,7 +125,7 @@ namespace Pockle.Tests
             Assert.That(toy.UsesMeshyPeach, Is.True, "Fresh Android preferences must reach Meshy through normal Peach play.");
             Assert.That(toy.BodyRenderer.sharedMaterial.mainTexture, Is.Not.Null);
             Assert.That(toy.Handling, Is.SameAs(Pockle.Core.MaterialHandling.Gel));
-            Assert.That(toy.GetComponentsInChildren<MeshRenderer>().Length, Is.EqualTo(1), "No duplicate eyes, crown or pearls over the painted mesh.");
+            Assert.That(toy.GetComponentsInChildren<MeshRenderer>().Length, Is.EqualTo(13), "Only the painted body plus twelve real interior accents should exist.");
             toy.SetDeformation(.18f, .24f, .1f, -.1f, .1f, -.1f, .25f, new Vector3(1,1,.1f),
                 .18f, new Vector3(.2f,.3f,-.5f), .4f);
             Mesh originalMesh = toy.BodyRenderer.GetComponent<MeshFilter>().sharedMesh;
@@ -146,7 +146,7 @@ namespace Pockle.Tests
                 for (int v = 0; v < actual.Length; v++)
                     Assert.That(Vector3.Distance(actual[v], expected[v]), Is.LessThan(.00001f), "Art switching must replay the raw grip pose.");
                 yield return null;
-                Assert.That(toy.GetComponentsInChildren<MeshRenderer>().Length, Is.EqualTo(1));
+                Assert.That(toy.GetComponentsInChildren<MeshRenderer>().Length, Is.EqualTo(13));
             }
             Assert.That(originalMesh == null, Is.True);
             Assert.That(originalMaterial == null, Is.True);
