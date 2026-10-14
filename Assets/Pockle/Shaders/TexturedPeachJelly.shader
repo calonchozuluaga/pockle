@@ -2,6 +2,8 @@ Shader "Pockle/Textured Peach Jelly"
 {
     Properties
     {
+        _StageEnvironment ("Painted environment", Cube) = "black" {}
+        _StageEnvironmentStrength ("Environment amount", Range(0,1)) = 0
         _StageTint ("Stage illumination", Color) = (1,1,1,1)
         _StageEmission ("Night glow", Float) = 0
         _FinishTint ("Collection tint", Color) = (1,1,1,1)
@@ -34,7 +36,7 @@ Shader "Pockle/Textured Peach Jelly"
         Tags { "RenderType"="Transparent" "Queue"="Transparent" }
         CGINCLUDE
         #include "UnityCG.cginc"
-    half4 _StageTint; half _StageEmission;
+    half4 _StageTint; half _StageEmission; samplerCUBE _StageEnvironment; half _StageEnvironmentStrength;
         sampler2D _MainTex;
         samplerCUBE _StudioCube;
         half _Roughness, _ReflectionStrength, _Opacity, _Transmission, _Subsurface, _SpeckEmission;
@@ -109,8 +111,10 @@ Shader "Pockle/Textured Peach Jelly"
             half rx = dot(reflection,across), ry = dot(reflection,along);
             half spread = lerp(60,18,saturate((_Roughness-.08)/.32));
             half softbox = exp2(-rx*rx*spread-ry*ry*spread*.48)*smoothstep(.5,.85,dot(reflection,key));
-            half3 studio = texCUBE(_StudioCube,reflection).rgb;
+            half3 studio = lerp(texCUBE(_StudioCube,reflection).rgb,texCUBE(_StageEnvironment,reflection).rgb,_StageEnvironmentStrength);
             color += (studio*(.17+.33*rim) + half3(1,.98,.94)*softbox*.5)*_ReflectionStrength;
+            half3 transmitted=texCUBE(_StageEnvironment,refract(-view,n,.74)).rgb;
+            color+=transmitted*_StageEnvironmentStrength*_Transmission*(1-_Opacity)*.28*(1-pigment);
             half gold = smoothstep(.55,.8,paint.r)*smoothstep(.45,.65,paint.g)
                 *(1-smoothstep(.16,.3,paint.b))*smoothstep(.68,.86,paint.g/max(paint.r,.001));
             color += half3(1,.65,.16)*gold*_SpeckEmission;
@@ -128,7 +132,7 @@ Shader "Pockle/Textured Peach Jelly"
             half alpha = lerp(saturate(_Opacity+.22*rim),.98,pigment);
             half reflectedAlpha = _ReflectionStrength*(max(studio.r,max(studio.g,studio.b))*.55+softbox*.65);
             alpha = max(alpha,saturate(reflectedAlpha));
-            return fixed4(saturate(color * _StageTint.rgb + _StageEmission * half3(.23,.65,.64)),alpha);
+            return fixed4(saturate(color * _StageTint.rgb + _StageEmission * half3(.23,.65,.64) * (1-pigment)),alpha);
         }
         ENDCG
         Pass

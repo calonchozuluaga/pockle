@@ -11,6 +11,41 @@ namespace Pockle.Tests
     public sealed class ToyStageRuntimeTests
     {
         [UnityTest]
+        public IEnumerator PaintedMapsBindToTheToyAndGlowSpillResetsWhenSwitching()
+        {
+            Color ambient=RenderSettings.ambientLight;
+            PrototypeStage.Create(out var camera,out var mount,out _,out _,out _);
+            var root=camera.transform.parent.gameObject;
+            var obj=new GameObject("Painted world toy");obj.transform.SetParent(mount,false);
+            var toy=obj.AddComponent<JellyToy>();toy.Initialize();
+            try
+            {
+                Assert.That(PaintedWorldAsset.Load(StageWorld.Studio,"studio"),Is.Null);
+                foreach(var world in new[]{StageWorld.Home,StageWorld.Garden,StageWorld.Midnight})
+                {
+                    var asset=PaintedWorldAsset.Load(world,"fox-hollow");
+                    Assert.That(asset,Is.Not.Null);Assert.That(asset.Background,Is.Not.Null);
+                    Assert.That(asset.Reflections.width,Is.EqualTo(128));
+                    Assert.That(toy.TrySetCollectible(ToyCatalog.FoxAuroraId),Is.True);
+                    PrototypeStage.SetWorld(camera,world,toy.CollectibleId);PrototypeStage.SetLight(camera,StageLight.Night);
+                    Assert.That(toy.BodyRenderer.sharedMaterial.GetTexture("_StageEnvironment"),Is.SameAs(asset.Reflections));
+                    Assert.That(camera.GetComponent<ToyGlowAura>().Strength,Is.GreaterThan(.2f));
+                    Assert.That(root.GetComponentsInChildren<Collider>().Length,Is.EqualTo(2), "Only the toy and plate may add colliders.");
+                    yield return null;
+                }
+                Assert.That(toy.TrySetCollectible(ToyCatalog.GoldId),Is.True);
+                PrototypeStage.SetWorld(camera,StageWorld.Midnight,toy.CollectibleId);PrototypeStage.SetLight(camera,StageLight.Night);
+                Assert.That(camera.GetComponent<ToyGlowAura>().Strength,Is.InRange(.01f,.1f));
+                Assert.That(toy.TrySetCollectible(ToyCatalog.MintId),Is.True);
+                PrototypeStage.SetWorld(camera,StageWorld.Studio,toy.CollectibleId);PrototypeStage.SetLight(camera,StageLight.Day);
+                Assert.That(toy.BodyRenderer.sharedMaterial.GetFloat("_StageEnvironmentStrength"),Is.Zero);
+                Assert.That(camera.GetComponent<ToyGlowAura>().Strength,Is.Zero);
+                Assert.That(root.GetComponentsInChildren<ReflectionProbe>(true).Single().enabled,Is.False);
+            }
+            finally {Object.Destroy(root);RenderSettings.ambientLight=ambient;}
+            yield return null;
+        }
+        [UnityTest]
         public IEnumerator WorldsAreBoundedCalmAndKeepThePlatePickable()
         {
             Color ambient=RenderSettings.ambientLight;

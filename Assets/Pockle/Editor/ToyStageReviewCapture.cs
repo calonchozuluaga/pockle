@@ -21,6 +21,7 @@ namespace Pockle.Editor
                 camera.rect=new Rect(0,0,1,1);camera.orthographicSize=2.55f;camera.transform.LookAt(new Vector3(0,1.53f,0));
                 var bg=root.transform.Find("Full-screen background").GetComponent<Camera>();bg.targetTexture=target;
                 bg.transform.Find("World gradient").localScale=new Vector3(.75f,1,1);
+                camera.GetComponent<ToyStageEnvironment>().SendMessage("Update");
                 bg.Render();camera.clearFlags=CameraClearFlags.Depth;camera.Render();
                 var previous=RenderTexture.active;RenderTexture.active=target;var pixels=new Texture2D(720,960,TextureFormat.RGB24,false);
                 pixels.ReadPixels(new Rect(0,0,720,960),0,0);pixels.Apply();RenderTexture.active=previous;

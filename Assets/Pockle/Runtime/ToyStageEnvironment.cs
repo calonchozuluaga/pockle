@@ -25,6 +25,10 @@ namespace Pockle.Runtime
         private Mesh gradient;
         private Transform gradientPlane;
         private Camera background;
+        private Material backgroundMaterial;
+        private PaintedWorldAsset paintedWorld;
+        private ReflectionProbe reflectionProbe;
+        private ToyGlowAura glowAura;
 
         public void Initialize(Camera camera, Transform mount, Light keyLight, Light fillLight, Material lower, Material upper)
         {
@@ -37,10 +41,12 @@ namespace Pockle.Runtime
             background.cullingMask=1<<29; viewer.cullingMask &= ~(1<<29);
             gradient=new Mesh{name="Stage gradient"};
             gradient.vertices=new[]{new Vector3(-1,-1,0),new Vector3(1,-1,0),new Vector3(-1,1,0),new Vector3(1,1,0)};
+            gradient.uv=new[]{Vector2.zero,Vector2.right,Vector2.up,Vector2.one};
             gradient.triangles=new[]{0,2,1,1,2,3}; gradient.RecalculateBounds();
             var plane=new GameObject("World gradient",typeof(MeshFilter),typeof(MeshRenderer));plane.layer=29;
             gradientPlane=plane.transform;gradientPlane.SetParent(background.transform,false);gradientPlane.localPosition=Vector3.forward;
-            plane.GetComponent<MeshFilter>().sharedMesh=gradient;plane.GetComponent<MeshRenderer>().sharedMaterial=cards;
+            backgroundMaterial=new Material(cards){name="Painted world backdrop"};
+            plane.GetComponent<MeshFilter>().sharedMesh=gradient;plane.GetComponent<MeshRenderer>().sharedMaterial=backgroundMaterial;
             plane.GetComponent<MeshRenderer>().shadowCastingMode=ShadowCastingMode.Off;
             plane.SetActive(false);
 
@@ -100,6 +106,25 @@ namespace Pockle.Runtime
                     i%3==0 ? .035f : .018f,i%3==0 ? .065f : .025f,new Color(.92f,.86f,1),4);
                 Ring("Lavender luminous rim",1.21f,.152f,new Color(.83f,.72f,1),.035f);
             }
+            paintedWorld=PaintedWorldAsset.Load(World,HomeWorld);
+            if(paintedWorld!=null)
+            {
+                // The image replaces duplicate scenery cards; drifting leaves remain a small optional effect.
+                foreach(Transform child in scenery) if(child.name!="Falling leaf") child.gameObject.SetActive(false);
+            }
+            backgroundMaterial.SetFloat("_UseTexture",paintedWorld!=null?1:0);
+            backgroundMaterial.mainTexture=paintedWorld!=null?paintedWorld.Background:null;
+            backgroundMaterial.SetFloat("_Pan",World==StageWorld.Midnight?.62f:.5f);
+            if(reflectionProbe==null)
+            {
+                var probeObject=new GameObject("Baked world reflection probe",typeof(ReflectionProbe));
+                probeObject.transform.SetParent(transform.parent,false);probeObject.transform.localPosition=new Vector3(0,1,0);
+                reflectionProbe=probeObject.GetComponent<ReflectionProbe>();reflectionProbe.mode=ReflectionProbeMode.Custom;
+                reflectionProbe.size=new Vector3(8,8,8);reflectionProbe.boxProjection=false;reflectionProbe.blendDistance=0;
+            }
+            reflectionProbe.customBakedTexture=paintedWorld!=null?paintedWorld.Reflections:null;
+            reflectionProbe.enabled=paintedWorld!=null;
+            if(glowAura==null){glowAura=gameObject.AddComponent<ToyGlowAura>();glowAura.Initialize(toyMount,viewer);}
             plateBase.color=rim; plateTop.color=top;
             ApplyLighting();
             return true;
@@ -128,14 +153,18 @@ namespace Pockle.Runtime
                 Color upper=Color.Lerp(field,night?new Color(.11f,.10f,.24f):new Color(.85f,.76f,.82f),night?.23f:.16f);
                 gradient.colors=new[]{lower,lower,upper,upper};
             }
+            if(backgroundMaterial!=null)backgroundMaterial.SetColor("_Tint",night&&World!=StageWorld.Midnight?new Color(.48f,.54f,.70f):golden?new Color(1,.90f,.75f):Color.white);
+            if(glowAura!=null)glowAura.Configure(collectibleId,Lighting);
             Color tint=night?new Color(.53f,.56f,.75f):golden?new Color(1,.86f,.68f):Color.white;
             bool glow=ToyCatalog.TryGetCollectible(collectibleId,out var item)&&item.FinishId=="glow-jelly";
             foreach(var renderer in toyMount.GetComponentsInChildren<Renderer>(true))
                 foreach(var material in renderer.sharedMaterials)
                 {
                     if(material==null) continue;
+                    if(material.HasProperty("_StageEnvironment"))material.SetTexture("_StageEnvironment",paintedWorld!=null?paintedWorld.Reflections:null);
+                    if(material.HasProperty("_StageEnvironmentStrength"))material.SetFloat("_StageEnvironmentStrength",paintedWorld!=null?1:0);
                     if(material.HasProperty("_StageTint")) material.SetColor("_StageTint",tint);
-                    if(material.HasProperty("_StageEmission")) material.SetFloat("_StageEmission",night&&glow?.23f:0);
+                    if(material.HasProperty("_StageEmission")) material.SetFloat("_StageEmission",night&&glow?.38f:0);
                 }
         }
 
@@ -186,7 +215,11 @@ namespace Pockle.Runtime
         }
         private void Update()
         {
-            if(gradientPlane!=null && background!=null) gradientPlane.localScale=new Vector3(background.aspect,1,1);
+            if(gradientPlane!=null && background!=null)
+            {
+                gradientPlane.localScale=new Vector3(background.aspect,1,1);
+                if(paintedWorld!=null)backgroundMaterial.SetFloat("_Crop",Mathf.Min(1,background.aspect/((float)paintedWorld.Background.width/paintedWorld.Background.height)));
+            }
             if(Calm||viewer==null||!viewer.enabled||leaves.Count==0) return;
             elapsed+=Time.deltaTime;
             for(int i=0;i<leaves.Count;i++)
@@ -202,6 +235,6 @@ namespace Pockle.Runtime
             plateDecorations.Clear();leaves.Clear();leafRest.Clear();
             foreach(var mesh in meshes) if(mesh!=null) Destroy(mesh);meshes.Clear();
         }
-        private void OnDestroy(){ClearScenery();if(gradient!=null)Destroy(gradient);if(gradientPlane!=null)Destroy(gradientPlane.gameObject);if(cards!=null)Destroy(cards);}
+        private void OnDestroy(){ClearScenery();if(gradient!=null)Destroy(gradient);if(gradientPlane!=null)Destroy(gradientPlane.gameObject);if(cards!=null)Destroy(cards);if(backgroundMaterial!=null)Destroy(backgroundMaterial);}
     }
 }

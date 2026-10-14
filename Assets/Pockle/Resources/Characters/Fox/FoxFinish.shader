@@ -2,6 +2,8 @@ Shader "Pockle/Fox Finish"
 {
     Properties
     {
+        _StageEnvironment ("Painted environment", Cube) = "black" {}
+        _StageEnvironmentStrength ("Environment amount", Range(0,1)) = 0
         _StageTint ("Stage illumination", Color) = (1,1,1,1)
         _StageEmission ("Night glow", Float) = 0
         _MainTex ("Original Fox paint", 2D) = "white" {}
@@ -19,7 +21,7 @@ Shader "Pockle/Fox Finish"
     }
     CGINCLUDE
     #include "UnityCG.cginc"
-    half4 _StageTint; half _StageEmission;
+    half4 _StageTint; half _StageEmission; samplerCUBE _StageEnvironment; half _StageEnvironmentStrength;
     sampler2D _MainTex; samplerCUBE _StudioCube;
     half4 _BodyColor;
     half _Gloss, _Opacity, _Fuzz, _Grain, _Metallic, _Pearl, _Crystal, _Iridescence, _Glitter;
@@ -49,7 +51,7 @@ Shader "Pockle/Fox Finish"
         base*=.70+.30*wrapped;
         base*=1-body*((grain-.5)*(_Fuzz*.22+_Grain*.16)+_Metallic*brush*.035);
         half3 reflected=reflect(-view,n);
-        half3 studio=texCUBE(_StudioCube,reflected).rgb;
+        half3 studio=lerp(texCUBE(_StudioCube,reflected).rgb,texCUBE(_StageEnvironment,reflected).rgb,_StageEnvironmentStrength);
         half3 across=normalize(cross(key,half3(0,1,0))); half3 along=cross(across,key);
         half rx=dot(reflected,across), ry=dot(reflected,along);
         half spread=lerp(8,95,_Gloss);
@@ -67,9 +69,10 @@ Shader "Pockle/Fox Finish"
         base+=body*_Crystal*smoothstep(.92,.99,facet)*(.06+.16*glaze)*half3(1,.7,.85);
         half fleck=smoothstep(.996,.999,grain);
         base+=body*_Glitter*fleck*half3(.8,.55,.16);
+        base+=body*texCUBE(_StageEnvironment,refract(-view,n,.74)).rgb*_StageEnvironmentStrength*(1-_Opacity)*.24;
         half alpha=lerp(1,_Opacity+(1-_Opacity)*rim*.42,body);
         if(back) alpha*=.32;
-        return fixed4(saturate(base * _StageTint.rgb + _StageEmission * half3(.23,.65,.64)),alpha);
+        return fixed4(saturate(base * _StageTint.rgb + _StageEmission * half3(.23,.65,.64) * body),alpha);
     }
     fixed4 fragBack(v2f i):SV_Target { return finish(i,true); }
     fixed4 fragFront(v2f i):SV_Target { return finish(i,false); }

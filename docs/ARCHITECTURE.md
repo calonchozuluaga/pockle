@@ -33,3 +33,5 @@ October 14 material/art extension: Fox finishes share one native readable mesh/p
 October 14 latest Pip collection: all ten Pip IDs resolve to the approved baked model via CharacterArt. Local finish recipes share the source paint, UVs and mesh; legacy selectors still preserve IDs. Undiscovered silhouette projects that same model. See LATEST_PIP_COLLECTION.md.
 
 UX-039: `ToyStageEnvironment` owns bounded procedural scenery, background gradient and stage lighting. `TactilePrototype` consumes the existing HUD WorldChanged/LightChanged events and reapplies the chosen look after selection. Catalog `HomeWorld` and per-finish `SwatchColor` are engine-free presentation metadata. See [TOY_STAGE_RUNTIME.md](TOY_STAGE_RUNTIME.md).
+
+Painted world images use `PaintedWorldAsset` plus precomputed reflection cubes (`PaintedWorldImport.Build`). `ToyGlowAura` owns two additive light-spill cards; it is independent of toy deformation and inventory. See [PAINTED_WORLDS.md](PAINTED_WORLDS.md).
