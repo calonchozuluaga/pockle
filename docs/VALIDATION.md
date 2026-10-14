@@ -221,3 +221,5 @@ UX-039 APK: StepCounter and all six JNI methods packaged; data-preserving phone 
 ## October 14 — Painted environment images and emitted light
 
 Built-in imagegen produced three original 1774 × 887 LDR paintings, saved under Resources/Worlds. Real Unity import created stable PNG/asset references and 128px cubemaps. Full PlayMode suite 41/43 passed (remaining two pre-existing Claude UI tests); after final halo tuning, all 3 targeted ToyStageRuntimeTests passed. Required portable/source checks passed: 103 source files / 3 symbol profiles / 224 GUIDs. Final fixed captures inspected: Fox Home, Garden, and rare Fox Midnight with visible halo. Final Android development build succeeded, walking class/six JNI methods packaged. Phone appearance/frame time and a green combined CI suite remain unverified. No Unity version/packages/owner Android settings changes.
+
+Painted-world APK installed successfully as a data-preserving update; launch/process 18763 confirmed. Final implementation commit de7027b on codex/painted-worlds.
