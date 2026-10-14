@@ -27,3 +27,13 @@ October 13 Fox collection validation: Unity 6000.6.5f1 imported the native runti
 ## Owner Fox test grant — UX-029/030/033
 
 Claimed on `codex/fox-owner-test`. Owner explicitly authorized a one-time local Fox award and necessary owned-HUD selection changes, preserving Claude Settings. Files: Core inventory, CollectionSession, temporary FoxOwnerTestGrant resource, HUD main/Shelf/Collections and theme, TactilePrototype, grant tests. Inventory persisted before refresh, existing saves/rewards preserved. Test grant resource must be disabled/removed before public distribution.
+
+## Fox orientation and rigid controls — UX-025/030/033
+
+Owner screenshot shows nose-down Fox plus incorrect Pip lift/stretch guidance. Claimed `codex/fox-orientation-handling`, extending the Fox test branch. Correct the native asset's import basis in place (preserve GUID), verify front-facing upright render, enforce rigid turn-only input and update per-toy guidance. User's earlier authorization for necessary Fox HUD changes applies; preserve Claude Settings and local Peach/walking changes. Files: FoxCollectionBuild/runtime Fox asset, handling/input, guidance/HUD hint, focused tests and docs.
+
+## Fox orientation and rigid controls — UX-025/030/033
+
+`codex/fox-orientation-handling`: repaired native Fox mesh basis in place, preserving stable asset identity; owner local project updated without overwriting Peach, walking, Settings or other HUD changes. Fox body/plate drags turn only; play hint says “Drag Fox or the plate to turn.” No lift, stretch, squish or sag. Unity front render inspected upright. Regression/check results recorded after completion; phone rebuild pending.
+
+Fox fix verification: Unity 30/30 PlayMode tests passed (including rigid vertices); combined local portable and source checks passed. Corrected front render saved in `docs/captures/fox-orientation/upright.png`. Phone rebuild pending.

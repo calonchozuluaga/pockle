@@ -22,7 +22,7 @@ namespace Pockle.Editor
             var filter = filters[0];
             Mesh mesh = UnityEngine.Object.Instantiate(filter.sharedMesh);
             var vertices = mesh.vertices;
-            var matrix = model.transform.worldToLocalMatrix * filter.transform.localToWorldMatrix;
+            var matrix = Matrix4x4.Rotate(Quaternion.Euler(0, 180, 0)) * filter.transform.localToWorldMatrix;
             Bounds bounds = new Bounds(matrix.MultiplyPoint3x4(vertices[0]), Vector3.zero);
             for (int i = 0; i < vertices.Length; i++) { vertices[i] = matrix.MultiplyPoint3x4(vertices[i]); bounds.Encapsulate(vertices[i]); }
             float scale = Mathf.Min(1.94f / bounds.size.y, 2.8f / bounds.size.x, 2.8f / bounds.size.z);
@@ -48,12 +48,21 @@ namespace Pockle.Editor
             asset.Eyes = asset.EyeGlints = asset.Cheeks = asset.Mouth = asset.Crowns = asset.CrownScales = asset.Pearls = asset.Flecks = Array.Empty<Vector3>();
             asset.BodyColor = asset.TopColor = asset.BottomColor = Color.white;
             const string path = folder + "/Fox.asset";
-            if (AssetDatabase.LoadAssetAtPath<PipCharacterAsset>(path) != null)
-                throw new InvalidOperationException("Fox runtime asset already exists; preserve its stable GUID and edit it in place.");
-            AssetDatabase.CreateAsset(asset, path); AssetDatabase.AddObjectToAsset(mesh, asset);
-            AssetDatabase.CreateAsset(new Material(material) { name = "Fox vinyl runtime" }, folder + "/FoxVinyl.mat");
+            var existing = AssetDatabase.LoadAssetAtPath<PipCharacterAsset>(path);
+            if (existing != null)
+            {
+                EditorUtility.CopySerialized(mesh, existing.BodyMesh);
+                existing.NormalGroups = groups;
+                EditorUtility.SetDirty(existing.BodyMesh); EditorUtility.SetDirty(existing);
+                UnityEngine.Object.DestroyImmediate(mesh); UnityEngine.Object.DestroyImmediate(asset);
+            }
+            else
+            {
+                AssetDatabase.CreateAsset(asset, path); AssetDatabase.AddObjectToAsset(mesh, asset);
+                AssetDatabase.CreateAsset(new Material(material) { name = "Fox vinyl runtime" }, folder + "/FoxVinyl.mat");
+            }
             AssetDatabase.SaveAssets();
-            Debug.Log("FOX_COLLECTION_BUILD " + vertices.Length + " vertices / " + mesh.triangles.Length / 3 + " triangles.");
+            Debug.Log("FOX_COLLECTION_BUILD " + vertices.Length + " vertices / " + filter.sharedMesh.triangles.Length / 3 + " triangles.");
         }
     }
 }

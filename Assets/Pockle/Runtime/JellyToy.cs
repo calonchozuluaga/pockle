@@ -296,6 +296,8 @@ namespace Pockle.Runtime
             float sag = 0f, Vector3 grip = default(Vector3), float clearance = 0f)
         {
             Initialize();
+            if (collectibleId == ToyCatalog.FoxId)
+                compression = stretch = tiltX = tiltZ = pinch = sag = 0f;
             // Match the portable shape's safe range so feature scale follows its shell,
             // including when a spring briefly overshoots zero on release.
             compression = SafeClamp(compression, 0f, 0.42f);

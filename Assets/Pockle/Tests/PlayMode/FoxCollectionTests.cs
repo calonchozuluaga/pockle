@@ -32,7 +32,9 @@ namespace Pockle.Tests
                 var material = visual.GetComponentInChildren<MeshRenderer>().sharedMaterial;
                 Assert.That(material.shader.name, Is.EqualTo("Standard"));
                 Assert.That(material.mainTexture, Is.SameAs(asset.BaseColorTexture));
-                toy.SetDeformation(.25f, .3f, 0, 0, 0, 0);
+                var resting = toy.VisualRoot.GetComponentInChildren<MeshFilter>().sharedMesh.vertices;
+                toy.SetDeformation(.25f, .3f, .5f, .5f, 0, 0, .4f, Vector3.up, .3f);
+                CollectionAssert.AreEqual(resting, toy.VisualRoot.GetComponentInChildren<MeshFilter>().sharedMesh.vertices, "Vinyl Fox must remain rigid.");
                 foreach (var vertex in toy.VisualRoot.GetComponentInChildren<MeshFilter>().sharedMesh.vertices)
                     Assert.That(float.IsNaN(vertex.x) || float.IsInfinity(vertex.y), Is.False);
                 Assert.That(toy.TrySetCollectible("fox.clear-jelly"), Is.False, "Planned finish must not use uploaded vinyl art.");

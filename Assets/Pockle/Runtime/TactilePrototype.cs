@@ -201,6 +201,9 @@ namespace Pockle.Runtime
             }
         }
 
+        private string PlayHint => toy.CollectibleId == ToyCatalog.FoxId
+            ? "Drag Fox or the plate to turn." : "Lift Pip. Pinch to stretch. Turn the plate.";
+
         private void BeginPointer(int id, Vector2 position)
         {
             if (gesture.PointerId != NoPointer || revealing || hud.StoreVisible) return;
@@ -219,6 +222,7 @@ namespace Pockle.Runtime
             if (!hitToy && !hitPlate) return;
             var target = hitToy && (!hitPlate || Vector3.Distance(ray.origin, toyPoint) <= plateHit.distance)
                 ? PointerTarget.Toy : PointerTarget.Plate;
+            if (toy.CollectibleId == ToyCatalog.FoxId) target = PointerTarget.Plate;
             if (!gesture.TryBegin(id, target)) return;
             pointerStart = pointerPrevious = position;
             liftStart = visibleLift;
@@ -235,7 +239,7 @@ namespace Pockle.Runtime
                 Play(pressClip);
                 hud.SetStatus("Drag up to lift. Add a finger to stretch.");
             }
-            else hud.SetStatus("Drag the plate sideways to turn Pip.");
+            else hud.SetStatus(PlayHint);
         }
 
         private void MovePointer(Vector2 position)
@@ -277,7 +281,7 @@ namespace Pockle.Runtime
                 Vibrate();
             }
             if (hud != null && !revealing)
-                hud.SetStatus("Lift Pip. Pinch to stretch. Turn the plate.");
+                hud.SetStatus(PlayHint);
         }
 
         public void ResetToy()
@@ -299,7 +303,7 @@ namespace Pockle.Runtime
             contactX = contactZ = 0f;
             toy.ResetToy();
             hud.SetRevealAvailable(true);
-            hud.SetStatus("Say hello to Pip. Squish or turn.");
+            hud.SetStatus(PlayHint);
         }
 
         public void Reveal()
@@ -340,7 +344,7 @@ namespace Pockle.Runtime
                 toyMount.localScale = Vector3.one;
                 compression.Target = 0f;
                 hud.SetRevealAvailable(true);
-                hud.SetStatus("Lift Pip. Pinch to stretch. Turn the plate.");
+                hud.SetStatus(PlayHint);
                 if (collection.Progress.Save.PendingReveal >= 0) collection.FinishReveal();
             }
         }
