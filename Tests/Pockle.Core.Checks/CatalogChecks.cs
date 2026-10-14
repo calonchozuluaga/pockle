@@ -10,7 +10,7 @@ internal static class CatalogChecks
     private static readonly JsonSerializerOptions Json = new JsonSerializerOptions { IncludeFields = true };
     public static void Run()
     {
-        Definitions(); FoxOwnerGrant(); Migration(); FutureIdentity(); ProfileReferences(); PreviewBudget();
+        Definitions(); FoxOwnerGrant(); FoxFinishGrant(); Migration(); FutureIdentity(); ProfileReferences(); PreviewBudget();
         Console.WriteLine("PASS: " + checks + " catalog assertions (definitions, legacy migration, unknown IDs, profiles, bounded preview lifetimes).");
     }
     private static void FoxOwnerGrant()
@@ -25,11 +25,28 @@ internal static class CatalogChecks
         Assert(restored.Save.Steps == 521 && restored.Save.PendingRevealId == ToyCatalog.MoonId, "Fox grant altered walking or pending reveal.");
         for (int i = 0; i < 4; i++) Assert(restored.GetOwnedCount(ToyCatalog.LegacyCollectibleId(i)) == 1, "Fox grant changed an existing toy.");
     }
+    private static void FoxFinishGrant()
+    {
+        var progress = new CollectionProgress(null, 20734);
+        progress.EnsureFoxTestCopy();
+        progress.Save.Steps = 521; progress.Save.PendingRevealId = ToyCatalog.MoonId;
+        Assert(progress.EnsureFoxFinishTestCopies(), "Finishes grant failed.");
+        Assert(!progress.EnsureFoxFinishTestCopies(), "Finishes grant duplicated.");
+        var restored = RoundTrip(progress, 20734);
+        foreach (var toy in ToyCatalog.Collectibles.Where(c => c.CharacterId == "fox"))
+        {
+            Assert(restored.GetOwnedCount(toy.Id) == 1 && toy.Available, "A Fox finish was not persisted exactly once.");
+            Assert(!ToyCatalog.IsDailyEligible(toy.Id), "Owner finish grant changed walking rewards.");
+        }
+        Assert(!restored.EnsureFoxFinishTestCopies(), "Restart duplicated finishes.");
+        Assert(restored.Save.Steps == 521 && restored.Save.PendingRevealId == ToyCatalog.MoonId, "Finish grant reset reward state.");
+        Assert(ToyCatalog.TryGetCollectible(ToyCatalog.FoxAuroraId, out var special) && special.IsSecret, "Aurora special metadata missing.");
+    }
     private static void Definitions()
     {
         Assert(ToyCatalog.Characters.Count == 13 && ToyCatalog.Finishes.Count == 10 && ToyCatalog.Collectibles.Count == 130, "Roster is not thirteen distinct characters with ten finishes.");
         Assert(ToyCatalog.Collectibles.Select(c => c.Id).Distinct(StringComparer.Ordinal).Count() == 130, "Collectible IDs collide.");
-        Assert(ToyCatalog.Collectibles.Count(c => c.Available) == 5, "Planned art was marked playable.");
+        Assert(ToyCatalog.Collectibles.Count(c => c.Available) == 14, "Planned art was marked playable.");
         foreach (var definition in ToyCatalog.Collectibles)
         {
             Assert(ToyCatalog.IsValidId(definition.Id), "Catalog has an invalid persistence ID.");
@@ -43,7 +60,7 @@ internal static class CatalogChecks
             Assert(ToyCatalog.Collectibles.Count(c => c.CharacterId == character.Id) == 10, "A character is merely a finish entry rather than its own silhouette.");
         Assert(ToyCatalog.TryGetCollection("fox", out var fox) && fox.CharacterId == "fox" && fox.Members.Count == 10, "Fox has no independent ten-slot collection.");
         Assert(ToyCatalog.TryGetCollectible(ToyCatalog.FoxId, out var foxToy) && foxToy.Available && foxToy.CollectionId == "fox" && foxToy.FinishId == "gloss-vinyl", "Uploaded fox is not the available vinyl variety.");
-        Assert(ToyCatalog.Collectibles.Count(c => c.CharacterId == "fox" && c.Available) == 1, "Planned fox finishes became available.");
+        Assert(ToyCatalog.Collectibles.Count(c => c.CharacterId == "fox" && c.Available) == 10, "Planned fox finishes became available.");
         Assert(!ToyCatalog.TryGetLegacyIndex(ToyCatalog.FoxId, out _) && !ToyCatalog.IsDailyEligible(ToyCatalog.FoxId), "Fox changed legacy identity or walking rewards.");
         Assert(!fox.HasApprovedOdds && !fox.HasPublishedSchedule && fox.SeriesNumber == 0, "Fox acquired unapproved release or reward metadata.");
         string[] oldIds = { "pip.peach-jelly", "pip.moon-pearl", "pip.gold-confetti", "pip.mint-mochi" };

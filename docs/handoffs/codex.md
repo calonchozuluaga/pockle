@@ -37,3 +37,11 @@ Owner screenshot shows nose-down Fox plus incorrect Pip lift/stretch guidance. C
 `codex/fox-orientation-handling`: repaired native Fox mesh basis in place, preserving stable asset identity; owner local project updated without overwriting Peach, walking, Settings or other HUD changes. Fox body/plate drags turn only; play hint says “Drag Fox or the plate to turn.” No lift, stretch, squish or sag. Unity front render inspected upright. Regression/check results recorded after completion; phone rebuild pending.
 
 Fox fix verification: Unity 30/30 PlayMode tests passed (including rigid vertices); combined local portable and source checks passed. Corrected front render saved in `docs/captures/fox-orientation/upright.png`. Phone rebuild pending.
+
+## Approved Fox material collection — UX-025/030/033
+
+Owner approved ten concept-sheet finishes and one copy of each for phone testing. Claimed on `codex/fox-material-collection`, extending the Fox orientation/grant branch. Files: catalog, Fox finish recipes/shader/runtime, CharacterArt registry, idempotent inventory grant/session, Fox tests/checks, editor captures and docs. Preserve existing save IDs, upright shape, Pip/Peach, walking and Claude Settings/HUD. Aurora is special metadata; public reward odds/purchases unchanged. Axolotl import remains authorized next.
+
+October 14 Fox finish implementation: all ten existing Fox slot IDs are available and named from the approved concept. Aurora is fox.glow-jelly / secret identity, no odds/pool/pricing changes. New independent finishes marker fills only missing copies; persists before UI. Necessary Fox HUD title/backdrop changes under earlier owner authorization, Settings preserved. See FOX_FINISHES.md. Axolotl import remains authorized next.
+
+Fox finishes final validation: 32/32 Unity PlayMode tests passed; required portable/source checks passed. Owner-local Android APK build succeeded, final log /private/tmp/fox-phone-release.log. Final APK is Builds/Pockle-Fox-Finishes.apk. No phone connected.

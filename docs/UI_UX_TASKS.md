@@ -130,3 +130,5 @@ For the proposed Codex/Claude work split and repository handoffs, see [agent coo
 October 13, ART-002 / UX-030: owner fox uploaded and imported as a separate review prefab on `codex/fox-model-import`; 30,000 triangles, original UV paint, editable vinyl material. Unity import/compile and portable checks passed. Catalog/playable integration and phone validation remain pending. See [fox import](FOX_MODEL_IMPORT.md).
 
 October 13 — UX-029/030/033, ART-002: Fox added as the thirteenth character collection on `codex/fox-collection`, with `fox.gloss-vinyl` runtime art and nine planned varieties. Box pools, legacy IDs and saves unchanged. Runtime and browse tests recorded in `FOX_MODEL_IMPORT.md`; phone review pending.
+
+UX-025/030/033: ten approved Fox finishes available; Aurora special metadata, owner test grants and per-finish HUD selection implemented. Phone APK prepared; device review pending. See FOX_FINISHES.md.

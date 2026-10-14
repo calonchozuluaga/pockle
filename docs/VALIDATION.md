@@ -172,3 +172,7 @@ October 13 Fox collection validation: Unity 6000.6.5f1 imported the native runti
 Fox orientation correction: imported FBX root axis transform now retained, with front facing the viewer. Corrected mesh applied in place, preserving asset GUID/subasset identity. Unity fixed render inspected upright; Fox is turn-only and deformation inputs leave vertices unchanged. Phone build review pending.
 
 Fox fix verification: Unity 30/30 PlayMode tests passed (including rigid vertices); combined local portable and source checks passed. Corrected front render saved in `docs/captures/fox-orientation/upright.png`. Phone rebuild pending.
+
+October 14 Fox finishes: all ten Unity material renders inspected, portable/source checks pass. Unity finish and save/grant regressions passed; final result recorded below. Android APK built successfully from owner local snapshot, StepCounter and six JNI entry points verified in DEX. No phone connected; on-device visuals/performance and step tracking pending.
+
+Fox finishes final validation: 32/32 Unity PlayMode tests passed; required portable/source checks passed. Owner-local Android APK build succeeded, final log /private/tmp/fox-phone-release.log. Final APK is Builds/Pockle-Fox-Finishes.apk. No phone connected.

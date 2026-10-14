@@ -14,7 +14,12 @@ namespace Pockle.Editor
             FoxCollectionBuild.Build();
             Capture();
         }
-        private static void Capture()
+        public static void Finishes()
+        {
+            foreach (var item in ToyCatalog.Collectibles)
+                if (item.CharacterId == "fox") Capture(item.Id);
+        }
+        private static void Capture(string id = ToyCatalog.FoxId)
         {
             Directory.CreateDirectory(Folder);
             Color previousAmbient = RenderSettings.ambientLight;
@@ -25,7 +30,7 @@ namespace Pockle.Editor
             {
                 root.transform.position = new Vector3(1000, 0, 0);
                 root.transform.rotation = Quaternion.identity;
-                var toy = root.AddComponent<JellyToy>(); toy.Initialize(); toy.TrySetCollectible(ToyCatalog.FoxId);
+                var toy = root.AddComponent<JellyToy>(); toy.Initialize(); toy.TrySetCollectible(id);
                 foreach (Transform t in root.GetComponentsInChildren<Transform>()) t.gameObject.layer = 30;
                 var material = toy.BodyRenderer.sharedMaterial;
                 var camera = cameraObject.GetComponent<Camera>(); camera.enabled = false;
@@ -41,7 +46,7 @@ namespace Pockle.Editor
                 try
                 { RenderTexture.active = target; pixels = new Texture2D(768, 768, TextureFormat.RGB24, false); pixels.ReadPixels(new Rect(0, 0, 768, 768), 0, 0); pixels.Apply(); }
                 finally { RenderTexture.active = previous; }
-                File.WriteAllBytes(Path.Combine(Folder, "upright.png"), pixels.EncodeToPNG());
+                File.WriteAllBytes(Path.Combine(Folder, id + ".png"), pixels.EncodeToPNG());
                 Debug.Log("FOX_CAPTURE upright using " + material.shader.name);
             }
             finally

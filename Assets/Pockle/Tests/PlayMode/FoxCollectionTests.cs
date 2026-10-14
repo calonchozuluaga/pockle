@@ -37,8 +37,8 @@ namespace Pockle.Tests
                 CollectionAssert.AreEqual(resting, toy.VisualRoot.GetComponentInChildren<MeshFilter>().sharedMesh.vertices, "Vinyl Fox must remain rigid.");
                 foreach (var vertex in toy.VisualRoot.GetComponentInChildren<MeshFilter>().sharedMesh.vertices)
                     Assert.That(float.IsNaN(vertex.x) || float.IsInfinity(vertex.y), Is.False);
-                Assert.That(toy.TrySetCollectible("fox.clear-jelly"), Is.False, "Planned finish must not use uploaded vinyl art.");
-                Assert.That(toy.CollectibleId, Is.EqualTo(ToyCatalog.FoxId));
+                Assert.That(toy.TrySetCollectible("fox.clear-jelly"), Is.True);
+                Assert.That(toy.BodyRenderer.sharedMaterial.shader.name, Is.EqualTo("Pockle/Fox Finish"));
                 Assert.That(toy.TrySetCollectible(ToyCatalog.PeachId), Is.True);
                 Assert.That(toy.TrySetCollectible(ToyCatalog.FoxId), Is.True);
             }

@@ -137,6 +137,16 @@ namespace Pockle.Core
             SynchronizeInventory();
             return true;
         }
+        /// <summary>Add only missing owner test finishes; preserve duplicates and all reward state.</summary>
+        public bool EnsureFoxFinishTestCopies()
+        {
+            bool changed = false;
+            foreach (var toy in ToyCatalog.Collectibles)
+                if (toy.CharacterId == "fox" && toy.Available && GetOwnedCount(toy.Id) == 0)
+                { counts[toy.Id] = 1; changed = true; }
+            if (changed) SynchronizeInventory();
+            return changed;
+        }
         private static int BoundedCount(int count) => Math.Max(0, Math.Min(9999, count));
         private static CollectionSave StarterSave()
         {

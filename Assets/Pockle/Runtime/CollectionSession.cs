@@ -59,7 +59,7 @@ namespace Pockle.Runtime
             tracker = new AndroidWalkingTracker();
             if (!readOnlySave) tracker.ResumeIfAllowed();
             Persist();
-            if (!Application.isBatchMode) TryApplyOwnerFoxTestGrant();
+            if (!Application.isBatchMode) { TryApplyOwnerFoxTestGrant(); TryApplyOwnerFoxFinishesGrant(); }
         }
 
         public const string FoxTestGrantKey = "pockle.owner-test.fox-grant.v1";
@@ -72,6 +72,18 @@ namespace Pockle.Runtime
             bool granted = Progress.EnsureFoxTestCopy();
             Persist(); // Durable inventory first, then the one-time marker, then any UI refresh.
             PlayerPrefs.SetInt(FoxTestGrantKey, 1); PlayerPrefs.Save();
+            Changed?.Invoke();
+            return granted;
+        }
+        public const string FoxFinishesGrantKey = "pockle.owner-test.fox-finishes.v1";
+        public bool TryApplyOwnerFoxFinishesGrant()
+        {
+            if (Progress == null || readOnlySave || PlayerPrefs.GetInt(FoxFinishesGrantKey, 0) == 1) return false;
+            var configuration = Resources.Load<TextAsset>("FoxOwnerTestGrant");
+            if (configuration == null || configuration.text.Trim() != "enabled") return false;
+            bool granted = Progress.EnsureFoxFinishTestCopies();
+            Persist(); // Inventory precedes grant marker and HUD refresh, including after interrupted startup.
+            PlayerPrefs.SetInt(FoxFinishesGrantKey, 1); PlayerPrefs.Save();
             Changed?.Invoke();
             return granted;
         }

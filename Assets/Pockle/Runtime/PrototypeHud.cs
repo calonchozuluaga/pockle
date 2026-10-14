@@ -23,8 +23,8 @@ namespace Pockle.Runtime
         public event Action<PipVariant> VariantChanged;
         public event Action<string> CollectibleChanged;
         private string selectedCollectibleId = ToyCatalog.PeachId;
-        private string SelectedToyName => selectedCollectibleId == ToyCatalog.FoxId ? "Fox · Gloss Vinyl" : ToyName(variant);
-        private string SelectedSeriesLine => selectedCollectibleId == ToyCatalog.FoxId ? "Fox collection" : SeriesLine(variant);
+        private string SelectedToyName => ToyCatalog.IsFoxCollectible(selectedCollectibleId) && ToyCatalog.TryGetCollectible(selectedCollectibleId, out var selected) ? selected.DisplayName : ToyName(variant);
+        private string SelectedSeriesLine => ToyCatalog.IsFoxCollectible(selectedCollectibleId) ? "Fox collection" : SeriesLine(variant);
         public event Action<bool> StoreVisibilityChanged;
         public event Action DailyBoxRequested;
         public event Action<Color> BackdropChanged;
@@ -158,6 +158,11 @@ namespace Pockle.Runtime
             else
             {
                 selectedCollectibleId = collectibleId;
+                if (page == AppPage.Play)
+                {
+                    heading.text = SelectedToyName; subtitle.text = SelectedSeriesLine; RefreshFavoriteToggle();
+                    BackdropChanged?.Invoke(PockleTheme.FieldFor(selectedCollectibleId));
+                }
                 if (page != AppPage.Shelf && page != AppPage.Collection && page != AppPage.Play) Navigate(AppPage.Shelf);
                 Navigate(AppPage.Play);
                 CollectibleChanged?.Invoke(collectibleId);

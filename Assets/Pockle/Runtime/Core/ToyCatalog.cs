@@ -113,6 +113,8 @@ namespace Pockle.Core
         public const string GoldId = "pip.gold-confetti";
         public const string MintId = "pip.mint-mochi";
         public const string FoxId = "fox.gloss-vinyl";
+        public const string FoxAuroraId = "fox.glow-jelly";
+        public static bool IsFoxCollectible(string id) => TryGetCollectible(id, out var toy) && toy.CharacterId == "fox";
         private static readonly string[] legacyIds = { PeachId, MoonId, GoldId, MintId };
         private static readonly Dictionary<string, CharacterDefinition> charactersById = new Dictionary<string, CharacterDefinition>(StringComparer.Ordinal);
         private static readonly Dictionary<string, FinishDefinition> finishesById = new Dictionary<string, FinishDefinition>(StringComparer.Ordinal);
@@ -159,6 +161,7 @@ namespace Pockle.Core
             foreach (var finish in finishes) finishesById.Add(finish.Id, finish);
             var collectibles = new List<CollectibleDefinition>(characters.Length * finishes.Length);
             string[] pipLabels = { "Peach Jelly", "Moon Jelly", "Gold Glitter", "Mint Soft" };
+            string[] foxLabels = { "Honey", "Pearl", "Rose Quartz", "Mochi", "Cloud", "Midnight", "Apricot", "Classic", "Copper", "Aurora · Super rare" };
             foreach (var character in characters)
             {
                 for (int index = 0; index < finishes.Length; index++)
@@ -167,7 +170,7 @@ namespace Pockle.Core
                     bool existing = character.Id == "pip" && index < legacyIds.Length;
                     string id = existing ? legacyIds[index] : character.Id + "." + finish.Id;
                     var collectible = new CollectibleDefinition(id, character, finish,
-                        existing ? pipLabels[index] : finish.DisplayName, existing || id == FoxId, character.Id);
+                        existing ? pipLabels[index] : character.Id == "fox" ? foxLabels[index] : finish.DisplayName, existing || character.Id == "fox", character.Id);
                     collectibles.Add(collectible); collectiblesById.Add(id, collectible);
                 }
             }
@@ -188,7 +191,7 @@ namespace Pockle.Core
                 foreach (var item in collectibles) if (item.CharacterId == character.Id) members.Add(item.Id);
                 uint field = character.Id == "pip" ? 0xf8d9c6u : character.Id == "fox" ? 0xffe0cbu : 0xfaf5eeu;
                 collections.Add(new CollectionDefinition(character.Id, character.DisplayName, character.Id, members,
-                    seriesNumber: character.Id == "pip" ? 1 : 0, fieldColor: field));
+                    seriesNumber: character.Id == "pip" ? 1 : 0, secretId: character.Id == "fox" ? FoxAuroraId : "", fieldColor: field));
             }
             Collections = new ReadOnlyCollection<CollectionDefinition>(collections);
             foreach (var collection in collections) collectionsById.Add(collection.Id, collection);

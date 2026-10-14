@@ -72,6 +72,7 @@ namespace Pockle.Runtime
                 Initialize();
                 // Retain the four reviewed Pip presets' existing feel in this first
                 // new-character pass. Their finish-specific handling can be reviewed separately.
+                if (ToyCatalog.IsFoxCollectible(collectibleId)) return MaterialHandling.Firm;
                 if (ToyCatalog.TryGetLegacyIndex(collectibleId, out _)) return MaterialHandling.Gel;
                 return ToyCatalog.TryGetCollectible(collectibleId, out var definition)
                     ? MaterialHandling.ForFinish(definition.FinishId) : MaterialHandling.Gel;
@@ -84,7 +85,7 @@ namespace Pockle.Runtime
             Initialize();
             if (!CharacterArt.TryLoad(id, out var asset)) return false;
             if (id == collectibleId) return true;
-            if (asset == characterAsset && asset.CharacterId != "pip")
+            if (asset == characterAsset && asset.CharacterId != "pip" && asset.CharacterId != "fox")
             {
                 // Alternate finishes share a body and face: only change the recipe
                 // and replay the unscaled pose under the new handling profile.
@@ -258,6 +259,8 @@ namespace Pockle.Runtime
 
             if (characterAsset != null) BuildAuthoredBody();
             else BuildBody();
+            if (collectibleId == ToyCatalog.FoxAuroraId || collectibleId == "fox.clear-jelly")
+                BuildFoxInclusions();
             if (!HasBakedSurface)
             {
                 accentMesh = BuildSphere("Shared accent sphere", characterAsset != null ? 16 : 12, characterAsset != null ? 12 : 10);
@@ -296,7 +299,7 @@ namespace Pockle.Runtime
             float sag = 0f, Vector3 grip = default(Vector3), float clearance = 0f)
         {
             Initialize();
-            if (collectibleId == ToyCatalog.FoxId)
+            if (ToyCatalog.IsFoxCollectible(collectibleId))
                 compression = stretch = tiltX = tiltZ = pinch = sag = 0f;
             // Match the portable shape's safe range so feature scale follows its shell,
             // including when a spring briefly overshoots zero on release.
@@ -608,6 +611,55 @@ namespace Pockle.Runtime
                 new Vector3(0.18f, 0.20f, 0.155f), bodyMaterial, accentMesh, true);
         }
 
+        private bool TryFoxInterior(Vector3 candidate, float radius, out Vector3 center)
+        {
+            center = candidate;
+            // Test both sides and the inclusion's four screen-plane edges against actual uploaded geometry.
+            float front = float.NegativeInfinity, back = float.PositiveInfinity;
+            Vector2[] offsets = { Vector2.zero, Vector2.right * radius, Vector2.left * radius, Vector2.up * radius, Vector2.down * radius };
+            foreach (var offset in offsets)
+            {
+                float near = float.PositiveInfinity, far = float.PositiveInfinity;
+                var a = new Point3(candidate.x + offset.x, candidate.y + offset.y, -3);
+                var b = new Point3(candidate.x + offset.x, candidate.y + offset.y, 3);
+                for (int t = 0; t < triangles.Length; t += 3)
+                {
+                    Vector3 p = restVertices[triangles[t]], q = restVertices[triangles[t+1]], r = restVertices[triangles[t+2]];
+                    var p3 = new Point3(p.x,p.y,p.z); var q3 = new Point3(q.x,q.y,q.z); var r3 = new Point3(r.x,r.y,r.z);
+                    if (SurfaceRaycast.TryTriangle(a,new Point3(0,0,1),p3,q3,r3,out float d)) near = Mathf.Min(near,d);
+                    if (SurfaceRaycast.TryTriangle(b,new Point3(0,0,-1),p3,q3,r3,out d)) far = Mathf.Min(far,d);
+                }
+                if (float.IsInfinity(near) || float.IsInfinity(far)) return false;
+                front = Mathf.Max(front,-3+near); back = Mathf.Min(back,3-far);
+            }
+            if (back-front < radius*2) return false;
+            center.z = (front+back)*.5f;
+            return true;
+        }
+
+        private void BuildFoxInclusions()
+        {
+            starMesh = BuildStar();
+            var gold = CreateFlatMaterial("Fox suspended gold", new Color(1, .73f, .26f));
+            gold.renderQueue = 2990;
+            // Kept inside the head, torso and curled tail; the opaque face paint hides foreground inclusions.
+            Vector3[] positions = {
+                new Vector3(-.30f,.55f,-.12f), new Vector3(.26f,.57f,-.08f), new Vector3(-.08f,.68f,.02f),
+                new Vector3(.38f,.36f,-.10f), new Vector3(-.34f,.28f,-.11f), new Vector3(.06f,.35f,.07f),
+                new Vector3(.19f,.12f,-.13f), new Vector3(-.13f,.11f,-.04f), new Vector3(.15f,-.51f,0),
+                new Vector3(-.18f,-.67f,-.02f), new Vector3(-.64f,-.63f,.10f), new Vector3(-.75f,-.48f,.08f) };
+            for (int i = 0; i < positions.Length; i++)
+            {
+                Vector3 center = positions[i];
+                float size = collectibleId == ToyCatalog.FoxAuroraId ? .025f + i % 3 * .007f : .009f + i % 3 * .004f;
+                for (int attempt = 0; attempt < 12 && !TryFoxInterior(center, size, out center); attempt++)
+                    center.x *= .90f;
+                var star = AddAccent("Fox gold inclusion " + i, center,
+                    Vector3.one * size, gold, starMesh, false);
+                star.localRotation = Quaternion.Euler(i * 11, i * 17, i * 37);
+            }
+        }
+
         private void BuildSuspendedAccents()
         {
             if (characterAsset != null && characterAsset.CharacterId != "pip") return;
@@ -680,10 +732,7 @@ namespace Pockle.Runtime
         {
             if (HasBakedSurface && !UsesMeshyPeach)
             {
-                var template = Resources.Load<Material>("Characters/Fox/FoxVinyl");
-                var vinyl = template != null ? new Material(template) : new Material(Shader.Find("Standard"));
-                vinyl.name = "Fox · textured vinyl";
-                vinyl.mainTexture = characterAsset.BaseColorTexture;
+                var vinyl = FoxFinishMaterial.Create(collectibleId, characterAsset.BaseColorTexture, studioReflection);
                 ownedMaterials.Add(vinyl);
                 return vinyl;
             }
