@@ -227,3 +227,5 @@ Painted-world APK installed successfully as a data-preserving update; launch/pro
 ## October 14 — owner-requested Pip finish test grant
 
 Portable checks passed (14 new assertions cover all Pip finishes, restart, existing duplicates, other collections and reward state). Unity PlayMode PipOwnerGrantTests passed: durable saved inventory exists before Changed, one-time marker and repeated-call safety. Source checks passed (104 files / 3 profiles / 226 GUIDs). Temporary PipOwnerTestGrant resource fills missing available Pip slots only, including Starlight Glow; no save schema or box-odds change. Disable the owner grant resource before public distribution. Phone result recorded after installation.
+
+Pip grant APK: final Android build and StepCounter/six JNI packaging passed; install -r succeeded, preserving app data. Initial launch logged UnityFoldingFeaturesWrapper duplicate-init exception; a fresh force-stop/relaunch was issued. Phone disconnected before on-device grant count could be confirmed. Grant code/test passes and runs on next successful launch; device ownership/visual confirmation remains pending.
