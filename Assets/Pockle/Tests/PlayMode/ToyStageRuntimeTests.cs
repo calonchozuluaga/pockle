@@ -1,0 +1,74 @@
+using System.Collections;
+using System.Linq;
+using NUnit.Framework;
+using Pockle.Core;
+using Pockle.Runtime;
+using UnityEngine;
+using UnityEngine.TestTools;
+
+namespace Pockle.Tests
+{
+    public sealed class ToyStageRuntimeTests
+    {
+        [UnityTest]
+        public IEnumerator WorldsAreBoundedCalmAndKeepThePlatePickable()
+        {
+            Color ambient=RenderSettings.ambientLight;
+            PrototypeStage.Create(out var camera,out var mount,out var plateRoot,out var plate,out _);
+            var root=camera.transform.parent.gameObject;
+            var environment=camera.GetComponent<ToyStageEnvironment>();
+            try
+            {
+                Assert.That(PrototypeStage.SetWorld(camera,StageWorld.Home,ToyCatalog.FoxId),Is.True);
+                Assert.That(environment.HomeWorld,Is.EqualTo("fox-hollow"));
+                Assert.That(root.GetComponentsInChildren<Collider>().Length,Is.EqualTo(1));
+                var leaf=root.GetComponentsInChildren<Transform>().First(t=>t.name=="Falling leaf");
+                environment.Calm=true;var rest=leaf.localPosition;
+                yield return new WaitForSeconds(.15f);Assert.That(leaf.localPosition,Is.EqualTo(rest));
+                environment.Calm=false;yield return new WaitForSeconds(.15f);Assert.That(leaf.localPosition,Is.Not.EqualTo(rest));
+                for(int i=0;i<12;i++)
+                {
+                    Assert.That(PrototypeStage.SetWorld(camera,(StageWorld)(i%4),ToyCatalog.FoxId),Is.True);
+                    yield return null;
+                    Assert.That(root.GetComponentsInChildren<MeshRenderer>().Length,Is.LessThan(55));
+                    Physics.SyncTransforms();
+                    Assert.That(plate.Raycast(new Ray(new Vector3(.8f,2,0),Vector3.down),out var hit,3),Is.True);
+                    Assert.That(hit.point.y,Is.EqualTo(.15f).Within(.001f));
+                }
+                Assert.That(PrototypeStage.SetWorld(camera,StageWorld.Home,ToyCatalog.PeachId),Is.True);
+                Assert.That(environment.HomeWorld,Is.EqualTo("studio"));
+                Assert.That(root.GetComponentsInChildren<Transform>().Any(t=>t.name=="Falling leaf"&&t.gameObject.activeInHierarchy),Is.False);
+                Assert.That(PrototypeStage.SetWorld(camera,(StageWorld)99,ToyCatalog.FoxId),Is.False);
+            }
+            finally { Object.Destroy(root); RenderSettings.ambientLight=ambient; }
+            yield return null;
+        }
+        [UnityTest]
+        public IEnumerator LightingAffectsOnlyTheSelectedToyAndAddsNightGlow()
+        {
+            Color ambient=RenderSettings.ambientLight;
+            PrototypeStage.Create(out var camera,out var mount,out _,out _,out _);
+            var root=camera.transform.parent.gameObject;
+            var toyObject=new GameObject("Stage glow test");toyObject.transform.SetParent(mount,false);
+            var toy=toyObject.AddComponent<JellyToy>();toy.Initialize();
+            var portraitObject=new GameObject("Unrelated portrait");var portrait=portraitObject.AddComponent<JellyToy>();portrait.Initialize();
+            try
+            {
+                foreach(string id in new[]{ToyCatalog.FoxAuroraId,ToyCatalog.PipSpecialId})
+                {
+                    Assert.That(toy.TrySetCollectible(id),Is.True);
+                    PrototypeStage.SetWorld(camera,StageWorld.Midnight,id);
+                    PrototypeStage.SetLight(camera,StageLight.Night);
+                    Assert.That(toy.BodyRenderer.sharedMaterial.GetFloat("_StageEmission"),Is.GreaterThan(0));
+                    Assert.That(portrait.BodyRenderer.sharedMaterial.GetColor("_StageTint"),Is.EqualTo(Color.white));
+                    PrototypeStage.SetLight(camera,StageLight.Day);
+                    Assert.That(toy.BodyRenderer.sharedMaterial.GetFloat("_StageEmission"),Is.EqualTo(0));
+                    Assert.That(toy.BodyRenderer.sharedMaterial.GetColor("_StageTint"),Is.EqualTo(Color.white));
+                }
+                Assert.That(PrototypeStage.SetLight(camera,(StageLight)99),Is.False);
+            }
+            finally { Object.Destroy(root);Object.Destroy(portraitObject);RenderSettings.ambientLight=ambient; }
+            yield return null;
+        }
+    }
+}

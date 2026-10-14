@@ -2,6 +2,8 @@ Shader "Pockle/Fox Finish"
 {
     Properties
     {
+        _StageTint ("Stage illumination", Color) = (1,1,1,1)
+        _StageEmission ("Night glow", Float) = 0
         _MainTex ("Original Fox paint", 2D) = "white" {}
         _StudioCube ("Studio reflections", Cube) = "black" {}
         _BodyColor ("Finish pigment", Color) = (1,.5,.2,1)
@@ -17,6 +19,7 @@ Shader "Pockle/Fox Finish"
     }
     CGINCLUDE
     #include "UnityCG.cginc"
+    half4 _StageTint; half _StageEmission;
     sampler2D _MainTex; samplerCUBE _StudioCube;
     half4 _BodyColor;
     half _Gloss, _Opacity, _Fuzz, _Grain, _Metallic, _Pearl, _Crystal, _Iridescence, _Glitter;
@@ -66,7 +69,7 @@ Shader "Pockle/Fox Finish"
         base+=body*_Glitter*fleck*half3(.8,.55,.16);
         half alpha=lerp(1,_Opacity+(1-_Opacity)*rim*.42,body);
         if(back) alpha*=.32;
-        return fixed4(saturate(base),alpha);
+        return fixed4(saturate(base * _StageTint.rgb + _StageEmission * half3(.23,.65,.64)),alpha);
     }
     fixed4 fragBack(v2f i):SV_Target { return finish(i,true); }
     fixed4 fragFront(v2f i):SV_Target { return finish(i,false); }

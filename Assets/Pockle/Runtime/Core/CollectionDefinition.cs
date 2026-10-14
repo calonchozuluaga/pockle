@@ -38,6 +38,7 @@ namespace Pockle.Core
         public bool HasApprovedOdds => Pool != null;
         public string ProductId { get; }
         public string BoxPriceTier { get; }
+        public string HomeWorld => CharacterId == "fox" ? "fox-hollow" : "studio";
         public CatalogColor FieldColor { get; }
         public CatalogColor InkColor { get; }
 

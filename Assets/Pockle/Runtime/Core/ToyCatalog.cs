@@ -46,6 +46,7 @@ namespace Pockle.Core
         public bool Available { get; }
         /// <summary>The character collection; membership does not grant art availability or reward eligibility.</summary>
         public string CollectionId { get; }
+        public CatalogColor SwatchColor => ToyCatalog.FinishSwatch(Id, FinishId);
         /// <summary>Derived from the character collection's explicit secret identity.</summary>
         public bool IsSecret => ToyCatalog.TryGetCollection(CollectionId, out var collection) && collection.SecretId == Id;
         internal CollectibleDefinition(string id, CharacterDefinition character, FinishDefinition finish,
@@ -198,6 +199,29 @@ namespace Pockle.Core
             }
             Collections = new ReadOnlyCollection<CollectionDefinition>(collections);
             foreach (var collection in collections) collectionsById.Add(collection.Id, collection);
+        }
+
+        internal static CatalogColor FinishSwatch(string id, string finish)
+        {
+            if (id == PeachId) return new CatalogColor(0xf5b89c);
+            if (id == MoonId) return new CatalogColor(0x73b8f5);
+            if (id == GoldId) return new CatalogColor(0xffb02e);
+            if (id == MintId) return new CatalogColor(0x8cd9a8);
+            bool fox = id.StartsWith("fox.", StringComparison.Ordinal);
+            uint colour = finish switch {
+                "clear-jelly" => fox ? 0xeeb754u : 0xf5b89cu,
+                "pearl-jelly" => 0xe7d8f5u,
+                "confetti-gel" => 0xef91b1u,
+                "mochi-foam" => 0xf6e5d3u,
+                "velvet-flock" => fox ? 0xf3eadfu : 0xb8a3efu,
+                "boucle-plush" => fox ? 0x363b60u : 0xf5b8c7u,
+                "matte-vinyl" => fox ? 0xf4ae72u : 0xcce6fau,
+                "gloss-vinyl" => fox ? 0xff742fu : 0xfa7d9cu,
+                "coated-metallic" => fox ? 0xbd784du : 0xdb9e3bu,
+                "glow-jelly" => 0x5cc7d1u,
+                _ => 0xf5b89cu
+            };
+            return new CatalogColor(colour);
         }
 
         public static bool TryGetCharacter(string? id, out CharacterDefinition character)

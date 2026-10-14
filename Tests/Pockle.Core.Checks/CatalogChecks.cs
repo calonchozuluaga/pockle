@@ -10,8 +10,21 @@ internal static class CatalogChecks
     private static readonly JsonSerializerOptions Json = new JsonSerializerOptions { IncludeFields = true };
     public static void Run()
     {
-        Definitions(); FoxOwnerGrant(); FoxFinishGrant(); Migration(); FutureIdentity(); ProfileReferences(); PreviewBudget();
+        StageMetadata(); Definitions(); FoxOwnerGrant(); FoxFinishGrant(); Migration(); FutureIdentity(); ProfileReferences(); PreviewBudget();
         Console.WriteLine("PASS: " + checks + " catalog assertions (definitions, legacy migration, unknown IDs, profiles, bounded preview lifetimes).");
+    }
+    private static void StageMetadata()
+    {
+        foreach(var collection in ToyCatalog.Collections)
+            Assert(collection.HomeWorld == (collection.CharacterId == "fox" ? "fox-hollow" : "studio"), "Collection home world fallback changed.");
+        foreach(var toy in ToyCatalog.Collectibles)
+        {
+            var c=toy.SwatchColor;
+            Assert(c.Red >= 0 && c.Red <= 1 && c.Green >= 0 && c.Green <= 1 && c.Blue >= 0 && c.Blue <= 1, "Invalid finish swatch.");
+        }
+        ToyCatalog.TryGetCollectible(ToyCatalog.MoonId,out var moon);
+        ToyCatalog.TryGetCollectible(ToyCatalog.MintId,out var mint);
+        Assert(moon.SwatchColor.Blue > moon.SwatchColor.Red && mint.SwatchColor.Green > mint.SwatchColor.Red, "Distinct jelly swatches missing.");
     }
     private static void FoxOwnerGrant()
     {

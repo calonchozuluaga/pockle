@@ -2,6 +2,8 @@ Shader "Pockle/Textured Peach Jelly"
 {
     Properties
     {
+        _StageTint ("Stage illumination", Color) = (1,1,1,1)
+        _StageEmission ("Night glow", Float) = 0
         _FinishTint ("Collection tint", Color) = (1,1,1,1)
         _TintStrength ("Collection tint amount", Range(0,1)) = 0
         _GlitterStrength ("Glitter flakes", Range(0,1)) = 0
@@ -32,6 +34,7 @@ Shader "Pockle/Textured Peach Jelly"
         Tags { "RenderType"="Transparent" "Queue"="Transparent" }
         CGINCLUDE
         #include "UnityCG.cginc"
+    half4 _StageTint; half _StageEmission;
         sampler2D _MainTex;
         samplerCUBE _StudioCube;
         half _Roughness, _ReflectionStrength, _Opacity, _Transmission, _Subsurface, _SpeckEmission;
@@ -125,7 +128,7 @@ Shader "Pockle/Textured Peach Jelly"
             half alpha = lerp(saturate(_Opacity+.22*rim),.98,pigment);
             half reflectedAlpha = _ReflectionStrength*(max(studio.r,max(studio.g,studio.b))*.55+softbox*.65);
             alpha = max(alpha,saturate(reflectedAlpha));
-            return fixed4(saturate(color),alpha);
+            return fixed4(saturate(color * _StageTint.rgb + _StageEmission * half3(.23,.65,.64)),alpha);
         }
         ENDCG
         Pass

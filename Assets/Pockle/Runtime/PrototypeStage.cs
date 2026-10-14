@@ -19,6 +19,19 @@ namespace Pockle.Runtime
             return framing != null && framing.SetBackdrop(colour);
         }
 
+        public static bool SetWorld(StageWorld world) => SetWorld(Camera.main, world, "pip.peach-jelly");
+        public static bool SetWorld(Camera viewer, StageWorld world, string collectibleId)
+        {
+            var environment = viewer == null ? null : viewer.GetComponent<ToyStageEnvironment>();
+            return environment != null && environment.SetWorld(world, collectibleId);
+        }
+        public static bool SetLight(StageLight light) => SetLight(Camera.main, light);
+        public static bool SetLight(Camera viewer, StageLight light)
+        {
+            var environment = viewer == null ? null : viewer.GetComponent<ToyStageEnvironment>();
+            return environment != null && environment.SetLight(light);
+        }
+
         public static void Create(out Camera camera, out Transform toyMount, out Transform turntable, out Collider plateCollider, out Transform contactShadow)
         {
             var stage = new GameObject("Pockle · presentation stage");
@@ -119,6 +132,8 @@ namespace Pockle.Runtime
             RenderSettings.ambientMode = AmbientMode.Flat;
             RenderSettings.ambientLight = new Color(0.69f, 0.65f, 0.66f);
             RenderSettings.fog = false;
+            cameraObject.AddComponent<ToyStageEnvironment>().Initialize(camera, toyMount, key, fill, baseMaterial, topMaterial);
+
         }
 
         private static Material MakeMaterial(string name, Color colour, float smoothness)
@@ -200,7 +215,7 @@ namespace Pockle.Runtime
             // The play screen reserves only its identity header and a short gesture hint.
             var pixelsPerUnit = height / (landscape ? 390f : 844f);
             var top = 144f * pixelsPerUnit;
-            var bottom = 72f * pixelsPerUnit;
+            var bottom = 120f * pixelsPerUnit;
             var viewportHeight = Mathf.Max(1f, safeArea.height - top - bottom);
             var viewportWidth = safeArea.width;
             viewer.rect = new Rect(safeArea.xMin / width, (safeArea.yMin + bottom) / height,
@@ -208,7 +223,7 @@ namespace Pockle.Runtime
             // Reserve at least 3.9 world units vertically and 3 horizontally, so
             // tall screens keep the full plate and stretched crown in view.
             viewer.orthographicSize = Mathf.Max(1.95f, 1.5f * viewportHeight / viewportWidth);
-            viewer.transform.LookAt(new Vector3(0f, 1.72f, 0f));
+            viewer.transform.LookAt(new Vector3(0f, 1.53f, 0f));
         }
     }
 }

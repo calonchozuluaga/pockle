@@ -93,10 +93,14 @@ namespace Pockle.Runtime
             hud.SetSoundVolume(soundVolume);
             hud.SetSettings(soundEnabled, hapticsEnabled, reducedMotion);
             hud.SetVariant(toy.Variant);
+            ApplyStage();
             hud.VariantChanged += SetVariant;
             hud.CollectibleChanged += SelectCollectible;
             hud.StoreVisibilityChanged += StoreVisibilityChanged;
             hud.BackdropChanged += SetBackdrop;
+            hud.WorldChanged += SetWorld;
+            hud.LightChanged += SetLight;
+            ApplyStage();
             hud.DailyBoxRequested += OpenDailyBox;
             hud.Bind(collection);
 
@@ -382,9 +386,24 @@ namespace Pockle.Runtime
             PlayerPrefs.SetInt(PipVariants.Preference, (int)toy.Variant);
             PlayerPrefs.Save();
             hud.SetVariant(toy.Variant);
+            ApplyStage();
         }
 
-        private void SetBackdrop(Color colour) => PrototypeStage.SetBackdrop(viewCamera, colour);
+        private void SetBackdrop(Color colour)
+        {
+            PrototypeStage.SetBackdrop(viewCamera, colour);
+            ApplyStage();
+        }
+        private void SetWorld(StageWorld world) => ApplyStage();
+        private void SetLight(StageLight light) => ApplyStage();
+        private void ApplyStage()
+        {
+            if (hud == null || toy == null || viewCamera == null) return;
+            PrototypeStage.SetWorld(viewCamera, hud.CurrentWorld, toy.CollectibleId);
+            PrototypeStage.SetLight(viewCamera, hud.CurrentLight);
+            viewCamera.GetComponent<ToyStageEnvironment>().Calm = reducedMotion;
+            shadowRestColor = new Color(.54f, .36f, .43f, hud.CurrentLight == StageLight.Night ? .12f : hud.CurrentLight == StageLight.Golden ? .27f : .20f);
+        }
 
         private void ConfigureHandling()
         {
@@ -409,6 +428,7 @@ namespace Pockle.Runtime
                 !collection.IsOwnedAndAvailable(id) || !toy.TrySetCollectible(id)) return false;
             ResetToy();
             ConfigureHandling();
+            ApplyStage();
             return true;
         }
 
@@ -462,6 +482,7 @@ namespace Pockle.Runtime
         private void SetReducedMotion(bool enabled)
         {
             reducedMotion = enabled;
+            ApplyStage();
             if (enabled) ClearMotion();
             SaveSetting("reducedMotion", enabled);
         }
@@ -504,6 +525,8 @@ namespace Pockle.Runtime
             if (hud != null) hud.CollectibleChanged -= SelectCollectible;
             if (hud != null) hud.StoreVisibilityChanged -= StoreVisibilityChanged;
             if (hud != null) hud.BackdropChanged -= SetBackdrop;
+            if (hud != null) hud.WorldChanged -= SetWorld;
+            if (hud != null) hud.LightChanged -= SetLight;
             if (hud != null) hud.DailyBoxRequested -= OpenDailyBox;
             if (hud != null) Destroy(hud.gameObject);
             if (pressClip != null) Destroy(pressClip);
