@@ -12,6 +12,7 @@ internal static class PersistentFusionChecks
     public static void Run()
     {
         int pairs = 0;
+        var patterns = new System.Collections.Generic.HashSet<int>();
         foreach (var collection in ToyCatalog.Collections.Where(c => c.CharacterId == c.Id))
         {
             var sources = collection.Members.Where(FusionCatalog.IsSource).ToArray();
@@ -19,6 +20,8 @@ internal static class PersistentFusionChecks
             {
                 var progress = new CollectionProgress(new CollectionSave { Version = 2, Day = 42, Steps = 681,
                     Claimed = true, Inventory = sources.Select(id => new OwnedCollectible(id, 3)).ToList() }, 42);
+                int pattern = FusionPattern.Kind(sources[i], sources[j]); patterns.Add(pattern);
+                Check(pattern >= 1 && pattern <= 4 && pattern == FusionPattern.Kind(sources[j], sources[i]), "Appearance must be stable and unordered.");
                 var record = Result(sources[i], sources[j]);
                 Check(progress.TryFuse(record), "A valid same-character spare pair was rejected.");
                 Check(progress.GetOwnedCount(sources[i]) == (i == j ? 1 : 2) && progress.GetOwnedCount(sources[j]) == (i == j ? 1 : 2), "Wrong parent consumption.");
@@ -35,6 +38,7 @@ internal static class PersistentFusionChecks
                 pairs++;
             }
         }
+        Check(patterns.Count == 4, "The roster should include all four pattern families.");
         var bad = new CollectionProgress(null, 42); bad.EnsureFusionReviewSpares();
         var state = JsonSerializer.Serialize(bad.Save, Json);
         Check(!bad.TryFuse(Result(ToyCatalog.PeachId, ToyCatalog.FoxId)), "Cross-character fusion accepted.");

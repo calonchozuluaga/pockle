@@ -2,6 +2,16 @@ Shader "Pockle/Fox Finish"
 {
     Properties
     {
+        _FusionDetailA ("First parent detail", Vector) = (0,0,0,0)
+        _FusionDetailB ("Second parent detail", Vector) = (0,0,0,0)
+        _FusionAccentA ("First parent accent", Vector) = (0,0,0,0)
+        _FusionAccentB ("Second parent accent", Vector) = (0,0,0,0)
+        _FusionPattern ("Fusion pattern: none / gradient / swirl / spots / ribbons", Float) = 0
+        _FusionPigmentA ("First parent pigment", Color) = (1,1,1,1)
+        _FusionPigmentB ("Second parent pigment", Color) = (1,1,1,1)
+        _FusionSurfaceA ("First parent surface", Vector) = (0,0,0,1)
+        _FusionSurfaceB ("Second parent surface", Vector) = (0,0,0,1)
+
         _CharacterTemperament ("Local temperament face", Float) = 1
         _TemperBlink ("Temperament Blink", Float) = 0
         _TemperHappy ("Temperament Happy", Float) = 0
@@ -53,6 +63,7 @@ Shader "Pockle/Fox Finish"
     }
     CGINCLUDE
     #include "UnityCG.cginc"
+    #include "Assets/Pockle/Shaders/FusionPattern.cginc"
     half4 _StageTint; half _StageEmission; samplerCUBE _StageEnvironment; half _StageEnvironmentStrength;
     sampler2D _MainTex; samplerCUBE _StudioCube;
     half4 _BodyColor; half _TemperClassic;
@@ -70,8 +81,13 @@ Shader "Pockle/Fox Finish"
     { return smoothstep(.025,.16,paint.r-paint.g)*smoothstep(.025,.16,paint.r-paint.b); }
     fixed4 finish(v2f i, bool back)
     {
+        half4 fusionSurface=FusionSurface(i.face,half4(_Gloss,_Metallic,_Fuzz,_Opacity));
+            half4 fusionDetail=FusionDetail(i.face,half4(_Grain,_Pearl,_Iridescence,_Glitter));
+            half4 fusionAccent=FusionAccent(i.face,half4(0,0,_Crystal,0));
+        half3 fusionPigment=FusionPigment(i.face,_BodyColor.rgb);
+
         half3 paint=TemperClean(i.face,tex2D(_MainTex,i.uv).rgb); half body=bodyMask(paint);
-        if(back) { clip(.999-_Opacity); clip(body-.3); }
+        if(back) { clip(.999-fusionSurface.w); clip(body-.3); }
         half3 n=TemperNormal(i.face,normalize(i.normal)); if(back) n=-n;
         half3 view=normalize(_WorldSpaceCameraPos.xyz-i.world);
         half facing=saturate(dot(n,view)); half rim=1-facing;
@@ -79,31 +95,31 @@ Shader "Pockle/Fox Finish"
         half wrapped=saturate((dot(n,key)+.45)/1.45);
         half grain=hash(floor(i.local*480));
         half brush=sin(i.local.y*680+i.local.x*8)*.5+.5;
-        half3 pigment=_BodyColor.rgb*(.87+.13*saturate(paint.r));
+        half3 pigment=fusionPigment*(.87+.13*saturate(paint.r));
         half3 base=lerp(paint,pigment,body*(1-_TemperClassic));
         base*=.70+.30*wrapped;
-        base*=1-body*((grain-.5)*(_Fuzz*.22+_Grain*.16)+_Metallic*brush*.035);
+        base*=1-body*((grain-.5)*(fusionSurface.z*.22+fusionDetail.x*.16)+fusionSurface.y*brush*.035);
         half3 reflected=reflect(-view,n);
         half3 studio=lerp(texCUBE(_StudioCube,reflected).rgb,texCUBE(_StageEnvironment,reflected).rgb,_StageEnvironmentStrength);
         half3 across=normalize(cross(key,half3(0,1,0))); half3 along=cross(across,key);
         half rx=dot(reflected,across), ry=dot(reflected,along);
-        half spread=lerp(8,95,_Gloss);
+        half spread=lerp(8,95,fusionSurface.x);
         half softbox=exp2(-rx*rx*spread-ry*ry*spread*.48)*smoothstep(.5,.85,dot(reflected,key));
-        half glaze=(softbox*.52+max(studio.r,max(studio.g,studio.b))*.16)*lerp(.08,1,_Gloss);
-        half3 spec=lerp(half3(1,.98,.95),_BodyColor.rgb,_Metallic*body*.8);
+        half glaze=(softbox*.52+max(studio.r,max(studio.g,studio.b))*.16)*lerp(.08,1,fusionSurface.x);
+        half3 spec=lerp(half3(1,.98,.95),fusionPigment,fusionSurface.y*body*.8);
         base+=spec*glaze*(1-TemperFeatures(i.face).a);
-        base+=body*_Metallic*(studio*_BodyColor.rgb*.55+spec*softbox*.20);
-        base+=body*_Fuzz*pow(rim,2)*half3(.25,.18,.14);
+        base+=body*fusionSurface.y*(studio*fusionPigment*.55+spec*softbox*.20);
+        base+=body*fusionSurface.z*pow(rim,2)*half3(.25,.18,.14);
         half3 pearl=.5+.5*cos(half3(0,2,4)+facing*6);
-        base+=body*_Pearl*pearl*(.06+.12*rim);
+        base+=body*fusionDetail.y*pearl*(.06+.12*rim);
         half3 aurora=.5+.5*cos(half3(.5,2.4,4.4)+facing*9+i.local.y*1.8);
-        base=lerp(base,base*.6+aurora*.45,body*_Iridescence*(.35+.65*rim));
+        base=lerp(base,base*.6+aurora*.45,body*fusionDetail.z*(.35+.65*rim));
         half facet=hash(floor(i.local*24));
-        base+=body*_Crystal*smoothstep(.92,.99,facet)*(.06+.16*glaze)*half3(1,.7,.85);
+        base+=body*fusionAccent.z*smoothstep(.92,.99,facet)*(.06+.16*glaze)*half3(1,.7,.85);
         half fleck=smoothstep(.996,.999,grain);
-        base+=body*_Glitter*fleck*half3(.8,.55,.16);
-        base+=body*texCUBE(_StageEnvironment,refract(-view,n,.74)).rgb*_StageEnvironmentStrength*(1-_Opacity)*.24;
-        half alpha=lerp(1,_Opacity+(1-_Opacity)*rim*.42,body);
+        base+=body*fusionDetail.w*fleck*half3(.8,.55,.16);
+        base+=body*texCUBE(_StageEnvironment,refract(-view,n,.74)).rgb*_StageEnvironmentStrength*(1-fusionSurface.w)*.24;
+        half alpha=lerp(1,fusionSurface.w+(1-fusionSurface.w)*rim*.42,body);
         if(back) alpha*=.32;
         else { base=TemperFinish(i.face,base);alpha=max(alpha,TemperFeatures(i.face).a); }
         return fixed4(saturate(base * _StageTint.rgb + _StageEmission * half3(.23,.65,.64) * body),alpha);

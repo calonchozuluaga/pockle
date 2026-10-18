@@ -2,7 +2,7 @@ using Pockle.Core;
 using UnityEngine;
 namespace Pockle.Runtime
 {
-    /// <summary>Version-one appearance recipe. Personality never participates in color or surface resolution.</summary>
+    /// <summary>Patterned appearance for both existing and new fusion receipts. Personality never participates in color or surface resolution.</summary>
     public static class FusionMaterial
     {
         private static readonly string[] Floats = { "_Gloss", "_Opacity", "_Metallic", "_Pearl", "_Iridescence", "_Glitter", "_Crystal",
@@ -25,21 +25,47 @@ namespace Pockle.Runtime
         }
         public static void Apply(Material material, FusedToy record)
         {
-            var a = Parent(record.First, material.mainTexture, material.GetTexture("_StudioCube") as Cubemap);
-            var b = Parent(record.Second, material.mainTexture, material.GetTexture("_StudioCube") as Cubemap);
+            bool reverse = string.CompareOrdinal(record.First, record.Second) > 0;
+            var a = Parent(reverse ? record.Second : record.First, material.mainTexture, material.GetTexture("_StudioCube") as Cubemap);
+            var b = Parent(reverse ? record.First : record.Second, material.mainTexture, material.GetTexture("_StudioCube") as Cubemap);
             try
             {
                 foreach (string property in Floats)
                     if (material.HasProperty(property) && a.HasProperty(property) && b.HasProperty(property))
                         material.SetFloat(property, (a.GetFloat(property) + b.GetFloat(property)) * .5f);
-                if (material.HasProperty("_BodyColor")) material.SetColor("_BodyColor", Color.Lerp(a.GetColor("_BodyColor"), b.GetColor("_BodyColor"), .5f));
+                if (material.HasProperty("_BodyColor")) material.SetColor("_BodyColor", a.GetColor("_BodyColor"));
+                bool approvedStudy = Study(record) != null;
+                material.SetFloat("_FusionPattern", approvedStudy ? 0 : FusionPattern.Kind(record.First, record.Second));
+                string pigment = material.HasProperty("_BodyColor") ? "_BodyColor" : "_FinishTint";
+                Color colorA = a.GetColor(pigment), colorB = b.GetColor(pigment);
+                // Same/near-identical pigments still produce a visible tonal pattern.
+                if (Vector3.Distance(new Vector3(colorA.r,colorA.g,colorA.b), new Vector3(colorB.r,colorB.g,colorB.b)) < .18f)
+                    colorB = Color.Lerp(colorB, colorB.maxColorComponent < .25f ? Color.white : Color.black, .38f);
+                material.SetColor("_FusionPigmentA", colorA); material.SetColor("_FusionPigmentB", colorB);
+                string shine = material.HasProperty("_Gloss") ? "_Gloss" : "_Roughness";
+                Vector4 Surface(Material m) => new Vector4(m.GetFloat(shine), m.GetFloat("_Metallic"), m.GetFloat("_Fuzz"), m.GetFloat("_Opacity"));
+                material.SetVector("_FusionSurfaceA", Surface(a)); material.SetVector("_FusionSurfaceB", Surface(b));
+                float Read(Material m, string p) => m.HasProperty(p) ? m.GetFloat(p) : 0;
+                bool pip = material.HasProperty("_FinishTint");
+                Vector4 Detail(Material m) => pip
+                    ? new Vector4(Read(m,"_ReflectionStrength"),Read(m,"_PearlSheen"),Read(m,"_Iridescence"),Read(m,"_GlitterStrength"))
+                    : new Vector4(Read(m,"_Grain"),Read(m,"_Pearl"),Read(m,"_Iridescence"),Read(m,"_Glitter"));
+                Vector4 Accent(Material m) => pip
+                    ? new Vector4(Read(m,"_Transmission"),Read(m,"_SpeckEmission"),Read(m,"_Glow"),0)
+                    : new Vector4(Read(m,"_SurfaceRelief"),Read(m,"_LoopPile"),Read(m,"_Crystal"),0);
+                material.SetVector("_FusionDetailA",Detail(a)); material.SetVector("_FusionDetailB",Detail(b));
+                material.SetVector("_FusionAccentA",Accent(a)); material.SetVector("_FusionAccentB",Accent(b));
+                if (!approvedStudy) {
+                    if (material.HasProperty("_TintStrength")) material.SetFloat("_TintStrength", 1);
+                    if (material.HasProperty("_TemperClassic")) material.SetFloat("_TemperClassic", 0);
+                }
                 if (material.HasProperty("_FusionMode"))
                 {
                     string study = Study(record);
                     if (study != null) PipFinishMaterial.Apply(material, study);
                     else
                     {
-                        material.SetFloat("_FusionMode", 1); material.SetFloat("_TintStrength", 1);
+                        material.SetFloat("_FusionMode", 0); material.SetFloat("_TintStrength", 1);
                         ToyCatalog.TryGetCollectible(record.First, out var first); ToyCatalog.TryGetCollectible(record.Second, out var second);
                         material.SetColor("_FusionColorA", ColorOf(first.SwatchColor)); material.SetColor("_FusionColorB", ColorOf(second.SwatchColor));
                     }
@@ -47,7 +73,7 @@ namespace Pockle.Runtime
                 float opacity = material.HasProperty("_Opacity") ? material.GetFloat("_Opacity") : 1;
                 material.renderQueue = opacity < .995f ? 3000 : 2001;
                 if (material.HasProperty("_ZWrite")) material.SetFloat("_ZWrite", opacity < .995f ? 0 : 1);
-                material.name = record.Name + " · fused recipe v1";
+                material.name = record.Name + " · patterned appearance v2";
             }
             finally { Object.Destroy(a); Object.Destroy(b); }
         }

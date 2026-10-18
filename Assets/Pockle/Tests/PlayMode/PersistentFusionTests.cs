@@ -16,7 +16,7 @@ namespace Pockle.Tests
         private const string SaveKey = "pockle.collection.v1";
         private readonly Dictionary<string, string> previous = new Dictionary<string, string>();
         private GameObject root;
-        private static readonly string[] Keys = { SaveKey, SaveKey + ".backup", SaveKey + ".before-v2", SaveKey + ".before-v3" };
+        private static readonly string[] Keys = { SaveKey, SaveKey + ".backup", SaveKey + ".before-v2", SaveKey + ".before-v3", SaveKey + ".before-v4" };
         private static object Field(object target, string name) => target.GetType().GetField(name, BindingFlags.Instance | BindingFlags.NonPublic).GetValue(target);
         private static void Call(object target, string name, params object[] args) => target.GetType().GetMethod(name, BindingFlags.Instance | BindingFlags.NonPublic).Invoke(target, args);
         [SetUp] public void SetUp()
@@ -50,7 +50,11 @@ namespace Pockle.Tests
                 Assert.IsFalse(service.TryFuse(first, second), "Unacknowledged reveal blocks duplicate input.");
                 Assert.IsTrue(toy.TrySetCollectible(id)); Assert.AreEqual(id, toy.CollectibleId);
                 var material = toy.BodyRenderer.sharedMaterial;
-                Assert.That(material.GetFloat("_Metallic"), Is.EqualTo(.5f).Within(.01f));
+                Assert.That(material.GetFloat("_FusionPattern"), Is.InRange(1f,4f));
+                var surfaces = new[] { material.GetVector("_FusionSurfaceA"), material.GetVector("_FusionSurfaceB") };
+                Assert.That(surfaces.Min(v => v.y), Is.EqualTo(0)); Assert.That(surfaces.Max(v => v.y), Is.EqualTo(1), "Metal must occupy its own regions instead of averaging to half-metal everywhere.");
+                Assert.That(material.GetColor("_FusionPigmentA"), Is.Not.EqualTo(material.GetColor("_FusionPigmentB")));
+                Assert.IsTrue(material.shader.isSupported);
                 Assert.That(PersonalityBook.Dials(id).Energy, Is.EqualTo(record.Energy));
                 Assert.That((int)PersonalityBook.TemperamentOf(id), Is.EqualTo(record.Temperament));
                 var face = toy.GetComponentInChildren<ToyTemperamentDriver>();
@@ -74,6 +78,7 @@ namespace Pockle.Tests
                 Assert.IsTrue(service.TryFuse(first[i], second[i])); string id = session.Progress.Save.PendingFusionId;
                 Assert.AreEqual(appearance[i], FusionMaterial.AppearanceId(id)); Assert.IsTrue(toy.TrySetCollectible(id));
                 Assert.That(toy.BodyRenderer.sharedMaterial.GetFloat("_FusionMode"), Is.EqualTo(i + 1));
+                Assert.That(toy.BodyRenderer.sharedMaterial.GetFloat("_FusionPattern"), Is.Zero);
                 if (i == 0) Assert.That(toy.GetComponentsInChildren<Transform>().Count(t => t.name.StartsWith("Dusk blue star")), Is.EqualTo(4));
                 if (i == 3) {
                     Assert.That(toy.GetComponentsInChildren<Transform>().Count(t => t.name.StartsWith("Eclipse gold star")), Is.EqualTo(4));
@@ -85,6 +90,56 @@ namespace Pockle.Tests
                 Assert.That(session.GetOwnedCount(id), Is.EqualTo(1), "Four creations must retain every parent's last copy.");
         }
 
+        [UnityTest] public IEnumerator OldHoneyCopperReceiptGainsPatternWithoutChangingInventoryOrPersonality()
+        {
+            root = new GameObject("Existing fusion appearance upgrade");
+            var receipt = new FusedToy { Id = "fusion.axolotl-existing", First = "axolotl.clear-jelly", Second = "axolotl.coated-metallic",
+                Name = "Honey Copper", Material = "Jelly metal", RecipeVersion = 1, Temperament = 7, Energy = 31 };
+            PlayerPrefs.SetString(SaveKey, JsonUtility.ToJson(new CollectionSave { Version = 3, Day = CollectionSession.Today,
+                Inventory = new List<OwnedCollectible> { new OwnedCollectible(receipt.Id, 1) }, Fusions = new List<FusedToy> { receipt } }));
+            var session = root.AddComponent<CollectionSession>(); session.Initialize();
+            var toy = new GameObject("Existing honey copper").AddComponent<JellyToy>(); toy.transform.SetParent(root.transform);
+            Assert.IsTrue(toy.TrySetCollectible(receipt.Id));
+            var material = toy.BodyRenderer.sharedMaterial;
+            Assert.That(material.GetFloat("_FusionPattern"), Is.InRange(1f,4f));
+            Assert.That(session.GetOwnedCount(receipt.Id), Is.EqualTo(1));
+            Assert.That(session.Progress.Save.Fusions[0].Energy, Is.EqualTo(31));
+            Assert.That(session.Progress.Save.Fusions[0].RecipeVersion, Is.EqualTo(1));
+            CaptureNativeFusion(receipt.Id,"axolotl-honey-copper");
+            var beforeA=material.GetColor("_FusionPigmentA"); var beforeB=material.GetColor("_FusionPigmentB");
+            var reverse = new FusedToy { First=receipt.Second, Second=receipt.First, Name="Reversed", Temperament=1, Energy=99 };
+            FusionMaterial.Apply(material, reverse);
+            Assert.AreEqual(beforeA, material.GetColor("_FusionPigmentA")); Assert.AreEqual(beforeB, material.GetColor("_FusionPigmentB"));
+            // Even a same-color pair needs visible tonal regions.
+            FusionMaterial.Apply(material, new FusedToy { First=receipt.First,Second=receipt.First,Name="Tonal" });
+            Assert.That(Vector4.Distance(material.GetColor("_FusionPigmentA"),material.GetColor("_FusionPigmentB")),Is.GreaterThan(.18f));
+            yield return null;
+        }
+
+        [UnityTest] public IEnumerator AllFourPatternFamiliesRenderAcrossEveryCharacter()
+        {
+            foreach (var collection in ToyCatalog.Collections.Where(c => c.Id == c.CharacterId && c.Members.Any(FusionCatalog.IsSource)))
+            {
+                var sources = collection.Members.Where(FusionCatalog.IsSource).ToArray();
+                for (int pattern = 1; pattern <= 4; pattern++)
+                {
+                    string first=null,second=null; float best=-1;
+                    for (int a=0;a<sources.Length;a++) for (int b=a;b<sources.Length;b++)
+                    {
+                        if (FusionPattern.Kind(sources[a],sources[b])!=pattern) continue;
+                        ToyCatalog.TryGetCollectible(sources[a],out var x); ToyCatalog.TryGetCollectible(sources[b],out var y);
+                        float distance=Math.Abs(x.SwatchColor.Red-y.SwatchColor.Red)+Math.Abs(x.SwatchColor.Green-y.SwatchColor.Green)+Math.Abs(x.SwatchColor.Blue-y.SwatchColor.Blue);
+                        if(distance>best) { best=distance; first=sources[a]; second=sources[b]; }
+                    }
+                    Assert.IsNotNull(first,collection.Id+" has no representative of pattern "+pattern);
+                    var record=new FusedToy { Id="fusion.pattern-review",First=first,Second=second,Name="Pattern review",Temperament=7 };
+                    FusionCatalog.Restore(new[] {record});
+                    CaptureNativeFusion(record.Id,collection.Id+"-pattern-"+pattern);
+                }
+                yield return null;
+            }
+        }
+
         private static void CaptureNativeFusion(string id, string character)
         {
             var target = (RenderTexture)typeof(JellyToy).Assembly.GetType("Pockle.Runtime.ToyPortrait").GetMethod("Render", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string), typeof(Color) }, null).Invoke(null, new object[] { id, new Color(.96f, .94f, .92f) });
@@ -93,6 +148,7 @@ namespace Pockle.Tests
             {
                 RenderTexture.active = target; image.ReadPixels(new Rect(0, 0, target.width, target.height), 0, 0); image.Apply();
                 var pixels = image.GetPixels32(); var background = pixels[0];
+                Assert.That(pixels.Count(c => c.r > 230 && c.b > 230 && c.g < 30), Is.LessThan(20), "Native fusion rendered shader-error magenta.");
                 Assert.That(pixels.Count(c => Math.Abs(c.r - background.r) + Math.Abs(c.g - background.g) + Math.Abs(c.b - background.b) > 35),
                     Is.GreaterThan(1000), "The persisted toy must actually render, not only resolve to a definition.");
                 string folder = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Application.dataPath), "test-results", "persistent-fusion");

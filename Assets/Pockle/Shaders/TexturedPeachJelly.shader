@@ -2,6 +2,16 @@ Shader "Pockle/Textured Peach Jelly"
 {
     Properties
     {
+        _FusionDetailA ("First parent detail", Vector) = (0,0,0,0)
+        _FusionDetailB ("Second parent detail", Vector) = (0,0,0,0)
+        _FusionAccentA ("First parent accent", Vector) = (0,0,0,0)
+        _FusionAccentB ("Second parent accent", Vector) = (0,0,0,0)
+        _FusionPattern ("Fusion pattern: none / gradient / swirl / spots / ribbons", Float) = 0
+        _FusionPigmentA ("First parent pigment", Color) = (1,1,1,1)
+        _FusionPigmentB ("Second parent pigment", Color) = (1,1,1,1)
+        _FusionSurfaceA ("First parent surface", Vector) = (0,0,0,1)
+        _FusionSurfaceB ("Second parent surface", Vector) = (0,0,0,1)
+
         _StageEnvironment ("Painted environment", Cube) = "black" {}
         _StageEnvironmentStrength ("Environment amount", Range(0,1)) = 0
         _StageTint ("Stage illumination", Color) = (1,1,1,1)
@@ -52,6 +62,7 @@ Shader "Pockle/Textured Peach Jelly"
         Tags { "RenderType"="Transparent" "Queue"="Transparent" }
         CGINCLUDE
         #include "UnityCG.cginc"
+    #include "Assets/Pockle/Shaders/FusionPattern.cginc"
     half4 _StageTint; half _StageEmission; samplerCUBE _StageEnvironment; half _StageEnvironmentStrength;
         sampler2D _MainTex;
         samplerCUBE _StudioCube;
@@ -170,16 +181,23 @@ Shader "Pockle/Textured Peach Jelly"
                     mixAmount=saturate(smoothstep(.38,.90,i.local.y)*.75+(1-smoothstep(-.85,-.45,i.local.y))*.60+pow(sin(i.local.x*4+i.local.y*3+i.local.z*2)*.5+.5,8)*.18);
                 tint=lerp(_FusionColorA.rgb,_FusionColorB.rgb,mixAmount);
             }
+            tint=FusionPigment(i.local,tint);
             return lerp(paint,tint*(.55+.45*luminance),_TintStrength*(1-FacePigment(i,paint))*(1-whiteHighlight));
         }
         fixed4 fragBack(v2f i) : SV_Target
         {
+            half4 fusionSurface=FusionSurface(i.local,half4(_Roughness,_Metallic,_Fuzz,_Opacity));
+
             half3 paint = PreviewPaint(i);
-            clip(.999-_Opacity);
-            return fixed4(FinishPaint(i,paint)*.8, _Opacity*.16);
+            clip(.999-fusionSurface.w);
+            return fixed4(FinishPaint(i,paint)*.8, fusionSurface.w*.16);
         }
         fixed4 fragFront(v2f i) : SV_Target
         {
+            half4 fusionSurface=FusionSurface(i.local,half4(_Roughness,_Metallic,_Fuzz,_Opacity));
+            half4 fusionDetail=FusionDetail(i.local,half4(_ReflectionStrength,_PearlSheen,_Iridescence,_GlitterStrength));
+            half4 fusionAccent=FusionAccent(i.local,half4(_Transmission,_SpeckEmission,_Glow,0));
+
             half3 paint = PreviewPaint(i);
             half pigment = FacePigment(i,paint);
             paint = FinishPaint(i,paint);
@@ -195,29 +213,29 @@ Shader "Pockle/Textured Peach Jelly"
             half body = smoothstep(.12,.35,brightness);
             half3 color = paint*(.80+.20*wrapped);
             color += paint*_SubsurfaceColor.rgb*_Subsurface*(1-wrapped)*body;
-            color += paint*_Transmission*saturate(dot(n,back))*(.035+.09*rim)*body;
+            color += paint*fusionAccent.x*saturate(dot(n,back))*(.035+.09*rim)*body;
             half3 reflection = reflect(-view,n);
             half3 across = normalize(cross(key,half3(0,1,0))), along = cross(across,key);
             half rx = dot(reflection,across), ry = dot(reflection,along);
-            half spread = lerp(60,18,saturate((_Roughness-.08)/.32));
+            half spread = lerp(60,18,saturate((fusionSurface.x-.08)/.32));
             half softbox = exp2(-rx*rx*spread-ry*ry*spread*.48)*smoothstep(.5,.85,dot(reflection,key));
             half3 studio = lerp(texCUBE(_StudioCube,reflection).rgb,texCUBE(_StageEnvironment,reflection).rgb,_StageEnvironmentStrength);
-            color += (studio*(.17+.33*rim) + half3(1,.98,.94)*softbox*.5)*_ReflectionStrength*(1-pigment);
+            color += (studio*(.17+.33*rim) + half3(1,.98,.94)*softbox*.5)*fusionDetail.x*(1-pigment);
             half3 transmitted=texCUBE(_StageEnvironment,refract(-view,n,.74)).rgb;
-            color+=transmitted*_StageEnvironmentStrength*_Transmission*(1-_Opacity)*.28*(1-pigment);
+            color+=transmitted*_StageEnvironmentStrength*fusionAccent.x*(1-fusionSurface.w)*.28*(1-pigment);
             half gold = smoothstep(.55,.8,paint.r)*smoothstep(.45,.65,paint.g)
                 *(1-smoothstep(.16,.3,paint.b))*smoothstep(.68,.86,paint.g/max(paint.r,.001));
-            color += half3(1,.65,.16)*gold*_SpeckEmission;
+            color += half3(1,.65,.16)*gold*fusionAccent.y;
             half noise = frac(sin(dot(floor(i.local*100),float3(127.1,311.7,74.7)))*43758.5453);
-            color += _GlitterStrength*smoothstep(.98,.997,noise)*(.3+.7*softbox)*half3(1,.81,.31)*(1-pigment);
+            color += fusionDetail.w*smoothstep(.98,.997,noise)*(.3+.7*softbox)*half3(1,.81,.31)*(1-pigment);
             half3 pearl = .5+.5*cos(half3(0,2,4)+facing*6);
-            color += _PearlSheen*pearl*(.05+.12*rim)*(1-pigment);
-            color *= 1 - _Fuzz*(noise-.5)*.10*(1-pigment);
-            color += _Fuzz*rim*half3(.10,.08,.12)*(1-pigment);
-            color += _Metallic*studio*_FinishTint.rgb*.45*(1-pigment);
+            color += fusionDetail.y*pearl*(.05+.12*rim)*(1-pigment);
+            color *= 1 - fusionSurface.z*(noise-.5)*.10*(1-pigment);
+            color += fusionSurface.z*rim*half3(.10,.08,.12)*(1-pigment);
+            color += fusionSurface.y*studio*FusionPigment(i.local,_FinishTint.rgb)*.45*(1-pigment);
             half3 iridescent=.5+.5*cos(half3(.5,2.4,4.4)+facing*9+i.local.y*1.8);
-            color=lerp(color,color*.7+iridescent*.35,_Iridescence*(.25+.75*rim)*(1-pigment));
-            color += _Glow*paint*(.045+.13*rim)*(1-pigment);
+            color=lerp(color,color*.7+iridescent*.35,fusionDetail.z*(.25+.75*rim)*(1-pigment));
+            color += fusionAccent.z*paint*(.045+.13*rim)*(1-pigment);
             if(_FusionMode>3.5)
             {
                 // A ray-offset local sample suggests a ribbon suspended beneath the shell, without extra draw calls.
@@ -226,14 +244,14 @@ Shader "Pockle/Textured Peach Jelly"
                 half ribbon=pow(saturate(1-abs(sin(inside.y*5+inside.x*1.7+inside.z*2.2+sin(inside.x*3+inside.z*2)*.75))),10);
                 half3 gold=half3(1,.66,.18);
                 color=lerp(color,color*.40+gold*.72,ribbon*.72*(1-pigment));
-                color+=gold*ribbon*_Glow*.32*(1-pigment);
+                color+=gold*ribbon*fusionAccent.z*.32*(1-pigment);
             }
             float4 cheekA=float4(-.22,-.29,.13,.075),cheekB=float4(.25,-.29,.13,.075);
             half cheeks=max(Region(i.local.xy,cheekA),Region(i.local.xy,cheekB))*smoothstep(.45,.62,-i.local.z);
             color=lerp(color,half3(1,.21,.37),cheeks*_Blush*.72);
             // Dark painted eyes/mouth remain readable; the rest is a translucent shell.
-            half alpha = lerp(saturate(_Opacity+.22*rim),.98,pigment);
-            half reflectedAlpha = _ReflectionStrength*(max(studio.r,max(studio.g,studio.b))*.55+softbox*.65);
+            half alpha = lerp(saturate(fusionSurface.w+.22*rim),.98,pigment);
+            half reflectedAlpha = fusionDetail.x*(max(studio.r,max(studio.g,studio.b))*.55+softbox*.65);
             alpha = max(alpha,saturate(reflectedAlpha));
             return fixed4(saturate(color * _StageTint.rgb + _StageEmission * half3(.23,.65,.64) * (1-pigment)),alpha);
         }
