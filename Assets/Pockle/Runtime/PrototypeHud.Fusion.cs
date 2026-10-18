@@ -241,6 +241,9 @@ namespace Pockle.Runtime
 
             int shown = 0;
             var noSpare = new List<string>();
+            // Which spare tiles (and the rows under them) were visible before this refresh. If that changes, the grid is
+            // laid out again so the remaining tiles close up from the top-left instead of keeping their old slots.
+            string visibleBefore = SpareVisibilityMask();
             for (int i = 0; i < spareTiles.Length; i++)
             {
                 string id = FusionOrder[i];
@@ -267,12 +270,24 @@ namespace Pockle.Runtime
             fusionNoSpareText.text = noSpare.Count == 0 ? "" :
                 (noSpare.Count == 1 ? noSpare[0] + " has no spare yet." : string.Join(" and ", noSpare.GetRange(0, Mathf.Min(2, noSpare.Count))) + (noSpare.Count > 2 ? " and more have" : " have") + " no spares yet.")
                 + " A spare is an extra copy; your last one always stays on your shelf.";
+            if (SpareVisibilityMask() != visibleBefore && page == AppPage.Fusion && lastLayoutSize.x > 0) AdaptLayout();
 
             fusionGo.interactable = ready;
             fusionGo.GetComponentInChildren<Text>().text = ready ? "Fuse " + FirstName(fuseFirst) + " + " + FirstName(fuseSecond) : "Pick two spares";
             fusionGo.GetComponent<Image>().color = ready ? PockleTheme.Plum : PockleTheme.FillDeep;
             fusionGo.GetComponentInChildren<Text>().color = ready ? PockleTheme.OnPlum : MutedInk;
             fusionGoNote.text = ready ? "Uses one spare of each. It can't be undone or traded." : "Your last copy of a toy is never used.";
+        }
+
+        /// <summary>Which spare tiles, the empty message and the no-spare row are showing, so a change can trigger a relayout.
+        /// A string rather than a bit mask, so it keeps working however many spare tiles a collection adds.</summary>
+        private string SpareVisibilityMask()
+        {
+            var shown = new System.Text.StringBuilder(spareTiles.Length + 2);
+            foreach (var tile in spareTiles) shown.Append(tile != null && tile.gameObject.activeSelf ? '1' : '0');
+            shown.Append(fusionEmpty != null && fusionEmpty.gameObject.activeSelf ? '1' : '0');
+            shown.Append(fusionNoSpareRow != null && fusionNoSpareRow.gameObject.activeSelf ? '1' : '0');
+            return shown.ToString();
         }
 
         /// <summary>A toy's own colour (its finish swatch), for the mystery toy and the fusion moment.</summary>

@@ -3,6 +3,11 @@
 October 13, 2026. Status: **UX-037/038 (living shelf, personalities, fusion screens) in review on `claude/personalities-fusion-ui`.** Earlier status (October 9): **UX-002/003/004 and ART-001 merged. The owner tested the UI and asked for a less dated look: "Pockle screens v2" (owner's design canvas) is the approved direction. Collection/series rules decided; see `../COLLECTIONS.md`. Next: rebuild the Unity screens to v2, then UX-031.**
 
 
+
+## October 17 — Fuse spares grid closes gaps (branch `claude/fuse-spares-grid`)
+
+Owner phone test: once fusion narrows to one collection, the hidden tiles left holes and the remaining spares stayed in their old slots near the bottom. `RefreshFusion` now notices when the set of visible spare tiles changes and re-runs the page layout, so the remaining tiles pack from the top-left. Only `PrototypeHud.Fusion.cs` changed. **Codex:** if your local build filters spares by collection somewhere other than `RefreshFusion`'s tile loop, call `AdaptLayout()` after hiding tiles there too.
+
 ## October 12–13: living shelf, personalities, fusion screens — `claude/personalities-fusion-ui`
 
 The owner approved the canvas row "Personalities and fusion" and asked to build it as shown. Claimed: **UX-037** (living shelf and personality page) and **UX-038** (fusion screens).
