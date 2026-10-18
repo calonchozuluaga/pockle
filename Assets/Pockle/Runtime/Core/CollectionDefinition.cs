@@ -16,6 +16,14 @@ namespace Pockle.Core
         { CollectibleId = entry.CollectibleId; Weight = entry.Weight; TotalWeight = total; IsSecret = CollectibleId == secretId; }
     }
 
+    public sealed class CollectionWorldDefinition
+    {
+        public string Id { get; }
+        public string DisplayName { get; }
+        public string EnvironmentArt => "Worlds/" + Id;
+        public CollectionWorldDefinition(string id, string name) { Id = id; DisplayName = name; }
+    }
+
     /// <summary>Read-only series presentation, separate from asset availability and ownership.</summary>
     public sealed class CollectionDefinition
     {
@@ -38,6 +46,12 @@ namespace Pockle.Core
         public bool HasApprovedOdds => Pool != null;
         public string ProductId { get; }
         public string BoxPriceTier { get; }
+        public string HomeWorld => Worlds.Count > 0 ? Worlds[0].Id : "studio";
+        public IReadOnlyList<CollectionWorldDefinition> Worlds { get; }
+        public string CoverArt => Id == "fox" ? "Collections/Fox/Cover" : (Id == "pip" || Id == PipFusionStudies.CollectionId) ? "Collections/Pip/Cover" : Id == "axolotl" ? "Collections/Axolotl/Cover" : HolidayCatalog.HasArtSet(Id) ? "Collections/" + HolidayCatalog.Title(Id) + "/Cover" : "";
+        public string BoxArt => Id == "fox" ? "UI/Boxes/Collection-fox" : Id == "pip" ? "UI/Boxes/Collection-pip" : Id == "axolotl" ? "UI/Boxes/Collection-axolotl" : HolidayCatalog.HasArtSet(Id) ? "UI/Boxes/Collection-" + Id : "";
+        public string BoxModel => Id == "fox" ? "Boxes/FoxCollectionBox" : Id == "pip" ? "Boxes/PipCollectionBox" : Id == "axolotl" ? "Boxes/AxolotlCollectionBox" : HolidayCatalog.HasArtSet(Id) ? "Boxes/" + HolidayCatalog.Title(Id) + "CollectionBox" : "";
+        public CatalogColor AccentColor => HolidayCatalog.IsCharacter(Id) ? HolidayCatalog.Accent(Id) : new CatalogColor(Id == "fox" ? 0xec7951u : Id == "pip" ? 0xe8508au : Id == "axolotl" ? 0xf493b5u : 0x49344cu);
         public CatalogColor FieldColor { get; }
         public CatalogColor InkColor { get; }
 
@@ -84,6 +98,25 @@ namespace Pockle.Core
             SeriesNumber = seriesNumber; ReleaseDateUtc = releaseDateUtc; RetireDateUtc = retireDateUtc;
             SecretId = secretId; ProductId = productId; BoxPriceTier = boxPriceTier;
             FieldColor = new CatalogColor(fieldColor); InkColor = new CatalogColor(inkColor);
+            Worlds = Id == "fox" ? Array.AsReadOnly(new[] {
+                new CollectionWorldDefinition("fox-hollow", "Fox Hollow"),
+                new CollectionWorldDefinition("fox-riverbank", "Misty Riverbank"),
+                new CollectionWorldDefinition("fox-autumn-orchard", "Autumn Orchard"),
+                new CollectionWorldDefinition("fox-snowy-den", "Snowy Den"),
+                new CollectionWorldDefinition("fox-aurora-grove", "Aurora Grove")
+            }) : (Id == "pip" || Id == PipFusionStudies.CollectionId) ? Array.AsReadOnly(new[] {
+                new CollectionWorldDefinition("pip-jelly-garden", "Peach Jelly Garden"),
+                new CollectionWorldDefinition("pip-mint-spring", "Mint Spring"),
+                new CollectionWorldDefinition("pip-pearl-lagoon", "Pearl Lagoon"),
+                new CollectionWorldDefinition("pip-confetti-meadow", "Golden Meadow"),
+                new CollectionWorldDefinition("pip-starlight-grove", "Starlight Grove")
+            }) : Id == "axolotl" ? Array.AsReadOnly(new[] {
+                new CollectionWorldDefinition("axolotl-blossom-pond", "Blossom Pond"),
+                new CollectionWorldDefinition("axolotl-mint-creek", "Mint Creek"),
+                new CollectionWorldDefinition("axolotl-pearl-cove", "Pearl Cove"),
+                new CollectionWorldDefinition("axolotl-sunset-marsh", "Sunset Marsh"),
+                new CollectionWorldDefinition("axolotl-biolume-lagoon", "Biolume Lagoon")
+            }) : HolidayCatalog.Worlds(Id);
             Members = Array.AsReadOnly(copy); Odds = Array.AsReadOnly(odds);
         }
 

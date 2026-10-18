@@ -19,6 +19,10 @@ namespace Pockle.Runtime
         public int GetOwnedCount(string id) => Progress.GetOwnedCount(id);
         public string PendingRevealId => Progress.Save.PendingRevealId;
         public bool IsReadOnlySave => readOnlySave;
+        /// <summary>Plugin startup/read failed; false for disabled permission, missing sensor or editor preview.</summary>
+        public bool WalkingFailed => tracker != null && tracker.Failed;
+        /// <summary>Sensor started successfully and permission is held; historical steps do not imply active tracking.</summary>
+        public bool WalkingActive => !readOnlySave && tracker != null && tracker.Active;
         private bool readOnlySave;
         private AndroidWalkingTracker tracker;
         private float nextPoll;
@@ -59,7 +63,90 @@ namespace Pockle.Runtime
             tracker = new AndroidWalkingTracker();
             if (!readOnlySave) tracker.ResumeIfAllowed();
             Persist();
+            if (!Application.isBatchMode) { TryApplyOwnerFoxTestGrant(); TryApplyOwnerFoxFinishesGrant(); TryApplyOwnerPipFinishesGrant(); TryApplyOwnerAxolotlFinishesGrant(); TryApplyOwnerPipFusionStudiesGrant(); TryApplyOwnerWinterTrioGrant(); }
         }
+
+        public const string WinterTrioGrantKey="pockle.owner-test.winter-trio.v1";
+        public bool TryApplyOwnerWinterTrioGrant()
+        {
+            if(!(Application.isEditor||Debug.isDebugBuild)||Progress==null||readOnlySave||PlayerPrefs.GetInt(WinterTrioGrantKey,0)==1)return false;
+            var flag=Resources.Load<TextAsset>("WinterTrioOwnerTestGrant");
+            if(flag==null||flag.text.Trim()!="enabled")return false;
+            bool granted=Progress.EnsureWinterTrioTestCopies();
+            Persist();PlayerPrefs.SetInt(WinterTrioGrantKey,1);PlayerPrefs.Save();
+            Debug.Log("Pockle owner test: Reiny, Guin and Bundy finishes saved (30/30).");Changed?.Invoke();return granted;
+        }
+        public const string PipFusionStudiesGrantKey="pockle.owner-test.pip-fusion-studies.v2";
+        public bool TryApplyOwnerPipFusionStudiesGrant()
+        {
+            if(Progress==null||readOnlySave||PlayerPrefs.GetInt(PipFusionStudiesGrantKey,0)==1)return false;
+            var config=Resources.Load<TextAsset>("PipFusionOwnerTestGrant");
+            if(config==null||config.text.Trim()!="enabled")return false;
+            bool granted=Progress.EnsurePipFusionStudyCopies();
+            Persist(); // Save inventory before the marker and any visible grant.
+            PlayerPrefs.SetInt(PipFusionStudiesGrantKey,1);PlayerPrefs.Save();
+            Debug.Log("Pockle owner test: Dusk, Sorbet, Honeydew and Eclipse saved for material review.");Changed?.Invoke();return granted;
+        }
+        public const string FoxTestGrantKey = "pockle.owner-test.fox-grant.v1";
+        /// <summary>Temporary owner test configuration; remove FoxOwnerTestGrant.txt before public distribution.</summary>
+        public bool TryApplyOwnerFoxTestGrant()
+        {
+            if (Progress == null || readOnlySave || PlayerPrefs.GetInt(FoxTestGrantKey, 0) == 1) return false;
+            var configuration = Resources.Load<TextAsset>("FoxOwnerTestGrant");
+            if (configuration == null || configuration.text.Trim() != "enabled") return false;
+            bool granted = Progress.EnsureFoxTestCopy();
+            Persist(); // Durable inventory first, then the one-time marker, then any UI refresh.
+            PlayerPrefs.SetInt(FoxTestGrantKey, 1); PlayerPrefs.Save();
+            Changed?.Invoke();
+            return granted;
+        }
+        public const string FoxFinishesGrantKey = "pockle.owner-test.fox-finishes.v1";
+        public bool TryApplyOwnerFoxFinishesGrant()
+        {
+            if (Progress == null || readOnlySave || PlayerPrefs.GetInt(FoxFinishesGrantKey, 0) == 1) return false;
+            var configuration = Resources.Load<TextAsset>("FoxOwnerTestGrant");
+            if (configuration == null || configuration.text.Trim() != "enabled") return false;
+            bool granted = Progress.EnsureFoxFinishTestCopies();
+            Persist(); // Inventory precedes grant marker and HUD refresh, including after interrupted startup.
+            PlayerPrefs.SetInt(FoxFinishesGrantKey, 1); PlayerPrefs.Save();
+            Changed?.Invoke();
+            return granted;
+        }
+        public const string PipFinishesGrantKey = "pockle.owner-test.pip-finishes.v1";
+        /// <summary>Temporary owner-only beta grant; disable PipOwnerTestGrant before public distribution.</summary>
+        public bool TryApplyOwnerPipFinishesGrant()
+        {
+            if (Progress == null || readOnlySave || PlayerPrefs.GetInt(PipFinishesGrantKey, 0) == 1) return false;
+            var configuration = Resources.Load<TextAsset>("PipOwnerTestGrant");
+            if (configuration == null || configuration.text.Trim() != "enabled") return false;
+            bool granted = Progress.EnsurePipFinishTestCopies();
+            Persist(); // Inventory must be durable before the marker and any collection refresh.
+            PlayerPrefs.SetInt(PipFinishesGrantKey, 1); PlayerPrefs.Save();
+            int found = 0;
+            foreach (var toy in ToyCatalog.Collectibles)
+                if (toy.CollectionId == "pip" && Progress.GetOwnedCount(toy.Id) > 0) found++;
+            Debug.Log("Pockle owner test: Pip finishes saved (" + found + "/10).");
+            Changed?.Invoke();
+            return granted;
+        }
+        public const string AxolotlFinishesGrantKey = "pockle.owner-test.axolotl-finishes.v1";
+        /// <summary>Temporary owner-only beta grant; disable AxolotlOwnerTestGrant before public distribution.</summary>
+        public bool TryApplyOwnerAxolotlFinishesGrant()
+        {
+            if (Progress == null || readOnlySave || PlayerPrefs.GetInt(AxolotlFinishesGrantKey, 0) == 1) return false;
+            var configuration = Resources.Load<TextAsset>("AxolotlOwnerTestGrant");
+            if (configuration == null || configuration.text.Trim() != "enabled") return false;
+            bool granted = Progress.EnsureAxolotlFinishTestCopies();
+            Persist(); // Inventory must be durable before the marker and any collection refresh.
+            PlayerPrefs.SetInt(AxolotlFinishesGrantKey, 1); PlayerPrefs.Save();
+            int found = 0;
+            foreach (var toy in ToyCatalog.Collectibles)
+                if (toy.CharacterId == "axolotl" && Progress.GetOwnedCount(toy.Id) > 0) found++;
+            Debug.Log("Pockle owner test: Axolotl finishes saved (" + found + "/10).");
+            Changed?.Invoke();
+            return granted;
+        }
+        public bool IsOwnedAndPlayable(string id) => IsOwnedAndAvailable(id) && CharacterArt.TryLoad(id, out _);
 
         private static CollectionSave LegacySnapshot(CollectionSave source) => new CollectionSave {
             Counts = source.Counts, Day = source.Day, Steps = source.Steps, Claimed = source.Claimed,

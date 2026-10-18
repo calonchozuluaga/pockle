@@ -6,115 +6,6 @@ namespace Pockle.Runtime
 {
     public sealed partial class TactilePrototype
     {
-        private void ReadTouches()
-        {
-            if (!gesture.IsActive)
-            {
-                for (int i = 0; i < Input.touchCount && !gesture.IsActive; i++)
-                {
-                    Touch touch = Input.GetTouch(i);
-                    if (touch.phase == TouchPhase.Began) BeginPointer(touch.fingerId, touch.position);
-                }
-            }
-            if (!gesture.IsActive) return;
-            Touch first, second;
-            bool foundFirst = FindTouch(gesture.PointerId, out first);
-            bool liveFirst = foundFirst && IsLive(first);
-            if (gesture.IsPair)
-            {
-                bool foundSecond = FindTouch(gesture.SecondPointerId, out second);
-                bool liveSecond = foundSecond && IsLive(second);
-                if (liveFirst && liveSecond) { MovePair(first.position, second.position); return; }
-                if (!liveFirst && !liveSecond)
-                {
-                    ReleasePointer(foundFirst && first.phase == TouchPhase.Ended &&
-                        foundSecond && second.phase == TouchPhase.Ended);
-                    return;
-                }
-                int ended = liveFirst ? gesture.SecondPointerId : gesture.PointerId;
-                gesture.End(ended); // Promote the survivor if the first finger left.
-                Touch survivor = liveFirst ? first : second;
-                pointerStart = pointerPrevious = survivor.position;
-                liftStart = visibleLift;
-                lift.Reset(visibleLift);
-                lift.Target = liftStart;
-                pinch.Target = 0f; // Ease out rather than snapping the mesh.
-                CaptureGrip(survivor.position);
-                hud.SetStatus("Drag up to lift. Add a finger to stretch.");
-                return;
-            }
-            if (!liveFirst) { ReleasePointer(foundFirst && first.phase == TouchPhase.Ended); return; }
-            if (gesture.Target == PointerTarget.Toy)
-            {
-                for (int i = 0; i < Input.touchCount; i++)
-                {
-                    Touch candidate = Input.GetTouch(i);
-                    if (candidate.phase != TouchPhase.Began || candidate.fingerId == gesture.PointerId) continue;
-                    if (!CanJoinToy(candidate) || Vector2.Distance(first.position, candidate.position) < 8f) continue;
-                    if (!gesture.TryJoin(candidate.fingerId, PointerTarget.Toy)) continue;
-                    pairStartDistance = Vector2.Distance(first.position, candidate.position);
-                    pairStartCenter = (first.position + candidate.position) * .5f;
-                    pairLiftStart = visibleLift;
-                    pairStartPinch = pinch.Target;
-                    lift.Reset(visibleLift);
-                    lift.Target = pairLiftStart;
-                    Vector3 secondGrip;
-                    if (toy.RaycastBody(viewCamera.ScreenPointToRay(candidate.position), out secondGrip))
-                        gripTarget = (gripTarget + toy.transform.InverseTransformPoint(secondGrip)) * .5f;
-                    hud.SetStatus("Pull apart to stretch. Pinch to squish.");
-                    MovePair(first.position, candidate.position);
-                    return;
-                }
-            }
-            MovePointer(first.position);
-        }
-
-        private bool CanJoinToy(Touch touch)
-        {
-            if (!viewCamera.pixelRect.Contains(touch.position)) return false;
-            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(touch.fingerId)) return false;
-            Vector3 hit;
-            return toy.RaycastBody(viewCamera.ScreenPointToRay(touch.position), out hit);
-        }
-
-        private void MovePair(Vector2 first, Vector2 second)
-        {
-            Vector2 separation = second - first;
-            float distance = separation.magnitude;
-            pinch.Target = Mathf.Clamp(pairStartPinch + (distance / pairStartDistance - 1f) * .75f, -.35f, .55f);
-            if (distance >= 2f)
-            {
-                Vector3 axis = toy.transform.InverseTransformDirection(
-                    viewCamera.transform.right * separation.x + viewCamera.transform.up * separation.y).normalized;
-                if (Vector3.Dot(axis, pinchAxis) < 0f) axis = -axis;
-                pinchAxis = Vector3.Slerp(pinchAxis, axis, Mathf.Clamp01(Time.unscaledDeltaTime * 18f)).normalized;
-            }
-            float midpointDelta = ((first + second) * .5f - pairStartCenter).y;
-            float worldDelta = midpointDelta / Mathf.Max(1f, viewCamera.pixelHeight) * viewCamera.orthographicSize * 2f;
-            lift.Target = Mathf.Clamp(pairLiftStart + worldDelta, 0f, .75f);
-        }
-
-        private static bool IsLive(Touch touch)
-        { return touch.phase != TouchPhase.Ended && touch.phase != TouchPhase.Canceled; }
-
-        private static bool FindTouch(int id, out Touch touch)
-        {
-            for (int i = 0; i < Input.touchCount; i++)
-            {
-                Touch candidate = Input.GetTouch(i);
-                if (candidate.fingerId == id) { touch = candidate; return true; }
-            }
-            touch = default(Touch);
-            return false;
-        }
-
-        private void CaptureGrip(Vector2 position)
-        {
-            Vector3 point;
-            if (toy.RaycastBody(viewCamera.ScreenPointToRay(position), out point))
-                gripTarget = toy.transform.InverseTransformPoint(point);
-        }
-
         private void ApplyLift()
         {
             float requested = revealing ? revealLift : reducedMotion ? lift.Target : lift.Value;
@@ -122,7 +13,7 @@ namespace Pockle.Runtime
             float scale = Mathf.Max(.01f, toyMount.lossyScale.y);
             float room = Mathf.Max(0f, 3.4f - (toyMount.position.y + toy.DeformedTop * scale)) / scale;
             visibleLift = Mathf.Clamp(requested, 0f, Mathf.Min(revealing ? 1.05f : .75f, room));
-            toy.transform.localPosition = Vector3.up * visibleLift;
+            toy.transform.localPosition = toyMount.InverseTransformVector(Vector3.up * visibleLift);
             if (Mathf.Abs(visibleLift - lastShadowLift) < .001f) return;
             lastShadowLift = visibleLift;
             float height = Mathf.Clamp01(visibleLift * scale / .75f);

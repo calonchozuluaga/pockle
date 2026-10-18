@@ -1,0 +1,1 @@
+Opening-ready original Bundy carton. Source: BundyCollectionBox.blend; GLB: models/BundyCollectionBox.glb; Unity FBX: Assets/Pockle/Art/Models/BundyBox/BundyCollectionBox.fbx. Frame 1 closed, 48 open; 24 fps. Lid and two dust flaps have independent real hinges. Product PNG renders come from the same geometry/materials. 874 triangles.

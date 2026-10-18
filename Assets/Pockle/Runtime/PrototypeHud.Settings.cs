@@ -15,10 +15,10 @@ namespace Pockle.Runtime
         private Image soundTrack, hapticsTrack, motionFullFace, motionCalmFace;
         private RectTransform soundKnob, hapticsKnob, motionGroup;
         private Slider soundVolume;
-        private Text volumeLabel, permissionStatus, walkingHelp;
+        private Text volumeLabel, permissionStatus, walkingHelp, motionHelpText;
         private Action<float> volumeCallback;
         private readonly RectTransform[] feelRows = new RectTransform[4];
-        public const string UiBuild = "v2 screens 02";
+        public const string UiBuild = "v2 screens 22";
 
         private void BuildSettings()
         {
@@ -39,19 +39,20 @@ namespace Pockle.Runtime
             feelRows[3] = Rect("Motion row", feelGroup);
             var motionTitle = Label("Motion", feelRows[3], 17, Ink, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, new Vector2(200, 24));
             LeftLabel(motionTitle.rectTransform, new Vector2(0, -14), new Vector2(200, 24));
-            var motionHelp = Label("Calm keeps squishing but skips bounces and shakes.", feelRows[3], PockleTheme.CaptionSize, MutedInk, FontStyle.Normal,
+            var motionHelp = Label("Calm skips bounces and shakes.", feelRows[3], PockleTheme.CaptionSize, MutedInk, FontStyle.Normal,
                 TextAnchor.UpperLeft, Vector2.zero, new Vector2(300, 38));
-            LeftLabel(motionHelp.rectTransform, new Vector2(0, -40), new Vector2(300, 38));
+            LeftLabel(motionHelp.rectTransform, new Vector2(0, -40), new Vector2(300, 20));
+            motionHelpText = motionHelp;
             motionGroup = Rect("Motion choice", feelRows[3]); Surface(motionGroup, PockleTheme.FillDeep, 22);
             motionFull = CreateButton("Full", motionGroup, Vector2.zero, new Vector2(100, 40), Paper, () => SetMotion(false), out motionFullFace, 15);
             motionCalm = CreateButton("Calm", motionGroup, Vector2.zero, new Vector2(100, 40), Paper, () => SetMotion(true), out motionCalmFace, 15);
 
             walkingHeading = GroupLabel("Walking", settingsRoot);
             walkingSettings = Rect("Walking access", settingsRoot); Surface(walkingSettings, Quiet, 24);
-            permissionStatus = Label("", walkingSettings, PockleTheme.BodySize, Ink, FontStyle.Bold, TextAnchor.UpperLeft, Vector2.zero, new Vector2(280, 44));
-            walkingHelp = Label("Steps count while Pockle is open. Keep it open on your walk for now. If activity access is denied, allow Physical activity in your phone's app settings.",
+            permissionStatus = Label("", walkingSettings, PockleTheme.CaptionSize + 1, Ink, FontStyle.Bold, TextAnchor.UpperLeft, Vector2.zero, new Vector2(280, 44));
+            walkingHelp = Label("Steps count while Pockle is open. If access was denied, allow Physical activity in your phone's settings.",
                 walkingSettings, PockleTheme.CaptionSize, MutedInk, FontStyle.Normal, TextAnchor.UpperLeft, Vector2.zero, new Vector2(300, 60));
-            walkingButton = CreateButton("Enable walking", walkingSettings, Vector2.zero, new Vector2(280, 48), PockleTheme.Plum, () => session?.EnableWalking(), out _);
+            walkingButton = CreateButton("Enable walking", walkingSettings, Vector2.zero, new Vector2(280, 44), Paper, () => session?.EnableWalking(), out _, PockleTheme.BodySize);
 
             aboutHeading = GroupLabel("About", settingsRoot);
             aboutCard = Rect("About and help", settingsRoot); Surface(aboutCard, Quiet, 24);
@@ -127,8 +128,10 @@ namespace Pockle.Runtime
             var fillArea = Rect("Volume fill area", root); Stretch(fillArea); fillArea.offsetMin = new Vector2(12, 19); fillArea.offsetMax = new Vector2(-12, -19);
             var fill = Rect("Volume fill", fillArea); Stretch(fill); Surface(fill, Ink, 3);
             var handleArea = Rect("Volume handle area", root); Stretch(handleArea); handleArea.offsetMin = new Vector2(12, 0); handleArea.offsetMax = new Vector2(-12, 0);
-            var handle = Rect("Volume handle", handleArea); handle.sizeDelta = new Vector2(24, 24);
-            handle.anchorMin = handle.anchorMax = new Vector2(0, .5f); handle.pivot = new Vector2(.5f, .5f);
+            // The slider stretches its handle to the area's height, so a 24 px knob is the area height minus 20.
+            var handle = Rect("Volume handle", handleArea);
+            handle.anchorMin = new Vector2(0, 0); handle.anchorMax = new Vector2(0, 1); handle.pivot = new Vector2(.5f, .5f);
+            handle.sizeDelta = new Vector2(24, -20);
             var image = Surface(handle, Ink, 12); image.raycastTarget = true;
             var slider = root.gameObject.AddComponent<Slider>(); slider.minValue = 0; slider.maxValue = 1;
             slider.fillRect = fill; slider.handleRect = handle; slider.targetGraphic = image; slider.direction = Slider.Direction.LeftToRight;
@@ -153,6 +156,9 @@ namespace Pockle.Runtime
             volumeLabel.text = soundEnabled ? "Volume" : "Muted";
             soundVolume.interactable = soundEnabled;
             permissionStatus.text = session == null ? "Choose walking to request activity access." : session.WalkingStatus;
+            bool walking = WalkingOn;
+            walkingButton.interactable = !walking;
+            walkingButton.GetComponentInChildren<Text>().text = walking ? "Walking is on" : "Enable walking";
         }
 
         private float LayoutSettings(float width)
@@ -161,23 +167,24 @@ namespace Pockle.Runtime
             float left = (width - w) / 2, inner = w - 32;
             float y = 4;
             LeftLabel(feelHeading, new Vector2(left + 4, -y), new Vector2(w, 22)); y += 30;
-            float[] heights = { 60, 56, 60, 108 };
+            float[] heights = { 60, 56, 60, 124 };
             float rowY = 0;
             for (int i = 0; i < feelRows.Length; i++) { LeftLabel(feelRows[i], new Vector2(16, -rowY), new Vector2(inner, heights[i])); rowY += heights[i]; }
             LeftLabel(volumeLabel.rectTransform, new Vector2(0, -16), new Vector2(64, 24));
             LeftLabel(soundVolume.GetComponent<RectTransform>(), new Vector2(70, -6), new Vector2(inner - 70, 44));
-            LeftLabel(motionGroup, new Vector2(0, -60), new Vector2(inner, 48));
+            LeftLabel(motionHelpText.rectTransform, new Vector2(0, -40), new Vector2(inner, 20));
+            LeftLabel(motionGroup, new Vector2(0, -68), new Vector2(inner, 44));
             float half = (inner - 12) / 2;
-            LeftLabel(motionFullFace.rectTransform, new Vector2(4, -4), new Vector2(half, 40));
-            LeftLabel(motionCalmFace.rectTransform, new Vector2(8 + half, -4), new Vector2(half, 40));
+            LeftLabel(motionFullFace.rectTransform, new Vector2(4, -4), new Vector2(half, 36));
+            LeftLabel(motionCalmFace.rectTransform, new Vector2(8 + half, -4), new Vector2(half, 36));
             rowY += 12;
             LeftLabel(feelGroup, new Vector2(left, -y), new Vector2(w, rowY)); y += rowY + 22;
 
             LeftLabel(walkingHeading, new Vector2(left + 4, -y), new Vector2(w, 22)); y += 30;
-            LeftLabel(permissionStatus.rectTransform, new Vector2(16, -14), new Vector2(inner, 44));
-            LeftLabel(walkingHelp.rectTransform, new Vector2(16, -60), new Vector2(inner, 56));
-            LeftLabel(walkingButton.GetComponent<RectTransform>(), new Vector2(16, -122), new Vector2(inner, 48));
-            LeftLabel(walkingSettings, new Vector2(left, -y), new Vector2(w, 186)); y += 186 + 22;
+            LeftLabel(permissionStatus.rectTransform, new Vector2(16, -16), new Vector2(inner, 22));
+            LeftLabel(walkingHelp.rectTransform, new Vector2(16, -42), new Vector2(inner, 40));
+            LeftLabel(walkingButton.GetComponent<RectTransform>(), new Vector2(16, -92), new Vector2(inner, 44));
+            LeftLabel(walkingSettings, new Vector2(left, -y), new Vector2(w, 152)); y += 152 + 22;
 
             LeftLabel(aboutHeading, new Vector2(left + 4, -y), new Vector2(w, 22)); y += 30;
             for (int i = 0; i < aboutCard.childCount; i++)

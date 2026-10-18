@@ -21,6 +21,10 @@ namespace Pockle.Runtime
         private GuestProfile profile;
         public bool StoreVisible => page != AppPage.Play || modal != null && modal.gameObject.activeSelf;
         public event Action<PipVariant> VariantChanged;
+        public event Action<string> CollectibleChanged;
+        private string selectedCollectibleId = ToyCatalog.PeachId;
+        private string SelectedToyName => !ToyCatalog.TryGetLegacyIndex(selectedCollectibleId, out _) && ToyCatalog.TryGetCollectible(selectedCollectibleId, out var selected) ? selected.DisplayName : ToyName(variant);
+        private string SelectedSeriesLine => !ToyCatalog.TryGetLegacyIndex(selectedCollectibleId, out _) && ToyCatalog.TryGetCollectible(selectedCollectibleId, out var selected) && ToyCatalog.TryGetCollection(selected.CollectionId, out var group) ? group.DisplayName + " collection" : SeriesLine(variant);
         public event Action<bool> StoreVisibilityChanged;
         public event Action DailyBoxRequested;
         public event Action<Color> BackdropChanged;
@@ -79,7 +83,9 @@ namespace Pockle.Runtime
             avatarButton = BuildAvatarButton(safeRoot);
             settingsButton = CreateButton("Settings", safeRoot, Vector2.zero, new Vector2(44, 44), Quiet, ShowSettings, out _, 12);
             IconOnly(settingsButton, "Settings", 22);
-            backButton = CreateButton("Back", safeRoot, Vector2.zero, new Vector2(44, 44), Quiet, () => GoBack(), out _, 12);
+            // The on-screen back arrow always leaves the page (closing any open play card on the way); the phone's Back
+            // closes the card first (see GoBack).
+            backButton = CreateButton("Back", safeRoot, Vector2.zero, new Vector2(44, 44), Quiet, () => { CloseStageCardQuietly(); GoBack(); }, out _, 12);
             IconOnly(backButton, "Back", 20);
             favoriteToggle = CreateButton("Favorite", safeRoot, Vector2.zero, new Vector2(44, 44), new Color(1, 1, 1, .6f), ToggleFavorite, out _, 12);
             IconOnly(favoriteToggle, "Heart", 20);
@@ -95,15 +101,18 @@ namespace Pockle.Runtime
             var dragTarget = viewport.gameObject.AddComponent<Image>(); dragTarget.color = Color.clear;
             content = Rect("Collection content", viewport); content.anchorMin = new Vector2(0, 1); content.anchorMax = new Vector2(1, 1); content.pivot = new Vector2(.5f, 1);
             scroll.content = content; scroll.viewport = viewport;
+            BuildCompactHeader(scroll);
             shelfPreviews = gameObject.AddComponent<ShelfPreviewRuntime>(); shelfPreviews.Initialize(viewport);
+            shelfPreviews.AnimateMissing = false; // Undiscovered outlines hop and wave in 2D (EagerOutline).
             shelfRoot = Rect("Your shelf", content); boxesRoot = Rect("Walking and shop", content);
             homeRoot = Rect("Home hub", content); rewardsRoot = Rect("Rewards", content);
             socialRoot = Rect("Friends and discovery", content); profileRoot = Rect("Local profile", content);
             settingsRoot = Rect("Settings page", content);
             collectionsRoot = Rect("Collections page", content); collectionRoot = Rect("Collection lineup", content);
             personalityRoot = Rect("Toy personality", content); fusionRoot = Rect("Fuse spares", content); fusionRevealRoot = Rect("Fusion reveal", content);
+            shelfPickRoot = Rect("Pick your live shelf", content);
             BuildShelf(); BuildLivingShelf(); BuildStore(); BuildHome(); BuildRewards(); BuildProfile(); BuildSocial(); BuildSettings(); BuildCollections();
-            BuildPersonality(); BuildFusion();
+            BuildPersonality(); BuildFusion(); BuildShelfPick();
             // The Shelf tab's header link to every collection.
             collectionsPill = CreateButton("All collections", safeRoot, Vector2.zero, new Vector2(140, 44), Quiet, () => Navigate(AppPage.Collections), out _, 15);
             navigation = Rect("Navigation", safeRoot); Surface(navigation, Primary, 32);
@@ -121,6 +130,9 @@ namespace Pockle.Runtime
             playHint = Label("Press to squish. Drag up to lift. Pinch to stretch.", playHintPill, PockleTheme.SmallSize, Ink, FontStyle.Bold,
                 TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
             Stretch(playHint.rectTransform); playHint.rectTransform.offsetMin = new Vector2(14, 2); playHint.rectTransform.offsetMax = new Vector2(-14, -2);
+            // Toy stage: collection pill, title badge and the Collection / World / Light tray.
+            BuildStage();
+            backButton.transform.SetAsLastSibling(); favoriteToggle.transform.SetAsLastSibling(); stageCollectionPill.transform.SetAsLastSibling();
             BuildModal();
             if (EventSystem.current == null)
             {
@@ -140,10 +152,11 @@ namespace Pockle.Runtime
         public void SetVariant(PipVariant choice)
         {
             variant = PipVariants.FromSaved((int)choice);
+            selectedCollectibleId = PipVariants.CollectibleId(variant);
             if (page == AppPage.Play)
             {
-                heading.text = ToyName(variant); subtitle.text = SeriesLine(variant); RefreshFavoriteToggle();
-                BackdropChanged?.Invoke(PockleTheme.FieldFor(PipVariants.CollectibleId(variant)));
+                heading.text = StageTitle; subtitle.text = ""; RefreshFavoriteToggle(); RefreshStage(); AdaptLayout();
+                BackdropChanged?.Invoke(StageBackdrop);
             }
         }
         public void ShowToy(PipVariant choice)
@@ -157,8 +170,20 @@ namespace Pockle.Runtime
         /// <summary>Plays an owned collectible by stable catalog ID. Unknown, planned, or unowned IDs do nothing.</summary>
         public bool ShowToy(string collectibleId)
         {
-            if (session == null || !session.TryGetPlayableVariant(collectibleId, out var choice) || Owned(choice) <= 0) return false;
-            ShowToy(choice);
+            if (session == null || !session.IsOwnedAndPlayable(collectibleId)) return false;
+            if (PipVariants.TryFromCollectibleId(collectibleId, out var choice)) ShowToy(choice);
+            else
+            {
+                selectedCollectibleId = collectibleId;
+                if (page == AppPage.Play)
+                {
+                    heading.text = StageTitle; subtitle.text = ""; RefreshFavoriteToggle(); RefreshStage(); AdaptLayout();
+                    BackdropChanged?.Invoke(StageBackdrop);
+                }
+                if (page != AppPage.Shelf && page != AppPage.Collection && page != AppPage.Play) Navigate(AppPage.Shelf);
+                Navigate(AppPage.Play);
+                CollectibleChanged?.Invoke(collectibleId);
+            }
             return page == AppPage.Play;
         }
 
@@ -180,7 +205,10 @@ namespace Pockle.Runtime
         public bool GoBack()
         {
             if (modal.gameObject.activeSelf) { CloseModal(); return true; }
+            if (FusionMomentPlaying) { moment.Skip(); return true; } // Back skips the fusion moment to the reveal
             if (!backButton.interactable) return true;
+            // The phone's Back closes an open play-screen card before it leaves the toy.
+            if (page == AppPage.Play && trayTab != TrayClosed) { SetTrayTab(TrayClosed); return true; }
             var selected = EventSystem.current != null ? EventSystem.current.currentSelectedGameObject : null;
             var editing = selected != null ? selected.GetComponent<InputField>() : null;
             if (TouchScreenKeyboard.visible || editing != null && editing.isFocused)
@@ -224,7 +252,7 @@ namespace Pockle.Runtime
             bool tabRoot = page == AppPage.Home || page == AppPage.Shelf || page == AppPage.Boxes || page == AppPage.Profile;
             bool fullBleed = FullBleed;
             // Personality and fusion pages are focused moments without the tab bar, as on the approved canvas.
-            navigation.gameObject.SetActive(!play && !fullBleed && page != AppPage.Fusion);
+            navigation.gameObject.SetActive(!play && (!fullBleed || page == AppPage.Collection) && page != AppPage.Fusion);
             playHintPill.gameObject.SetActive(play);
             // On the toy's stage and full-bleed colour fields, header buttons are translucent milk; elsewhere the neutral fill.
             backButton.GetComponent<Image>().color = play || fullBleed ? new Color(1, 1, 1, .6f) : Quiet;
@@ -243,12 +271,14 @@ namespace Pockle.Runtime
             collectionsRoot.gameObject.SetActive(page == AppPage.Collections); collectionRoot.gameObject.SetActive(page == AppPage.Collection);
             personalityRoot.gameObject.SetActive(page == AppPage.Personality); fusionRoot.gameObject.SetActive(page == AppPage.Fusion);
             fusionRevealRoot.gameObject.SetActive(page == AppPage.FusionReveal);
+            shelfPickRoot.gameObject.SetActive(page == AppPage.ShelfPick);
             // The daily card is shared, so both destinations always show the same claim state.
             walkCard.SetParent(page == AppPage.Rewards ? rewardsRoot : boxesRoot, false);
             switch (page)
             {
                 case AppPage.Home: heading.text = Greeting() + ", " + profile.Name; subtitle.text = HomeLine(); break;
                 case AppPage.Shelf: heading.text = "Your shelf"; subtitle.text = ShelfMood(); break;
+                case AppPage.ShelfPick: heading.text = "Pick your live shelf"; subtitle.text = "These six move, chat and share moments. Mix collections to find new ones."; break;
                 case AppPage.Personality: case AppPage.FusionReveal: heading.text = ""; subtitle.text = ""; break;
                 case AppPage.Fusion:
                     heading.text = "Fuse spares";
@@ -260,21 +290,24 @@ namespace Pockle.Runtime
                 case AppPage.Boxes: heading.text = "Boxes"; subtitle.text = "Walk for a free box every day, or pick one to buy."; break;
                 case AppPage.Collections: heading.text = "Collections"; subtitle.text = "Meet the little characters for your shelf."; break;
                 case AppPage.Collection:
-                    heading.text = SelectedCollection.DisplayName; subtitle.text = CollectionCaption(SelectedCollection); break;
-                default: heading.text = ToyName(variant); subtitle.text = SeriesLine(variant); break;
+                    heading.text = ""; subtitle.text = ""; break; // the collection's hero carries its title
+                default: heading.text = StageTitle; subtitle.text = ""; break;
             }
             RefreshFavoriteToggle(); RefreshAvatarButton();
             StyleTab(homeTab, page == AppPage.Home || page == AppPage.Rewards || page == AppPage.Social);
             // Collection browsing lives under the Shelf tab.
-            StyleTab(shelfTab, page == AppPage.Shelf || page == AppPage.Collections || page == AppPage.Collection
+            StyleTab(shelfTab, page == AppPage.Shelf || page == AppPage.Collections || page == AppPage.Collection || page == AppPage.ShelfPick
                 || page == AppPage.Personality || page == AppPage.Fusion || page == AppPage.FusionReveal);
             StyleTab(boxesTab, page == AppPage.Boxes);
             StyleTab(youTab, page == AppPage.Profile || page == AppPage.Settings);
             RefreshShelf(); RefreshProfile(); RefreshSettings(); RefreshWalkingCard(); RefreshHome(); RefreshCollections();
             RefreshPersonality(); RefreshFusion(); if (page == AppPage.FusionReveal) RefreshFusionReveal();
+            RefreshShelfPick();
+            if (!play && trayTab != TrayClosed) SetTrayTab(TrayClosed);
+            RefreshStage();
             content.anchoredPosition = new Vector2(0, navigator.Scroll);
             if (lastLayoutSize.x > 0) AdaptLayout();
-            BackdropChanged?.Invoke(play ? PockleTheme.FieldFor(PipVariants.CollectibleId(variant)) : PrototypeStage.Background);
+            BackdropChanged?.Invoke(play ? StageBackdrop : PrototypeStage.Background);
             if (wasBlocked != StoreVisible) StoreVisibilityChanged?.Invoke(StoreVisible);
         }
         public void SetSettings(bool sound, bool haptics, bool reducedMotion)
@@ -332,8 +365,11 @@ namespace Pockle.Runtime
         }
         private void AdaptLayout()
         {
-            var size = safeRoot.rect.size; if (size.x < 1 || size.y < 1) return; lastLayoutSize = size;
-            shelfPreviews?.InvalidateView();
+            var size = safeRoot.rect.size; if (size.x < 1 || size.y < 1) return;
+            // Only a new screen size invalidates the live previews. Relayouts from collection refreshes (steps, walking
+            // status) used to restart every shelf animation, which read as the toys skipping.
+            if (size != lastLayoutSize) shelfPreviews?.InvalidateView();
+            lastLayoutSize = size;
             const float gutter = PockleTheme.Gutter;
             float width = Mathf.Max(1, Mathf.Min(560, size.x - gutter * 2));
             float left = (size.x - width) / 2;
@@ -368,6 +404,8 @@ namespace Pockle.Runtime
             for (int i = 0; i < tabButtons.Length; i++)
                 LeftLabel(tabButtons[i].rectTransform, new Vector2(6 + i * (tabWidth + 4), -6), new Vector2(tabWidth, 56));
             playHintPill.sizeDelta = new Vector2(Mathf.Min(width, 360), 40);
+            LayoutStage(size, left, width);
+            LayoutCompactHeader(left);
             float height;
             switch (page)
             {
@@ -382,6 +420,7 @@ namespace Pockle.Runtime
                 case AppPage.Personality: height = LayoutPersonality(width); break;
                 case AppPage.Fusion: height = LayoutFusion(width); break;
                 case AppPage.FusionReveal: height = LayoutFusionReveal(width); break;
+                case AppPage.ShelfPick: height = LayoutShelfPick(width); break;
                 default: height = LayoutShelf(width); break;
             }
             // Leave room to scroll the last row clear of the floating tab bar.
@@ -391,7 +430,8 @@ namespace Pockle.Runtime
             if (modal.gameObject.activeSelf) LayoutModal();
         }
 
-        private bool FullBleed => page == AppPage.Personality || page == AppPage.FusionReveal;
+        // Collection pages are full-bleed too: their painted banner runs to the top edge, under the back button (canvas "Collections, box first").
+        private bool FullBleed => page == AppPage.Personality || page == AppPage.FusionReveal || page == AppPage.Collection;
 
         private void LayoutModal()
         {
@@ -570,8 +610,10 @@ namespace Pockle.Runtime
         {
             var fill = Rect("Progress", track); Stretch(fill);
             var image = fill.gameObject.AddComponent<Image>(); image.sprite = roundedSprite; image.color = colour;
-            image.type = Image.Type.Filled; image.fillMethod = Image.FillMethod.Horizontal; image.fillOrigin = 0;
+            // Sliced, so the ends stay round; ProgressWidth turns fillAmount into the bar's width.
+            image.type = Image.Type.Sliced; SetRadius(image, Mathf.Max(2f, track.rect.height > 0 ? track.rect.height / 2 : 6f));
             image.raycastTarget = false; image.fillAmount = 0;
+            fill.gameObject.AddComponent<ProgressWidth>();
             return image;
         }
 
@@ -648,14 +690,14 @@ namespace Pockle.Runtime
         private void ToggleFavorite()
         {
             if (profile == null) return;
-            profile.SetFavorite(variant);
+            profile.SetFavorite(selectedCollectibleId);
             RefreshFavoriteToggle(); RefreshShelf(); RefreshProfile();
         }
 
         private void RefreshFavoriteToggle()
         {
             if (favoriteGlyph == null || profile == null) return;
-            bool favorite = profile.FavoriteId == PipVariants.CollectibleId(variant);
+            bool favorite = profile.FavoriteId == selectedCollectibleId;
             favoriteGlyph.color = favorite ? PockleTheme.Heart : MutedInk;
         }
 

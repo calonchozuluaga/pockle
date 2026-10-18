@@ -93,7 +93,7 @@ namespace Pockle.Runtime
                 picture.texture = legacy ? previews[(int)choice] : null; toyPictures[i] = pictureRect;
                 // Unfound toys show the character outline, without its face or finish.
                 toyMysteries[i] = Rect("Yet to discover", toyTiles[i]);
-                var silhouette = toyMysteries[i].gameObject.AddComponent<CharacterSilhouetteGraphic>(); silhouette.color = PockleTheme.PlumSoft;
+                var silhouette = EagerOutline(toyMysteries[i], i);
                 shelfBindings[i] = shelfPreviews.Register(picture, silhouette, id);
 
                 toyNameLabels[i] = Label(legacy ? ToyName(choice) : "Coming soon", toyTiles[i], PockleTheme.SmallSize, Ink, FontStyle.Bold, TextAnchor.MiddleCenter,
@@ -111,6 +111,7 @@ namespace Pockle.Runtime
                 var heart = AddIcon(toyFavoriteBadges[i], "Heart", 16, PockleTheme.Heart); heart.anchoredPosition = Vector2.zero;
             }
 
+            BuildShelfCollections();
             shelfEmpty = Rect("Nothing in this view", shelfRoot);
             shelfEmptyText = Label("", shelfEmpty, PockleTheme.BodySize, MutedInk, FontStyle.Normal, TextAnchor.UpperCenter, Vector2.zero, Vector2.zero);
             Stretch(shelfEmptyText.rectTransform);
@@ -134,49 +135,13 @@ namespace Pockle.Runtime
 
         private float LayoutShelf(float width)
         {
-            // The living shelf comes first; every toy's tile follows under "All your toys".
+            // Live shelf first, then one card per collection (owner decisions, October 14). The old Pip-only grid and its
+            // Everything / Missing / Duplicates switch are retired from this page: spares show as ×N on the slots, and the
+            // full lineup lives on each collection's page.
             float y = LayoutLivingShelf(width, 0);
-            TopCentered(shelfViews, new Vector2(0, -y), new Vector2(width, 48));
-            float segment = (width - 8 - 8) / 3;
-            for (int i = 0; i < 3; i++)
-                LeftLabel(shelfViewFaces[i].rectTransform, new Vector2(4 + i * (segment + 4), -4), new Vector2(segment, 40));
-            y += 48 + 20;
-
-            TopCentered(shelfSection, new Vector2(0, -y), new Vector2(width, 34));
-            float nameWidth = Mathf.Min(shelfSectionName.preferredWidth + 4, 160);
-            LeftLabel(shelfSectionName.rectTransform, new Vector2(22, -3), new Vector2(nameWidth, 28));
-            LeftLabel(shelfSectionSeries.rectTransform, new Vector2(22 + nameWidth + 8, -5), new Vector2(110, 24));
-            shelfSectionProgress.rectTransform.anchorMin = shelfSectionProgress.rectTransform.anchorMax = shelfSectionProgress.rectTransform.pivot = new Vector2(1, 1);
-            shelfSectionProgress.rectTransform.anchoredPosition = new Vector2(0, -5);
-            shelfSectionProgress.rectTransform.sizeDelta = new Vector2(Mathf.Max(80, width - 22 - nameWidth - 130), 24);
-            y += 34 + 10;
-
-            int columns = width >= 560 ? 4 : width >= 270 ? 3 : 2;
-            const float gap = 10;
-            float tileWidth = (width - (columns - 1) * gap) / columns;
-            float tileHeight = Mathf.Round(tileWidth * 1.2f);
-            float portrait = tileWidth * .78f;
-            int slot = 0;
-            for (int i = 0; i < toyTiles.Length; i++)
-            {
-                bool shown = ShowOnShelf(i);
-                toyTiles[i].gameObject.SetActive(shown);
-                if (!shown) continue;
-                int row = slot / columns, column = slot % columns; slot++;
-                LeftLabel(toyTiles[i], new Vector2(column * (tileWidth + gap), -y - row * (tileHeight + gap)), new Vector2(tileWidth, tileHeight));
-                TopCentered(toyPictures[i], new Vector2(0, -6), new Vector2(portrait, portrait));
-                TopCentered(toyMysteries[i], new Vector2(0, -6), new Vector2(portrait, portrait));
-                toyNames[i].anchorMin = toyNames[i].anchorMax = toyNames[i].pivot = new Vector2(.5f, 0);
-                toyNames[i].anchoredPosition = new Vector2(0, 10); toyNames[i].sizeDelta = new Vector2(tileWidth - 12, 20);
-                TopCentered(toyCounts[i].rectTransform, new Vector2(0, -tileHeight), new Vector2(tileWidth - 12, 18));
-                toyCountBadges[i].anchorMin = toyCountBadges[i].anchorMax = toyCountBadges[i].pivot = new Vector2(1, 1);
-                toyCountBadges[i].anchoredPosition = new Vector2(-8, -8); toyCountBadges[i].sizeDelta = new Vector2(34, 24);
-                LeftLabel(toyFavoriteBadges[i], new Vector2(8, -8), new Vector2(28, 28));
-            }
-            int rows = (slot + columns - 1) / columns;
-            y += rows > 0 ? rows * tileHeight + (rows - 1) * gap : 0;
-            shelfEmpty.gameObject.SetActive(slot == 0);
-            if (slot == 0) { TopCentered(shelfEmpty, new Vector2(0, -y - 8), new Vector2(width, 60)); y += 68; }
+            shelfViews.gameObject.SetActive(false); shelfSection.gameObject.SetActive(false); shelfEmpty.gameObject.SetActive(false);
+            foreach (var tile in toyTiles) tile.gameObject.SetActive(false);
+            y = LayoutShelfCollections(width, y);
             TopCentered(shelfRoot, Vector2.zero, new Vector2(width, y + 8));
             RefreshShelf();
             return y + 8;
@@ -192,7 +157,7 @@ namespace Pockle.Runtime
                 int owned = session.GetOwnedCount(id);
                 bool has = owned > 0;
                 bool available = ToyCatalog.TryGetCollectible(id, out var definition) && definition.Available;
-                bool playable = session.TryGetPlayableVariant(id, out var choice);
+                bool playable = session.IsOwnedAndPlayable(id);
                 if (has) discovered++;
                 toyButtons[i].interactable = playable;
                 shelfPreviews.SetFound(shelfBindings[i], playable);
@@ -214,13 +179,14 @@ namespace Pockle.Runtime
             }
             shelfEmptyText.text = shelfView == ShelfView.Missing ? "You've found every finish in this collection. Nice shelf!" : "No duplicates here yet. Spares come from walking boxes.";
             if (page == AppPage.Shelf && subtitle != null) subtitle.text = ShelfMood();
+            RefreshShelfCollections();
         }
 
         private void RefreshCollection()
         {
             if (session == null) return;
             RefreshShelf(); RefreshHome(); RefreshProfile(); RefreshSettings(); RefreshWalkingCard();
-            RefreshCollections(); RefreshLivingShelf(); RefreshPersonality(); RefreshFusion();
+            RefreshCollections(); RefreshLivingShelf(); RefreshPersonality(); RefreshFusion(); RefreshStage();
             if (page == AppPage.Shelf && lastLayoutSize.x > 0) AdaptLayout(); // Missing/Duplicates views change with ownership.
         }
     }

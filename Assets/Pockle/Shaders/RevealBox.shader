@@ -30,9 +30,8 @@ Shader "Pockle/Reveal Box"
             }
             fixed4 frag(v2f i) : SV_Target
             {
-                float light = 0.72 + 0.28 * saturate(dot(normalize(i.normal), normalize(float3(-0.5, 1.0, -0.4))));
                 fixed4 art = tex2D(_MainTex, i.uv) * _Color;
-                return fixed4(art.rgb * light, art.a);
+                return fixed4(art.rgb, art.a);
             }
             ENDCG
         }

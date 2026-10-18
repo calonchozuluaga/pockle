@@ -27,6 +27,20 @@ internal static class Program
             CatalogChecks.Run();
             MaterialHandlingChecks.Run();
             SeriesMotionChecks.Run();
+            PeachExpressionChecks.Run();
+            ToyOrbitChecks.Run();
+            PipReactionChecks.Run();
+            SoftToyGestureChecks.Run();
+            FoxReactionChecks.Run();
+            RetiredRosterChecks.Run();
+            AxolotlReactionChecks.Run();
+FirbReactionChecks.Run();
+CocoReactionChecks.Run();
+GingerReactionChecks.Run();
+SnowyReactionChecks.Run();
+PipFusionStudyChecks.Run();
+PipFaceChecks.Run();
+WinterTrioChecks.Run();
             return 0;
         }
         catch (Exception exception)

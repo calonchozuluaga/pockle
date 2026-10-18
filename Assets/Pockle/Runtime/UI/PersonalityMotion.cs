@@ -11,7 +11,7 @@ namespace Pockle.Runtime
     [DisallowMultipleComponent]
     public sealed class PersonalityMotion : MonoBehaviour
     {
-        public enum Kind { Toy, Twinkle, FloatUp, Pop }
+        public enum Kind { Toy, Twinkle, FloatUp, Pop, Hop, Wave }
 
         private RectTransform rect;
         private CanvasGroup group;
@@ -25,8 +25,8 @@ namespace Pockle.Runtime
         {
             rect = (RectTransform)transform;
             kind = what; style = motion; phase = phaseSeconds; amplitude = scale;
-            // Marks fade as a group (a bubble and its icon together); toys never fade.
-            if (what != Kind.Toy) { group = GetComponent<CanvasGroup>(); if (group == null) group = gameObject.AddComponent<CanvasGroup>(); group.blocksRaycasts = false; }
+            // Marks fade as a group (a bubble and its icon together); toys and eager silhouettes never fade.
+            if (what != Kind.Toy && what != Kind.Hop && what != Kind.Wave) { group = GetComponent<CanvasGroup>(); if (group == null) group = gameObject.AddComponent<CanvasGroup>(); group.blocksRaycasts = false; }
             Apply(0f);
         }
 
@@ -67,6 +67,19 @@ namespace Pockle.Runtime
                         float on = Window(t, .55f, .62f, .90f, .97f);
                         alpha = on; scale = Vector2.one * Mathf.Lerp(.5f, 1f, on); break;
                     }
+                    case Kind.Hop:
+                    {
+                        // An undiscovered toy hops to be noticed: squash, jump, land with a squash (canvas "pk-hop").
+                        float t = Cycle(time, 1.5f);
+                        if (t < .12f) { float k = Ease(t / .12f); scale = Vector2.Lerp(new Vector2(1.06f, .92f), Vector2.one, k); }
+                        else if (t < .40f) { float k = Ease((t - .12f) / .28f); offset.y = 16f * k; scale = Vector2.Lerp(Vector2.one, new Vector2(.97f, 1.04f), k); }
+                        else if (t < .62f) { float k = Ease((t - .40f) / .22f); offset.y = 16f * (1 - k); scale = Vector2.Lerp(new Vector2(.97f, 1.04f), new Vector2(1.07f, .9f), k); }
+                        else if (t < .75f) { float k = Ease((t - .62f) / .13f); scale = Vector2.Lerp(new Vector2(1.07f, .9f), Vector2.one, k); }
+                        else { float k = Ease((t - .75f) / .25f); scale = Vector2.Lerp(Vector2.one, new Vector2(1.06f, .92f), k); }
+                        break;
+                    }
+                    case Kind.Wave:
+                        roll = 7f * Mathf.Sin(time * Mathf.PI * 2f / 1.2f); break;
                 }
             }
             rect.anchoredPosition = offset * amplitude;

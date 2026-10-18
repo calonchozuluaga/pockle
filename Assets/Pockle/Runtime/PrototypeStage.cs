@@ -19,6 +19,29 @@ namespace Pockle.Runtime
             return framing != null && framing.SetBackdrop(colour);
         }
 
+        public static bool SetWorld(StageWorld world) => SetWorld(Camera.main, world, "pip.peach-jelly");
+        public static bool SetWorld(Camera viewer, StageWorld world, string collectibleId)
+        {
+            var environment = viewer == null ? null : viewer.GetComponent<ToyStageEnvironment>();
+            return environment != null && environment.SetWorld(world, collectibleId);
+        }
+        public static bool SetEnvironment(Camera viewer, string worldId, string collectibleId)
+        {
+            var environment = viewer == null ? null : viewer.GetComponent<ToyStageEnvironment>();
+            return environment != null && environment.SetEnvironment(worldId, collectibleId);
+        }
+
+        public static bool SetLight(StageLight light) => SetLight(Camera.main, light);
+        public static bool SetLight(Camera viewer, StageLight light)
+        {
+            var environment = viewer == null ? null : viewer.GetComponent<ToyStageEnvironment>();
+            return environment != null && environment.SetLight(light);
+        }
+
+        public static void SetViewport(Camera viewer, Rect pixels) => viewer?.GetComponent<StageFraming>()?.SetViewport(pixels);
+        public static void SetSoftFraming(Camera viewer,bool soft) { var f=viewer?.GetComponent<StageFraming>();if(f!=null)f.Soft=soft; }
+        public static void SetZoom(Camera viewer, float zoom) { var f=viewer?.GetComponent<StageFraming>(); if(f!=null)f.Zoom=zoom; }
+
         public static void Create(out Camera camera, out Transform toyMount, out Transform turntable, out Collider plateCollider, out Transform contactShadow)
         {
             var stage = new GameObject("Pockle · presentation stage");
@@ -39,8 +62,7 @@ namespace Pockle.Runtime
             camera.transform.position = new Vector3(0f, 2.3f, -6f);
             camera.transform.LookAt(new Vector3(0f, 1.2f, 0f));
 
-            // A clear-only camera lets the landscape viewer use a smaller viewport
-            // while keeping the whole screen the same warm background colour.
+            // A full-screen background camera holds the painted world independently of toy framing.
             var backgroundObject = new GameObject("Full-screen background", typeof(Camera));
             backgroundObject.transform.SetParent(stage.transform, false);
             var background = backgroundObject.GetComponent<Camera>();
@@ -54,8 +76,9 @@ namespace Pockle.Runtime
             var framing = cameraObject.AddComponent<StageFraming>();
             framing.Initialize(camera, background);
 
-            turntable = new GameObject("Pip and plate · turntable").transform;
+            turntable = new GameObject("Toy orbit pivot").transform;
             turntable.SetParent(stage.transform, false);
+            turntable.position = new Vector3(0,1.15f,0);
             var mount = new GameObject("Pip mount");
             mount.transform.SetParent(turntable, false);
             mount.transform.position = new Vector3(0f, 1.15f, 0f);
@@ -75,28 +98,10 @@ namespace Pockle.Runtime
             resources.Materials = new[] { baseMaterial, topMaterial, shadowMaterial };
             Mesh diskMesh = PresentationMeshes.CreateDisk();
             resources.Mesh = diskMesh;
-            Transform lower = MakeDisk(turntable, "Pedestal · lower rim", new Vector3(0f, 0.045f, 0f),
-                new Vector3(2.68f, 0.035f, 2.68f), baseMaterial, diskMesh);
-            MakeDisk(turntable, "Pedestal · ceramic top", new Vector3(0f, 0.1f, 0f),
-                new Vector3(2.46f, 0.05f, 2.46f), topMaterial, diskMesh);
-            contactShadow = MakeDisk(turntable, "Pip · contact shadow", new Vector3(0f, 0.151f, 0.04f),
-                new Vector3(1.88f, 0.0005f, 1.58f), shadowMaterial, diskMesh);
-            // A thin cylinder covers the exposed plate. CapsuleCollider cannot
-            // represent this nonuniform scale: its radius would swallow the toy.
-            var touchSurface = new GameObject("Plate touch surface", typeof(MeshCollider));
-            touchSurface.transform.SetParent(turntable, false);
-            touchSurface.transform.localPosition = new Vector3(0f, .075f, 0f);
-            touchSurface.transform.localScale = new Vector3(2.68f, .075f, 2.68f);
-            var meshCollider = touchSurface.GetComponent<MeshCollider>();
-            meshCollider.sharedMesh = lower.GetComponent<MeshFilter>().sharedMesh;
-            plateCollider = meshCollider;
-            // Small inset marks make the circular plate's rotation visible.
-            for (int i = -1; i <= 1; i++)
-            {
-                var radians = (i * 14f + 180f) * Mathf.Deg2Rad;
-                MakeDisk(turntable, "Turntable rim mark", new Vector3(Mathf.Sin(radians) * 1.13f, .151f, Mathf.Cos(radians) * 1.13f),
-                    new Vector3(.055f, .0005f, .055f), baseMaterial, diskMesh);
-            }
+            // Ground contact stays in world space while the toy orbits around its centre.
+            contactShadow = MakeDisk(stage.transform, "Pip · contact shadow", new Vector3(0f, .151f, .04f),
+                new Vector3(1.88f, .0005f, 1.58f), shadowMaterial, diskMesh);
+            plateCollider = null; // Kept as a compatibility output; the viewer has no plate or picking surface.
 
             var keyObject = new GameObject("Soft studio key", typeof(Light));
             keyObject.transform.SetParent(stage.transform, false);
@@ -119,6 +124,8 @@ namespace Pockle.Runtime
             RenderSettings.ambientMode = AmbientMode.Flat;
             RenderSettings.ambientLight = new Color(0.69f, 0.65f, 0.66f);
             RenderSettings.fog = false;
+            cameraObject.AddComponent<ToyStageEnvironment>().Initialize(camera, toyMount, key, fill, baseMaterial, topMaterial);
+
         }
 
         private static Material MakeMaterial(string name, Color colour, float smoothness)
@@ -168,6 +175,17 @@ namespace Pockle.Runtime
         private int width;
         private int height;
         private Rect safeArea;
+        private Rect requested;
+        private Rect frame;
+        private bool initialized;
+        public float Zoom = 1;
+        public bool Soft;
+        public void SetViewport(Rect pixels)
+        {
+            if(float.IsNaN(pixels.x)||float.IsNaN(pixels.y)||float.IsNaN(pixels.width)||float.IsNaN(pixels.height)||
+                float.IsInfinity(pixels.x)||float.IsInfinity(pixels.y)||float.IsInfinity(pixels.width)||float.IsInfinity(pixels.height)||pixels.width<=0||pixels.height<=0)return;
+            requested=pixels;
+        }
 
         public void Initialize(Camera viewerCamera, Camera backgroundCamera)
         {
@@ -190,7 +208,7 @@ namespace Pockle.Runtime
         private void LateUpdate()
         {
             if (viewer == null || Screen.width < 1 || Screen.height < 1) return;
-            if (width == Screen.width && height == Screen.height && safeArea == Screen.safeArea) return;
+
             width = Screen.width;
             height = Screen.height;
             safeArea = Screen.safeArea;
@@ -200,15 +218,30 @@ namespace Pockle.Runtime
             // The play screen reserves only its identity header and a short gesture hint.
             var pixelsPerUnit = height / (landscape ? 390f : 844f);
             var top = 144f * pixelsPerUnit;
-            var bottom = 72f * pixelsPerUnit;
+            var bottom = 120f * pixelsPerUnit;
             var viewportHeight = Mathf.Max(1f, safeArea.height - top - bottom);
             var viewportWidth = safeArea.width;
-            viewer.rect = new Rect(safeArea.xMin / width, (safeArea.yMin + bottom) / height,
-                viewportWidth / width, viewportHeight / height);
-            // Reserve at least 3.9 world units vertically and 3 horizontally, so
-            // tall screens keep the full plate and stretched crown in view.
-            viewer.orthographicSize = Mathf.Max(1.95f, 1.5f * viewportHeight / viewportWidth);
-            viewer.transform.LookAt(new Vector3(0f, 1.72f, 0f));
+            Rect pixels=requested.width>0?requested:new Rect(safeArea.xMin,safeArea.yMin+bottom,viewportWidth,viewportHeight);
+            float left=Mathf.Clamp(pixels.xMin,safeArea.xMin,safeArea.xMax-1);
+            float low=Mathf.Clamp(pixels.yMin,safeArea.yMin,safeArea.yMax-1);
+            float right=Mathf.Clamp(pixels.xMax,left+1,safeArea.xMax);
+            float high=Mathf.Clamp(pixels.yMax,low+1,safeArea.yMax);
+            Rect target=new Rect(left/width,low/height,(right-left)/width,(high-low)/height);
+            float t=initialized?1-Mathf.Exp(-Time.unscaledDeltaTime/ .07f):1;
+            var r=frame;
+            frame=new Rect(Mathf.Lerp(r.x,target.x,t),Mathf.Lerp(r.y,target.y,t),Mathf.Lerp(r.width,target.width,t),Mathf.Lerp(r.height,target.height,t));
+            initialized=true;
+            // Frame the toy in the available HUD area without clipping rendering to that area.
+            viewer.rect = new Rect(0, 0, 1, 1);
+            float screenAspect = (float)width / height;
+            float frameAspect = screenAspect * frame.width / frame.height;
+            float halfHeight = Pockle.Core.ToyOrbit.FrameSize(frameAspect, Zoom, Soft) / frame.height;
+            float halfWidth = halfHeight * screenAspect;
+            viewer.orthographicSize = halfHeight;
+            Vector2 offset = new Vector2((1 - 2 * frame.center.x) * halfWidth, (1 - 2 * frame.center.y) * halfHeight);
+            viewer.transform.LookAt(new Vector3(0f,1.15f,0f));
+            viewer.projectionMatrix = Matrix4x4.Ortho(offset.x - halfWidth, offset.x + halfWidth,
+                offset.y - halfHeight, offset.y + halfHeight, viewer.nearClipPlane, viewer.farClipPlane);
         }
     }
 }

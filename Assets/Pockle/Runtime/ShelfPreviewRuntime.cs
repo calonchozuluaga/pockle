@@ -6,13 +6,14 @@ using UnityEngine.UI;
 
 namespace Pockle.Runtime
 {
-    /// <summary>Four visible actors, one disabled camera, and at most four 192px live targets at 15 fps.</summary>
+    /// <summary>Four visible actors, one disabled camera, and at most four 192px live targets at 30 fps.</summary>
     [DisallowMultipleComponent]
     public sealed class ShelfPreviewRuntime : MonoBehaviour
     {
         public const int Capacity = 4;
         public const int Resolution = 192;
-        public const float FramesPerSecond = 15f;
+        // 15 fps read as stutter against the HUD's full-rate motion on device (owner review, October 14).
+        public const float FramesPerSecond = 30f;
         public sealed class Binding
         {
             internal RawImage Picture;
@@ -50,6 +51,8 @@ namespace Pockle.Runtime
         private float nextFrame;
         private bool disposed;
         public int ActiveCount => budget.ActiveCount;
+        /// <summary>When false, missing silhouettes are left to the HUD's own 2D motion and take no actor slot.</summary>
+        public bool AnimateMissing { get; set; } = true;
         public int ActiveSilhouetteCount { get { int count = 0; foreach (var actor in actors) if (actor.Binding != null && !actor.Binding.Found && actor.Slot != null) count++; return count; } }
         public int AllocatedTargetCount { get { int count = 0; foreach (var actor in actors) if (actor.Target != null) count++; return count; } }
         public int CameraCount => portraitCamera != null ? 1 : 0;
@@ -78,7 +81,7 @@ namespace Pockle.Runtime
         public void SetFound(Binding binding, bool found)
         {
             found = found && ToyCatalog.TryGetCollectible(binding.Id, out var definition) && definition.Available &&
-                PipVariants.TryFromCollectibleId(binding.Id, out _);
+                CharacterArt.TryLoad(binding.Id, out _);
             if (binding.Found != found)
             { foreach (var actor in actors) if (actor.Binding == binding) Release(actor); binding.Found = found; }
             binding.Picture.gameObject.SetActive(found);
@@ -122,7 +125,7 @@ namespace Pockle.Runtime
             { InvalidateView(); return; }
             wanted.Clear(); visibleFound.Clear(); visibleMissing.Clear();
             foreach (var binding in bindings)
-                if (InsideViewport(binding)) { if (binding.Found) visibleFound.Add(binding); else visibleMissing.Add(binding); }
+                if (InsideViewport(binding)) { if (binding.Found) visibleFound.Add(binding); else if (AnimateMissing) visibleMissing.Add(binding); }
             // A tall viewport can show both groups. Reserve room for the eager
             // silhouettes rather than letting the first four found toys starve them.
             int foundLimit = visibleMissing.Count > 0 ? Mathf.Min(2, visibleFound.Count) : Capacity;
@@ -171,7 +174,8 @@ namespace Pockle.Runtime
                 actor.Toy = toyObject.AddComponent<JellyToy>(); actor.Toy.Initialize();
                 actor.Animator = toyObject.AddComponent<ToyLineupAnimator>();
             }
-            actor.Root.SetActive(true); actor.Toy.SetVariant(PipVariants.TryFromCollectibleId(binding.Id, out var choice) ? choice : PipVariant.PeachJelly);
+            actor.Root.SetActive(true);
+            if (!actor.Toy.TrySetCollectible(binding.Id)) { Release(actor); return; }
             foreach (Transform child in actor.Root.GetComponentsInChildren<Transform>(true)) child.gameObject.layer = 30;
             actor.Animator.Configure(actor.Toy, budget, phaseOffset: binding.Phase);
             actor.Animator.SetVisible(true);

@@ -19,22 +19,35 @@ namespace Pockle.Runtime
 
         private string fuseFirst, fuseSecond;
         private bool lastFusionWasPreview = true;
-        private RectTransform fusionCard, fusionPlus, fusionHintRow, fusionSecret, fusionSparesHeading, fusionSparesNote, fusionEmpty;
+
+        // The fusion card (owner-approved canvas "Fuse spares, redesigned", October 16): a dark lab with both picks standing
+        // on soft pedestals, a blurred "?" toy in the parents' colours, and three hint chips. Who it is stays a surprise.
+        private RectTransform fusionCard, fusionMystery, fusionSecret, fusionSparesHeading, fusionSparesNote, fusionEmpty, fusionNoSpareRow;
         private Button fusionSlotA, fusionSlotB, fusionGo;
-        private RawImage fusionSlotPictureA, fusionSlotPictureB;
-        private Text fusionSlotEmptyA, fusionSlotEmptyB, fusionHint;
-        private Image fusionHintBubble;
-        private PersonalityMotion fusionHintMotion;
+        private RawImage fusionSlotPictureA, fusionSlotPictureB, fusionMysteryTop;
+        private Image fusionMysteryBottom;
+        private RectTransform fusionSlotEmptyA, fusionSlotEmptyB;
+        private Text fusionSlotNameA, fusionSlotNameB, fusionSlotTempA, fusionSlotTempB, fusionMysteryLine, fusionGoNote, fusionNoSpareText;
+        private RectTransform fusionSlotTempPillA, fusionSlotTempPillB;
+        private readonly Text[] fusionChipValues = new Text[3];
+        private Image fusionColourSwatchBottom;
+        private RawImage fusionColourSwatchTop;
+        private PersonalityMotion fusionMysteryMotion;
         private readonly Button[] spareTiles = new Button[4];
         private readonly Image[] spareRings = new Image[4], spareFaces = new Image[4];
-        private readonly Text[] spareLabels = new Text[4];
+        private readonly RawImage[] sparePictures = new RawImage[4];
+        private readonly Text[] spareNames = new Text[4], spareLabels = new Text[4], spareBadges = new Text[4];
+        private readonly RectTransform[] spareBadgeRects = new RectTransform[4];
+        private static readonly Color LabTop = new Color32(0x54, 0x47, 0x9A, 0xFF), LabDeep = new Color32(0x2A, 0x14, 0x30, 0xFF);
+        private static readonly Color LabGlass = new Color(1, 1, 1, .12f), LabMuted = new Color32(0xD9, 0xCB, 0xE0, 0xFF);
+        private const float FusionCardHeight = 300, SlotWidth = 128, SpareTileHeight = 136;
 
         // Reveal.
         private RectTransform revealChip, revealDisc, revealToy, revealSheet, revealParents, revealTraits;
         private readonly List<RectTransform> revealSparkles = new List<RectTransform>();
         private RawImage revealPicture, revealParentA, revealParentB;
         private Image revealParentFaceA, revealParentFaceB;
-        private Text revealName, revealParentsLine, revealFootnote, revealPreviewNote;
+        private Text revealName, revealPersonalityLine, revealParentsLine, revealFootnote, revealPreviewNote;
         private readonly Text[] revealTraitValues = new Text[4];
         private Button revealAdd, revealAgain;
         private PersonalityMotion revealMotion;
@@ -42,167 +55,283 @@ namespace Pockle.Runtime
 
         private void BuildFusion()
         {
-            fusionCard = Rect("Fusion", fusionRoot); Surface(fusionCard, PockleTheme.Confetti, 28);
-            fusionSlotA = FusionSlot("Spare 1", out fusionSlotPictureA, out fusionSlotEmptyA, () => { fuseFirst = null; RefreshFusion(); });
-            fusionSlotB = FusionSlot("Spare 2", out fusionSlotPictureB, out fusionSlotEmptyB, () => { fuseSecond = null; RefreshFusion(); });
-            fusionPlus = Rect("Plus", fusionCard); Surface(fusionPlus, Color.white, 16);
-            var plus = Label("+", fusionPlus, 22, Ink, FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero); Stretch(plus.rectTransform);
-            fusionHintRow = Rect("What it could make", fusionCard); Surface(fusionHintRow, new Color(1, 1, 1, .7f), 18);
-            var bubbleHolder = Rect("Hint mark", fusionHintRow);
-            LeftLabel(bubbleHolder, new Vector2(12, -8), new Vector2(36, 36));
-            var bubble = Rect("Bubble", bubbleHolder); Stretch(bubble); bubble.pivot = new Vector2(.5f, .5f);
-            fusionHintBubble = Surface(bubble, PockleTheme.FillDeep, 18);
-            var question = Label("?", bubble, 18, PockleTheme.OnPlum, FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero); Stretch(question.rectTransform);
-            fusionHintMotion = bubble.gameObject.AddComponent<PersonalityMotion>();
-            fusionHintMotion.Configure(PersonalityMotion.Kind.Toy, PersonalityMotionStyle.Calm);
-            fusionHint = Label("", fusionHintRow, PockleTheme.CaptionSize, Ink, FontStyle.Normal, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
+            fusionCard = Rect("Fusion", fusionRoot); Surface(fusionCard, LabDeep, 30);
+            fusionCard.gameObject.AddComponent<Mask>().showMaskGraphic = true;
+            var glow = Rect("Lab glow", fusionCard);
+            var glowImage = glow.gameObject.AddComponent<RawImage>(); glowImage.texture = UiShapes.Glow; glowImage.color = LabTop; glowImage.raycastTarget = false;
+            glow.anchorMin = glow.anchorMax = glow.pivot = new Vector2(.5f, .5f); glow.anchoredPosition = new Vector2(0, 40); glow.sizeDelta = new Vector2(620, 520);
+            foreach (var (x, y, size, colour) in new[] { (26f, -22f, 10f, PockleTheme.FieldGold), (-34f, -30f, 12f, Color.white), (-18f, -150f, 9f, PockleTheme.FieldGold), (20f, -170f, 8f, Color.white) })
+            {
+                var star = Rect("Lab sparkle", fusionCard);
+                var image = star.gameObject.AddComponent<RawImage>(); image.texture = UiShapes.Sparkle; image.color = colour; image.raycastTarget = false;
+                star.anchorMin = star.anchorMax = star.pivot = new Vector2(x > 0 ? 0 : 1, 1); star.anchoredPosition = new Vector2(x, y); star.sizeDelta = new Vector2(size, size);
+            }
+            var eyebrow = Label("YOUR FUSION", fusionCard, PockleTheme.SmallSize - 1, LabMuted, FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
+            eyebrow.rectTransform.anchorMin = new Vector2(0, 1); eyebrow.rectTransform.anchorMax = new Vector2(1, 1); eyebrow.rectTransform.pivot = new Vector2(.5f, 1);
+            eyebrow.rectTransform.anchoredPosition = new Vector2(0, -14); eyebrow.rectTransform.sizeDelta = new Vector2(0, 18);
 
-            fusionSecret = Rect("Secret recipe", fusionRoot); Surface(fusionSecret, PockleTheme.Plum, 20);
-            var star = Rect("Star", fusionSecret);
-            var starImage = star.gameObject.AddComponent<RawImage>(); starImage.texture = UiShapes.Sparkle; starImage.color = PockleTheme.FieldGold; starImage.raycastTarget = false;
-            var secret = Label("This pair hides a secret recipe", fusionSecret, PockleTheme.CaptionSize, PockleTheme.FieldGold, FontStyle.Bold,
-                TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
-            Stretch(secret.rectTransform); secret.rectTransform.offsetMin = new Vector2(24, 0);
-            star.anchorMin = star.anchorMax = star.pivot = new Vector2(.5f, .5f); star.sizeDelta = new Vector2(16, 16);
+            fusionSlotA = FusionSlot("Spare 1", out fusionSlotPictureA, out fusionSlotEmptyA, out fusionSlotNameA, out fusionSlotTempA, out fusionSlotTempPillA, () => { fuseFirst = null; RefreshFusion(); });
+            fusionSlotB = FusionSlot("Spare 2", out fusionSlotPictureB, out fusionSlotEmptyB, out fusionSlotNameB, out fusionSlotTempB, out fusionSlotTempPillB, () => { fuseSecond = null; RefreshFusion(); });
 
-            fusionSparesHeading = Label("Your spares", fusionRoot, 19, Ink, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, new Vector2(200, 28)).rectTransform;
-            fusionSparesNote = Label("Your last copy is never used", fusionRoot, PockleTheme.SmallSize, MutedInk, FontStyle.Normal,
+            // The mystery toy: the first spare's colour below, the second's fading in from the top, with a "?".
+            fusionMystery = Rect("Mystery", fusionCard);
+            var bob = Rect("Mystery motion", fusionMystery); Stretch(bob);
+            fusionMysteryMotion = bob.gameObject.AddComponent<PersonalityMotion>();
+            fusionMysteryMotion.Configure(PersonalityMotion.Kind.Toy, PersonalityMotionStyle.Calm);
+            var disc = Rect("Mystery disc", bob); disc.anchorMin = disc.anchorMax = disc.pivot = new Vector2(.5f, 1); disc.anchoredPosition = Vector2.zero; disc.sizeDelta = new Vector2(84, 84);
+            fusionMysteryBottom = Surface(disc, PockleTheme.FillDeep, 42);
+            disc.gameObject.AddComponent<Mask>().showMaskGraphic = true;
+            var top = Rect("Mystery top colour", disc); Stretch(top);
+            fusionMysteryTop = top.gameObject.AddComponent<RawImage>(); fusionMysteryTop.texture = UiShapes.FadeDown; fusionMysteryTop.raycastTarget = false;
+            fusionMysteryTop.rectTransform.localScale = new Vector3(1, -1, 1); // opaque at the top, clear at the bottom
+            var shine = Rect("Mystery shine", disc); shine.anchorMin = shine.anchorMax = shine.pivot = new Vector2(.32f, .7f); shine.sizeDelta = new Vector2(46, 34);
+            var shineImage = shine.gameObject.AddComponent<RawImage>(); shineImage.texture = UiShapes.Glow; shineImage.color = new Color(1, 1, 1, .55f); shineImage.raycastTarget = false;
+            var question = Label("?", disc, 36, Color.white, FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero); Stretch(question.rectTransform);
+            fusionMysteryLine = Label("", fusionMystery, PockleTheme.SmallSize, LabMuted, FontStyle.Bold, TextAnchor.UpperCenter, Vector2.zero, Vector2.zero);
+            fusionMysteryLine.rectTransform.anchorMin = new Vector2(0, 1); fusionMysteryLine.rectTransform.anchorMax = new Vector2(1, 1); fusionMysteryLine.rectTransform.pivot = new Vector2(.5f, 1);
+            fusionMysteryLine.rectTransform.anchoredPosition = new Vector2(0, -90); fusionMysteryLine.rectTransform.sizeDelta = new Vector2(30, 32);
+            fusionMysteryLine.horizontalOverflow = HorizontalWrapMode.Overflow;
+
+            fusionSecret = Rect("Secret recipe", fusionCard); Surface(fusionSecret, PockleTheme.FieldGold, 13);
+            var secretStar = Rect("Star", fusionSecret);
+            var secretStarImage = secretStar.gameObject.AddComponent<RawImage>(); secretStarImage.texture = UiShapes.Sparkle; secretStarImage.color = Ink; secretStarImage.raycastTarget = false;
+            secretStar.anchorMin = secretStar.anchorMax = secretStar.pivot = new Vector2(0, .5f); secretStar.anchoredPosition = new Vector2(10, 0); secretStar.sizeDelta = new Vector2(13, 13);
+            var secret = Label("This pair hides a secret recipe", fusionSecret, PockleTheme.SmallSize, Ink, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
+            secret.horizontalOverflow = HorizontalWrapMode.Overflow; secret.resizeTextForBestFit = false;
+            Stretch(secret.rectTransform); secret.rectTransform.offsetMin = new Vector2(28, 0);
+
+            // Hint chips: colour, finish, personality.
+            string[] chipNames = { "COLOUR", "FINISH", "PERSONALITY" };
+            for (int i = 0; i < 3; i++)
+            {
+                var chip = Rect("Hint · " + chipNames[i], fusionCard); Surface(chip, LabGlass, 16);
+                var name = Label(chipNames[i], chip, 10, LabMuted, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
+                LeftLabel(name.rectTransform, new Vector2(9, -6), new Vector2(120, 14));
+                fusionChipValues[i] = Label("", chip, PockleTheme.SmallSize, PockleTheme.OnPlum, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
+                if (i == 0)
+                {
+                    var swatch = Rect("Swatch", chip); LeftLabel(swatch, new Vector2(9, -26), new Vector2(14, 14));
+                    fusionColourSwatchBottom = Surface(swatch, PockleTheme.FillDeep, 7);
+                    swatch.gameObject.AddComponent<Mask>().showMaskGraphic = true;
+                    var swatchTop = Rect("Swatch top", swatch); Stretch(swatchTop);
+                    fusionColourSwatchTop = swatchTop.gameObject.AddComponent<RawImage>(); fusionColourSwatchTop.texture = UiShapes.FadeDown; fusionColourSwatchTop.raycastTarget = false;
+                    fusionColourSwatchTop.rectTransform.localScale = new Vector3(1, -1, 1);
+                }
+            }
+
+            fusionSparesHeading = Label("Your spares", fusionRoot, 20, Ink, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, new Vector2(200, 28)).rectTransform;
+            fusionSparesNote = Label("Tap two · same one twice works too", fusionRoot, PockleTheme.SmallSize, MutedInk, FontStyle.Normal,
                 TextAnchor.MiddleRight, Vector2.zero, new Vector2(200, 28)).rectTransform;
             for (int i = 0; i < spareTiles.Length; i++)
             {
                 string id = FusionOrder[i];
-                var tile = Rect("Spare", fusionRoot);
-                spareRings[i] = Surface(tile, Ink, 20); spareRings[i].raycastTarget = true;
+                var tile = Rect("Spare · " + id, fusionRoot);
+                spareRings[i] = Surface(tile, Ink, 22); spareRings[i].raycastTarget = true;
                 spareTiles[i] = tile.gameObject.AddComponent<Button>(); spareTiles[i].targetGraphic = spareRings[i];
                 spareTiles[i].onClick.AddListener(() => PickSpare(id));
                 tile.gameObject.AddComponent<SquishFeedback>();
-                tile.name = "Spare · " + id;
-                var face = Rect("Face", tile); Stretch(face); spareFaces[i] = Surface(face, PockleTheme.FieldFor(id), 18);
-                PipVariants.TryFromCollectibleId(id, out var variant);
-                var art = Portrait(face, (int)variant); art.rectTransform.anchorMin = art.rectTransform.anchorMax = new Vector2(.5f, 1);
-                art.rectTransform.pivot = new Vector2(.5f, 1); art.rectTransform.anchoredPosition = new Vector2(0, -4); art.rectTransform.sizeDelta = new Vector2(62, 62);
-                spareLabels[i] = Label("", face, 12, Ink, FontStyle.Bold, TextAnchor.LowerCenter, Vector2.zero, Vector2.zero);
-                Stretch(spareLabels[i].rectTransform); spareLabels[i].rectTransform.offsetMin = new Vector2(2, 8);
+                var face = Rect("Face", tile); Stretch(face); spareFaces[i] = Surface(face, PockleTheme.FieldFor(id), 20);
+                var art = Rect("Toy", face); art.anchorMin = art.anchorMax = art.pivot = new Vector2(.5f, 1); art.anchoredPosition = new Vector2(0, -8); art.sizeDelta = new Vector2(74, 74);
+                sparePictures[i] = art.gameObject.AddComponent<RawImage>(); sparePictures[i].raycastTarget = false;
+                spareNames[i] = Label(PersonalityBook.ShortName(id), face, PockleTheme.CaptionSize, Ink, FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
+                spareNames[i].rectTransform.anchorMin = new Vector2(0, 0); spareNames[i].rectTransform.anchorMax = new Vector2(1, 0); spareNames[i].rectTransform.pivot = new Vector2(.5f, 0);
+                spareNames[i].rectTransform.anchoredPosition = new Vector2(0, 26); spareNames[i].rectTransform.sizeDelta = new Vector2(-8, 18);
+                spareLabels[i] = Label("", face, PockleTheme.SmallSize - 1, MutedInk, FontStyle.Normal, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
+                spareLabels[i].rectTransform.anchorMin = new Vector2(0, 0); spareLabels[i].rectTransform.anchorMax = new Vector2(1, 0); spareLabels[i].rectTransform.pivot = new Vector2(.5f, 0);
+                spareLabels[i].rectTransform.anchoredPosition = new Vector2(0, 9); spareLabels[i].rectTransform.sizeDelta = new Vector2(-8, 16);
+                spareBadgeRects[i] = Rect("Order", face); Surface(spareBadgeRects[i], Ink, 13);
+                spareBadgeRects[i].anchorMin = spareBadgeRects[i].anchorMax = spareBadgeRects[i].pivot = new Vector2(0, 1);
+                spareBadgeRects[i].anchoredPosition = new Vector2(8, -8);
+                spareBadges[i] = Label("", spareBadgeRects[i], PockleTheme.CaptionSize, PockleTheme.OnPlum, FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
+                Stretch(spareBadges[i].rectTransform);
             }
+            fusionNoSpareRow = Rect("No spare yet", fusionRoot); Surface(fusionNoSpareRow, Quiet, 20);
+            fusionNoSpareText = Label("", fusionNoSpareRow, PockleTheme.SmallSize, MutedInk, FontStyle.Normal, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
+            Stretch(fusionNoSpareText.rectTransform); fusionNoSpareText.rectTransform.offsetMin = new Vector2(14, 6); fusionNoSpareText.rectTransform.offsetMax = new Vector2(-14, -6);
             fusionEmpty = Label("No spares yet. Spares come from walking boxes and the daily check-in.", fusionRoot, PockleTheme.BodySize, MutedInk,
                 FontStyle.Normal, TextAnchor.UpperCenter, Vector2.zero, new Vector2(300, 60)).rectTransform;
+            fusionGoNote = Label("", fusionRoot, PockleTheme.SmallSize, MutedInk, FontStyle.Normal, TextAnchor.MiddleCenter, Vector2.zero, new Vector2(300, 20));
             fusionGo = CreateButton("Pick two spares", fusionRoot, Vector2.zero, new Vector2(300, 56), PockleTheme.Plum, Fuse, out _);
             fusionGo.name = "Fuse";
             BuildFusionReveal();
         }
 
-        private Button FusionSlot(string title, out RawImage picture, out Text empty, System.Action clear)
+        private Button FusionSlot(string title, out RawImage picture, out RectTransform empty, out Text name, out Text temperament, out RectTransform temperamentPill, System.Action clear)
         {
-            var slot = CreateButton(title, fusionCard, Vector2.zero, new Vector2(96, 96), Color.white, clear, out _, 13);
+            var slot = CreateButton("", fusionCard, Vector2.zero, new Vector2(SlotWidth, 190), new Color(1, 1, 1, 0), clear, out _, 13);
             slot.name = "Fusion slot · " + title;
-            empty = slot.GetComponentInChildren<Text>(); empty.color = MutedInk;
-            slot.gameObject.AddComponent<Mask>().showMaskGraphic = true;
-            var art = Rect("Spare", slot.transform); Stretch(art); art.offsetMin = new Vector2(10, -6); art.offsetMax = new Vector2(-10, -4);
+            var rect = slot.GetComponent<RectTransform>();
+            var pedestal = Rect("Pedestal", rect);
+            var pedestalImage = pedestal.gameObject.AddComponent<RawImage>(); pedestalImage.texture = UiShapes.Glow; pedestalImage.color = new Color32(0xFF, 0xD6, 0xF0, 0x90); pedestalImage.raycastTarget = false;
+            pedestal.anchorMin = pedestal.anchorMax = pedestal.pivot = new Vector2(.5f, 1); pedestal.anchoredPosition = new Vector2(0, -112); pedestal.sizeDelta = new Vector2(104, 26);
+            var art = Rect("Spare", rect); art.anchorMin = art.anchorMax = art.pivot = new Vector2(.5f, 1); art.anchoredPosition = new Vector2(0, -16); art.sizeDelta = new Vector2(104, 104);
             picture = art.gameObject.AddComponent<RawImage>(); picture.raycastTarget = false;
+            art.gameObject.AddComponent<PersonalityMotion>().Configure(PersonalityMotion.Kind.Toy, PersonalityMotionStyle.Calm);
+            empty = Rect("Empty", rect); empty.anchorMin = empty.anchorMax = empty.pivot = new Vector2(.5f, 1); empty.anchoredPosition = new Vector2(0, -26); empty.sizeDelta = new Vector2(84, 84);
+            Surface(empty, new Color(1, 1, 1, .1f), 42);
+            var plus = Label("+", empty, 26, LabMuted, FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero); Stretch(plus.rectTransform); plus.rectTransform.offsetMin = new Vector2(0, 18);
+            var pick = Label("Pick a spare", empty, PockleTheme.SmallSize - 1, LabMuted, FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero); Stretch(pick.rectTransform); pick.rectTransform.offsetMax = new Vector2(0, -24);
+            name = Label("", rect, PockleTheme.CaptionSize + 1, PockleTheme.OnPlum, FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
+            name.rectTransform.anchorMin = name.rectTransform.anchorMax = name.rectTransform.pivot = new Vector2(.5f, 1);
+            name.rectTransform.anchoredPosition = new Vector2(0, -126); name.rectTransform.sizeDelta = new Vector2(SlotWidth, 20);
+            temperamentPill = Rect("Temperament", rect); Surface(temperamentPill, new Color(1, 1, 1, .14f), 11);
+            temperamentPill.anchorMin = temperamentPill.anchorMax = temperamentPill.pivot = new Vector2(.5f, 1); temperamentPill.anchoredPosition = new Vector2(0, -150);
+            temperament = Label("", temperamentPill, PockleTheme.SmallSize - 1, PockleTheme.OnPlum, FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
+            Stretch(temperament.rectTransform); temperament.horizontalOverflow = HorizontalWrapMode.Overflow; temperament.resizeTextForBestFit = false;
             return slot;
         }
 
-        private int SparesLeft(string id)
-        {
-            int spares = session != null ? Mathf.Max(0, session.GetOwnedCount(id) - 1) : 0;
-            if (fuseFirst == id) spares--;
-            if (fuseSecond == id) spares--;
-            return spares;
-        }
+        /// <summary>Spares are the extra copies: the last one of a toy is never offered.</summary>
+        private int SpareCount(string id) => session != null ? Mathf.Max(0, session.GetOwnedCount(id) - 1) : 0;
 
+        /// <summary>
+        /// Tap logic from the canvas: a toy already picked as often as it has spares (or with both slots full) is put back;
+        /// otherwise it fills the next empty slot, or replaces the second pick.
+        /// </summary>
         private void PickSpare(string id)
         {
-            if (SparesLeft(id) <= 0) return;
-            if (fuseFirst == null) fuseFirst = id; else fuseSecond = id;
+            int spares = SpareCount(id);
+            if (spares <= 0) return;
+            int picked = (fuseFirst == id ? 1 : 0) + (fuseSecond == id ? 1 : 0);
+            bool full = fuseFirst != null && fuseSecond != null;
+            if (picked > 0 && (picked >= spares || full))
+            {
+                if (fuseSecond == id) fuseSecond = null;
+                if (fuseFirst == id) fuseFirst = null;
+            }
+            else if (fuseFirst == null) fuseFirst = id;
+            else if (fuseSecond == null) fuseSecond = id;
+            else fuseSecond = id;
             RefreshFusion();
         }
 
         private void Fuse()
         {
             if (fuseFirst == null || fuseSecond == null) return;
-            // A real service persists the fused toy before the reveal; the preview uses nothing.
+            // A real service persists the fused toy before anything animates; the preview uses nothing.
             lastFusionWasPreview = !(fusion.Available && fusion.TryFuse(fuseFirst, fuseSecond));
-            Navigate(AppPage.FusionReveal); // ApplyPage refreshes the reveal.
+            StartFusionMoment(); // the 4-second moment, then the reveal (PrototypeHud.FusionMoment.cs)
         }
 
         private void RefreshFusion()
         {
             if (fusionGo == null) return;
             // Drop picks that are no longer spares (for example after a trade elsewhere).
-            if (fuseSecond != null && SparesLeft(fuseSecond) < 0) fuseSecond = null;
-            if (fuseFirst != null && SparesLeft(fuseFirst) < 0) fuseFirst = null;
-            ShowSlot(fusionSlotA, fusionSlotPictureA, fusionSlotEmptyA, fuseFirst);
-            ShowSlot(fusionSlotB, fusionSlotPictureB, fusionSlotEmptyB, fuseSecond);
+            int Picked(string id) => (fuseFirst == id ? 1 : 0) + (fuseSecond == id ? 1 : 0);
+            if (fuseSecond != null && Picked(fuseSecond) > SpareCount(fuseSecond)) fuseSecond = null;
+            if (fuseFirst != null && Picked(fuseFirst) > SpareCount(fuseFirst)) fuseFirst = null;
+            ShowSlot(fusionSlotA, fusionSlotPictureA, fusionSlotEmptyA, fusionSlotNameA, fusionSlotTempA, fusionSlotTempPillA, fuseFirst);
+            ShowSlot(fusionSlotB, fusionSlotPictureB, fusionSlotEmptyB, fusionSlotNameB, fusionSlotTempB, fusionSlotTempPillB, fuseSecond);
             bool ready = fuseFirst != null && fuseSecond != null;
             var outcome = ready ? PersonalityBook.DescribeFusion(fuseFirst, fuseSecond) : null;
-            fusionHint.text = outcome != null ? outcome.Hint : "Pick two spares to see what they could make.";
-            fusionHintBubble.color = ready ? PockleTheme.Plum : PockleTheme.FillDeep;
-            fusionHintMotion.SetStyle(ready ? PersonalityMotionStyle.Dream : PersonalityMotionStyle.Calm);
+
+            // The mystery toy and the three hints. Its name and personality stay hidden until the reveal.
+            Color bottom = fuseFirst != null ? ToyColour(fuseFirst) : (Color)new Color32(0x8C, 0x7F, 0xB0, 0xFF);
+            Color top = ready ? ToyColour(fuseSecond) : bottom;
+            fusionMysteryBottom.color = bottom; fusionMysteryTop.color = top;
+            fusionColourSwatchBottom.color = bottom; fusionColourSwatchTop.color = top;
+            fusionMysteryMotion.SetStyle(ready ? PersonalityMotionStyle.Dream : PersonalityMotionStyle.Calm);
+            bool hybrid = ready && PersonalityBook.HybridOf(PersonalityBook.TemperamentOf(fuseFirst), PersonalityBook.TemperamentOf(fuseSecond)) != null;
+            fusionMysteryLine.text = !ready ? "Pick two spares" : outcome != null && outcome.Secret ? "Secret recipe!" : hybrid ? "A named hybrid?" : "Who will it be?";
+            fusionChipValues[0].text = outcome != null ? outcome.Colour : "?";
+            fusionChipValues[1].text = outcome != null ? outcome.Material : "?";
+            fusionChipValues[2].text = !ready ? "?" : fuseFirst == fuseSecond ? "Extra " + PersonalityBook.TemperamentName(PersonalityBook.TemperamentOf(fuseFirst)).ToLowerInvariant()
+                : PersonalityBook.TemperamentName(PersonalityBook.TemperamentOf(fuseFirst)) + " + " + PersonalityBook.TemperamentName(PersonalityBook.TemperamentOf(fuseSecond));
             fusionSecret.gameObject.SetActive(outcome != null && outcome.Secret);
+
             int shown = 0;
+            var noSpare = new List<string>();
             for (int i = 0; i < spareTiles.Length; i++)
             {
                 string id = FusionOrder[i];
                 int owned = session != null ? session.GetOwnedCount(id) : 0;
-                bool has = owned > 1 && session.TryGetPlayableVariant(id, out _);
+                bool playable = session != null && session.TryGetPlayableVariant(id, out _);
+                bool has = owned > 1 && playable;
+                if (owned == 1 && playable) noSpare.Add(PersonalityBook.ShortName(id));
                 spareTiles[i].gameObject.SetActive(has);
                 if (!has) continue;
                 shown++;
-                int left = SparesLeft(id);
-                bool picked = fuseFirst == id || fuseSecond == id;
-                spareLabels[i].text = left + (left == 1 ? " spare" : " spares");
-                spareRings[i].color = picked ? Ink : PockleTheme.FieldFor(id);
-                var face = spareFaces[i].rectTransform; face.offsetMin = picked ? new Vector2(3, 3) : Vector2.zero; face.offsetMax = picked ? new Vector2(-3, -3) : Vector2.zero;
-                spareTiles[i].interactable = left > 0;
-                var colours = spareTiles[i].colors; colours.disabledColor = new Color(1, 1, 1, .45f); spareTiles[i].colors = colours;
+                int spares = SpareCount(id);
+                spareLabels[i].text = spares + (spares == 1 ? " spare" : " spares");
+                if (sparePictures[i].texture == null) sparePictures[i].texture = CutoutPortrait(id);
+                bool first = fuseFirst == id, second = fuseSecond == id;
+                spareBadges[i].text = first && second ? "1 · 2" : first ? "1" : second ? "2" : "";
+                spareBadgeRects[i].gameObject.SetActive(first || second);
+                spareBadgeRects[i].sizeDelta = new Vector2(first && second ? 44 : 26, 26);
+                spareRings[i].color = first || second ? Ink : PockleTheme.FieldFor(id);
+                var face = spareFaces[i].rectTransform; face.offsetMin = first || second ? new Vector2(3, 3) : Vector2.zero; face.offsetMax = first || second ? new Vector2(-3, -3) : Vector2.zero;
+                spareTiles[i].interactable = true;
             }
             fusionEmpty.gameObject.SetActive(shown == 0);
+            fusionNoSpareRow.gameObject.SetActive(noSpare.Count > 0 && shown > 0);
+            fusionNoSpareText.text = noSpare.Count == 0 ? "" :
+                (noSpare.Count == 1 ? noSpare[0] + " has no spare yet." : string.Join(" and ", noSpare.GetRange(0, Mathf.Min(2, noSpare.Count))) + (noSpare.Count > 2 ? " and more have" : " have") + " no spares yet.")
+                + " A spare is an extra copy; your last one always stays on your shelf.";
+
             fusionGo.interactable = ready;
-            fusionGo.GetComponentInChildren<Text>().text = ready ? "Fuse, using both spares" : "Pick two spares";
+            fusionGo.GetComponentInChildren<Text>().text = ready ? "Fuse " + FirstName(fuseFirst) + " + " + FirstName(fuseSecond) : "Pick two spares";
             fusionGo.GetComponent<Image>().color = ready ? PockleTheme.Plum : PockleTheme.FillDeep;
             fusionGo.GetComponentInChildren<Text>().color = ready ? PockleTheme.OnPlum : MutedInk;
+            fusionGoNote.text = ready ? "Uses one spare of each. It can't be undone or traded." : "Your last copy of a toy is never used.";
         }
 
-        private void ShowSlot(Button slot, RawImage picture, Text empty, string id)
+        /// <summary>A toy's own colour (its finish swatch), for the mystery toy and the fusion moment.</summary>
+        private static Color ToyColour(string id) => ToyCatalog.TryGetCollectible(id, out var toy) ? CatalogUnityColor(toy.SwatchColor) : PockleTheme.FillDeep;
+
+        private static string FirstName(string id) => PersonalityBook.ShortName(id).Split(' ')[0];
+
+        private void ShowSlot(Button slot, RawImage picture, RectTransform empty, Text name, Text temperament, RectTransform pill, string id)
         {
-            bool has = id != null && PipVariants.TryFromCollectibleId(id, out _);
-            PipVariants.TryFromCollectibleId(id ?? "", out var variant);
-            picture.texture = has ? previews[(int)variant] : null;
-            picture.gameObject.SetActive(has);
-            empty.enabled = !has;
-            slot.GetComponent<Image>().color = has ? PockleTheme.FieldFor(id) : Color.white;
+            bool has = !string.IsNullOrEmpty(id);
+            picture.texture = has ? CutoutPortrait(id) : null;
+            picture.gameObject.SetActive(has && picture.texture != null);
+            empty.gameObject.SetActive(!has);
+            name.text = has ? PersonalityBook.ShortName(id) : "Empty";
+            temperament.text = has ? PersonalityBook.TemperamentName(PersonalityBook.TemperamentOf(id)) : "Pick one below";
+            pill.sizeDelta = new Vector2(temperament.preferredWidth + 20, 22);
             slot.interactable = has;
         }
 
         private float LayoutFusion(float width)
         {
             float y = 4;
-            TopCentered(fusionCard, new Vector2(0, -y), new Vector2(width, 200));
-            LeftLabel(fusionSlotA.GetComponent<RectTransform>(), new Vector2(18, -24), new Vector2(96, 96));
-            LeftLabel(fusionSlotB.GetComponent<RectTransform>(), new Vector2(width - 18 - 96, -24), new Vector2(96, 96));
-            LeftLabel(fusionPlus, new Vector2(width / 2 - 16, -56), new Vector2(32, 32));
-            LeftLabel(fusionHintRow, new Vector2(18, -132), new Vector2(width - 36, 52));
-            LeftLabel(fusionHint.rectTransform, new Vector2(60, 0), new Vector2(width - 36 - 72, 52));
-            y += 200;
-            if (fusionSecret.gameObject.activeSelf) { y += 10; TopCentered(fusionSecret, new Vector2(0, -y), new Vector2(width, 40)); y += 40; }
-            var star = fusionSecret.GetChild(0) as RectTransform;
-            star.anchoredPosition = new Vector2(-fusionSecret.GetComponentInChildren<Text>().preferredWidth / 2 - 4, 0);
-            y += 18;
-            LeftLabel(fusionSparesHeading, new Vector2(0, -y), new Vector2(width / 2, 28));
-            LeftLabel(fusionSparesNote, new Vector2(width / 2, -y), new Vector2(width / 2, 28));
+            TopCentered(fusionCard, new Vector2(0, -y), new Vector2(width, FusionCardHeight));
+            LeftLabel(fusionSlotA.GetComponent<RectTransform>(), new Vector2(8, -40), new Vector2(SlotWidth, 180));
+            LeftLabel(fusionSlotB.GetComponent<RectTransform>(), new Vector2(width - 8 - SlotWidth, -40), new Vector2(SlotWidth, 180));
+            LeftLabel(fusionMystery, new Vector2(width / 2 - 60, -62), new Vector2(120, 124));
+            float secretWidth = fusionSecret.GetComponentInChildren<Text>().preferredWidth + 40;
+            LeftLabel(fusionSecret, new Vector2(width / 2 - secretWidth / 2, -190), new Vector2(secretWidth, 26));
+            // Chips along the bottom of the card.
+            float chipsWidth = width - 24, gap = 6;
+            float[] shares = { 1.3f, .85f, 1.4f };
+            float total = shares[0] + shares[1] + shares[2], x = 12;
+            for (int i = 0; i < 3; i++)
+            {
+                float w = (chipsWidth - gap * 2) * shares[i] / total;
+                var chip = fusionChipValues[i].transform.parent as RectTransform;
+                LeftLabel(chip, new Vector2(x, -(FusionCardHeight - 12 - 52)), new Vector2(w, 52));
+                LeftLabel(fusionChipValues[i].rectTransform, new Vector2(i == 0 ? 28 : 9, -22), new Vector2(w - (i == 0 ? 32 : 14), 22));
+                x += w + gap;
+            }
+            y += FusionCardHeight + 20;
+            LeftLabel(fusionSparesHeading, new Vector2(0, -y), new Vector2(width * .45f, 28));
+            LeftLabel(fusionSparesNote, new Vector2(width * .4f, -y), new Vector2(width * .6f, 28));
             y += 38;
-            const float gap = 8;
-            float tile = (width - gap * 3) / 4;
+            const float tileGap = 8;
+            const int columns = 3;
+            float tile = (width - tileGap * (columns - 1)) / columns;
             int slot = 0;
             for (int i = 0; i < spareTiles.Length; i++)
             {
                 if (!spareTiles[i].gameObject.activeSelf) continue;
-                LeftLabel(spareTiles[i].GetComponent<RectTransform>(), new Vector2(slot * (tile + gap), -y), new Vector2(tile, 96));
+                LeftLabel(spareTiles[i].GetComponent<RectTransform>(), new Vector2(slot % columns * (tile + tileGap), -(y + slot / columns * (SpareTileHeight + tileGap))), new Vector2(tile, SpareTileHeight));
                 slot++;
             }
             if (slot == 0) { TopCentered(fusionEmpty, new Vector2(0, -y - 8), new Vector2(width, 60)); y += 68; }
-            else y += 96;
-            y += 28;
+            else y += ((slot + columns - 1) / columns) * (SpareTileHeight + tileGap) - tileGap;
+            if (fusionNoSpareRow.gameObject.activeSelf) { y += 12; LeftLabel(fusionNoSpareRow, new Vector2(0, -y), new Vector2(width, 56)); y += 56; }
+            y += 22;
+            LeftLabel(fusionGoNote.rectTransform, new Vector2(0, -y), new Vector2(width, 20)); y += 28;
             LeftLabel(fusionGo.GetComponent<RectTransform>(), new Vector2(0, -y), new Vector2(width, 56));
             y += 56;
             TopCentered(fusionRoot, Vector2.zero, new Vector2(width, y));
@@ -234,6 +363,7 @@ namespace Pockle.Runtime
 
             revealSheet = Rect("Fusion sheet", fusionRevealRoot); Surface(revealSheet, Paper, 32);
             revealName = Label("", revealSheet, PockleTheme.TitleSize, Ink, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, new Vector2(300, 38));
+            revealPersonalityLine = Label("", revealSheet, PockleTheme.BodySize, PockleTheme.JellyInk, FontStyle.Bold, TextAnchor.UpperLeft, Vector2.zero, new Vector2(300, 44));
             revealParents = Rect("Parents", revealSheet);
             revealParentA = ParentBubble(revealParents, 0, out revealParentFaceA);
             var plus = Label("+", revealParents, PockleTheme.CaptionSize + 1, Ink, FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
@@ -275,6 +405,7 @@ namespace Pockle.Runtime
             PipVariants.TryFromCollectibleId(fuseFirst, out var a);
             PipVariants.TryFromCollectibleId(fuseSecond, out var b);
             revealName.text = outcome.Name;
+            revealPersonalityLine.text = outcome.PersonalityLine;
             revealParentA.texture = previews[(int)a]; revealParentFaceA.color = PockleTheme.FieldFor(fuseFirst);
             revealParentB.texture = previews[(int)b]; revealParentFaceB.color = PockleTheme.FieldFor(fuseSecond);
             revealParentsLine.text = "Fused from " + ToyName(a) + " and " + ToyName(b);
@@ -332,7 +463,9 @@ namespace Pockle.Runtime
             LeftLabel(revealToy, new Vector2(width / 2 - 110, -150), new Vector2(220, 220));
             const float sheetTop = 420f;
             float y = 24;
-            LeftLabel(revealName.rectTransform, new Vector2(left, -y), new Vector2(inner, 38)); y += 46;
+            LeftLabel(revealName.rectTransform, new Vector2(left, -y), new Vector2(inner, 38)); y += 42;
+            // "It's… Secretly Sweet! Grumpy on the outside, soft on the inside." Up to two lines.
+            LeftLabel(revealPersonalityLine.rectTransform, new Vector2(left, -y), new Vector2(inner, 44)); y += 44 + 8;
             LeftLabel(revealParents, new Vector2(left, -y), new Vector2(inner, 30));
             LeftLabel(revealParentsLine.rectTransform, new Vector2(88, 0), new Vector2(inner - 88, 30));
             y += 30 + 16;

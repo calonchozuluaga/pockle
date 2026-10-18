@@ -19,5 +19,19 @@
     <Compile Include="CatalogChecks.cs" />
     <Compile Include="MaterialHandlingChecks.cs" />
     <Compile Include="SeriesMotionChecks.cs" />
+    <Compile Include="PeachExpressionChecks.cs" />
+    <Compile Include="ToyOrbitChecks.cs" />
+    <Compile Include="PipReactionChecks.cs" />
+    <Compile Include="SoftToyGestureChecks.cs" />
+    <Compile Include="FoxReactionChecks.cs" />
+    <Compile Include="RetiredRosterChecks.cs" />
+    <Compile Include="AxolotlReactionChecks.cs" />
+    <Compile Include="FirbReactionChecks.cs" />
+    <Compile Include="CocoReactionChecks.cs" />
+    <Compile Include="GingerReactionChecks.cs" />
+    <Compile Include="SnowyReactionChecks.cs" />
+    <Compile Include="PipFusionStudyChecks.cs" />
+    <Compile Include="PipFaceChecks.cs" />
+    <Compile Include="WinterTrioChecks.cs" />
   </ItemGroup>
 </Project>

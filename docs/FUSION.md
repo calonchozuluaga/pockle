@@ -37,16 +37,16 @@ Everything else stays the same:
 - **Colour:** blend the two parents' colour fields and accents, with a rule that keeps the result pleasant (no muddy mixes).
 - **Material:** a table of pairings. For example, jelly + vinyl might give a glossy gel-coated shell, and plush + foam a fuzzy soft-touch. Each pairing names a small set of results.
 - **Shape:** the hardest part technically. A safe first pass is that the fused toy keeps one parent's body shape and carries a visible detail from the other, such as a crown bump, a leaf, or a tail curl. Truly melting two shapes together is a later, riskier step.
-- **Personality:** a blend of the two temperaments, or one parent's temperament with a quirk from the other (open question 2).
+- **Personality:** combine the parents' personalities into a new profile that governs social interactions and can select trait-specific facial expressions. It does not determine the result's overall color or material. See the owner-approved October15 separation below; the exact inheritance formula remains to be designed.
 - **Secret recipes:** a short hand-made list that overrides the rules for specific pairs.
 
 ## Open questions for the owner
 
-The approved screens settle how fusion looks and how spares are picked. The rules below are still the owner's call. Until then the UI follows these placeholders: the same pair always makes the same result, and personality is the first spare's mood with a lean toward the second's.
+The approved screens settle how fusion looks and how spares are picked. The rules below are still the owner's call. Until then the UI follows these placeholders: the same pair always makes the same result, and the current preview still uses the first spare's mood with a lean toward the second's. That personality placeholder is superseded by the October15 owner direction below and is not the final inheritance rule.
 
 
 1. Can a fused toy be fused again?
-2. How does personality blend: does one parent win, does it land in between, or is it a mix with a random lean?
+2. Which rules combine both parents into the new personality profile? The owner has settled that it is a new combined personality, independent of the color/material recipe; exact trait mappings remain open.
 3. How many secret recipes for a first pass?
 4. How are fused toys shown? They aren't part of any series' finite set, so they could have a "Fusions" section on the shelf, their own showcase, or sit next to their parents.
 5. Is the same pair always the same result, or is there some chance? Always the same lets players share recipes. A chance-based result feels more like opening a box but is less predictable.
@@ -68,3 +68,20 @@ As built (UX-038): the HUD calls `IFusionService` (`Runtime/FusionService.cs`). 
 | Rule-based art (combining meshes, materials, colours), the fusion runtime, save and ledger changes, server validation | **Codex** (runtime, art pipeline, inventory) |
 
 This is more technically ambitious than anything scoped so far, especially the shape and material blending. **Codex: please don't start building until the owner approves the approach.** After that, a short technical spike on blending two materials and attaching one parent's detail to the other's body would tell us how far the rules can go.
+
+
+October 15 material-test update: owner approved Dusk and Sorbet for on-device appearance review. Fixed Pip Fusion Lab studies are implemented separately from IFusionService, with owner-only grants and existing Pip reactions. No parent consumption, personality inheritance, crafting, or production fusion persistence is implemented by this spike. See PIP_FUSION_MATERIAL_STUDIES.md.
+
+
+October15 follow-up: Honeydew and Eclipse approved as two additional fixed material studies in Pip Fusion Lab. V2 test grant adds missing studies for v1 owners. No production recipe/secret odds, parent consumption or personality inheritance is implied. See PIP_FUSION_MATERIAL_STUDIES.md.
+
+
+## Owner-approved separation: appearance and personality (October15)
+
+- Every fused toy has a personality. The parents' personalities combine to form a new profile; this must be more than a descriptive material label.
+- Personality determines how the toy interacts with other toys. Social reactions must consider the fused profile and the other toy's personality.
+- Personality does not alter the toy's overall color or material. Palette, finish, inclusions and glow come from the visual fusion recipe; personality mixing cannot silently recolor or replace that finish.
+- Traits may have different facial expressions and expression styles (eyes, mouth, timing and intensity), so personality is visible while the approved body shape and material remain consistent.
+- The existing 55-pair gallery's personality/reaction labels are proposals for review. Its static renders do not implement inheritance, social behavior, or trait-specific facial animation. The four phone material studies still use existing Pip reactions.
+
+Claude authors profile/trait combinations, social pairings, expression direction and UI descriptions; Codex implements separate appearance/personality resolution and local expression/social behavior hooks. Exact inheritance mappings, expression sets and social outcomes remain to be designed and reviewed. All behavior remains authored and local, with no per-touch AI generation.

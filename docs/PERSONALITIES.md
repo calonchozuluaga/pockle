@@ -16,6 +16,12 @@ After you open today's box, there's nothing more to do: the toys are a reward wi
 2. **Personality lives on the character, and the variety tints it.** All Pips share Pip's nature (curious and sunny); a finish nudges it. This keeps the writing to twelve characters plus small per-variety adjustments, not 120 separate personalities.
 3. **Alive, but never needy.** No decay, hunger, feeding, sadness from neglect, streak penalties, or anything that punishes being away. Toys are always happy to see you. Pockle is a cozy collecting game, and guilt is the wrong feeling for it.
 
+## Owner clarification: fused personality and expression (October15)
+
+A fused toy receives a new personality formed from its parents' personalities. That profile determines how it interacts with other toys and can drive trait-specific facial expressions, including eye/mouth poses and their timing. The profile is independent of the appearance recipe: personality does not change the overall color, material, inclusions or glow. Regular character/finish profiles may still supply the parent personalities; appearance must not be recomputed from the resulting temperament.
+
+The trait-to-expression and social-pairing mappings remain design work. The current Pip fusion gallery contains draft labels, not implemented inheritance or unique social/face behavior. The four material prototypes use existing Pip reactions. Keep these implementation limits explicit when presenting them.
+
 ## How a personality is built
 
 Each character gets one small, authored profile:

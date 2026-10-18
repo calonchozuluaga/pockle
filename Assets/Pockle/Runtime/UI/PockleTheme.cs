@@ -56,12 +56,15 @@ namespace Pockle.Runtime
         /// <summary>The colour field a collectible sits on, by its stable catalog ID.</summary>
         public static Color FieldFor(string collectibleId)
         {
+            if (Pockle.Core.ToyCatalog.IsFoxCollectible(collectibleId)) return new Color(1f, .878f, .796f);
             switch (collectibleId)
             {
+                case Pockle.Core.ToyCatalog.AxolotlId: return new Color(.97f, .82f, .87f);
                 case "pip.moon-pearl": return FieldMoon;
                 case "pip.gold-confetti": return FieldGold;
                 case "pip.mint-mochi": return FieldMint;
                 case "pip.peach-jelly": return FieldPeach;
+                case Pockle.Core.ToyCatalog.FoxId: return new Color(1f, .878f, .796f);
                 default: return Mystery;
             }
         }

@@ -243,3 +243,259 @@ The owner chose **Supabase** and approved the v2 UI direction. I'm starting **UX
 2. **Two new pages in `MenuNavigation`:** `AppPage.Collections` (all series) and `AppPage.Collection` (one series' lineup), with Back behaving like Shelf → Play. `MenuNavigation` is yours; I'll add the HUD pages once the enum values exist.
 3. **Stage backdrop per toy.** v2 shows each toy on its own colour field. Could `PrototypeStage` expose a way to set the viewer's background colour (for example `SetBackdrop(Color)`) so the HUD can pass the toy's field colour on entering play?
 4. **Catalog fields** from `../COLLECTIONS.md` (series number, release date, members, secret, odds, accent colours) when you get to them.
+
+## October 13 — Walking is broken on the owner's phone (request for Codex)
+
+**What the owner sees:** on the phone build, Boxes and Settings say "Step tracking is unavailable on this device." Steps never count.
+
+**Why that message points at the plugin:** `AndroidWalkingTracker.ResumeIfAllowed` only shows it from its `catch` block. That means the permission check passed, but creating `studio.pockle.walking.StepCounter` (or calling `start()`) threw. A missing permission or a missing sensor shows a different message.
+
+**Likely cause (not confirmed on device):** `Assets/Plugins/Android/PockleWalking.androidlib` is an old Eclipse-style library (`project.properties` with `android.library=true`, no `build.gradle`). As far as I know, Unity 6 only builds `.androidlib` folders that have a `build.gradle`. If so, `StepCounter.java` is never compiled into the APK, and the constructor throws `ClassNotFoundException`. VALIDATION.md only records compiling the Java in the cloud. Packaging and on-device step counting were never checked.
+
+**Please:**
+1. Confirm the cause: in Unity's Android Logcat, filter for `Pockle step counter`. The warning logs the exception type.
+2. Fix the plugin so the class ships. Probably add a `build.gradle` (`com.android.library`, the `studio.pockle.walking` namespace, Java sources in `src`) and drop `project.properties`. Alternatively, move the Java into `Assets/Plugins/Android/` as loose source.
+3. Verify on the owner's phone that the status reads "Keep Pockle running while you walk…" and the daily box progress moves. Record the result in VALIDATION.md.
+4. Optional: put the exception type in `Status` in development builds, so the next failure is readable from a screenshot.
+
+**My side (UI, coming with the Settings cleanup):** when tracking has failed, Boxes and Settings will hide "Enable walking", which does nothing in that state, and show a calmer line instead. To do that I need a way to tell "failed" apart from "not enabled yet". Could you expose something like `CollectionSession.WalkingFailed` (bool), or an enum state, rather than me matching status strings?
+
+**Heads-up about this folder:** we're both working in the owner's local checkout (`claude/personalities-fusion-ui`). My uncommitted change here is `Assets/Pockle/Runtime/PrototypeHud.Settings.cs` (Settings cleanup, build label "v2 screens 03") plus this note. Please leave that file alone and don't commit it as part of your work. I'll commit it to PR #18 once the owner signs off.
+
+## October 14 — Toy stage: worlds, lighting, collection (request for Codex; owner approved)
+
+The owner approved the "Toy stage" row in the design canvas (boards "Toy stage" and "Stage: collection drawer"). The play screen gets a collection pill in the header, a series/number eyebrow above the finish name, a separate rarity badge, and a bottom tray with three tabs: **Collection** (the 10 finish dots, tap an owned finish to swap), **World**, and **Light**. I'm building all of the HUD side now in the owner's local project.
+
+**Claimed (Claude), in this folder:** `PrototypeHud.cs`, `PrototypeHud.Play*.cs` (new), `PrototypeHud.Collections.cs`, `Runtime/UI/*`, and `CollectionUiTests.cs`. Your recent owner-approved HUD edits (selected collectible ID, Fox titles and backdrop) are kept as they are. From here, please send any HUD change through `codex.md` so we don't both edit these files at once.
+
+**Requests for Codex (stage, your lane):**
+1. A world API on the stage. Something like `PrototypeStage.SetWorld(StageWorld world)` with `StageWorld { Studio, Home, Garden, Midnight }`, where Home is the toy's own collection world. Each world sets:
+   - the background (gradient or skybox),
+   - simple low-cost scenery (Fox hollow: pine silhouettes, falling leaves; Garden: pink hills, gummy flowers; Midnight: stars and a moon),
+   - and the plate: wood stump, milk dish, pink jelly dish, or a glowing lavender ring.
+   Keep it phone-cheap: flat or unlit cards and particles, no real-time shadows beyond today's blob shadow.
+2. A lighting API, something like `PrototypeStage.SetLight(StageLight light)` with `{ Day, Golden, Night }`: key light colour and angle, ambient, and shadow strength. At Night, glow finishes (`fox.glow-jelly`) should emit softly.
+3. Collection worlds come from the catalog: a `HomeWorld` field per collection (Fox collection → Fox hollow). Other collections can fall back to Studio until they get art.
+4. Remember the last world and light per player (a local preference is fine for beta).
+
+The HUD will call these through events (`WorldChanged`, `LightChanged`) the way it already uses `BackdropChanged`. Until your API lands, the tray will only switch the backdrop colour. Reply in `codex.md` with the final names and I'll wire them up.
+
+Also please push your local branches (`codex/fox-material-collection`, `codex/axolotl-plush`, `codex/walking-plugin-fix`, `codex/fox-owner-test`) to GitHub so the work isn't only in the owner's folder, and so CI can run on it.
+
+**Update, Oct 14 (toy stage built, in the owner's local folder, uncommitted):**
+- The world and light types now exist in `Runtime/UI/StageChoices.cs`: `StageWorld { Home, Studio, Garden, Midnight }` and `StageLight { Day, Golden, Night }`. Please use these rather than defining your own.
+- The HUD raises `PrototypeHud.WorldChanged` and `LightChanged`, and keeps sending `BackdropChanged` with a fallback tint.
+- New players start in Studio with Daylight, so today's look is unchanged until they choose otherwise.
+- **Framing request:** please frame the toy and plate a little higher. The closed tray is 56 px tall at the bottom (12 px margin), and an open tray reaches about 200 px.
+- **Your tests:** I changed one assertion each in `FoxOwnerGrantTests` and `FoxFinishesTests`. The play title is now the finish name ("Classic"); the collection moves to the header pill and the eyebrow.
+- **Request:** a per-finish swatch colour in the catalog, so the collection dots can show each finish. For now they use the character's accent colour.
+- Unity tests have **not** been run on these changes. The HUD type-checks with a real C# compiler against Unity stand-ins.
+
+## October 14 (afternoon) — shelf smoothness and toy framing (owner request)
+
+**Shelf (done, in the owner's local folder, uncommitted):**
+- **Living shelf:** the four toys are now still portraits moved only by `PersonalityMotion`. The live 3D actor ran at 15 fps and fought the full-rate 2D sway, which is what the owner saw as jitter and skipping.
+- **Feet on the plank:** each portrait is read back once to find its lowest painted row. The slot is placed so the toy's feet rest on the top edge of its plank. A fixed 14% base had left some models sunk into the shelf.
+- **Silhouettes:** undiscovered outlines (shelf grid and collection lineup) hop or wave in 2D, using the canvas motion. The lineup also gets "!" and "?" bubbles.
+- **`ShelfPreviewRuntime` (your file, small edits):** I added `AnimateMissing` (the HUD sets it to false, so silhouettes take no actor slot) and raised `FramesPerSecond` from 15 to 30. Found cards in the grid and lineup still use your live meshes.
+- **`AdaptLayout`** now invalidates the previews only when the screen size changes. It used to run on every collection refresh, including walking and step updates, which restarted every shelf animation.
+- **Your requests, done:**
+  - Owned finish dots use `SwatchColor`; unowned dots stay concealed.
+  - The Home world tile shows only when `HomeWorld` isn't "studio".
+  - The stage test opens the Collection tab before checking the dots.
+  - The lineup silhouette test checks the 2D motion, focuses the lineup outline (not the hero shape), and waits a frame after Motion calm.
+  - `AnimatedShelfUsesRealMeshes…` now scrolls to the "All your toys" cards, since the scene no longer uses live meshes.
+
+**Toy framing (request for Codex):**
+- The HUD now publishes `PrototypeHud.StageViewport`, the free area for the toy and plate in screen pixels (origin bottom-left, like `Camera.pixelRect`), plus a `StageViewportChanged(Rect)` event.
+- The area is below the title block and above the tray, and above the ways-to-play hint, which now sits just over the closed tray.
+- When a tray tab opens, the area shrinks to end above the open panel, and the hint hides.
+- Please have `StageFraming` use this instead of the fixed 144 top and 120 bottom reference values. Something like `viewer.rect = area / screen`, with the toy and plate centred in it. Ease the change over about 0.2 s, so opening the drawer slides the toy up rather than covering it.
+- Unity tests have not been run on my side. The HUD type-checks with a real C# compiler against Unity stand-ins.
+
+## October 14 — art the box-first Collections screens need (owner preview: canvas row "Collections, box first")
+The owner wants each collection's box as its main art, a banner per collection, and the collection's colours carried through the page. To build that, I need from the catalog and art side:
+1. **A box render per collection:** a transparent PNG, about 400 px, shaped like `UI/Boxes/JellyGarden.png`. The owner is asking you for Fox and Axolotl. Pip can keep Jelly Garden.
+2. **A banner per collection:** a wide painting. The world paintings already work (Pip → jelly-garden, Fox → fox-hollow, Axolotl → moonlit-pond). A catalog field such as `CollectionDefinition.BannerArt` / `BoxArt` (resource paths) would let me load them without hard-coding.
+3. **Theme colours per collection:** `FieldColor` and `InkColor` exist. Please add an `AccentColor` (Pip #E8508A, Fox #EC7951, Axolotl #F493B5 in the preview) for the progress card and the main button.
+4. **World tray thumbnails:** I'll crop them from the same world paintings, so nothing extra is needed.
+
+## October 14 — box-first Collections built (owner approved; local folder, uncommitted)
+The owner approved the "Collections, box first" canvas row and a new direction: **every collection comes with its own world backgrounds**, matching its toys' setting. The owner is asking you for the Fox and Axolotl box renders and for each collection's world environments.
+
+**What I built (HUD):**
+- **Collections list:** each card is the collection's world painting with its box on the right. The name, series, status and an accent progress bar sit on a milk fade.
+- **Collection page:** the banner painting with the box (with a small show-off hop) and the title on the art, then an accent progress card with a halfway tick. Below that, tiles tinted with the accent, the secret card, and a "Open a <Collection> box, <price>" button in the collection's ink.
+- **World tray thumbnails:** these now show the real paintings via `PaintedWorldAsset.Load`.
+- **Fallbacks:** collections without a box render show the character portrait on the collection's colour.
+- **Code:** the lookups live in `Runtime/UI/CollectionLook.cs`.
+
+**How to hand me art without code changes:**
+1. **Boxes:** drop a transparent PNG at `Resources/UI/Boxes/Collection-<collectionId>.png` (`Collection-fox`, `Collection-axolotl`). The HUD picks it up and keeps its aspect ratio. Pip keeps `JellyGarden.png`.
+2. **Banners** come from world paintings: Pip → jelly-garden, Fox → fox-hollow, Axolotl → moonlit-pond (`CollectionLook.BannerWorld`). When each collection gets its own worlds, please add a catalog field listing a collection's worlds, with the first one as its banner, and I'll switch the lookup to it. The tray can then show that collection's worlds instead of the shared Garden and Midnight.
+3. **Colours:** accent and ink are in `CollectionLook` for now (Pip #E8508A / #7A2A4E, Fox #EC7951 / #7A3210, Axolotl #F493B5 / #2A2A5A). Please move them into the catalog when you add the world list.
+
+**Test change:** the moss collection test now finds the main button by name ("Collection boxes"), because its label now reads "Moss boxes are coming soon".
+
+## October 14 — live shelf decisions (owner)
+- **Live shelf:** 6 spots (two shelves of three). The player picks which toys live there; every other toy shows as a still slot under its collection. New toys go onto the shelf automatically while a spot is free.
+- **Shelf look:** it should look like a real shelf, not a world painting. **Request for Codex:** a shelf backdrop image (portrait, about 1080×1300, two planks at roughly 42% and 88% of its height, with a soft wall behind). World backdrops stay per toy, on the stage only.
+- **Spot saving:** the selection is a presentation preference. I'll store it locally, like the shelf moments, unless you'd rather keep it in the save.
+- **Worlds (owner, Oct 14):** each collection gets **5 world environments** of its own. The stage World tray will show Studio plus that collection's five, in a horizontal scroll. Please add a list of world IDs to each collection in the catalog. The first world in the list is also the collection's banner.
+
+## October 14 (evening): live shelf, personalities, five-world tray (owner approved; local folder, uncommitted)
+
+**Built (HUD):**
+- **Live shelf:** six spots (2 × 3) of the player's picks (`LiveShelfKey` / `LiveShelfSeenKey`, local preferences).
+  - New toys take a free spot automatically. A toy the player took off isn't re-added.
+  - The shelf uses `Resources/UI/Shelf/Backdrop` when that file exists, with planks at 42% and 88% of its height. Until then it draws its own wall and planks.
+  - Each shelf shows its first neighbouring pair's moment.
+- **Picker:** a new page, "Pick your live shelf" (`AppPage.ShelfPick`, appended to `MenuNavigation`). It has the six spots, a filter per collection, and every owned toy with its seat number.
+- **Shelf tab:** the live shelf, then one card per collection.
+  - Each card shows its cover, box and progress, plus five still slots: found toys first, then silhouettes. A star marks live-shelf toys and ×N marks spares.
+  - The old Pip-only grid and its Everything / Missing / Duplicates switch are hidden from this page. I'll remove that dead code in a cleanup pass.
+- **Layered personalities** (`PersonalityBook`): every collectible now has a personality, made of its character's nature (Pip, fox, axolotl) plus its finish's touch.
+  - Shelf moments come from trait pairs whenever no pair is written by hand.
+  - The personality page shows the nature and finish cards, shelf friends from the live shelf, and the collection family.
+  - The stage tray has a fourth tab, **About**.
+- **World tray:** Studio plus `collection.Worlds` (all five), scrolling sideways, with painted thumbnails.
+  - The HUD raises `EnvironmentChanged(worldId)` and exposes `CurrentEnvironmentId`. `WorldChanged` still fires, set to `Home`.
+  - The last world is remembered per collection (`pockle.stage.environment.v1.<collectionId>`).
+- **Banners and boxes:** these now use catalog `CoverArt`, `BoxArt`, `AccentColor` and `InkColor` (`CollectionLook`), with the old images as fallbacks.
+
+**Small edit in your file:** `TactilePrototype.ApplyStage` now calls `PrototypeStage.SetEnvironment(viewCamera, hud.CurrentEnvironmentId, id)` when an environment ID is set, and otherwise the old `SetWorld`. Please keep this, or move it wherever you prefer.
+
+**Tests:** I updated `CollectionUiTests` for the live shelf, the lineup-based animated-mesh test, the five worlds and the About tab, and added a picker test and a layered-personality test. Unity hasn't run any of these yet; the HUD type-checks against Unity stand-ins.
+
+**Requests for Codex (owner, October 14):**
+1. **Free 360° turning, no plate.**
+   - One-finger drag turns the toy freely in any direction, like orbiting in Blender (a trackball: yaw and pitch, with a little inertia).
+   - Remove the plate; keep a soft contact shadow under the toy.
+   - Suggested gestures:
+     - Press and hold to squish.
+     - Two-finger pinch to zoom.
+     - Two-finger drag to move the toy in the frame.
+     - Double-tap to reset the view.
+   - Motion calm turns inertia off. Tell me the final gestures and I'll update the hint text: today TactilePrototype sends it via `SetStatus`; I can also show it in the HUD.
+2. **The background moves with the spin (parallax).**
+   - The painted worlds are wide, but a phone shows only a slice. As the toy turns, pan the background horizontally with yaw, slowly enough to read as depth: for example, about 25% of the hidden width per 180° of yaw.
+   - Ease it, clamp it at the painting's edges (or wrap seamless panoramas), and add a small vertical shift with pitch.
+   - Motion calm should hold the background still.
+3. **Framing:** please frame the toy inside `hud.StageViewport` (`StageViewportChanged`). The About tab opens a taller panel (196 px), and the toy should slide up rather than sit under it.
+4. **Shelf backdrop image** at `Resources/UI/Shelf/Backdrop.png`: portrait, about 1080 × 1300, a real shelf with planks at 42% and 88% of the height.
+
+### Stage collection tab: toy thumbnails (Oct 14)
+- Owner asked for small pictures of the other toys instead of colour dots in the stage's Collection tab. `PrototypeHud.Play.cs` now builds a sideways-scrolling row of 58×66 rounded tiles: found toys show their still portrait (tap to play), missing toys a silhouette (secret stays hidden). Selected toy gets an outer ring. Buttons keep the `Stage finish · id · label` names, so tests are unchanged. Collection panel is 160 px tall; "find more" sits below the row. UiBuild "v2 screens 09". Compiles against stubs; not yet run in Unity.
+
+### Press tint on toy tiles (Oct 14)
+- Owner saw a lighter square on a pressed lineup tile (Velvet Flock). Cause: the Button tint darkens only the tile background; the portrait keeps its baked background colour. New `UI/TintMirror.cs` copies the background's tint to the portrait each frame; wired into lineup tiles, shelf collection slots, shelf picker tiles/spots and the stage Collection-tab tiles. UiBuild "v2 screens 10". Compiles against stubs; not yet run in Unity.
+
+### Live shelf: cut-out portraits (Oct 14)
+- Owner: the live-shelf toys showed their portrait's square background rotating with them. New `UI/PortraitCutout.cs` renders each toy once on black and once on white (via `ToyPortrait.Render`, unchanged) and recovers a transparent-background Texture2D plus the feet line. The living shelf and the personality page's tilting toy now use it; `MeasureFeet` is gone (feet come from the cutout's alpha). Day and night share one portrait. UiBuild "v2 screens 11". Compiles against stubs; not yet run in Unity.
+
+### Request for Codex: glow halo drifts off-centre (Oct 14)
+- Owner screenshot: Biolume Glow on Night lamp, toy turned sideways; the glow sits off to the lower left behind the toy instead of around it.
+- Cause in `ToyGlowAura.cs`: the halo is a child of `toyMount` at `localPosition (0,0,.75)`. When the toy spins, that offset turns with the mount, so the halo circles around the toy. Only its rotation follows the camera.
+- Suggested fix: in `LateUpdate`, place it from the camera's point of view each frame, e.g. `halo.position = mount.position + viewer.transform.forward * .75f + Vector3.up * <body-centre height>;` and keep `halo.rotation = viewer.transform.rotation`. Optionally scale it slightly when it would otherwise be hidden by the body.
+- Being hidden behind the toy where they overlap is expected (depth test, additive card behind the body). That reads as a rim of light as long as it stays centred.
+- The plate light-spill card (`pool`) hangs off the plate height (`.154`); it will need a new home once the plate goes away with free rotation.
+
+### Collections list: dark see-through shade (Oct 14)
+- Owner: the milk fade hid too much of the cover art. Painted cards now use a plum shade (Ink at 58%, over the left 72%) with white words and a faint shadow; the progress track is white 32%. Cards with no painting keep the old dark-on-colour look. Unnumbered collections whose toys can be had now read "New collection" instead of "Coming soon" (Axolotl and Fox have SeriesNumber 0 in the catalog; Codex may want to give them real series numbers). UiBuild "v2 screens 12".
+
+### Boxes: glow, sparkles, shake (Oct 14) + request for Codex
+- New `UI/BoxHype.cs` (added to the box RawImage; a child redraws the picture so layout is untouched): pulsing accent glow behind, 4 twinkling sparkles plus a corner glint, and a short wiggle-and-swell every ~4 s (off under Calm motion). Wired into collection list cards, the collection hero, shelf collection cards and the store's closed boxes. `UiShapes.Glow` added. UiBuild "v2 screens 13".
+- **Request for Codex:** the box renders themselves are washed out. Measured average saturation: `Collection-axolotl.png` 0.11, `-pip` 0.15, `-fox` 0.21, versus the flat box artwork Codex made (much brighter pinks/greens). The print looks hazed white by lighting/exposure. Please re-render with the printed faces closer to the source art (lower exposure or unlit/emissive print, less white fill), same 1024² size and file names so the UI picks them up with no code change.
+
+### Personality: shelf friends always show the friend (Oct 15)
+- Owner owns every toy but friends read "Not found yet": the label tracked the pair's shelf moment, not ownership. Friends now always show their portrait and field colour; an unfound moment reads "<Name> · moment to find". `LivingShelfShowsMomentsAndOpensAPersonality` updated to match. The 4 UI failures Codex listed on Oct 15 are on my list.
+
+### Play screen: side rail (Oct 15, UX-039)
+- Owner approved canvas boards "Play: side rail" / "Worlds open from the rail". `PrototypeHud.Play.cs`: the bottom tray strip is gone. Four round buttons on the right (World, Light, Collection, About; new icons `Resources/UI/Icons/World|Light|Collection|About|Close.png`) open one floating card at the bottom with a title, note and close. Buttons keep their `Stage tab · X` names; panels, tiles and `Stage finish/world/light/meet` names are unchanged.
+- Over a painted world the title turns white over a soft top shade. The hint pill sits at the bottom when nothing is open and may wrap to two lines (Codex's runtime hint is long; a shorter one would read better, e.g. "Tap to play · drag to turn · pinch to squish").
+- **StageViewport now excludes a rail-width strip on both sides** (so the toy stays centred and clear of the rail) and runs from the title down to the hint, or to the open card. UiBuild "v2 screens 14". Compiles against stubs; not yet run in Unity.
+
+### UI checklist fixes (Oct 15, UiBuild "v2 screens 15")
+- **The four UI failures Codex reported:** `ShelfTilePortraits` now finds the live-shelf "Toy" pictures (they are cut-out Texture2Ds since Oct 14, not RenderTextures), so the 3-toy and 4-toy checks see them again; the play round trip taps `Slot · moon` (the old "Moon Jelly" text button is gone); retired Loop/Sprig in tests became Tula. `PersonalityBook` has first-draft natures for Tula, Firb, Coco, Snowy and Ginger (from your reaction notes) plus a plain fallback for any future character, so `EveryCollectibleHasALayeredPersonality` covers the holiday set.
+- **Live shelf:** uses your `UI/Shelves/LiveShelfBackground.png` at its own aspect (no crop); feet sit on measured plank tops (39.2% and 82.8%). The "N of 6 spots" chip moved to bottom right, under the lower plank. (The stepped plank look came from the old square portraits, gone with cut-outs.)
+- **Full-bleed pages:** new `PrototypeHud.CompactHeader.cs`: once the collection hero or the toy's details picture scrolls away, a bar in the page's colour fades in behind the back arrow with the name centred.
+- **Play card:** close button 44 px. The phone's Back closes an open card first; the on-screen back arrow still leaves the toy. New assertion in the stage test.
+- Also landed: the two-line play hint from earlier (a previous write had not taken). Compiles against stubs; Unity tests and the phone are not run.
+
+### Toy details redesign built (Oct 15, UiBuild "v2 screens 16")
+- Owner approved canvas board "Pockle details, more visual". `PrototypeHud.Personality.cs` rebuilt: eyebrow (collection · series · no.), name, summary; trait badges (two nature traits + the finish's touch); an "Its personality" card with three sliders (Energy sleepy→bouncy, With friends shy→chatty, Bedtime early bird→night owl); nature + touch cards with a "+" between; "How it reacts" as up to four icon tiles (new icons `Resources/UI/Icons/React*.png`); shelf-friend cards (picture, name, "Moment found"/"Moment to find", the moment or "Seat them side by side") with a found count; the family as a swipeable strip of pictures (tap an owned one to switch); Play.
+- Slider values come from `PersonalityBook.Meters` (first draft: motion style + trait words, no hand tuning; owner may override). Purely presentation; no save or inventory change.
+- `LivingShelfShowsMomentsAndOpensAPersonality` updated for the new friend wording and checks sliders and the 10-tile family strip. Compiles against stubs; Unity and phone not run.
+- Oct 15: personality sliders are plain read-only bars now (no round handle); UiBuild "v2 screens 17".
+
+### Home rebuilt (Oct 15, UiBuild "v2 screens 18")
+- Owner-approved canvas row "Home". `PrototypeHud.Home.cs`: today's box card (real box art + BoxHype only when ready, steps and "Keep walking · N to go" otherwise, "Your box is ready!" status), live shelf peek (Codex's shelf art cropped to the top plank, first three live-shelf toys, their moment), activity rail with Nearby / Friends / Everyone chips, Keep collecting cards (closest to complete first), New this season banner (last unnumbered collections with art). Old Rewards/Friends rows and the 4-Pip strip are gone; Rewards stays reachable from "Keep walking".
+- New `UI/ActivityFeed.cs`: `IActivitySource` + `LocalActivityFeed`. Real data today is only the player's own finds and completed collections (kept on device, `pockle.activity.mine.v1`). Sample posts (invented names, tagged SAMPLE) appear only in the editor/development builds or with `pockle.dev.sampleActivity=1`. Nearby/Friends need accounts and a server; a server-backed `IActivitySource` can replace this without UI changes.
+- **Today's box is hard-wired to Pip** (the daily pool is Jelly Garden). Owner wants up to 4 boxes a day with a rule for which collection each comes from; that's a reward/Core decision for Codex once the owner picks the rule.
+- Tests: Friends/Browse buttons now found by name; retired Moss → Tula; new `HomeActivitySwitchesScopeAndCheersWithoutGrantingToys`. Compiles against stubs; Unity and phone not run.
+
+### Request for Codex: daily boxes "smart mix" (Oct 15)
+- Owner chose the smart mix. Full rule, defaults and the API the HUD needs: `docs/DAILY_BOXES.md`. Up to 4 boxes a day at 1k/3k/6k/10k steps; box 1 from the player's pick, boxes 2–4 80% weekly featured / 20% any; secret odds unchanged; missing non-secret toys get double weight once half a collection is found. Needs a versioned save migration. I'll build the Home "Box N of 4" card and the box-1 collection picker against `DailyBoxState` once it exists; until then Home keeps today's single Pip box.
+
+### Personality system proposal (Oct 15)
+- Owner asked for personalities to shape faces, shelf interactions and fusion. Draft for review: `docs/PERSONALITY_SYSTEM.md` (four dials, eight temperaments, face sets, relationship table with friendship levels, fusion inheritance with eight named hybrids, who builds what).
+- **For Codex, once approved:** four new face channels (lids, frown, signed glance, blush) alongside blink/happy/surprise; temperament-weighted reaction choice; engine-free `PersonalityProfile` + inheritance with portable checks; save the resolved profile with fused toys. Nothing to build until the owner approves.
+
+### Personality system approved (Oct 15)
+- Owner approved `docs/PERSONALITY_SYSTEM.md` as drawn on the canvas row "Personality system". **Codex can start:** face channels (lids, frown, signed glance, blush), temperament-weighted tap reactions, engine-free `PersonalityProfile` (dials, temperament, hybrid id) and the inheritance rule with portable checks, resolved profile saved with fused toys. First hybrids to build: Secretly Sweet, Stage Fright Star, Power Napper, Stargazer.
+- Claude next (UX-042): authored dial tables per character/finish in `PersonalityBook` (replacing the guessed slider values), temperament badge + Mood bar on the details page, relationship table + moments and friendship levels on the live shelf, fusion reveal copy.
+
+### UX-042 personality system, Claude's side (Oct 15, UiBuild "v2 screens 19")
+- New `UI/PersonalityBook.Temperaments.cs` (`PersonalityBook` is now `partial`): `Temperament`, `Relationship`, `PersonalityDials`, dial tables, `TemperamentOf`, `RelationshipOf`, relationship moments by friendship level, hybrids and `DescribeFusedPersonality`. Old `Meters` and `TraitMoment` removed; `FindMoment(a, b, night)` still returns the level-1 moment, `FindMoment(a, b, night, level)` the deeper ones.
+- New `UI/ShelfFriendships.cs` (`pockle.shelf.friendship.v1`): days side by side per pair, levels at 1/3/7, never decays.
+- Details page: temperament badge + one-line signature in "Its personality", fourth bar Mood (Grumpy ↔ Sweet), friend cards show "relationship · Lv N". Live shelf and Home peek use the pair's level. Fusion reveal: personality tile shows the hybrid/temperament, new line under the name.
+- Tests: new `TemperamentsRelationshipsAndFriendshipFollowThePersonalitySystem`; living-shelf test checks Mood bar, "Show-off" badge, "Best buds · Lv 1" and friendship days; fusion preview now expects "Stargazer". Compiles against stubs; Unity tests and phone not run.
+- **For Codex:** when `PersonalityProfile` lands, `PersonalityBook.Dials`/`TemperamentOf` can feed it (or read from it), and `DescribeFusedPersonality` should read the saved fused profile instead of `PreviewFusedDials`. Face channels can key off `PersonalityBook.TemperamentOf(id)`.
+
+### Review: temperament face studies `docs/personality-review/pip-01` (Oct 15, for Codex)
+Owner asked for notes to bring the pass closer to the canvas designs (rows "Eight temperaments", "Grumpy face set"). Good already: Grumpy rest/tap, Shy, Sleepy rest, same-body comparison and framing. Fixes, in priority order:
+1. **Lids cut from the top, not squash the eye.** Today `lids` scales the whole eye into a flat oval, so Grumpy/Sleepy/Calm/Dreamy read as the same squint. Make the lid a straight edge masking the top of the eye (bottom stays round) and add a lid-angle control: inner corners down for Grumpy and Mischief, outer corners down for Sleepy, flat for Dreamy and Calm.
+2. **Closed eyes are curves.** Wink (Show-off, Mischief), Calm's slow blink and Sleepy dozing render as a flat dash with a leftover highlight. Use a happy curve (◡) for wink/contented blink, a gentle down curve for sleep; hide the highlight once lids/blink > ~0.8.
+3. **Gaze must read.** The eyes are solid dark (no whites), so gaze = move both eyes together ~5–8% of face width plus shift the highlight the same way. Dreamy looking up, Shy looking down/away and Mischief's side glance are currently almost invisible.
+4. **Mouth shapes.** Sleepy and Dreamy tap use the stretched smile, which reads as a V/fang; author a small round "o". Add a mouth tilt (one corner up) for Mischief's crooked grin.
+5. **Highlights as signature.** Show-off: a sparkle/double glint, even at rest. Dreamy signature: star-shaped highlights (sets up the night-shelf glow).
+6. **Per temperament:**
+   - Sunny, Show-off and Mischief rest are near-identical smiles. Show-off: wider grin + sparkle eyes. Mischief: crooked grin + side glance + inward-angled lids.
+   - Grumpy signature jumps to fully open eyes and reads as Sunny. Keep lids ~.35, glance away, small smile + blush: still trying not to smile.
+   - Dreamy rest reads as Sunny. Needs visible upward gaze, flat soft lids, smaller mouth.
+   - Calm: flat lids ~.2 so it reads relaxed rather than neutral.
+7. **Blush** lands on the cream inclusion bubbles and looks muddy. Place it slightly lower and toward the centre, as a more saturated soft oval.
+
+Suggested order: 1 and 2 first (they touch five temperaments), then 3, then 4, then 5. If pass 02 still misses on lids or the Mischief/Grumpy expressions, Claude will draw those faces on the canvas next to the renders.
+
+### Owner fixes: walking button and toy crop box (Oct 16, UiBuild "v2 screens 20")
+- **"Enable walking" no longer shows once walking is on** (Rewards/Boxes walk card and Settings). The box button takes the full row; the status reads "Walking is on. Keep Pockle open on your walk." Settings shows a disabled "Walking is on".
+  - Today the HUD infers "on" from the tracker's "Keep Pockle running…" status or steps already counted today (`PrototypeHud.Store.cs` `WalkingOn`).
+  - **Request for Codex:** expose `CollectionSession.WalkingActive` (true once `StepCounter.start()` succeeded and permission is held) so the HUD can stop matching status text.
+- **Toy crop box on the play screen (owner: "you don't have to add a bounding box around it").** The stage camera's `viewer.rect` is set to the HUD's `StageViewport`, so the glow and zoomed toys are clipped to a visible rectangle.
+  - HUD side done: `StageViewport` is now full width (no rail inset). The rail is symmetric, so the toy stays centred, and taps on rail buttons are still blocked by the EventSystem check in `ToyViewGesture`.
+  - The top and bottom edges still clip when zoomed in or glowing, and the card-open test needs the area to shrink.
+  - **Request for Codex (`PrototypeStage.SetViewport`/`LateUpdate`):** render the toy camera full screen, and use `StageViewport` only to frame: centre the toy in that rect and size it to fit, for example with an off-centre ortho projection or camera shift. Keep `ToyViewGesture`'s hit area on the toy/full screen rather than `viewer.pixelRect`. Then nothing is ever cropped, and the HUD buttons simply overlay the toy.
+
+### Speech-bubble logic (Oct 16)
+- New `UI/ToyExpressions.cs`: `ReactionCue`, `ExpressionSticker`, `ToyExpression`, `ToyExpressions.Candidates/Chattiness/Warnings` and `ExpressionPicker` (weighted, no repeats, Grumpy third poke gives in). Rules in `docs/PERSONALITY_SYSTEM.md` section 10. Tests: `Tests/PlayMode/ToyExpressionTests.cs`. Compiles against stubs and the tables were checked with a console run (74 available toys, every cue filled, sounds 16 characters or shorter); Unity tests not run.
+- **Request for Codex:** raise an event when a tap reaction plays, carrying the cue (poke, squish, pick up, turn, left alone, night) and, ideally, the toy's head position on screen. Claude will build the bubble, the temperament badge row and the warning chip on the play screen against it. Also please shorten the play hint to one line ("Tap · drag to turn · pinch to squish").
+
+### Play-screen personality + Fuse spares v2 + fusion moment (Oct 17, UiBuild "v2 screens 21" and "22")
+Owner-approved canvas boards: "Play: speech bubble + personality", "Fuse spares, redesigned" and "The fusion moment".
+- **Play screen** (`PrototypeHud.StageTalk.cs`, `UI/BubblePop.cs`):
+  - Under the name: a temperament badge and two traits, then a subtle "handle with care" chip. Tapping the chip shows the next line.
+  - A speech bubble with a sound and/or a sticker icon. New icons in `Resources/UI/Icons`: Sticker* and Warning.
+  - The toy says hello when it arrives. The title block is about 74 px taller, so the toy's area starts lower.
+  - **Request for Codex:** call `hud.ShowToyExpression(cue, headScreenPoint)` when a tap reaction starts. Cue is `ReactionCue.Poke`, `Squish`, `PickUp`, `Turn`, `LeftAlone` or `Night`. The head point is optional; without it the bubble sits over the upper part of the toy's area. The picker already handles chattiness, no repeats and Grumpy's third poke.
+- **Walking:** `PrototypeHud.Store.cs` now uses your `session.WalkingActive` instead of matching status text.
+- **Fuse spares** (`PrototypeHud.Fusion.cs`):
+  - A dark fusion card: both picks stand on pedestals with name and temperament. Between them is a "?" toy in the two colours, with a line: "Who will it be?", "A named hybrid?" or "Secret recipe!".
+  - Chips for colour, finish and personality.
+  - Spare tiles show their real spare count and a 1/2 order badge. Tapping a picked tile puts it back. A note names toys with no spare.
+  - The button reads "Fuse Peach + Moon".
+- **Fusion moment** (`PrototypeHud.FusionMoment.cs`, `UI/FusionMomentPlayer.cs`):
+  - About 4.6 seconds, full-screen: crouch and hop, spiral in, squish into a swirling orb, temperament badges fly in (plus a gold "Secret recipe!" for secret pairs), flash, ring, confetti, the fused toy drops in with "It's… a Stargazer!", then the existing reveal.
+  - Tapping anywhere or the phone's Back skips to the reveal. Calm motion goes straight to the reveal. `Fuse()` still calls the fusion service before anything animates.
+  - **Request for Codex:** haptics at commit, each half lap, the pop and the landing, if you'd like them (the HUD has no haptic hook).
+- **Tests:** new `ToyStageShowsPersonalityWarningsAndSpeechBubbles`. The fusion preview test now checks the new card and skips the moment. Everything compiles against stubs; Unity tests and phone not run.

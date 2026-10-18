@@ -1,0 +1,1 @@
+Opening-ready original Firb carton. Source: FirbCollectionBox.blend; GLB: models/FirbCollectionBox.glb; Unity FBX: Resources/Boxes/FirbCollectionBox.fbx. Frame 1 closed, 48 open; 24 fps. Lid and two dust flaps have independent real hinges. Product PNG renders come from the same geometry/materials. 874 triangles.

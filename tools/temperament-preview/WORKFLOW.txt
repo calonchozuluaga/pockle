@@ -1,0 +1,22 @@
+Pip temperament face studies — pass02 (editor-only)
+
+1. Run python3 tools/temperament-preview/build-pip-faces.py.
+2. Use Unity 6000.6.5f1 on an isolated copy of the current owner project:
+   Unity -batchmode -projectPath <snapshot> -executeMethod Pockle.Editor.PipTemperamentFaceCapture.Capture -facePreview <absolute docs/personality-review/pip-02> -quit -logFile <log>
+3. Convert frames/<temperament>/000.png through 063.png into looping GIFs
+   at 0.07 seconds/frame, saved as loops/<temperament>.gif. The native
+   macOS ImageIO encoder supplied here avoids external dependencies:
+   swift -module-cache-path /private/tmp/pip-swift-cache tools/temperament-preview/encode-loops.swift <absolute output folder>
+4. Inspect rest, tap and signature stills and transition frames. Keep frame
+   sequences in the isolated capture directory; publish renders, loops,
+   poses.json and index.html only.
+
+Pass01 output is preserved for comparison; the current tool generates pass02.
+Top-cut/angled lids, curved closure, stronger gaze, round mouths, crooked grin,
+double/star glints and lower central blush implement Claude’s Oct15 review.
+
+Eight temperaments; 24 poses; 48 stills; eight 64-frame loops. The shader
+authors local face paint and smooths front shading as a feasibility proof.
+Sculpted eye outlines may remain faintly visible when closed: production
+face integration still needs cleanup. This does not modify source textures,
+meshes, runtime shaders, saves, personality assignment or phone builds.

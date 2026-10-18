@@ -1,0 +1,12 @@
+{
+  "source_file": "Bundy.glb",
+  "source_sha256": "1b0873eb6da17090ac6dddd34de5507aec5ccc93dd273b26891a893c0ad4e3f4",
+  "source_triangles": 270892,
+  "runtime_triangles": 30000,
+  "texture_size": [
+    4096,
+    4096
+  ],
+  "conversion": "Weld source UV seams, decimate to about 30k triangles, retain original paint and UVs. Unity native build normalizes floor and viewer direction.",
+  "source_rigged": false
+}

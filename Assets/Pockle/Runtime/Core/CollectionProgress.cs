@@ -129,6 +129,61 @@ namespace Pockle.Core
             if (string.IsNullOrEmpty(expectedId) || expectedId != Save.PendingRevealId) return false;
             Save.PendingRevealId = ""; Save.PendingReveal = -1; return true;
         }
+        /// <summary>Owner-requested local test copy; never adds duplicates or changes box/reveal state.</summary>
+        public bool EnsureFoxTestCopy()
+        {
+            if (GetOwnedCount(ToyCatalog.FoxId) > 0) return false;
+            counts[ToyCatalog.FoxId] = 1;
+            SynchronizeInventory();
+            return true;
+        }
+        /// <summary>Add only missing owner test finishes; preserve duplicates and all reward state.</summary>
+        public bool EnsureFoxFinishTestCopies()
+        {
+            bool changed = false;
+            foreach (var toy in ToyCatalog.Collectibles)
+                if (toy.CharacterId == "fox" && toy.Available && GetOwnedCount(toy.Id) == 0)
+                { counts[toy.Id] = 1; changed = true; }
+            if (changed) SynchronizeInventory();
+            return changed;
+        }
+        /// <summary>Owner-requested Pip collection test copies; existing duplicates and rewards are preserved.</summary>
+        public bool EnsurePipFinishTestCopies()
+        {
+            bool changed = false;
+            foreach (var toy in ToyCatalog.Collectibles)
+                if (toy.CollectionId == "pip" && toy.Available && GetOwnedCount(toy.Id) == 0)
+                { counts[toy.Id] = 1; changed = true; }
+            if (changed) SynchronizeInventory();
+            return changed;
+        }
+        /// <summary>Owner-requested Axolotl copies; preserve existing duplicates and reward state.</summary>
+        public bool EnsureAxolotlFinishTestCopies()
+        {
+            bool changed = false;
+            foreach (var toy in ToyCatalog.Collectibles)
+                if (toy.CharacterId == "axolotl" && toy.Available && GetOwnedCount(toy.Id) == 0)
+                { counts[toy.Id] = 1; changed = true; }
+            if (changed) SynchronizeInventory();
+            return changed;
+        }
+        /// <summary>Add one missing copy of each approved owner study, preserving all existing state.</summary>
+        public bool EnsurePipFusionStudyCopies()
+        {
+            bool changed=false;
+            foreach(string id in PipFusionStudies.Ids)
+                if(GetOwnedCount(id)==0){counts[id]=1;changed=true;}
+            if(changed)SynchronizeInventory();return changed;
+        }
+        /// <summary>Development owner review: add only missing winter-trio copies, never consume or reset prior state.</summary>
+        public bool EnsureWinterTrioTestCopies()
+        {
+            bool changed=false;
+            foreach(var toy in ToyCatalog.Collectibles)
+                if(HolidayCatalog.IsWinterTrio(toy.CharacterId)&&toy.Available&&GetOwnedCount(toy.Id)==0)
+                {counts[toy.Id]=1;changed=true;}
+            if(changed)SynchronizeInventory();return changed;
+        }
         private static int BoundedCount(int count) => Math.Max(0, Math.Min(9999, count));
         private static CollectionSave StarterSave()
         {

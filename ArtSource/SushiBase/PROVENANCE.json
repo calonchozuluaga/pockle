@@ -1,0 +1,15 @@
+{
+  "name": "SushiBase",
+  "design": "Owner-selected maki roll, shallow molded rice and three filling sections",
+  "base_color_srgb": "#EFE5D1",
+  "material_count": 1,
+  "painted_textures": 0,
+  "vertices": 6001,
+  "triangles": 11998,
+  "connected_components": 1,
+  "non_manifold_edges": 0,
+  "uv_layers": 1,
+  "floor_z": 0,
+  "geometry_origin": "Locally authored in Blender 4.5.3",
+  "status": "Review base only; not registered in Unity collections or awarded; materials/expressions deferred"
+}

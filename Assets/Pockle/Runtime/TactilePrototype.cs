@@ -7,8 +7,6 @@ namespace Pockle.Runtime
     /// <summary>Collection entry point and tactile viewer. Rewards are local beta saves.</summary>
     public sealed partial class TactilePrototype : MonoBehaviour
     {
-        private const int NoPointer = PointerGesture.NoPointer;
-        private readonly PointerGesture gesture = new PointerGesture();
         private const string PrefPrefix = "pockle.prototype.";
         private Spring1D compression = new Spring1D(3.8f, .45f);
         private Spring1D stretch = new Spring1D(3.6f, 0.59f);
@@ -25,20 +23,26 @@ namespace Pockle.Runtime
         private Camera viewCamera;
         private Transform toyMount;
         private Transform turntable;
-        private Collider plateCollider;
+        private ToyViewGesture toyView;
+        private PipReactionDriver pipReactions;
+        private FoxReactionDriver foxReactions;
+        private AxolotlReactionDriver axolotlReactions;
+        private FirbReactionDriver firbReactions;
+        private CocoReactionDriver cocoReactions;
+        private GingerReactionDriver gingerReactions;
+        private SnowyReactionDriver snowyReactions;
+        private WinterTrioReactionDriver winterReactions;
+        public event System.Action<ReactionCue,Vector2?> ToyReactionStarted;
+        private float lastToyActivity;
+        private bool leftAloneSaid,pairSquishSaid,pairLiftSaid;
+        private float manipulationLiftStart;
         private Transform contactShadow;
         private Material shadowMaterial;
         private Color shadowRestColor;
         private Vector3 shadowRestScale;
         private float visibleLift;
         private float lastShadowLift = -1f;
-        private float liftStart;
-        private float pairLiftStart;
-        private float pairStartDistance;
-        private float pairStartPinch;
-        private Vector2 pairStartCenter;
         private Vector3 pinchAxis = Vector3.up;
-        private Vector2 interactionScreenSize;
         private ScreenOrientation sensorOrientation;
         private JellyToy toy;
         private PrototypeHud hud;
@@ -51,8 +55,6 @@ namespace Pockle.Runtime
         private AudioClip releaseClip;
         private AudioClip landingClip;
         private AudioClip revealClip;
-        private Vector2 pointerStart;
-        private Vector2 pointerPrevious;
         private float contactX;
         private float contactZ;
         private bool soundEnabled;
@@ -74,17 +76,56 @@ namespace Pockle.Runtime
             hapticsEnabled = PlayerPrefs.GetInt(PrefPrefix + "haptics", 0) == 1;
             reducedMotion = PlayerPrefs.GetInt(PrefPrefix + "reducedMotion", 0) == 1;
 
-            PrototypeStage.Create(out viewCamera, out toyMount, out turntable, out plateCollider, out contactShadow);
+            PrototypeStage.Create(out viewCamera, out toyMount, out turntable, out _, out contactShadow);
             shadowMaterial = contactShadow.GetComponent<Renderer>().sharedMaterial;
             shadowRestColor = shadowMaterial.color;
             shadowRestScale = contactShadow.localScale;
-            interactionScreenSize = new Vector2(Screen.width, Screen.height);
             sensorOrientation = Screen.orientation;
             GameObject toyObject = new GameObject("Pip - tactile companion");
             toyObject.transform.SetParent(toyMount, false);
             toy = toyObject.AddComponent<JellyToy>();
             toy.Initialize();
             ConfigureHandling();
+            pipReactions=toyObject.AddComponent<PipReactionDriver>();
+            pipReactions.Initialize(toy);
+            foxReactions=toyObject.AddComponent<FoxReactionDriver>();foxReactions.Initialize(toy);
+            axolotlReactions=toyObject.AddComponent<AxolotlReactionDriver>();axolotlReactions.Initialize(toy);
+            firbReactions=toyObject.AddComponent<FirbReactionDriver>();firbReactions.Initialize(toy);
+            cocoReactions=toyObject.AddComponent<CocoReactionDriver>();cocoReactions.Initialize(toy);
+            gingerReactions=toyObject.AddComponent<GingerReactionDriver>();gingerReactions.Initialize(toy);
+            snowyReactions=toyObject.AddComponent<SnowyReactionDriver>();snowyReactions.Initialize(toy);
+            winterReactions=toyObject.AddComponent<WinterTrioReactionDriver>();winterReactions.Initialize(toy);
+            toyView=gameObject.AddComponent<ToyViewGesture>();
+            toyView.Initialize(viewCamera,turntable,toy,pressed =>
+            {
+                compression.Target=pressed&&toy.Handling!=MaterialHandling.Firm?.23f:0;
+                if(pressed){Play(pressClip);SayToyCue(ReactionCue.Squish);}else Play(releaseClip);
+            },ResetToy);
+            toyView.Tapped=PlayTapReaction;
+            toyView.TurnStarted=()=>SayToyCue(ReactionCue.Turn);
+            toyView.GestureStarted=()=>{RecordToyActivity();pipReactions.Cancel();foxReactions.Cancel();axolotlReactions.Cancel();firbReactions.Cancel();cocoReactions.Cancel();gingerReactions.Cancel();snowyReactions.Cancel();winterReactions.Cancel();};
+            toyView.SoftManipulationStarted=position =>
+            {
+                pairSquishSaid=pairLiftSaid=false;
+                manipulationLiftStart=visibleLift;lift.Reset(visibleLift);dropFeedback=false;
+                if(toy.RaycastBody(viewCamera.ScreenPointToRay(position),out var point))
+                { gripTarget=toy.transform.InverseTransformPoint(point);gripPoint=gripTarget;contactX=gripPoint.x;contactZ=gripPoint.z; }
+            };
+            toyView.SoftManipulated=(pose,axis) =>
+            {
+                pinch.Target=pose.Pinch;pinchAxis=axis;
+                compression.Target=pose.Compression;
+                lift.Target=Mathf.Clamp(manipulationLiftStart+pose.LiftDelta,0,WeightedLift.Maximum);
+                RecordToyActivity();
+                if(!pairLiftSaid&&pose.LiftDelta>.06f){pairLiftSaid=true;SayToyCue(ReactionCue.PickUp);}
+                else if(!pairSquishSaid&&(Mathf.Abs(pose.Pinch)>.025f||pose.Compression>.20f)){pairSquishSaid=true;SayToyCue(ReactionCue.Squish);}
+            };
+            toyView.SoftManipulationEnded=feedback =>
+            {
+                compression.Target=pinch.Target=lift.Target=0;
+                dropFeedback=feedback&&!reducedMotion&&visibleLift>.03f;
+                if(!feedback){lift.Reset();sag.Reset();}
+            };
 
             collection = gameObject.AddComponent<CollectionSession>();
             collection.Initialize();
@@ -93,9 +134,16 @@ namespace Pockle.Runtime
             hud.SetSoundVolume(soundVolume);
             hud.SetSettings(soundEnabled, hapticsEnabled, reducedMotion);
             hud.SetVariant(toy.Variant);
+            ApplyStage();
             hud.VariantChanged += SetVariant;
+            hud.CollectibleChanged += SelectCollectible;
             hud.StoreVisibilityChanged += StoreVisibilityChanged;
             hud.BackdropChanged += SetBackdrop;
+            hud.WorldChanged += SetWorld;
+            hud.LightChanged += SetLight;
+            hud.StageViewportChanged += SetStageViewport;
+            SetStageViewport(hud.StageViewport);
+            ApplyStage();
             hud.DailyBoxRequested += OpenDailyBox;
             hud.Bind(collection);
 
@@ -116,26 +164,25 @@ namespace Pockle.Runtime
                 Reveal();
             }
             if (Application.isEditor || Debug.isDebugBuild)
-                Debug.Log("Pockle controls: lift · two-finger squish/stretch · phone-motion jiggle", this);
+                Debug.Log("Pockle controls: orbit · soft pinch/squeeze/lift · rigid zoom/pan · random Pip tap · double-tap reset", this);
         }
 
         private void Update()
         {
             if (toy == null) return;
-            var screenSize = new Vector2(Screen.width, Screen.height);
-            if (screenSize != interactionScreenSize && gesture.IsActive) ReleasePointer(false);
-            interactionScreenSize = screenSize;
             if (Input.GetKeyDown(KeyCode.Escape) && !hud.GoBack() && Application.platform == RuntimePlatform.Android) Application.Quit();
             if (revealing) UpdateReveal(Time.unscaledDeltaTime);
             else if (!hud.StoreVisible) ReadInput();
 
+            toyView.Calm=reducedMotion;
+            toyView.Suspended=revealing||hud.StoreVisible;
             float dt = Time.unscaledDeltaTime;
             ReadMotion(dt);
             compression.Step(dt);
             stretch.Step(dt);
             tiltX.Step(dt);
             tiltZ.Step(dt);
-            bool held = gesture.IsActive && gesture.Target == PointerTarget.Toy && !revealing && !hud.StoreVisible;
+            bool held = toyView.IsHolding && !revealing && !hud.StoreVisible;
             lift.Step(dt, held, reducedMotion || revealing || hud.StoreVisible);
             sag.Target = !reducedMotion && held ? ToyFeel.HangingSag * Mathf.Clamp01(lift.Value / .25f) : 0f;
             sag.Step(dt);
@@ -171,6 +218,7 @@ namespace Pockle.Runtime
             float hanging = reducedMotion || revealing ? 0f : Mathf.Max(0f, sag.Value);
             float clearance = revealing ? 0f : lift.Value;
             float p = reducedMotion ? pinch.Target : pinch.Value;
+            toy.SetExpressionContext(squash, held && !revealing ? lift.Value : 0f);
             toy.SetDeformation(squash, elongation, tx, tz, contactX, contactZ, p, pinchAxis, hanging, gripPoint, clearance);
             ApplyLift();
             if (hanging > 0f && visibleLift < clearance - .0001f)
@@ -180,115 +228,73 @@ namespace Pockle.Runtime
 
         private void ReadInput()
         {
+            if(!leftAloneSaid&&!revealing&&hud!=null&&hud.CurrentPage==AppPage.Play&&!toyView.IsHolding&&Time.unscaledTime-lastToyActivity>18)
+            { SayToyCue(ReactionCue.LeftAlone);leftAloneSaid=true; }
 #if UNITY_EDITOR
-            if (Input.GetKeyDown(KeyCode.R)) ResetToy();
-            if (Input.GetKeyDown(KeyCode.Space)) { Reveal(); return; }
+            if(Input.GetKeyDown(KeyCode.R))ResetToy();
+            if(Input.GetKeyDown(KeyCode.Space)){Reveal();return;}
 #endif
-
-            if (Input.touchCount > 0 || gesture.PointerId >= 0)
+            toyView.ReadInput();
+        }
+        private void RecordToyActivity(){lastToyActivity=Time.unscaledTime;leftAloneSaid=false;}
+        private void SayToyCue(ReactionCue cue)
+        {
+            if(hud==null||hud.CurrentPage!=AppPage.Play||revealing||toy==null)return;
+            Vector2? head=null;
+            if(toy.BodyRenderer!=null&&viewCamera!=null)
             {
-                ReadTouches();
-                return;
+                var b=toy.BodyRenderer.bounds;
+                var screen=viewCamera.WorldToScreenPoint(b.center+viewCamera.transform.up*b.extents.y*.55f);
+                if(screen.z>0)head=new Vector2(screen.x,screen.y);
             }
-
-            if (Input.GetMouseButtonDown(0)) BeginPointer(-1, Input.mousePosition);
-            if (gesture.PointerId == -1)
+            hud.ShowToyExpression(cue,head);ToyReactionStarted?.Invoke(cue,head);RecordToyActivity();
+        }
+        private bool AnyReactionPlaying => pipReactions.IsPlaying||foxReactions.IsPlaying||axolotlReactions.IsPlaying||firbReactions.IsPlaying||cocoReactions.IsPlaying||gingerReactions.IsPlaying||snowyReactions.IsPlaying||winterReactions.IsPlaying;
+        private void PlayTapReaction()
+        {
+            if(AnyReactionPlaying)return;
+            if(ToyCatalog.IsFoxCollectible(toy.CollectibleId))foxReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var tapped)&&tapped.CharacterId=="axolotl")axolotlReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var firb)&&firb.CharacterId=="firb")firbReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var coco)&&coco.CharacterId=="coco")cocoReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var ginger)&&ginger.CharacterId=="ginger")gingerReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var snowy)&&snowy.CharacterId=="snowy")snowyReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var winter)&&HolidayCatalog.IsWinterTrio(winter.CharacterId))winterReactions.PlayRandom();else pipReactions.PlayRandom();
+            if(AnyReactionPlaying)
+                SayToyCue(ReactionCue.Poke);
+        }
+        private string PlayHint
+        {
+            get
             {
-                if (Input.GetMouseButtonUp(0)) ReleasePointer(true);
-                else if (Input.GetMouseButton(0)) MovePointer(Input.mousePosition);
-                else ReleasePointer(false);
+                return toy.Handling==MaterialHandling.Firm
+                    ? "Tap · drag to turn · pinch to zoom"
+                    : "Tap · drag to turn · pinch to squish";
             }
         }
-
-        private void BeginPointer(int id, Vector2 position)
+        private void SetStageViewport(Rect pixels)
         {
-            if (gesture.PointerId != NoPointer || revealing || hud.StoreVisible) return;
-            if (!viewCamera.pixelRect.Contains(position)) return;
-            if (EventSystem.current != null)
-            {
-                bool overUi = id >= 0 ? EventSystem.current.IsPointerOverGameObject(id)
-                                      : EventSystem.current.IsPointerOverGameObject();
-                if (overUi) return;
-            }
-            Ray ray = viewCamera.ScreenPointToRay(position);
-            Vector3 toyPoint;
-            RaycastHit plateHit;
-            bool hitToy = toy.RaycastBody(ray, out toyPoint);
-            bool hitPlate = plateCollider.Raycast(ray, out plateHit, 30f);
-            if (!hitToy && !hitPlate) return;
-            var target = hitToy && (!hitPlate || Vector3.Distance(ray.origin, toyPoint) <= plateHit.distance)
-                ? PointerTarget.Toy : PointerTarget.Plate;
-            if (!gesture.TryBegin(id, target)) return;
-            pointerStart = pointerPrevious = position;
-            liftStart = visibleLift;
-            if (target == PointerTarget.Toy)
-            {
-                dropFeedback = false;
-                lift.Target = liftStart;
-                Vector3 localContact = toy.transform.InverseTransformPoint(toyPoint);
-                gripTarget = localContact;
-                if (visibleLift <= .001f) gripPoint = gripTarget;
-                contactX = Mathf.Clamp(localContact.x, -0.9f, 0.9f);
-                contactZ = Mathf.Clamp(localContact.z, -0.8f, 0.8f);
-                compression.Target = 0.23f;
-                Play(pressClip);
-                hud.SetStatus("Drag up to lift. Add a finger to stretch.");
-            }
-            else hud.SetStatus("Drag the plate sideways to turn Pip.");
-        }
-
-        private void MovePointer(Vector2 position)
-        {
-            if (gesture.Target == PointerTarget.Plate)
-            {
-                float yaw = (position.x - pointerPrevious.x) / Mathf.Max(viewCamera.pixelWidth, 1) * 260f;
-                turntable.Rotate(0f, -yaw, 0f, Space.Self);
-            }
-            else
-            {
-                float dragX = (position.x - pointerStart.x) / Mathf.Max(viewCamera.pixelHeight, 1) * 2f * viewCamera.orthographicSize;
-                float dragY = (position.y - pointerStart.y) / Mathf.Max(viewCamera.pixelHeight, 1) * 2f * viewCamera.orthographicSize;
-                float liftDrag = Mathf.Sign(dragY) * Mathf.Max(0f, Mathf.Abs(dragY) - .025f);
-                lift.Target = Mathf.Clamp(liftStart + liftDrag, 0f, .75f);
-                stretch.Target = 0f;
-                compression.Target = Mathf.Clamp(.23f - Mathf.Max(0f, dragY) * .4f + Mathf.Max(0f, -dragY) * .25f, .04f, .42f);
-                // Screen-relative leaning stays intuitive after rotating the toy.
-                Vector3 worldLean = viewCamera.transform.right * (dragX * 0.0672f)
-                    + viewCamera.transform.forward * (-dragY * 0.0085f);
-                Vector3 localLean = toy.transform.InverseTransformDirection(worldLean);
-                tiltX.Target = Mathf.Clamp(localLean.x / 0.42f, -0.25f, 0.25f);
-                tiltZ.Target = Mathf.Clamp(localLean.z / 0.34f, -0.25f, 0.25f);
-            }
-            pointerPrevious = position;
+            if(toyView!=null)toyView.Cancel();
+            PrototypeStage.SetViewport(viewCamera,pixels);
         }
 
         private void ReleasePointer(bool feedback)
         {
-            bool wasPressed = gesture.Target == PointerTarget.Toy;
-            gesture.Cancel();
+            if(toyView!=null)toyView.Cancel();
             compression.Target = stretch.Target = tiltX.Target = tiltZ.Target = 0f;
             lift.Target = pinch.Target = 0f;
-            dropFeedback = feedback && wasPressed && !reducedMotion && visibleLift > .03f;
+            dropFeedback = false;
             if (!feedback) { lift.Reset(); sag.Reset(); }
-            if (feedback && wasPressed && (reducedMotion || visibleLift <= .03f))
-            {
-                Play(releaseClip);
-                Vibrate();
-            }
             if (hud != null && !revealing)
-                hud.SetStatus("Lift Pip. Pinch to stretch. Turn the plate.");
+                hud.SetStatus(PlayHint);
         }
 
         public void ResetToy()
         {
             if (toy == null) return;
             ReleasePointer(false);
+            pipReactions?.Cancel();foxReactions?.Cancel();axolotlReactions?.Cancel();firbReactions?.Cancel();cocoReactions?.Cancel();gingerReactions?.Cancel();snowyReactions?.Cancel();winterReactions?.Cancel();
             revealing = false;
             boxRoot.gameObject.SetActive(false);
             toyMount.localScale = Vector3.one;
             toy.gameObject.SetActive(true);
             toy.transform.localRotation = Quaternion.identity;
             turntable.localRotation = Quaternion.identity;
+            toyView?.ResetView();
             compression.Reset(); stretch.Reset(); tiltX.Reset(); tiltZ.Reset();
             lift.Reset(); pinch.Reset(); ClearMotion();
             sag.Reset(); gripPoint = gripTarget = Vector3.zero;
@@ -298,7 +304,7 @@ namespace Pockle.Runtime
             contactX = contactZ = 0f;
             toy.ResetToy();
             hud.SetRevealAvailable(true);
-            hud.SetStatus("Say hello to Pip. Squish or turn.");
+            hud.SetStatus(PlayHint);
         }
 
         public void Reveal()
@@ -339,7 +345,7 @@ namespace Pockle.Runtime
                 toyMount.localScale = Vector3.one;
                 compression.Target = 0f;
                 hud.SetRevealAvailable(true);
-                hud.SetStatus("Lift Pip. Pinch to stretch. Turn the plate.");
+                hud.SetStatus(PlayHint);
                 if (collection.Progress.Save.PendingReveal >= 0) collection.FinishReveal();
             }
         }
@@ -348,7 +354,7 @@ namespace Pockle.Runtime
         {
             boxRoot = new GameObject("Jelly Garden mystery box").transform;
             boxRoot.SetParent(turntable, false);
-            boxRoot.localPosition = new Vector3(0f, .15f, 0f);
+            boxRoot.localPosition = new Vector3(0f, -1f, 0f);
             discoveryBox = boxRoot.gameObject.AddComponent<MysteryBox>();
             discoveryBox.Initialize();
             boxRoot.gameObject.SetActive(false);
@@ -375,12 +381,30 @@ namespace Pockle.Runtime
             PlayerPrefs.SetInt(PipVariants.Preference, (int)toy.Variant);
             PlayerPrefs.Save();
             hud.SetVariant(toy.Variant);
+            ApplyStage();
         }
 
-        private void SetBackdrop(Color colour) => PrototypeStage.SetBackdrop(viewCamera, colour);
+        private void SetBackdrop(Color colour)
+        {
+            PrototypeStage.SetBackdrop(viewCamera, colour);
+            ApplyStage();
+        }
+        private void SetWorld(StageWorld world) => ApplyStage();
+        private void SetLight(StageLight light) { ApplyStage();if(light==StageLight.Night)SayToyCue(ReactionCue.Night); }
+        private void ApplyStage()
+        {
+            if (hud == null || toy == null || viewCamera == null) return;
+            // A collection world picked by ID (five per collection) goes through SetEnvironment; Studio and legacy worlds keep SetWorld.
+            if (string.IsNullOrEmpty(hud.CurrentEnvironmentId) || !PrototypeStage.SetEnvironment(viewCamera, hud.CurrentEnvironmentId, toy.CollectibleId))
+                PrototypeStage.SetWorld(viewCamera, hud.CurrentWorld, toy.CollectibleId);
+            PrototypeStage.SetLight(viewCamera, hud.CurrentLight);
+            viewCamera.GetComponent<ToyStageEnvironment>().Calm = reducedMotion;
+            shadowRestColor = new Color(.54f, .36f, .43f, hud.CurrentLight == StageLight.Night ? .12f : hud.CurrentLight == StageLight.Golden ? .27f : .20f);
+        }
 
         private void ConfigureHandling()
         {
+            RecordToyActivity();
             MaterialHandling h = toy.Handling;
             bool gel = h == MaterialHandling.Gel;
             compression = new Spring1D(h.RecoveryFrequency, h.RecoveryDamping);
@@ -402,6 +426,7 @@ namespace Pockle.Runtime
                 !collection.IsOwnedAndAvailable(id) || !toy.TrySetCollectible(id)) return false;
             ResetToy();
             ConfigureHandling();
+            ApplyStage();
             return true;
         }
 
@@ -431,7 +456,7 @@ namespace Pockle.Runtime
             ResetToy();
             ConfigureHandling();
             if (ToyCatalog.TryGetCollectible(id, out var definition))
-                hud.SetStatus("Draft " + definition.DisplayName + " · drag to lift, J to test jiggle");
+                hud.SetStatus("Draft " + definition.DisplayName + " · " + PlayHint);
             return true;
         }
 #endif
@@ -455,7 +480,8 @@ namespace Pockle.Runtime
         private void SetReducedMotion(bool enabled)
         {
             reducedMotion = enabled;
-            if (enabled) ClearMotion();
+            ApplyStage();
+            if (enabled) { ClearMotion(); toyView?.Orbit.Stop(); }
             SaveSetting("reducedMotion", enabled);
         }
         private static void SaveSetting(string key, bool enabled)
@@ -489,11 +515,16 @@ namespace Pockle.Runtime
         private void OnApplicationPause(bool paused) { if (paused) { ReleasePointer(false); ClearMotion(); } }
         private void OnApplicationFocus(bool focused) { if (!focused) { ReleasePointer(false); ClearMotion(); } }
         private void OnDisable() { ReleasePointer(false); ClearMotion(); }
+        private void SelectCollectible(string id) { TryPlayCollectible(id); }
+
         private void OnDestroy()
         {
             if (hud != null) hud.VariantChanged -= SetVariant;
-            if (hud != null) hud.StoreVisibilityChanged -= StoreVisibilityChanged;
+            if (hud != null) hud.CollectibleChanged -= SelectCollectible;
+            if (hud != null) { hud.StoreVisibilityChanged -= StoreVisibilityChanged; hud.StageViewportChanged -= SetStageViewport; }
             if (hud != null) hud.BackdropChanged -= SetBackdrop;
+            if (hud != null) hud.WorldChanged -= SetWorld;
+            if (hud != null) hud.LightChanged -= SetLight;
             if (hud != null) hud.DailyBoxRequested -= OpenDailyBox;
             if (hud != null) Destroy(hud.gameObject);
             if (pressClip != null) Destroy(pressClip);
