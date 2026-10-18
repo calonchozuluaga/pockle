@@ -57,11 +57,26 @@ namespace Pockle.Runtime
         private float previousSag, previousClearance;
         private Vector3 previousGrip;
         public float DeformedTop { get; private set; }
+        private FoxActionPose foxReaction;
+        public void SetFoxReaction(FoxActionPose pose)
+        {
+            if(!ToyCatalog.IsFoxCollectible(collectibleId))return;
+            foxReaction=pose;haveDeformation=false;
+            SetDeformation(previousCompression,previousStretch,previousTiltX,previousTiltZ,previousContactX,previousContactZ,
+                previousPinch,previousPinchAxis,previousSag,previousGrip,previousClearance);
+        }
+        private PeachExpressionDriver peachExpression;
+        private ToyTemperamentDriver temperamentExpression;
+        private AxolotlExpressionDriver axolotlExpression;
+        private HolidayExpressionDriver holidayExpression;
+        public void SetExpressionContext(float pressure, float liftedHeight)
+        { if (temperamentExpression != null) temperamentExpression.SetContext(pressure,liftedHeight); if (peachExpression != null) peachExpression.SetContext(pressure, liftedHeight); if (axolotlExpression != null) axolotlExpression.SetContext(pressure, liftedHeight); if (holidayExpression != null) holidayExpression.SetContext(pressure, liftedHeight); }
 
         public Transform VisualRoot { get { Initialize(); return visualRoot; } }
         public Renderer BodyRenderer { get; private set; }
         public bool UsesAuthoredMesh { get { return characterAsset != null; } }
-        public bool UsesMeshyPeach { get { return characterAsset != null && characterAsset.BakedSurface; } }
+        public bool UsesMeshyPeach { get { return HasBakedSurface && characterAsset.CharacterId == "pip"; } }
+        private bool HasBakedSurface => characterAsset != null && characterAsset.BakedSurface;
         public PipVariant Variant { get { Initialize(); return variant; } }
         public string CollectibleId { get { Initialize(); return collectibleId; } }
         public MaterialHandling Handling
@@ -71,6 +86,7 @@ namespace Pockle.Runtime
                 Initialize();
                 // Retain the four reviewed Pip presets' existing feel in this first
                 // new-character pass. Their finish-specific handling can be reviewed separately.
+                if (ToyCatalog.IsFoxCollectible(collectibleId)) return MaterialHandling.Firm;
                 if (ToyCatalog.TryGetLegacyIndex(collectibleId, out _)) return MaterialHandling.Gel;
                 return ToyCatalog.TryGetCollectible(collectibleId, out var definition)
                     ? MaterialHandling.ForFinish(definition.FinishId) : MaterialHandling.Gel;
@@ -83,7 +99,7 @@ namespace Pockle.Runtime
             Initialize();
             if (!CharacterArt.TryLoad(id, out var asset)) return false;
             if (id == collectibleId) return true;
-            if (asset == characterAsset && asset.CharacterId != "pip")
+            if (asset == characterAsset && asset.CharacterId != "pip" && asset.CharacterId != "fox" && asset.CharacterId != "axolotl" && !HolidayCatalog.IsCharacter(asset.CharacterId))
             {
                 // Alternate finishes share a body and face: only change the recipe
                 // and replay the unscaled pose under the new handling profile.
@@ -137,10 +153,11 @@ namespace Pockle.Runtime
                 SetDeformation(compression, stretch, tiltX, tiltZ, contactX, contactZ, pinch, axis, sag, grip, clearance);
                 return;
             }
-            if (choice == variant) return;
+            if (choice == variant && collectibleId == id) return;
             variant = choice;
             collectibleId = id;
             ApplyVariantMaterial();
+            peachExpression?.SetCollectible(id);
             // Remove only filling pieces. Mesh, face, pose and turntable survive.
             for (int i = accents.Count - 1; i >= 0; i--)
             {
@@ -217,7 +234,7 @@ namespace Pockle.Runtime
                 if (characterAsset == null)
                     Debug.LogWarning("Authored Pip is unavailable. Check the .pocklemesh import errors; using the baseline.", this);
             }
-            visualRoot = new GameObject(UsesMeshyPeach ? "Pip • Meshy Peach phone test" : characterAsset != null ? "Pip • authored peach jelly" : "Pip • procedural baseline").transform;
+            visualRoot = new GameObject(UsesMeshyPeach ? "Pip • Meshy Peach phone test" : characterAsset != null ? characterAsset.name : "Pip • procedural baseline").transform;
             visualRoot.SetParent(transform, false);
             if (characterAsset != null) studioReflection = StudioReflection.Create();
             bodyMaterial = CreateBodyMaterial();
@@ -257,7 +274,15 @@ namespace Pockle.Runtime
 
             if (characterAsset != null) BuildAuthoredBody();
             else BuildBody();
-            if (!UsesMeshyPeach)
+            if(HasBakedSurface&&!UsesMeshyPeach&&ToyFaceLayout.TryGet(characterAsset.CharacterId,out _))
+            {
+                ToyFaceLayout.Apply(bodyMaterial,characterAsset);
+                temperamentExpression=visualRoot.gameObject.AddComponent<ToyTemperamentDriver>();
+                temperamentExpression.Initialize(bodyMaterial,collectibleId);
+            }
+            if (collectibleId == ToyCatalog.FoxAuroraId || collectibleId == "fox.clear-jelly")
+                BuildFoxInclusions();
+            if (!HasBakedSurface)
             {
                 accentMesh = BuildSphere("Shared accent sphere", characterAsset != null ? 16 : 12, characterAsset != null ? 12 : 10);
                 sparkleMesh = BuildSparkle();
@@ -265,6 +290,28 @@ namespace Pockle.Runtime
                 BuildFace();
                 BuildCrown();
                 BuildSuspendedAccents();
+            }
+
+            if (UsesMeshyPeach)
+            {
+                accentMesh = BuildSphere("Peach interior pearl mesh", 12, 10);
+                sparkleMesh = BuildSparkle();
+                starMesh = BuildStar();
+                silverMaterial.renderQueue = 2990;
+                bubbleMaterial = CreateCandyMaterial("Peach interior cream pearls", new Color(1f, .91f, .78f, 1f), .82f);
+                SetFloat(bubbleMaterial, "_ZWrite", 1f);
+                SetColor(bubbleMaterial, "_TopColor", new Color(1f,.97f,.87f,1f));
+                SetColor(bubbleMaterial, "_BottomColor", new Color(.75f,.83f,.84f,1f));
+                SetColor(bubbleMaterial, "_RimColor", new Color(1f,.99f,.9f,1f));
+                bubbleMaterial.renderQueue = 2990;
+                sparkleMaterial.renderQueue = 2990;
+                ApplyVariantMaterial();
+                BuildSuspendedAccents();
+                if (bodyMaterial.HasProperty("_Blink"))
+                {
+                    peachExpression = visualRoot.gameObject.AddComponent<PeachExpressionDriver>();
+                    peachExpression.Initialize(bodyMaterial,collectibleId);
+                }
             }
 
             var touchCollider = GetComponent<SphereCollider>();
@@ -295,6 +342,8 @@ namespace Pockle.Runtime
             float sag = 0f, Vector3 grip = default(Vector3), float clearance = 0f)
         {
             Initialize();
+            if (ToyCatalog.IsFoxCollectible(collectibleId) || UsesMeshyPeach && Handling == MaterialHandling.Firm)
+                compression = stretch = tiltX = tiltZ = pinch = sag = 0f;
             // Match the portable shape's safe range so feature scale follows its shell,
             // including when a spring briefly overshoots zero on release.
             compression = SafeClamp(compression, 0f, 0.42f);
@@ -345,11 +394,18 @@ namespace Pockle.Runtime
             var directional = new DirectionalStretch(pinch, new Point3(pinchAxis.x, pinchAxis.y, pinchAxis.z));
             var suspension = new SuspendedShape(sag, new Point3(grip.x, grip.y, grip.z), clearance);
 
+            var foxPose=new FoxDeformation(temperamentExpression!=null?new FoxActionPose(foxReaction.Lift,foxReaction.Pitch,foxReaction.Yaw,foxReaction.Roll,foxReaction.HeadRoll,foxReaction.Tail,foxReaction.Ears,0,0,0,foxReaction.HeadPitch):foxReaction);
+            bool fox=ToyCatalog.IsFoxCollectible(collectibleId);
             DeformedTop = -1f;
             float rotatedBottom = float.PositiveInfinity;
             for (int i = 0; i < vertices.Length; i++)
             {
-                vertices[i] = Deform(restVertices[i], compression, stretch, tiltX, tiltZ, contactX, contactZ, directional, suspension);
+                vertices[i] = fox ? restVertices[i] : Deform(restVertices[i], compression, stretch, tiltX, tiltZ, contactX, contactZ, directional, suspension);
+                if(fox)
+                {
+                    var point=foxPose.Apply(new Point3(vertices[i].x,vertices[i].y,vertices[i].z));
+                    vertices[i]=new Vector3(point.X,point.Y,point.Z);
+                }
                 float rotatedY = (visualRoot.localRotation * vertices[i]).y;
                 DeformedTop = Mathf.Max(DeformedTop, rotatedY);
                 rotatedBottom = Mathf.Min(rotatedBottom, rotatedY);
@@ -359,6 +415,11 @@ namespace Pockle.Runtime
             visualRoot.localPosition = Vector3.up * rockLift;
             DeformedTop += rockLift;
 
+            if (peachExpression != null && !bodyMaterial.HasProperty("_PipFace"))
+                peachExpression.SetCenters(
+                    Deform(new Vector3(-.284f, -.06f, -.73f), compression, stretch, tiltX, tiltZ, contactX, contactZ, directional, suspension),
+                    Deform(new Vector3(.32f, -.06f, -.73f), compression, stretch, tiltX, tiltZ, contactX, contactZ, directional, suspension),
+                    Deform(new Vector3(.02f, -.125f, -.79f), compression, stretch, tiltX, tiltZ, contactX, contactZ, directional, suspension));
             RebuildNormals();
             bodyMesh.vertices = vertices;
             bodyMesh.normals = normals;
@@ -469,6 +530,7 @@ namespace Pockle.Runtime
             bodyMesh.MarkDynamic();
             ownedMeshes.Add(bodyMesh);
             restVertices = bodyMesh.vertices;
+            if(HasBakedSurface)bodyMesh.SetUVs(1,new System.Collections.Generic.List<Vector3>(restVertices));
             vertices = new Vector3[restVertices.Length];
             normals = new Vector3[restVertices.Length];
             triangles = bodyMesh.triangles;
@@ -605,11 +667,78 @@ namespace Pockle.Runtime
                 new Vector3(0.18f, 0.20f, 0.155f), bodyMaterial, accentMesh, true);
         }
 
+        private bool TryFoxInterior(Vector3 candidate, float radius, out Vector3 center)
+        {
+            center = candidate;
+            // Test both sides and the inclusion's four screen-plane edges against actual uploaded geometry.
+            float front = float.NegativeInfinity, back = float.PositiveInfinity;
+            Vector2[] offsets = { Vector2.zero, Vector2.right * radius, Vector2.left * radius, Vector2.up * radius, Vector2.down * radius };
+            foreach (var offset in offsets)
+            {
+                float near = float.PositiveInfinity, far = float.PositiveInfinity;
+                var a = new Point3(candidate.x + offset.x, candidate.y + offset.y, -3);
+                var b = new Point3(candidate.x + offset.x, candidate.y + offset.y, 3);
+                for (int t = 0; t < triangles.Length; t += 3)
+                {
+                    Vector3 p = restVertices[triangles[t]], q = restVertices[triangles[t+1]], r = restVertices[triangles[t+2]];
+                    var p3 = new Point3(p.x,p.y,p.z); var q3 = new Point3(q.x,q.y,q.z); var r3 = new Point3(r.x,r.y,r.z);
+                    if (SurfaceRaycast.TryTriangle(a,new Point3(0,0,1),p3,q3,r3,out float d)) near = Mathf.Min(near,d);
+                    if (SurfaceRaycast.TryTriangle(b,new Point3(0,0,-1),p3,q3,r3,out d)) far = Mathf.Min(far,d);
+                }
+                if (float.IsInfinity(near) || float.IsInfinity(far)) return false;
+                front = Mathf.Max(front,-3+near); back = Mathf.Min(back,3-far);
+            }
+            if (back-front < radius*2) return false;
+            center.z = (front+back)*.5f;
+            return true;
+        }
+
+        private void BuildFoxInclusions()
+        {
+            starMesh = BuildStar();
+            var gold = CreateFlatMaterial("Fox suspended gold", new Color(1, .73f, .26f));
+            gold.renderQueue = 2990;
+            // Kept inside the head, torso and curled tail; the opaque face paint hides foreground inclusions.
+            Vector3[] positions = {
+                new Vector3(-.30f,.55f,-.12f), new Vector3(.26f,.57f,-.08f), new Vector3(-.08f,.68f,.02f),
+                new Vector3(.38f,.36f,-.10f), new Vector3(-.34f,.28f,-.11f), new Vector3(.06f,.35f,.07f),
+                new Vector3(.19f,.12f,-.13f), new Vector3(-.13f,.11f,-.04f), new Vector3(.15f,-.51f,0),
+                new Vector3(-.18f,-.67f,-.02f), new Vector3(-.64f,-.63f,.10f), new Vector3(-.75f,-.48f,.08f) };
+            for (int i = 0; i < positions.Length; i++)
+            {
+                Vector3 center = positions[i];
+                float size = collectibleId == ToyCatalog.FoxAuroraId ? .025f + i % 3 * .007f : .009f + i % 3 * .004f;
+                for (int attempt = 0; attempt < 12 && !TryFoxInterior(center, size, out center); attempt++)
+                    center.x *= .90f;
+                var star = AddAccent("Fox gold inclusion " + i, center,
+                    Vector3.one * size, gold, starMesh, false);
+                star.localRotation = Quaternion.Euler(i * 11, i * 17, i * 37);
+            }
+        }
+
         private void BuildSuspendedAccents()
         {
             if (characterAsset != null && characterAsset.CharacterId != "pip") return;
+            if(collectibleId==PipFusionStudies.HoneydewId)return; // Fine sparkle is shaded in one shell pass.
+            if(collectibleId==PipFusionStudies.EclipseId)
+            {
+                var gold=CreateFlatMaterial("Eclipse suspended gold stars",new Color(1,.73f,.25f));gold.renderQueue=2990;
+                Vector3[] eclipseStars={new Vector3(-.34f,-.53f,-.24f),new Vector3(.28f,-.35f,-.29f),new Vector3(-.22f,.30f,-.22f),new Vector3(.34f,.22f,-.26f)};
+                for(int i=0;i<eclipseStars.Length;i++)AddAccent("Eclipse gold star "+i,eclipseStars[i],Vector3.one*(.04f+i*.004f),gold,starMesh,false).localRotation=Quaternion.Euler(i*11,i*19,i*31);
+                return;
+            }
+            if(collectibleId==PipFusionStudies.SorbetId)return; // Opaque marbling has no floating contents.
+            if(collectibleId==PipFusionStudies.DuskId)
+            {
+                Vector3[] duskPearls={new Vector3(-.38f,-.40f,-.24f),new Vector3(.16f,-.60f,-.25f),new Vector3(.40f,-.30f,-.13f)};
+                for(int i=0;i<duskPearls.Length;i++)AddAccent("Dusk peach pearl "+i,duskPearls[i],Vector3.one*(.065f+i*.014f),bubbleMaterial,accentMesh,false);
+                Vector3[] stars={new Vector3(-.32f,-.65f,-.26f),new Vector3(.30f,-.45f,-.30f),new Vector3(-.24f,.29f,-.22f),new Vector3(.32f,.24f,-.26f)};
+                for(int i=0;i<stars.Length;i++)AddAccent("Dusk blue star "+i,stars[i],Vector3.one*.052f,silverMaterial,starMesh,false).localRotation=Quaternion.Euler(i*11,i*19,i*31);
+                return;
+            }
             // Glitter is shaded as dense microflakes; opaque soft gel hides filling.
             // Neither needs extra interior objects or per-flake draw calls.
+            if (UsesMeshyPeach && !PipVariants.TryFromCollectibleId(collectibleId,out _)) return;
             if (variant == PipVariant.GoldGlitter || variant == PipVariant.MintSoft) return;
             if (variant == PipVariant.MoonJelly)
             {
@@ -675,12 +804,35 @@ namespace Pockle.Runtime
 
         private Material CreateBodyMaterial()
         {
+            if (HasBakedSurface && !UsesMeshyPeach)
+            {
+                Material vinyl;
+                if (HolidayCatalog.IsCharacter(characterAsset.CharacterId)) vinyl = HolidayFinishMaterial.Create(collectibleId, characterAsset.BaseColorTexture, studioReflection);
+                else if (ToyCatalog.IsFoxCollectible(collectibleId)) vinyl = FoxFinishMaterial.Create(collectibleId, characterAsset.BaseColorTexture, studioReflection);
+                else
+                {
+                    vinyl = AxolotlFinishMaterial.Create(collectibleId, characterAsset.BaseColorTexture, studioReflection);
+                }
+                ownedMaterials.Add(vinyl);
+                if (characterAsset.CharacterId == "axolotl")
+                {
+                    axolotlExpression = visualRoot.gameObject.AddComponent<AxolotlExpressionDriver>();
+                    axolotlExpression.Initialize(vinyl);
+                }
+                if (HolidayCatalog.IsCharacter(characterAsset.CharacterId))
+                {
+                    holidayExpression = visualRoot.gameObject.AddComponent<HolidayExpressionDriver>();
+                    holidayExpression.Initialize(vinyl);
+                }
+                return vinyl;
+            }
             if (UsesMeshyPeach)
             {
                 Shader shader = Shader.Find("Pockle/Textured Peach Jelly");
                 if (shader == null || !shader.isSupported) shader = Shader.Find("Unlit/Texture");
                 var textured = new Material(shader) { name = "Meshy Peach · wet textured jelly", mainTexture = characterAsset.BaseColorTexture };
                 if (textured.HasProperty("_StudioCube")) textured.SetTexture("_StudioCube", studioReflection);
+                textured.renderQueue = 3000;
                 ownedMaterials.Add(textured);
                 return textured;
             }
@@ -714,7 +866,21 @@ namespace Pockle.Runtime
 
         private void ApplyVariantMaterial()
         {
-            if (UsesMeshyPeach) return; // Baked face/palette and its own mobile material recipe.
+            if (UsesMeshyPeach)
+            {
+                PipFinishMaterial.Apply(bodyMaterial, collectibleId);
+                if(collectibleId==PipFusionStudies.DuskId)
+                {
+                    SetColor(bubbleMaterial,"_Color",new Color(1,.66f,.66f));SetColor(bubbleMaterial,"_TopColor",new Color(1,.86f,.78f));SetColor(bubbleMaterial,"_BottomColor",new Color(.94f,.42f,.52f));
+                    SetColor(silverMaterial,"_Color",new Color(.50f,.65f,1));SetColor(silverMaterial,"_TopColor",new Color(.72f,.80f,1));SetColor(silverMaterial,"_BottomColor",new Color(.35f,.45f,.78f));return;
+                }
+                bool moonFinish = collectibleId == Pockle.Core.ToyCatalog.MoonId;
+                SetColor(bubbleMaterial, "_Color", moonFinish ? new Color(.88f,.96f,1f,1f) : new Color(1f,.91f,.78f,1f));
+                SetColor(bubbleMaterial, "_TopColor", moonFinish ? Color.white : new Color(1f,.97f,.87f,1f));
+                SetColor(bubbleMaterial, "_BottomColor", moonFinish ? new Color(.55f,.74f,.93f,1f) : new Color(.75f,.83f,.84f,1f));
+                return;
+            }
+            if (HasBakedSurface) return; // Other imported characters keep their own recipes.
             if (characterAsset != null && characterAsset.CharacterId != "pip")
             {
                 ApplyStudyMaterial();
@@ -924,6 +1090,11 @@ namespace Pockle.Runtime
 
         private void ReleaseVisual()
         {
+            foxReaction=default;
+            peachExpression = null;
+            temperamentExpression = null;
+            axolotlExpression = null;
+            holidayExpression = null;
             if (visualRoot != null)
             { visualRoot.gameObject.SetActive(false); Destroy(visualRoot.gameObject); }
             for (int i = 0; i < ownedMeshes.Count; i++)

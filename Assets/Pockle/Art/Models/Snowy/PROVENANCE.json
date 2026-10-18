@@ -1,0 +1,12 @@
+{
+  "source_file": "snowy.glb",
+  "source_sha256": "5ca6dbd40aeb8b0e7927edf9814903a6f199482bcbc92d7df53180414a39b099",
+  "source_triangles": 331448,
+  "runtime_triangles": 30000,
+  "texture_size": [
+    4096,
+    4096
+  ],
+  "conversion": "Weld source UV seams, decimate to about 30k triangles, retain original paint and UVs. Unity native build normalizes floor and viewer direction.",
+  "source_rigged": false
+}

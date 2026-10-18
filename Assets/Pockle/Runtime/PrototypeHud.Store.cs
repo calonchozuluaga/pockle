@@ -34,6 +34,7 @@ namespace Pockle.Runtime
             index = Mathf.Clamp(index, 0, BoxCutouts.Length - 1);
             var rect = Rect("Closed box", parent);
             var image = rect.gameObject.AddComponent<RawImage>(); image.raycastTarget = false;
+            BoxHype.Add(image, new Color(1f, .86f, .93f), index * 1.4f);
             var cutout = Resources.Load<Texture2D>(BoxCutouts[index]);
             if (cutout != null) image.texture = cutout;
             else
@@ -110,8 +111,11 @@ namespace Pockle.Runtime
             LeftLabel(walkTrack, new Vector2(textX, -60), new Vector2(textWidth, 6));
             LeftLabel(walkStatus.rectTransform, new Vector2(textX, -70), new Vector2(textWidth, 20));
             float buttonWidth = (w - 32 - 10) / 2;
+            // Once walking is on, "Enable walking" goes away and the box button takes the whole row.
+            bool enableShown = enableWalking.gameObject.activeSelf;
             LeftLabel(enableWalking.GetComponent<RectTransform>(), new Vector2(16, -height + 14 + 40), new Vector2(buttonWidth, 40));
-            LeftLabel(openDaily.GetComponent<RectTransform>(), new Vector2(16 + buttonWidth + 10, -height + 14 + 40), new Vector2(buttonWidth, 40));
+            LeftLabel(openDaily.GetComponent<RectTransform>(), new Vector2(enableShown ? 16 + buttonWidth + 10 : 16, -height + 14 + 40),
+                new Vector2(enableShown ? buttonWidth : w - 32, 40));
             return height;
         }
 
@@ -140,6 +144,9 @@ namespace Pockle.Runtime
             return y;
         }
 
+        /// <summary>True once step counting is running (Codex's session flag: sensor started and permission held).</summary>
+        private bool WalkingOn => session != null && session.WalkingActive;
+
         private void RefreshWalkingCard()
         {
             if (session == null || walkProgress == null) return;
@@ -150,7 +157,10 @@ namespace Pockle.Runtime
             walkTitle.text = saved.Claimed ? "Today's box is yours" : ready ? "Today's free box is ready" : "Today's free box";
             walkProgress.text = Mathf.Min(saved.Steps, target).ToString("N0") + " of " + target.ToString("N0") + " steps";
             walkFill.fillAmount = Mathf.Clamp01(saved.Steps / (float)target);
-            walkStatus.text = !currentDay ? "Check your device date to keep walking." : saved.Claimed ? NextBoxIn() : session.WalkingStatus;
+            bool walking = WalkingOn;
+            walkStatus.text = !currentDay ? "Check your device date to keep walking." : saved.Claimed ? NextBoxIn()
+                : walking ? "Walking is on. Keep Pockle open on your walk." : session.WalkingStatus;
+            if (enableWalking.gameObject.activeSelf == walking) { enableWalking.gameObject.SetActive(!walking); AdaptLayout(); }
             openDaily.interactable = ready;
             openDaily.GetComponentInChildren<Text>().text = saved.Claimed ? "Opened today" : ready ? "Open your box" : "Walk to unlock";
         }

@@ -46,6 +46,7 @@ namespace Pockle.Core
         public bool Available { get; }
         /// <summary>The character collection; membership does not grant art availability or reward eligibility.</summary>
         public string CollectionId { get; }
+        public CatalogColor SwatchColor => ToyCatalog.FinishSwatch(Id, FinishId);
         /// <summary>Derived from the character collection's explicit secret identity.</summary>
         public bool IsSecret => ToyCatalog.TryGetCollection(CollectionId, out var collection) && collection.SecretId == Id;
         internal CollectibleDefinition(string id, CharacterDefinition character, FinishDefinition finish,
@@ -112,6 +113,12 @@ namespace Pockle.Core
         public const string MoonId = "pip.moon-pearl";
         public const string GoldId = "pip.gold-confetti";
         public const string MintId = "pip.mint-mochi";
+        public const string FoxId = "fox.gloss-vinyl";
+        public const string AxolotlId = "axolotl.boucle-plush";
+        public const string AxolotlSpecialId = "axolotl.glow-jelly";
+        public const string PipSpecialId = "pip.glow-jelly";
+        public const string FoxAuroraId = "fox.glow-jelly";
+        public static bool IsFoxCollectible(string id) => TryGetCollectible(id, out var toy) && toy.CharacterId == "fox";
         private static readonly string[] legacyIds = { PeachId, MoonId, GoldId, MintId };
         private static readonly Dictionary<string, CharacterDefinition> charactersById = new Dictionary<string, CharacterDefinition>(StringComparer.Ordinal);
         private static readonly Dictionary<string, FinishDefinition> finishesById = new Dictionary<string, FinishDefinition>(StringComparer.Ordinal);
@@ -140,23 +147,24 @@ namespace Pockle.Core
             };
             var characters = new[] {
                 new CharacterDefinition("pip", "Pip", 0xf5b89c, "clear-jelly"),
-                new CharacterDefinition("dew", "Dew", 0x9cdbdc, "clear-jelly"),
                 new CharacterDefinition("tula", "Tula", 0xabcaae, "mochi-foam"),
-                new CharacterDefinition("ripple", "Ripple", 0xa9bfeb, "pearl-jelly"),
-                new CharacterDefinition("moss", "Moss", 0x94ba8a, "velvet-flock"),
-                new CharacterDefinition("nook", "Nook", 0xd4bba5, "boucle-plush"),
-                new CharacterDefinition("wisp", "Wisp", 0xc7b6df, "velvet-flock"),
-                new CharacterDefinition("loop", "Loop", 0xeabccf, "boucle-plush"),
-                new CharacterDefinition("bop", "Bop", 0xf1c47b, "gloss-vinyl"),
-                new CharacterDefinition("rolo", "Rolo", 0x96bbc7, "matte-vinyl"),
-                new CharacterDefinition("mallow", "Mallow", 0xd3c5e5, "matte-vinyl"),
-                new CharacterDefinition("sprig", "Sprig", 0xaecba0, "coated-metallic")
+                new CharacterDefinition("fox", "Fox", 0xec7951, "gloss-vinyl"),
+                new CharacterDefinition("axolotl", "Axolotl", 0xeeb2cb, "boucle-plush"),
+                new CharacterDefinition("firb", "Firb", 0x548b66, "matte-vinyl"),
+                new CharacterDefinition("coco", "Coco", 0xbd7456, "matte-vinyl"),
+                new CharacterDefinition("snowy", "Snowy", 0x7abbbb, "matte-vinyl"),
+                new CharacterDefinition("ginger", "Ginger", 0xd69b64, "matte-vinyl"),
+                new CharacterDefinition("reiny", "Reiny", 0xc39365, "matte-vinyl"),
+                new CharacterDefinition("guin", "Guin", 0x7397b5, "matte-vinyl"),
+                new CharacterDefinition("bundy", "Bundy", 0x99674d, "matte-vinyl")
             };
             Characters = Array.AsReadOnly(characters); Finishes = Array.AsReadOnly(finishes);
             foreach (var character in characters) charactersById.Add(character.Id, character);
             foreach (var finish in finishes) finishesById.Add(finish.Id, finish);
             var collectibles = new List<CollectibleDefinition>(characters.Length * finishes.Length);
             string[] pipLabels = { "Peach Jelly", "Moon Jelly", "Gold Glitter", "Mint Soft" };
+            string[] axolotlLabels = { "Honey Jelly", "Pearl", "Rose Glitter", "Mint Mochi", "Lavender Flock", "Blossom Plush", "Sky Matte", "Coral Gloss", "Copper", "Biolume Glow · Ultra rare" };
+            string[] foxLabels = { "Honey", "Pearl", "Rose Quartz", "Mochi", "Cloud", "Midnight", "Apricot", "Classic", "Copper", "Aurora · Super rare" };
             foreach (var character in characters)
             {
                 for (int index = 0; index < finishes.Length; index++)
@@ -165,10 +173,16 @@ namespace Pockle.Core
                     bool existing = character.Id == "pip" && index < legacyIds.Length;
                     string id = existing ? legacyIds[index] : character.Id + "." + finish.Id;
                     var collectible = new CollectibleDefinition(id, character, finish,
-                        existing ? pipLabels[index] : finish.DisplayName, existing, character.Id);
+                        existing ? pipLabels[index] : id == PipSpecialId ? "Starlight Glow · Ultra rare" : character.Id == "fox" ? foxLabels[index] : character.Id == "axolotl" ? axolotlLabels[index] : HolidayCatalog.IsCharacter(character.Id) ? (finish.Id == "matte-vinyl" ? "Classic" : finish.Id == "glow-jelly" ? HolidayCatalog.SpecialLabel(character.Id) + " · Ultra rare" : finish.DisplayName) : finish.DisplayName, character.Id == "pip" || character.Id == "fox" || character.Id == "axolotl" || HolidayCatalog.IsCharacter(character.Id), character.Id);
                     collectibles.Add(collectible); collectiblesById.Add(id, collectible);
                 }
             }
+            foreach(var study in new[] {
+                new CollectibleDefinition(PipFusionStudies.DuskId,charactersById["pip"],finishesById["pearl-jelly"],"Dusk · fusion study",true,PipFusionStudies.CollectionId),
+                new CollectibleDefinition(PipFusionStudies.SorbetId,charactersById["pip"],finishesById["mochi-foam"],"Sorbet · fusion study",true,PipFusionStudies.CollectionId),
+                new CollectibleDefinition(PipFusionStudies.HoneydewId,charactersById["pip"],finishesById["confetti-gel"],"Honeydew · fusion study",true,PipFusionStudies.CollectionId),
+                new CollectibleDefinition(PipFusionStudies.EclipseId,charactersById["pip"],finishesById["glow-jelly"],"Eclipse · fusion study",true,PipFusionStudies.CollectionId) })
+            {collectibles.Add(study);collectiblesById.Add(study.Id,study);}
             Collectibles = new ReadOnlyCollection<CollectibleDefinition>(collectibles);
             var pools = new[] {
                 new BoxPoolDefinition(DailyPoolId, "Jelly Garden", new BoxPoolEntry(PeachId, 50), new BoxPoolEntry(MintId, 50)),
@@ -183,13 +197,44 @@ namespace Pockle.Core
             foreach (var character in characters)
             {
                 var members = new List<string>(finishes.Length);
-                foreach (var item in collectibles) if (item.CharacterId == character.Id) members.Add(item.Id);
-                uint field = character.Id == "pip" ? 0xf8d9c6u : 0xfaf5eeu;
+                foreach (var item in collectibles) if (item.CollectionId == character.Id) members.Add(item.Id);
+                uint field = character.Id == "pip" ? 0xf8d9c6u : character.Id == "fox" ? 0xffe0cbu : 0xfaf5eeu;
                 collections.Add(new CollectionDefinition(character.Id, character.DisplayName, character.Id, members,
-                    seriesNumber: character.Id == "pip" ? 1 : 0, fieldColor: field));
+                    seriesNumber: character.Id == "pip" ? 1 : 0, secretId: character.Id == "fox" ? FoxAuroraId : character.Id == "pip" ? PipSpecialId : character.Id == "axolotl" ? AxolotlSpecialId : HolidayCatalog.IsCharacter(character.Id) ? character.Id + ".glow-jelly" : "", fieldColor: field, inkColor: character.Id == "fox" ? 0x7a3210u : character.Id == "pip" ? 0x7a2a4eu : character.Id == "axolotl" ? 0x2a2a5au : 0x49344cu));
             }
+            collections.Add(new CollectionDefinition(PipFusionStudies.CollectionId,"Pip Fusion Lab", "pip",
+                PipFusionStudies.Ids,fieldColor:0xf7e2de,inkColor:0x7a2a4e));
             Collections = new ReadOnlyCollection<CollectionDefinition>(collections);
             foreach (var collection in collections) collectionsById.Add(collection.Id, collection);
+        }
+
+        internal static CatalogColor FinishSwatch(string id, string finish)
+        {
+            if (id == PipFusionStudies.HoneydewId) return new CatalogColor(0xb5d699);
+            if (id == PipFusionStudies.EclipseId) return new CatalogColor(0x444185);
+            if (id == PipFusionStudies.DuskId) return new CatalogColor(0xb99cde);
+            if (id == PipFusionStudies.SorbetId) return new CatalogColor(0xb3dac1);
+            if (id == PeachId) return new CatalogColor(0xf5b89c);
+            if (id == MoonId) return new CatalogColor(0x73b8f5);
+            if (id == GoldId) return new CatalogColor(0xffb02e);
+            if (id == MintId) return new CatalogColor(0x8cd9a8);
+            if (id.StartsWith("axolotl.", StringComparison.Ordinal))
+                return new CatalogColor(finish == "mochi-foam" ? 0x89d6b9u : finish == "coated-metallic" ? 0xbd784du : finish == "clear-jelly" ? 0xf5cb83u : finish == "gloss-vinyl" ? 0xf884a5u : finish == "glow-jelly" ? 0x5ddbd7u : finish == "matte-vinyl" ? 0xcce6fau : finish == "velvet-flock" ? 0xb8a3efu : finish == "pearl-jelly" ? 0xe7d8f5u : finish == "confetti-gel" ? 0xef91b1u : 0xf5b8c7u);
+            bool fox = id.StartsWith("fox.", StringComparison.Ordinal);
+            uint colour = finish switch {
+                "clear-jelly" => fox ? 0xeeb754u : 0xf5b89cu,
+                "pearl-jelly" => 0xe7d8f5u,
+                "confetti-gel" => 0xef91b1u,
+                "mochi-foam" => 0xf6e5d3u,
+                "velvet-flock" => fox ? 0xf3eadfu : 0xb8a3efu,
+                "boucle-plush" => fox ? 0x363b60u : 0xf5b8c7u,
+                "matte-vinyl" => fox ? 0xf4ae72u : 0xcce6fau,
+                "gloss-vinyl" => fox ? 0xff742fu : 0xfa7d9cu,
+                "coated-metallic" => fox ? 0xbd784du : 0xdb9e3bu,
+                "glow-jelly" => 0x5cc7d1u,
+                _ => 0xf5b89cu
+            };
+            return new CatalogColor(colour);
         }
 
         public static bool TryGetCharacter(string? id, out CharacterDefinition character)

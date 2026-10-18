@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53ac575e9c10e216ba89d05647e29649, type: 3}
+  m_Name: bundy-sugarplum-table
+  m_EditorClassIdentifier: Pockle.Runtime::Pockle.Runtime.PaintedWorldAsset
+  Background: {fileID: 2800000, guid: d88f4ca23c71f89cd88589563d1f16b4, type: 3}
+  Reflections: {fileID: 8900000, guid: b1c99a039e8e849e79e6226e7ca50745, type: 2}

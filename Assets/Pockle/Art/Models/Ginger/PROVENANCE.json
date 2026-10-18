@@ -1,0 +1,12 @@
+{
+  "source_file": "ginger.glb",
+  "source_sha256": "67b9b4a7c897473d3f40d663f132aed1170b7610a39b44a1a94bbc46216798af",
+  "source_triangles": 359412,
+  "runtime_triangles": 30000,
+  "texture_size": [
+    4096,
+    4096
+  ],
+  "conversion": "Weld source UV seams, decimate to about 30k triangles, retain original paint and UVs. Unity native build normalizes floor and viewer direction.",
+  "source_rigged": false
+}

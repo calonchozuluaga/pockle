@@ -1,0 +1,30 @@
+Three additional winter Pockle concepts — October 16, 2026
+
+Generated with built-in image_gen. Exact prompt set: prompts.json.
+One original character per sheet; front upper left, left profile upper right,
+rear lower left, front three-quarter lower right. Working names only.
+Turnarounds are concept art: reconcile shape consistency when modeling.
+
+Tavi — chubby caramel reindeer, cream muzzle/belly, blunt two-tip antlers,
+cranberry collar and mint clasp. Candidate motions: hop, antler/head nod,
+ear perk, little hoof wave and shy bow. Tail is an attached cream button.
+
+Pogo — slate-blue penguin, ivory face/belly, apricot beak/feet and chunky
+mint earmuffs. Candidate motions: waddle, flipper wave, happy hop,
+head tilt and cozy sway. Keep beak clear of the animated mouth.
+
+Pud — replaces Bowie in the active three-character selection. A squat cocoa
+Christmas pudding with a vanilla icing cap, chunky holly/berries, little arms
+and broad feet. Candidate motions: hop, icing wobble, holly nod, arm wave
+and bashful sway. Keep icing clear of the animated eyes and mouth.
+The sheet provides front, side, rear and three-quarter references; its side
+profile faces right. Exact prompt: pud-pudding-prompt.txt.
+
+Bowie's previous gift-box sheet is retained as a superseded concept only.
+Current selection: Tavi, Pogo, Pud. Working names pending approval.
+
+All require animated eyes/mouth and character-specific subtle motion,
+including Calm alternatives. Any eventual sound should drive expressions.
+These sheets do not provide a rig, blend shapes, animation or playable toys.
+Material variants, rare finishes, worlds, cover art and packaging come after
+owner approval of the base designs. No Meshy credits spent by this task.

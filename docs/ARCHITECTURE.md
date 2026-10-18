@@ -27,3 +27,89 @@ The custom `.pocklemesh` source records Unity-space geometry and anchors from Bl
 The editor menu configures the prototype's scene and presentation defaults. Build preprocessing guards against a missing scene, render pipeline mismatch, or missing custom shaders. It is not a substitute for an editor build or a real-device check.
 
 The owner’s current collecting direction is daily walking-unlocked boxes or optional paid boxes, with collection-themed packaging. Hardware steps and local daily rewards are implemented for testing; location verification, store billing, and authoritative inventory remain future work. The next viewer experiments are lights-off glow and internal stars/pearls that lag during squeeze/stretch and settle after release. Trading, evolution, and edition registries are outside the simplified initial release.
+
+October 14 material/art extension: Fox finishes share one native readable mesh/paint with local shader recipes and per-ID special metadata; Axolotl has one separate native plush mesh/paint. CharacterArt authorizes only registered finish IDs. Engine-free catalog/inventory retain old IDs and add no new save schema. See FOX_FINISHES.md and AXOLOTL_IMPORT.md.
+
+October 14 latest Pip collection: all ten Pip IDs resolve to the approved baked model via CharacterArt. Local finish recipes share the source paint, UVs and mesh; legacy selectors still preserve IDs. Undiscovered silhouette projects that same model. See LATEST_PIP_COLLECTION.md.
+
+UX-039: `ToyStageEnvironment` owns bounded procedural scenery, background gradient and stage lighting. `TactilePrototype` consumes the existing HUD WorldChanged/LightChanged events and reapplies the chosen look after selection. Catalog `HomeWorld` and per-finish `SwatchColor` are engine-free presentation metadata. See [TOY_STAGE_RUNTIME.md](TOY_STAGE_RUNTIME.md).
+
+Painted world images use `PaintedWorldAsset` plus precomputed reflection cubes (`PaintedWorldImport.Build`). `ToyGlowAura` owns two additive light-spill cards; it is independent of toy deformation and inventory. See [PAINTED_WORLDS.md](PAINTED_WORLDS.md).
+
+Owner beta test builds can enable `PipOwnerTestGrant.txt`: CollectionSession runs a one-time missing-Pip grant, persists inventory before its separate marker and HUD notification. Existing counts, daily rewards and pending reveals remain intact. Remove/disable the resource before public distribution.
+
+Fox art-set contracts: CollectionDefinition has ordered Worlds (Id, DisplayName, EnvironmentArt), independent CoverArt/BoxArt/BoxModel paths and AccentColor/InkColor. SetEnvironment validates world membership against the chosen toy. NativeCollectionBox samples an authored hinged-carton clip against RevealPose; default Pip MysteryBox remains procedural. Full asset requirements and mandatory expression/idle support are in COLLECTION_ART_STANDARD.md.
+
+
+October 14 — Pip now supplies five collection-specific painted worlds and separate cover/box resources. MysteryBox resolves catalog BoxModel for both Pip and Fox, retaining procedural fallback; native clips support calm motion. See PIP_ART_SET.md.
+
+
+October 14 — Axolotl ten finishes share approved art via AxolotlFinishMaterial and local AxolotlExpressionDriver. Five worlds and native carton are catalog-resolved. Durable owner-only test grant precedes marker/UI refresh. See AXOLOTL_ART_SET.md.
+
+
+October 15 — UX-025/039: `ToyOrbit` supplies engine-free free-view state; `ToyViewGesture` arbitrates orbit/hold/zoom/pan/reset. StageFraming consumes HUD StageViewport pixels; ToyStageEnvironment applies clamped painted-world parallax; ToyGlowAura keeps its halo camera-centred. See FREE_TOY_VIEW.md.
+
+October 15: PipReactions supplies five engine-free action poses; PipReactionDriver applies a separate visual offset and face pose, triggered by delayed single taps in ToyViewGesture. See PIP_REACTIONS.md.
+
+October15 material gesture split: SoftToyGesture maps pair separation and vertical midpoint motion to pinch/press/lift, wired to existing tactile springs. ToyViewGesture routes firm materials to zoom/pan and soft materials to deformation. Glow follows the actual visual origin after reaction animation.
+
+October15: FoxReactions/FoxDeformation provide five bounded Fox poses and smooth tail/head/ear/painted-face articulation in instance mesh buffers via JellyToy.SetFoxReaction. FoxReactionDriver owns the reaction offset/lifecycle; TactilePrototype dispatches Pip/Fox taps. See FOX_REACTIONS.md.
+
+October15 owner roster: 8 active characters/collections,80 slots,70 playable finishes; ten retired definitions removed, historical save IDs preserved. See ACTIVE_ROSTER.md. AxolotlReactions/Driver now dispatch local face/arm/gill/tail poses on tap alongside Pip/Fox; see AXOLOTL_REACTIONS.md.
+
+
+Firb now uses engine-free FirbReactions and FirbReactionDriver for five random/no-repeat tap actions, with HolidayFinish Firb-only branch/star/tier masks and HolidayExpressionDriver face controls. Source meshes, save format and other holiday motion remain unchanged. See FIRB_REACTIONS.md.
+
+
+Coco adds engine-free CocoReactions, CocoReactionDriver and Coco-only HolidayFinish cream/marshmallow masks. Five random/no-repeat actions coordinate rigid cup transforms and HolidayExpressionDriver faces; material-aware gestures, finish recipes, IDs and saves are preserved. See COCO_REACTIONS.md.
+
+
+Ginger now uses engine-free GingerReactions and GingerReactionDriver for five random/no-repeat actions, with Ginger-only HolidayFinish paw/ear/head articulation and HolidayExpressionDriver faces. All ten finish recipes, source geometry, material gestures and inventory remain intact. See GINGER_REACTIONS.md.
+
+
+Snowy now uses engine-free SnowyReactions and SnowyReactionDriver for five random/no-repeat tap actions, with Snowy-only HolidayFinish mitten/pom/head articulation and HolidayExpressionDriver faces. Source geometry, finish recipes, material gestures and saves remain unchanged. See SNOWY_REACTIONS.md.
+
+
+Owner material lab: PipFusionStudies adds two fixed Pip IDs in a separate two-member pip-fusion-lab collection, leaving regular ten-member Pip and box pools intact. PipFinishMaterial/TexturedPeachJelly use resettable gradient/marbling fields; JellyToy adds Dusk inclusions. CollectionSession saves the resource-gated owner grant before notification/marker. No crafting or save format change; see PIP_FUSION_MATERIAL_STUDIES.md.
+
+
+Soft viewer framing: ToyViewGesture forwards the current material compliance to StageFraming. ToyOrbit.FrameSize computes aspect-aware orthographic size: soft half-width1.2, firm1.5, shared vertical minimum1.6. Core tests cover aspect/finiteness/rigid preservation; SoftToyFramingTests cover Dusk/Sorbet/rigid/legacy selection, reset and viewport resizing.
+
+
+Pip fusion studies expansion: read-only PipFusionStudies.Ids lists four fixed lab studies. Grant v2 ensures missing copies on existing v1 phones, preserving saves/duplicates. Honeydew uses satin jade/honey pigment and fine sparkle; Eclipse uses a parallax ribbon shader plus native gold stars and gold ToyGlowAura night tint. No new mesh/character, save version, parent consumption, or fusion service change.
+
+
+Owner-approved fusion boundary (October15): appearance resolution uses parent visual recipes; personality resolution combines parent personalities into a new profile independently. That profile supplies social interactions and trait-specific eye/mouth expression styles without altering overall color/material/inclusions/glow. This is a design contract; current preview-only fusion and material studies do not implement it. See FUSION.md and PERSONALITIES.md.
+
+
+October16 — Pip temperament faces: engine-free PipFaces/PipFacePose provides eight bounded authored face sets, independent of visual recipes. PeachExpressionDriver reads PersonalityBook.TemperamentOf and combines local facial paint with idle/touch input; PipReactionDriver combines tap phases with existing five no-repeat body actions. A resource-gated editor/development owner test cycles all eight styles without persisting personality. JellyToy puts rest positions in the instance mesh’s UV channel1 so face paint follows CPU deformation; the TexturedPeachJelly nearest-shell depth pass removes baked eye traces while retaining interior rendering before the translucent shell. Source mesh/texture, save schema and finish recipes stay unchanged. See PEACH_EXPRESSIONS.md.
+
+
+October16 — temperament faces now cover every playable character. PipFaces’ engine-free bounded poses are reused by ToyTemperamentDriver for Fox/Axolotl/Firb/Coco/Ginger/Snowy, alongside Pip’s existing driver. ToyFaceLayout fits native per-character feature footprints, preserves nose/muzzle/icing details and caches clean UV skin anchors per character. Instance UVchannel1 stores rest positions; shared TemperamentFace.cginc paints the local expressions and clears baked face remnants. Native articulation and legacy expression channels remain separate. Fox Classic moves from Standard to the expression-capable Fox shader with source paint untinted. All six reaction drivers start/cancel the shared face clock while retaining their original random/no-repeat body actions. The editor/development PipTemperamentOwnerTest resource now enables the same eight-style owner cycle across all seven playable characters; release behavior reads PersonalityBook.TemperamentOf, without persisting an override. Planned Tula stays unavailable.
+
+
+### Full-screen toy camera and walking availability (October 16)
+
+`PrototypeStage` keeps its toy camera rect at `(0,0,1,1)`. The HUD's pixel `StageViewport` is now an available framing area, eased independently of the camera rect. Its aspect determines the existing soft/firm framing size; dividing by its normalized height extends the orthographic volume to the full screen. An off-centre orthographic projection places the toy centre at the available area's centre, keeping ray picking aligned. Opening a HUD card still recentres/resizes the toy; toy/glow fragments can render beyond the framing area. `ToyViewGesture` accepts screen-space starts subject to the existing EventSystem UI exclusion; material-aware squish and firm zoom remain unchanged. Background panorama rendering stays independent.
+
+`CollectionSession.WalkingActive` reports `!IsReadOnlySave && tracker.Active`. On Android the tracker only becomes active after `StepCounter.start()` returns true and while activity-recognition permission remains held; failed reads/startup, disposal, missing sensors and editor previews are inactive. Saved steps/status copy are never evidence of active registration. This is the API for Claude's HUD binding; this task does not edit HUD files or change background-walking guarantees.
+
+
+### Reiny, Guin and Bundy native toys — October 17, 2026
+
+The uploaded winter trio extends HolidayCatalog/CharacterArt with three independent ten-finish collections and native readable assets. Each uses its original paint on a 30,000-triangle mesh converted by tools/import-winter-trio.py and WinterTrioCollectionBuild; no GLB is parsed at runtime. The active catalog is now 11 characters (10 playable, Tula planned), 114 entries (104 playable, including four Pip fusion studies), and 12 collection views including the fusion lab. Public box odds and series numbering remain unchanged.
+
+WinterTrioReactions samples five distinct actions per character with no-repeat draw mapping and a Calm alternative. WinterTrioReactionDriver combines whole-toy hop/turn offsets with local shader masks for Reiny's hoof/antlers, Guin's flipper/earmuffs and Bundy's arm/holly/icing nod. Rigid finishes do not scale or squash during these actions. Shared ToyFaceLayout/ToyTemperamentDriver preserve noses/beak and source paint while supporting all eight face styles; the existing development flag cycles them on accepted taps. PersonalityBook's generic authored fallback is used until Claude provides dedicated nature/dial tables.
+
+WinterTrioOwnerTestGrant is editor/development-only and grants missing copies of all 30 new finishes once, persisted before its v1 marker and UI notification. It preserves prior copies, walking progress, pending reveals and the save schema. HasArtSet distinguishes playable toys from finished collection artwork: new trio cover/box fields are empty and worlds remain empty/Studio until dedicated art exists. Existing collections keep their complete artwork. Runtime play hints now use the requested one-line text, with squish or zoom chosen by material handling.
+
+
+### Winter art and UI integration — October 17, 2026
+Reiny, Guin and Bundy now each resolve five unique painted worlds with reflection cubemaps, an exact 3:1 cover, and a native branded mystery carton with opening lid/flap animation and transparent closed/open renders. HolidayCatalog exposes the collection-specific paths. ArtSource/WinterTrioArt/generated-manifest.json preserves 27 image-generation prompts; Blender sources and build/import tools preserve editable packaging. Printed carton colors remain unlit/white-tinted for bright artwork.
+TactilePrototype routes accepted toy reactions and squish/lift/turn/night/idle cues to Claude's ShowToyExpression API with an approximate head screen position. The idle cue fires once after 18 seconds until interaction resumes. Runtime routing preserves gesture arbitration and inventory. Claude UiBuild22, the live shelf and fusion moment are integrated together. Fusion remains the existing preview-only service; this integration does not enable inventory-consuming crafting.
+
+
+October17 winter finish readability: character-specific per-finish pigments and opt-in whole-toy flock/plush/foam surfaces now distinguish all thirty Reiny/Guin/Bundy variants. Native side-by-side gallery: [finish review](winter-trio-finish-review/index.html). Original Classic paint, character markings, IDs/inventory/personality and older holiday finishes preserved. Full local PlayMode90/90 passes; latest CI/phone status in VALIDATION.
+
+
+October17 UiBuild23 integrated: authored winter trio personalities/dials/speech now replace the fallback limitation, Home null-art/BoxHype picture mirroring fixes white boxes, and fusion previews blend readable transparent cutouts. Full local combined PlayMode90/90 passes; final CI/APK status in VALIDATION.

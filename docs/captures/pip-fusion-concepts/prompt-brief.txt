@@ -1,0 +1,17 @@
+Pip fusion concept pass 01 — built-in image_gen, October 15, 2026.
+Concept review only; no runtime, approved recipes, inventory or personality data changed.
+
+Reference images: docs/captures/latest-pip-collection/pip.peach-jelly.png, pip.moon-pearl.png, pip.gold-confetti.png, pip.mint-mochi.png.
+
+Generation prompt brief:
+Create one polished landscape comparison board of four Pip fusion concepts in a spacious two-by-two grid, using the four approved parent renders as shape and material references. Preserve the squat rounded triangular mound with broad soft base and two asymmetric rounded bumps, left small and right tall; no limbs, tails or new animal features. Premium 3D toy product render style; warm off-white studio field and restrained plum typography. Each panel shows two small parents plus an arrow to a large fusion, with concise name, material and personality labels. Header: PIP / FUSION STUDIES. Subtitle: Color + material + personality.
+
+01 DUSK — Peach + Moon: peach-pink base to lilac/periwinkle top, semitranslucent pearl jelly, peach pearls and small blue stars inside; curious gentle expression, slight tilt. Labels: Pearl jelly / Curious + dreamy.
+02 SORBET — Peach + Mint: distinct broad pink and mint marbled ribbons, opaque silky soft mochi gel, low gloss, no glitter; contented half-lidded eyes and small smile. Labels: Soft marbled gel / Curious + calm.
+03 HONEYDEW — Gold + Mint: pale jade with warm honey-gold accents near the base and bumps, satin gel with fine embedded gold flecks; cheeky delighted expression. Labels: Satin sparkle gel / Playful + composed.
+04 ECLIPSE — Moon + Gold: deep periwinkle midnight-blue translucent jelly, an internal luminous gold ribbon, sparse gold stars, cool pearl edges and restrained aura close to the body; wide-eyed stargazing smile. Labels: Luminous crystal jelly / Dreamy + theatrical. Badge: Secret recipe candidate.
+
+All traits are design proposals, not final gameplay. Clean colors rather than muddy averaging. Full uncropped toys. No boxes, pedestals, landscapes or watermark.
+
+Review observations:
+Approved Pip identity and all four parent combinations read clearly. Sorbet and Honeydew rendered glossier than the low-gloss/satin targets; treat their surface roughness as a proposed refinement. Eclipse is a new working concept name; the existing preview-only UI calls Moon+Gold Starlight Pip. No name or recipe change is approved by this image.

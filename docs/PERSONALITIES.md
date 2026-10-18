@@ -1,6 +1,6 @@
 # Personalities and a living shelf (proposal)
 
-October 9, 2026. **Proposal for the owner's review.** Owner direction from today's discussion: give every Pockle a personality that ships with the app, plus a few ways toys react to each other on the shelf. Design by Claude; the runtime is Codex's lane (see "Who builds what").
+October 9, 2026. **Approved by the owner on October 12** from the design canvas ("Living shelf" and "Toy personality" screens); built in UX-037. Originally a proposal. Owner direction from today's discussion: give every Pockle a personality that ships with the app, plus a few ways toys react to each other on the shelf. Design by Claude; the runtime is Codex's lane (see "Who builds what").
 
 ## The problem it solves
 
@@ -15,6 +15,12 @@ After you open today's box, there's nothing more to do: the toys are a reward wi
    - AI may help **during development** to draft voices and reaction ideas, which people then review and edit. Nothing is generated at runtime. This matches the project rule of no per-touch network or AI calls.
 2. **Personality lives on the character, and the variety tints it.** All Pips share Pip's nature (curious and sunny); a finish nudges it. This keeps the writing to twelve characters plus small per-variety adjustments, not 120 separate personalities.
 3. **Alive, but never needy.** No decay, hunger, feeding, sadness from neglect, streak penalties, or anything that punishes being away. Toys are always happy to see you. Pockle is a cozy collecting game, and guilt is the wrong feeling for it.
+
+## Owner clarification: fused personality and expression (October15)
+
+A fused toy receives a new personality formed from its parents' personalities. That profile determines how it interacts with other toys and can drive trait-specific facial expressions, including eye/mouth poses and their timing. The profile is independent of the appearance recipe: personality does not change the overall color, material, inclusions or glow. Regular character/finish profiles may still supply the parent personalities; appearance must not be recomputed from the resulting temperament.
+
+The trait-to-expression and social-pairing mappings remain design work. The current Pip fusion gallery contains draft labels, not implemented inheritance or unique social/face behavior. The four material prototypes use existing Pip reactions. Keep these implementation limits explicit when presenting them.
 
 ## How a personality is built
 
@@ -58,14 +64,19 @@ Personalities are presentation only:
 - no reaction is ever sold;
 - a toy's personality comes with every copy, including traded and crafted ones.
 
-## Open questions for the owner
+## Answered by the approved screens (October 12)
 
-1. How many pairing reactions for a first pass? Proposal: one "same character" reaction per character, plus five to eight special pairs across the launch roster.
-2. How should personality show up: animation only, animation plus sounds, or also short text lines? Proposal: animation and sounds first, with text lines as a later layer. Text needs translation and is the easiest part to get wrong in tone.
-3. Can players arrange their own shelf so they can set up pairings, or does the shelf keep its order (newest series first)?
-4. Should a newly found toy get a short "meet your toy" moment that introduces its personality?
+1. **First pass:** the four Pip finishes form six pairs, each with a day and a night moment, for twelve moments to find. More arrive with each character.
+2. **How personality shows up:** animation and a short voice sound, plus short labels: trait chips, a reactions list, and moment captions. There is no dialogue.
+3. **Arranging the shelf:** not yet. The shelf places owned toys in a fixed order (show-offs and dreamers on the top shelf). Player arranging is a later option.
+4. **"Meet your toy":** still open.
+
+The approved screens also add a **Day / Night** switch on the shelf. It starts from the phone's clock (night is 9 pm to 6 am). At night everyone dozes except the dreamers, and the night moments differ from the day ones.
 
 ## Who builds what
+
+As built (UX-037): the content lives in `Runtime/UI/PersonalityBook.cs`, which is engine-free so it can move to Core. The shelf toys are Codex's live meshes (`ShelfPreviewRuntime`) on the scene's colour, with `PersonalityMotion` adding each personality's sway. Moments found are a UI preference (`pockle.shelf.moments.v1`), never inventory.
+
 
 | Part | Owner |
 | --- | --- |

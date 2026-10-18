@@ -119,3 +119,15 @@ Executed **1,224 new portable catalog/cache assertions**: 108 unique definitions
 C# source/asset checks pass for 49 files across default/Editor/Android symbol profiles and 91 GUIDs. Unity migration tests are authored in `CatalogMigrationTests.cs` but **not executed in cloud**. They cover actual JsonUtility/PlayerPrefs/session migration, restart, profile references, unknown IDs, and newer-schema preservation. This evidence does not establish Unity API compilation, rendering, portrait lifetime on the GPU, or Android APK behavior.
 
 Review in Unity with a copy of an existing local save: confirm counts and daily state, pending reveal resumption, profile mapping, one successful daily grant, and unchanged legacy UI/controller behavior. Update Claude's UI test key backup first, then run the PlayMode suite and inspect warnings. Run portrait-cache rendering/lifetime checks when Claude integrates visible-item leases.
+
+October 14 latest Pip finish integration: 14 characters, 140 slots, 21 available finishes (10 Pip + 10 Fox + uploaded Axolotl plush). Legacy Pip IDs/pool weights unchanged; availability does not grant ownership. No new full-series prices/odds/secrets. All Pip art uses the approved latest model.
+
+October 14 Fox art-set additions: CollectionDefinition.Worlds is an ordered immutable list of CollectionWorldDefinition { Id, DisplayName, EnvironmentArt }; first is Home. CoverArt is an independent 3:1 illustration resource path. BoxArt and BoxModel refer to the render and opening-ready model. AccentColor/InkColor are approved palette metadata. Fox supplies five worlds and complete art; others remain pending. Art metadata does not approve reward pools, odds or paid purchase availability.
+
+
+October 14 — Pip HomeWorld is pip-jelly-garden; Worlds exposes five unique environments. CoverArt=Collections/Pip/Cover, BoxArt=UI/Boxes/Collection-pip, BoxModel=Boxes/PipCollectionBox. Cover is distinct from Home background; no inventory or odds changes.
+
+
+October 14 — Axolotl now has ten available members with AxolotlSpecialId axolotl.glow-jelly. HomeWorld axolotl-blossom-pond, Worlds five, CoverArt Collections/Axolotl/Cover, BoxArt UI/Boxes/Collection-axolotl, BoxModel Boxes/AxolotlCollectionBox. Availability and test grants do not approve box pools.
+
+October15 owner roster: 8 active characters/collections,80 slots,70 playable finishes; ten retired definitions removed, historical save IDs preserved. See ACTIVE_ROSTER.md. AxolotlReactions/Driver now dispatch local face/arm/gill/tail poses on tap alongside Pip/Fox; see AXOLOTL_REACTIONS.md.

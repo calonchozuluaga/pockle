@@ -1,0 +1,12 @@
+{
+  "source_file": "Reiny.glb",
+  "source_sha256": "f0aad8f69ff14ff81163ff9224032a448dadda80aedc48f44a0333d59d19d14b",
+  "source_triangles": 257250,
+  "runtime_triangles": 30000,
+  "texture_size": [
+    4096,
+    4096
+  ],
+  "conversion": "Weld source UV seams, decimate to about 30k triangles, retain original paint and UVs. Unity native build normalizes floor and viewer direction.",
+  "source_rigged": false
+}

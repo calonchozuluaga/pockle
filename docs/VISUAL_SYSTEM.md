@@ -1,6 +1,6 @@
 # Pockle visual system (v2, UX-032)
 
-Version **v2 screens 01** (shown in **Settings → About**). Owner: Claude, per `AGENT_COORDINATION.md`. The owner approved the direction in the design canvas "Pockle screens v2" on October 9, 2026, replacing Visual system 01 after on-device feedback that the first pass felt clunky and dated. Tokens live in `Assets/Pockle/Runtime/UI/PockleTheme.cs`; screens take values from there.
+Version **v2 screens 04** (shown in **Settings → About**). Owner: Claude, per `AGENT_COORDINATION.md`. The owner approved the direction in the design canvas "Pockle screens v2" on October 9, 2026, replacing Visual system 01 after on-device feedback that the first pass felt clunky and dated. Tokens live in `Assets/Pockle/Runtime/UI/PockleTheme.cs`; screens take values from there.
 
 ## Personality
 
@@ -51,4 +51,14 @@ Labels best-fit down by up to 5 px, never below 11. The font has no CJK or emoji
 
 ## Screens
 
+v2 screens 02 adds the living shelf (Shelf tab), the toy personality page, and the fusion screens, from the canvas row "Personalities and fusion". The personality and reveal pages are full-bleed: a colour field (the toy's field, or midnight for a reveal) with a milk sheet, and no tab bar. Sparkles and the crescent moon are drawn at runtime (`UiShapes`).
+
+
 Home, Shelf, Boxes, You, Settings, Friends, and the toy header follow the canvas. The Collection ("Who's inside") and Collections pages need new pages in `MenuNavigation` (requested from Codex), and the Box reveal moment is UX-012.
+
+v2 screens 04 adds the toy stage and finishes Collections, from the canvas rows "Toy stage" and "Collection: who's inside":
+- **Play:** a collection pill in the header (opens that collection), an eyebrow ("FOX · NO. 10"), the finish name as the title, and a separate rarity badge ("Secret · Super rare"). The ways-to-play hint sits under the title.
+- **Stage tray:** a milk strip at the bottom with Collection, World and Light. Closed, it stays clear of the plate; a tab opens its panel above the strip. World and light are remembered (`StageLook.WorldKey`, `LightKey`). New players start in Studio with Daylight, which matches the old stage exactly.
+- **Until the stage draws worlds itself,** the HUD tints the backdrop (`StageLook.Backdrop`); dark worlds switch the title to light ink.
+- **All collections:** neutral rows with the character on its colour field (shelf portraits for Pips, one small render for other characters), the series line, and "N of M found" / "Complete".
+- **One collection:** a hero on the collection's colour with the title, caption, the character and a progress bar; "Who's inside"; the lineup; and a plum secret card when the collection has a secret.

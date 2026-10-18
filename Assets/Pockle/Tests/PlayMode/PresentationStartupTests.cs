@@ -28,24 +28,19 @@ namespace Pockle.Tests
         }
 
         [UnityTest]
-        public IEnumerator StartupHasOnlyThePlateColliderAndReleasesOwnedGeometry()
+        public IEnumerator StartupHasNoPlateAndReleasesOwnedGeometry()
         {
             PrototypeStage.Create(out Camera viewer, out _, out _, out Collider plate, out _);
             stage = viewer.transform.parent.gameObject;
-            Assert.That(stage.GetComponentsInChildren<Collider>().Length, Is.EqualTo(1));
-            Assert.That(plate, Is.TypeOf<MeshCollider>());
+            Assert.That(stage.GetComponentsInChildren<Collider>(), Is.Empty);
+            Assert.That(plate, Is.Null);
             var filters = stage.GetComponentsInChildren<MeshFilter>();
-            Assert.That(filters.Length, Is.EqualTo(6));
+            Assert.That(filters.Length, Is.EqualTo(1));
             Mesh disk = filters[0].sharedMesh;
-            foreach (var filter in filters) Assert.That(filter.sharedMesh, Is.SameAs(disk));
-            Physics.SyncTransforms();
-            Assert.That(plate.Raycast(new Ray(new Vector3(.8f, 2f, 0f), Vector3.down), out RaycastHit hit, 3f), Is.True);
-            Assert.That(hit.point.y, Is.EqualTo(.15f).Within(.001f));
-            Assert.That(plate.Raycast(new Ray(new Vector3(1.5f, 2f, 0f), Vector3.down), out _, 3f), Is.False);
 
             carton = new GameObject("Startup test carton");
             var box = carton.AddComponent<MysteryBox>();
-            box.Initialize(); box.Initialize();
+            box.Initialize("legacy"); box.Initialize("legacy");
             Assert.That(carton.GetComponentsInChildren<Collider>(), Is.Empty);
             Transform floor = carton.transform.Find("Carton floor");
             Assert.That(floor, Is.Not.Null);

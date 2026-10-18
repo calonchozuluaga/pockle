@@ -113,6 +113,17 @@ The owner clarified **one collection per distinct character, with at least ten c
 - [ ] **UX-034 — Walk tiers and crafting.** Daily box from the newest series that upgrades at longer step goals; craft a missing toy from same-series spares. Acceptance: tier odds are shown before opening; crafting spends exactly the stated spares once and records "Crafted"; depends on dependable walking (UX-010) for higher tiers. Trading follows accounts and a backend (UX-013, UX-016–019).
 - [ ] **UX-035 — Finite editions, never-duplicate paid boxes, and the public ledger.** Edition sizes and serial numbers per copy; paid boxes draw only toys you don't own and close once the regular set is complete; sold-out states; an append-only ledger with an opt-in public view. Acceptance: supply can't go negative under concurrent purchases; every copy has one serial and a complete history. Depends on the backend choice.
 - [ ] **UX-036 — Trading: friend swaps and open market.** Spares only, one-for-one, no currency; open-market "have / want" listings matched by the server with both items swapped at once. Acceptance: you can never trade your only copy; interrupted trades never lose or duplicate a toy; reporting, blocking, and rate limits exist. Depends on accounts and UX-035.
+- [ ] **UX-037 — Living shelf and toy personalities.** Owner-approved screens (October 12): the Shelf tab opens on a scene of up to four owned toys on two shelves, idling in character, with a Day/Night switch, authored pair moments (12 for the four Pips), and moments found. Tapping a toy opens its personality page (nature, tint, reactions, shelf friends, voice, Play). Acceptance: content is authored, not generated; motion stops in Motion calm; personalities never change inventory or odds.
+  - In review on `claude/personalities-fusion-ui`.
+- [ ] **UX-038 — Fusion screens.** Owner-approved "Fuse spares" and "Fusion reveal" (October 12): pick two spares (never a last copy), see what they'd make, secret-recipe hint, reveal with traits. Acceptance: the HUD only calls `IFusionService`; the preview-only default uses nothing and says so. Runtime, save, ledger and fused art: Codex.
+
+- [ ] **UX-039 — Toy stage: worlds, light, collection.** Runtime implemented locally on `codex/toy-stage-runtime`, with painted backgrounds, environment maps and light spill on `codex/painted-worlds`; phone review and Claude swatch/Home-label integration plus two UI test repairs remain. Owner-approved canvas row "Toy stage" (October 14). The play screen shows a "<Collection> collection · N of M" header pill (opens the collection), a "COLLECTION · SERIES · NO." eyebrow over the finish name, a separate rarity badge, and a bottom tray with Collection (member dots; tap an owned one to swap), World (the collection's home world, Studio, Jelly Garden, Midnight) and Light (Daylight, Golden hour, Night lamp). HUD: Claude (`PrototypeHud.Play.cs`, `UI/StageChoices.cs`). Worlds, plates, lights and night glow: Codex, via `WorldChanged`/`LightChanged`. Acceptance: the tray never covers the plate while closed; choices persist; Motion calm unaffected; no inventory change.
+
+- [ ] **UX-040 — Social layer (proposal).** Canvas row "Social layer" (October 14), awaiting owner review: Home feed (Following / Everyone) with preset reactions, other players' profiles (follow, badges, shelf, spares), find collectors, your profile with showcase and milestones, badges, trades (swaps and have/want market), and share cards. Needs accounts and a server (UX-013, UX-016–019); no free-text messaging in the first pass.
+- [ ] **UX-041 — Home v3 and daily boxes.** Home rebuilt October 15 (box card, live shelf peek, activity rail Nearby / Friends / Everyone with local finds + dev-only samples, Keep collecting, New this season). Daily boxes "smart mix" decided (docs/DAILY_BOXES.md): up to 4 a day by step tiers; box 1 your pick, 2–4 weekly featured. Pending: Codex reward/save API, then the Box N of 4 card and box-1 picker; real feed needs accounts and a server.
+- [ ] **UX-042 — Personality system.** Approved October 15 (docs/PERSONALITY_SYSTEM.md, canvas row "Personality system"): four dials, eight temperaments with face sets, shelf relationships with friendship levels, fused personalities with named hybrids. Claude: dial tables, temperament badge, Mood bar, relationship moments, friendship levels, fusion reveal copy. Codex: lids/frown/glance/blush face channels, temperament-weighted reactions, engine-free profile + inheritance, saved with fused toys.
+  - UI in review on `claude/personalities-fusion-ui`; fusion runtime not started.
+  - Oct 15, UiBuild "v2 screens 19": Claude's side built in the owner's folder (dial tables, temperament badge, Mood bar, relationship moments with friendship levels 1/3/7 days, fusion reveal copy). Compiles against stubs; Unity tests and phone not run. Codex's face channels, weighted reactions and `PersonalityProfile` not started.
 
 ## Suggested work order
 
@@ -126,3 +137,94 @@ The owner clarified **one collection per distinct character, with at least ten c
 Use this file as the task checklist. Each implementation should name its task ID, update its status, and record relevant evidence in `VALIDATION.md`. Prototype capabilities above are already available; unchecked tasks describe the remaining finished-game work, not features currently promised by the app.
 
 For the proposed Codex/Claude work split and repository handoffs, see [agent coordination](AGENT_COORDINATION.md). Assignments remain proposed until each assistant acknowledges its task and file ownership.
+
+## October 13 — Fox collection
+
+Implemented on `codex/fox-collection` in the attached isolated worktree; collection/runtime/check files copied to this local project for Unity use. Fox is collection/character `fox`; uploaded art is `fox.gloss-vinyl`, with nine planned finish slots. No inventory grants or box-pool changes. Unity 6000.6.5f1: 29 PlayMode and 16 EditMode tests passed; portable/source/branch whitespace checks passed. Android/phone review pending. Existing local settings and Claude UI edits preserved; owner approved the one collection-count test assertion update. See `docs/FOX_MODEL_IMPORT.md`.
+
+Walking fix validation on isolated main-based branch: 17/17 EditMode and 27/27 PlayMode tests passed; rebuilt previous exported APK contains JNI class/API and ACTIVITY_RECOGNITION. Current local C#/Fox/UI needs a fresh Unity build for phone testing. No phone connected. Details in `docs/WALKING_PLUGIN_REPAIR.md`.
+
+## Approved Peach expressions and visible filling — October 13
+
+Implemented and applied locally from `codex/peach-expressions`: short blink, squint on compression, lifted expression; stronger moving reflections and transparent shell over six cream pearls/six gold flecks. Approved mesh/paint and other Pips unchanged. Unity 6000.6.5f1: 28/28 PlayMode and 16/16 EditMode tests passed; portable/source checks and fixed renders passed/inspected. New APK/device frame time unverified. See `docs/PEACH_EXPRESSIONS.md` and `docs/captures/peach-expressions/`.
+
+Fox owner test award also applied to actual editor save (UI verified five toys, up from four). Grant and owned-ID HUD selection are on `codex/fox-owner-test`, 30 PlayMode tests passed. Resource `FoxOwnerTestGrant.txt` awards once on non-batch startup, preserves existing counts/steps/pending reveal, and must be disabled before public distribution. Owner explicitly approved the necessary HUD changes; Claude Settings cleanup preserved.
+
+UX-025/030/033: ten approved Fox finishes available; Aurora special metadata, owner test grants and per-finish HUD selection implemented. Phone APK prepared; device review pending. See FOX_FINISHES.md.
+
+October 14 — UX-030/033, ART-002: Axolotl plush is the fourteenth collection. Uploaded art playable by stable ID; nine finish concepts unimplemented. Unity front render upright inspected; owner local assets applied. Device review pending. See AXOLOTL_IMPORT.md.
+
+UX-025/030/033, ART-002 — owner confirmed all ten Pip finishes on approved latest shared shape/face. Moon/Gold/Mint now use it; six remaining finish materials implemented. Owned IDs/rewards preserved; render/test/build verification in LATEST_PIP_COLLECTION.md.
+
+Owner-approved Pip special: glow slot is now Starlight Glow · Ultra rare, stable ID pip.glow-jelly, collection secret identity. Existing secret UI badge/concealment uses this metadata. Shared approved mesh and aqua glow/iridescent material retained; no inventory grant, box odds or reward pool changes.
+
+ART-005 / UX-033 / UX-039 Fox art set: five distinct worlds, separate text-free 3:1 cover and opening-ready 3D box + PNG renders implemented locally on codex/fox-art-set. Owner's Fox v2 tail replacement applied to all ten finishes with stable IDs/GUIDs. Claude's five-world picker/cover integration and model-specific facial/tail animation are still pending. Every collection must meet COLLECTION_ART_STANDARD.md, including nine common + one rare within ten and mandatory eye/mouth/idle/touch/sound-expression support.
+
+
+October 14 — ART-005 / UX-033 / UX-039 Pip art set implemented locally on codex/pip-art-set: five unique painted worlds/reflection maps, text-free 3:1 cover and native opening-ready mystery carton with transparent PNGs. Claude five-world/cover UI hookup and phone visual acceptance remain pending.
+
+
+October 14 — ART-002/005 UX-033/039: Axolotl finishes, cover, five worlds, native carton and local blink/mouth/wave controls implemented for testing. Owner grant fills ten missing copies on updated build. Claude six-spot selectable shelf, cover/world picker and stage viewport integration remain pending.
+
+
+October 15 UX-025 / UX-039 local implementation: free yaw/pitch rotation, no plate, hold squish for soft finishes, pinch zoom/two-finger pan/double-tap reset, eased StageViewport framing, Calm-safe backdrop parallax and camera-centred halo. Runtime/portable checks and render review recorded in FREE_TOY_VIEW.md. Phone acceptance remains pending.
+
+UX-025/039 October15 owner feedback: free rotation and glow accepted on phone. Material-aware pair controls implemented: soft pinch/stretch/press/lift, rigid zoom/pan; focused Unity5/5 and Core/source passed, revised phone feel pending owner review.
+
+UX-025 October15: five Fox tap reactions implemented locally with tail, ears and eyes/mouth; all ten finishes preserve rigid touch handling and existing gestures. Unity7/7 and portable/source checks passed; phone feel/performance acceptance pending. See FOX_REACTIONS.md.
+
+UX-025/029 October15: Axolotl now has five random tap reactions with animated face/gills/arm/tail. Owner requested ten-character roster cleanup applied to catalog/resources; active8 collections including planned Tula. Core/source and focusedUnity10/10 passed; full suite and phone/build follow in VALIDATION.md. See ACTIVE_ROSTER.md and AXOLOTL_REACTIONS.md.
+
+
+UX-005 Firb extension: five random/no-repeat tap reactions implemented (branch wave, star nod, ornament shimmy, happy hop, sleepy sway), all ten finishes, Calm and existing material gestures. Runtime tests and native capture tracked in VALIDATION.md; owner device acceptance pending.
+
+
+UX-005 Coco extension: five random/no-repeat tap reactions implemented (handle hello, marshmallow bounce, cream wobble, happy hop, cozy sway), with faces, all ten finishes and Calm. Runtime validation and device status tracked in VALIDATION.md.
+
+
+UX-005 Ginger extension: five random/no-repeat tap reactions implemented (cookie wave, ear wiggle, button dance, happy hop, sweet bow), with expressions, all ten finishes and Calm. Verification and phone status are tracked in VALIDATION.md.
+
+
+UX-005 Snowy extension: five random/no-repeat tap reactions implemented (mitten wave, pom wobble, frosty shuffle, snow hop, cozy nod), with facial expressions, all ten finishes and Calm. Verification and phone status are tracked in VALIDATION.md.
+
+
+UX-038 material spike: Dusk/Sorbet prototypes added to a temporary Pip Fusion Lab for owner device review. Separate from the preview-only fusion service; no parents consumed or production fusion ledger. Runtime material/grant tests and native renders added. Device result recorded in VALIDATION.md.
+
+
+UX-025 owner sizing follow-up: soft toys enlarged25% in width-limited portrait views; vertical reaction room, soft pinch/squish/stretch and rigid zoom preserved. Runtime/portable checks pass; device build/result in VALIDATION.md.
+
+
+UX-038 material spike extension: owner approved Honeydew/Eclipse for device testing. Four fixed studies in Pip Fusion Lab, v2 missing-copy grant, distinct materials and warm Eclipse halo, current Pip gestures/expressions/larger framing retained. Not fusion crafting; validation in VALIDATION.md.
+
+
+UX-038 review artifact: complete55-pair original Pip gallery generated with native views, parent/rule/review filters, pairing matrix and exportable Keep/Rework decisions. Four current phone studies reused, other51outcomes and all trait/reaction inheritance descriptions are proposals. Review at docs/fusion-review/pip-01/index.html; no additional app toys or production fusion logic added.
+
+
+UX-037/038 acceptance clarification (owner, October15): fused personalities form a new profile from both parents, determine interactions with other toys and can vary facial expressions by trait. Personality must not alter overall color/material. Separate appearance/personality outputs and trait/social/expression mappings need design and runtime implementation; gallery labels remain proposals.
+
+
+UX-037 Pip temperament face proof (October15): eight proposed temperaments, each with rest/tap/signature poses, close-ups, full-body stills and an animated loop at docs/personality-review/pip-01/index.html. Native editor-only projected face study keeps one Peach palette/finish across the comparison. Faint sculpted eye outlines remain during closure; production face cleanup is pending review. Personality runtime, weighted actions, social behavior, inheritance, saves and phone builds are outside this preview.
+
+
+UX-037/042 Pip temperament pass02 (October16): Claude’s Oct15 face-review changes applied in editor-only preview controls. Top-cut/angled lids, happy/sleep closure curves without glints, visible two-axis gaze, round surprise mouths, crooked grin, double/star glints and lower/central blush. Revised authored poses distinguish Grumpy/Show-off/Mischief/Dreamy/Calm; gallery at docs/personality-review/pip-02/index.html links preserved pass01. Native review proof only; no runtime temperament, personality assignment, glow/material capabilities or phone change. Faint source eye traces still need production surface cleanup.
+
+
+UX-037/042 October16: approved Pip pass02 expressions integrated into runtime; old eye outlines removed with nearest-shell depth handling. All eight face sets, rest/tap/signature interpolation, tactile rest-coordinate mapping and development-only eight-tap owner cycle implemented. Existing random body actions and finish recipes preserved. Core/source checks,15focused Unity tests and native56-view capture passed; Android build succeeded and walking JNI packaging passed. Installation/device acceptance tracked in VALIDATION.md. Personality inheritance, social runtime and weighted action selection remain separate.
+
+
+UX-037/042 October16 roster extension: all74currently playable finishes (7characters:14Pip/lab +60other finishes) support the eight temperament faces, rest/tap/signature progression, deformation-attached paint and development eight-tap test cycle. Native body actions, original art, material/handling recipes and inventory are preserved; Fox Classic uses the expression-capable custom finish shader. Tula remains planned. Source/Core checks,35existing runtime regressions and the re-run new lifecycle test pass; native276-view capture and Android build complete. Device acceptance/status recorded in VALIDATION.md. Weighted reactions, social runtime and fusion inheritance remain separate.
+
+
+October 16 UX-010/025 follow-up to Claude UiBuild20: runtime exposes CollectionSession.WalkingActive from successful Android sensor registration plus held permission, and the toy camera renders full-screen with StageViewport used only for eased framing. Existing soft/firm sizing, pinch handling, orbit/picking, background motion and centred halos preserved. All eight focused Unity tests passed, including a rendered fragment outside the former crop area and Claude's open-card viewport contract. Core/source checks passed. HUD consumption of WalkingActive remains Claude's lane; device sensor/revocation and framing acceptance remain owner verification.
+
+
+October17 ART-002/UX-005/037: Reiny/Guin/Bundy uploaded models imported as native readable meshes, ten finishes and one rare each, five random/no-repeat character actions, Calm and eight temperament faces. Current owner review adds missing 30 copies via development-only persisted grant. Scoped runtime files integrated with no HUD/PersonalityBook edits. Core checks and final focused Unity17/17 pass; native 138-still/450-frame review generated. Android packaging/device status in VALIDATION. Full cover/five-world/3D-box art sets remain pending for these new collections. Claude: author their dedicated personalities/dials/social copy when ready; generic personality fallback currently works.
+
+
+October 17 ART-004/005 and UX-037/038 integration: all three winter collection art sets complete (15 painted worlds/reflections, three 3:1 covers, three opening box models and six transparent renders). Combined latest Claude UiBuild22/live shelf/fusion board and runtime speech cues pass 89/89 PlayMode and 17/17 EditMode tests locally. This supersedes the winter art-pending status above. Production fusion crafting remains preview-only. CI and combined phone packaging status are recorded in VALIDATION and Codex's handoff.
+
+
+October17 winter finish readability: character-specific per-finish pigments and opt-in whole-toy flock/plush/foam surfaces now distinguish all thirty Reiny/Guin/Bundy variants. Native side-by-side gallery: [finish review](winter-trio-finish-review/index.html). Original Classic paint, character markings, IDs/inventory/personality and older holiday finishes preserved. Full local PlayMode90/90 passes; latest CI/phone status in VALIDATION.
+
+
+October17 UiBuild23 integrated: authored winter trio personalities/dials/speech now replace the fallback limitation, Home null-art/BoxHype picture mirroring fixes white boxes, and fusion previews blend readable transparent cutouts. Full local combined PlayMode90/90 passes; final CI/APK status in VALIDATION.

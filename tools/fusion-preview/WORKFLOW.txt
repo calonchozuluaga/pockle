@@ -1,0 +1,23 @@
+Pip fusion review gallery, pass 01
+
+Scope: all unordered combinations with replacement of the ten original Pip finishes: 55 total (45 cross-finish + 10 same-finish). Existing fusion studies are outcomes, not extra parents. The app's catalog, inventory and phone build are unchanged.
+
+Regenerate:
+  python3 tools/fusion-preview/build-pip-gallery.py
+  Run Unity6000.6.5f1 on an isolated project with current owner Assets, using:
+  -executeMethod Pockle.Editor.PipFusionGalleryCapture.Capture -fusionGallery <absolute path to docs/fusion-review/pip-01> -quit
+  The capture expects recipes.json and writes 165 PNGs to renders/. Copy the ten original finish captures from docs/captures/latest-pip-collection into parents/ if creating a new output folder.
+
+Open docs/fusion-review/pip-01/index.html. Use Parent or Rule filters; choose Front, Turned or Dark. The matrix mirrors unordered pairs for readability; mirrored cells open the same canonical result. Keep/Rework marks use browser localStorage; export a JSON review before changing browsers. If storage is blocked, the page displays a warning. Exported decisions are not applied to the app automatically.
+
+Rule proposal:
+- Preserve parent palettes as gradients or marbling, rather than average RGB.
+- Same-finish pairs deepen pigment and strengthen signature material cues.
+- Textile takes priority as a soft/fuzzy surface treatment.
+- Foam produces matte marbling or soft-touch coated surfaces.
+- Rigid parents produce a coated shell or a jelly glaze.
+- Jelly combinations retain translucent/pearl/sparkle cues.
+- Glow adds bounded local emission to the selected surface treatment.
+- Dusk, Sorbet, Honeydew and Eclipse use their current phone material factories, preserving actual existing study appearance.
+
+All personality labels and reaction descriptions are draft proposals, keeping Pip curious and sunny. No new animation is generated. Same-character restriction, selection-order independence and same-finish coverage are the review assumptions. Re-fusion, production recipe rules, personality inheritance and rarity remain separate decisions. Fuzz approximates pile, not individual fibers. Dark images show the shader on a dark field without an in-game halo or painted environment. The gallery intentionally exposes similar-looking outcomes so the owner can mark them for refinement.

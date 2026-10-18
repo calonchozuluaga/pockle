@@ -11,14 +11,11 @@ namespace Pockle.Editor
         private static void Open() { GetWindow<CharacterStudyWindow>("Character studies"); }
         private void OnGUI()
         {
-            EditorGUILayout.HelpBox("Press Play in the Pockle scene, then choose a draft model. Drag to lift, release to drop, or press J for a simulated shake. Review previews do not grant toys or write inventory.", MessageType.Info);
-            EditorGUILayout.LabelField("The current HUD still labels the viewer Pip.");
+            EditorGUILayout.HelpBox("Press Play in the Pockle scene, then choose a current model. Drag to turn, or tap for its signature reactions. Review previews do not grant toys or write inventory.", MessageType.Info);
             using (new EditorGUI.DisabledScope(!EditorApplication.isPlaying))
             {
-                if (GUILayout.Button("Preview Moss · Velvet Flock")) Preview(CharacterArt.MossStudyId);
-                if (GUILayout.Button("Preview Bop · Gloss Vinyl")) Preview(CharacterArt.BopStudyId);
-                if (GUILayout.Button("Preview Nook · Oat Bouclé Plush")) Preview(CharacterArt.NookPlushStudyId);
-                if (GUILayout.Button("Preview Nook · Lilac Mochi Foam")) Preview(CharacterArt.NookFoamStudyId);
+                if (GUILayout.Button("Preview Fox · Gloss Vinyl")) Preview(Pockle.Core.ToyCatalog.FoxId);
+                if (GUILayout.Button("Preview Axolotl · Plush")) Preview(Pockle.Core.ToyCatalog.AxolotlId);
             }
         }
         private static void Preview(string id)

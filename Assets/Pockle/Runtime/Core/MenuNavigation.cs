@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Pockle.Core
 {
-    public enum AppPage { Home, Shelf, Rewards, Social, Profile, Settings, Boxes, Play, Collections, Collection }
+    public enum AppPage { Home, Shelf, Rewards, Social, Profile, Settings, Boxes, Play, Collections, Collection, Personality, Fusion, FusionReveal, ShelfPick }
 
     /// <summary>Navigation history and per-page scroll survive visits, tabs and toy play.</summary>
     public sealed class MenuNavigation

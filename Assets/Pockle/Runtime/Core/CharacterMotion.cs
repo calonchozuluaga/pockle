@@ -38,17 +38,16 @@ namespace Pockle.Core
     {
         private static readonly CharacterIdleDefinition[] profiles = {
             new CharacterIdleDefinition("pip", "Jelly breath and curious bounce", 4f, 3.6f, .020f, 0, 3, 2, .10f),
-            new CharacterIdleDefinition("dew", "Sleepy breath and drowsy nod", 5.8f, 4.8f, .018f, 3, 0, 1, .065f),
             new CharacterIdleDefinition("tula", "Slow nod and tiny lift", 6.4f, 5.2f, .012f, 4, 0, 1, .035f),
-            new CharacterIdleDefinition("ripple", "Float and gentle fin-like bank", 4.8f, 3.8f, .008f, 2, 0, 4, .08f),
-            new CharacterIdleDefinition("moss", "Shy lean and garden peek", 5.4f, 4.5f, .012f, 3, 4, 2, .045f),
-            new CharacterIdleDefinition("nook", "Cozy stuffed breath and soft rock", 6f, 4.8f, .025f, 1, 0, 2, .04f),
-            new CharacterIdleDefinition("wisp", "Comet bob and curious turn", 3.8f, 3.1f, .008f, 1, 6, 3, .11f),
-            new CharacterIdleDefinition("loop", "Bow sway and cheerful bounce", 4.2f, 3.4f, .014f, 0, 4, 4, .09f),
-            new CharacterIdleDefinition("bop", "Firm show-off turn and top rock", 4.6f, 3.3f, 0, 0, 9, 3, .055f),
-            new CharacterIdleDefinition("rolo", "Firm robot nod and scan", 5.2f, 4f, 0, 4, 7, 0, .025f),
-            new CharacterIdleDefinition("mallow", "Moon sway and quiet peek", 6.2f, 5f, 0, 1, 3, 3, .04f),
-            new CharacterIdleDefinition("sprig", "Seed bob and sprout-like sway", 4.9f, 3.9f, 0, 3, 4, 2, .065f)
+            new CharacterIdleDefinition("fox", "Alert fox glance and gentle rock", 4.7f, 3.7f, 0, 2, 8, 1, .045f),
+            new CharacterIdleDefinition("axolotl", "Soft plush sway", 5.8f, 4.2f, 0, 1, 5, .5f, .025f),
+            new CharacterIdleDefinition("firb", "Evergreen branch sway", 5.3f, 4.1f, 0, 1, 2, 2.5f, .035f),
+            new CharacterIdleDefinition("coco", "Cozy cocoa wobble", 6.1f, 4.6f, 0, 1.5f, 3, 1.5f, .022f),
+            new CharacterIdleDefinition("snowy", "Snowy mitten greeting", 5.6f, 4.3f, 0, 2, 3.5f, 1.2f, .028f),
+            new CharacterIdleDefinition("ginger", "Gingerbread cheerful bounce", 4.5f, 3.5f, 0, .5f, 2.5f, 3.2f, .06f),
+            new CharacterIdleDefinition("reiny", "Reindeer curious nod", 5.4f, 3.8f, 0, 2, 4, 1.1f, .05f),
+            new CharacterIdleDefinition("guin", "Penguin cozy waddle", 5.8f, 4.2f, 0, .8f, 2.2f, 3.4f, .035f),
+            new CharacterIdleDefinition("bundy", "Pudding gentle wobble", 6.1f, 4.5f, 0, 1, 1.5f, 2, .045f)
         };
         private static readonly Dictionary<string, CharacterIdleDefinition> byId = BuildLookup();
         public static IReadOnlyList<CharacterIdleDefinition> Profiles { get; } = Array.AsReadOnly(profiles);

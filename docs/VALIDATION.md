@@ -2,6 +2,27 @@
 
 See [MESHY_PEACH_TEST.md](MESHY_PEACH_TEST.md) on `codex/meshy-peach-test`. Local conversion: 3,845 triangles / 3,951 vertices from the 64,102-triangle upload. Geometry, all 543,484 portable assertions, source/meta/whitespace checks pass (69 files / three profiles / five asmdefs / 154 GUIDs). Code `79cc98bb` passed **41/41 Unity tests** (15 EditMode + 26 PlayMode; no skips), import/shader and actual render captures in [CI 38315430626](https://github.com/calonchozuluaga/pockle/actions/runs/38315430626). Android packaging is now being requested through the repo's `build-apk` label; final status is on [PR #15](https://github.com/calonchozuluaga/pockle/pull/15). Phone acceptance/performance are unverified. Existing authored geometry/finish-reuse tests keep explicit reference art, with separate Meshy switch/render cases.
 
+
+## v2 screens 02: living shelf, personalities, fusion (UX-037/038, Claude)
+
+**Executed:** a Mono type-check against hand-written Unity API stubs, covering:
+- every HUD partial;
+- the new `PersonalityBook`, `PersonalityMotion`, `UiShapes` and `FusionService`;
+- Codex's real `Pockle.Core` sources.
+
+It checks names and types only, not real Unity signatures. `git diff --check` and the meta sync also pass. CI runs the portable checks and the Unity suites on the pull request.
+
+**New PlayMode tests (run in CI):**
+- **Living shelf:** the day and night moments for the default four Pips; four of twelve moments recorded and kept across a restart; the personality page with reactions, a found shelf friend and an unfound one; Play and Back from the personality page.
+- **Fusion preview:** a last copy is never offered; a spare already in a slot can't be picked again; the secret-recipe hint appears and clears; the reveal shows its traits and the preview note, with Add to shelf disabled; the inventory is unchanged.
+- **Existing tests:** the shelf-tile portrait counts now look only at the tiles, not the scene. The shelf now opens collections from the header's "All collections" button.
+
+**Not verified until the owner tries it on a phone:**
+- How the scene looks: toy bases sitting on the shelves, plank overlap, and the night colours.
+- Personality motion feel, and the voice chirp.
+- The stand-in fused picture.
+- Full-bleed pages under a notch.
+
 ## Animated shelf and undiscovered silhouettes (October 12, 2026)
 
 UX-033 integration from main `dca3ec3`: four bounded visible actors, one camera, up to four 192px targets at 15 fps; found toys deform actual meshes, missing slots use eager face-free outlines. Ownership/playability remains gated; unknown finishes/secrets never get a face or material. Shelf is now a Core tab root. Existing boxes, Pip art and tactile physics are preserved.
@@ -160,3 +181,241 @@ Install the target's Unity build support through Hub. Android requires its suppo
 - Transparency is a lightweight material approximation, without refraction or physically correct subsurface scattering. The authored crown no longer overlaps a separate shell. Inspect internal accent sorting, reflections, and blush on target hardware. Rotate through front, side, and back and confirm bright studio highlights move across the wet shell. There must be no pink materials, missing cubemap, or blown-out white toy on Android. The cubemap uses RGBAHalf where supported and RGBA32 otherwise; that fallback is not yet device-tested.
 - Haptics are basic vibration, not tuned iOS/Android native patterns.
 - Saved data consists of comfort preferences and the selected comparison variant. Inventory, edition issuance, and the collecting loop belong to later milestones.
+
+## October 13 — Fox collection
+
+Implemented on `codex/fox-collection` in the attached isolated worktree; collection/runtime/check files copied to this local project for Unity use. Fox is collection/character `fox`; uploaded art is `fox.gloss-vinyl`, with nine planned finish slots. No inventory grants or box-pool changes. Unity 6000.6.5f1: 29 PlayMode and 16 EditMode tests passed; portable/source/branch whitespace checks passed. Android/phone review pending. Existing local settings and Claude UI edits preserved; owner approved the one collection-count test assertion update. See `docs/FOX_MODEL_IMPORT.md`.
+
+Walking fix validation on isolated main-based branch: 17/17 EditMode and 27/27 PlayMode tests passed; rebuilt previous exported APK contains JNI class/API and ACTIVITY_RECOGNITION. Current local C#/Fox/UI needs a fresh Unity build for phone testing. No phone connected. Details in `docs/WALKING_PLUGIN_REPAIR.md`.
+
+## Approved Peach expressions and visible filling — October 13
+
+Implemented and applied locally from `codex/peach-expressions`: short blink, squint on compression, lifted expression; stronger moving reflections and transparent shell over six cream pearls/six gold flecks. Approved mesh/paint and other Pips unchanged. Unity 6000.6.5f1: 28/28 PlayMode and 16/16 EditMode tests passed; portable/source checks and fixed renders passed/inspected. New APK/device frame time unverified. See `docs/PEACH_EXPRESSIONS.md` and `docs/captures/peach-expressions/`.
+
+Fox owner test award also applied to actual editor save (UI verified five toys, up from four). Grant and owned-ID HUD selection are on `codex/fox-owner-test`, 30 PlayMode tests passed. Resource `FoxOwnerTestGrant.txt` awards once on non-batch startup, preserves existing counts/steps/pending reveal, and must be disabled before public distribution. Owner explicitly approved the necessary HUD changes; Claude Settings cleanup preserved.
+
+Fox orientation correction: imported FBX root axis transform now retained, with front facing the viewer. Corrected mesh applied in place, preserving asset GUID/subasset identity. Unity fixed render inspected upright; Fox is turn-only and deformation inputs leave vertices unchanged. Phone build review pending.
+
+Fox fix saved as `codex/fox-orientation-handling`: Unity 30/30 PlayMode tests, combined local portable/source checks passed. Upright front render inspected. Phone rebuild pending.
+
+October 14 Fox finishes: all ten Unity material renders inspected, portable/source checks pass. Unity finish and save/grant regressions passed; final result recorded below. Android APK built successfully from owner local snapshot, StepCounter and six JNI entry points verified in DEX. No phone connected; on-device visuals/performance and step tracking pending.
+
+Fox finishes saved on codex/fox-material-collection at 9a231a2. Unity 32/32 PlayMode and portable/source checks passed; final owner-local APK built and StepCounter packaging check passed. File: Builds/Pockle-Fox-Finishes.apk; grant runs on next app launch. No connected phone.
+
+Final combined Android preview: Builds/Pockle-Fox-Axolotl.apk built successfully from the current owner local snapshot. StepCounter plus all six JNI methods verified. Fox finishes award on startup; Axolotl collection import included. No phone connected for installation or visuals. Final combined Unity suite result recorded below.
+
+Final phone preview: Builds/Pockle-Fox-Axolotl.apk (37 MB). Combined snapshot passed 36/36 PlayMode tests; collection branch 16/16 EditMode and required portable/source/whitespace checks passed. Android build and walking JNI packaging passed. No phone connected; Fox awards run on app startup. Axolotl import is on codex/axolotl-plush; Fox finish topic on codex/fox-material-collection at 9a231a2.
+
+Sushi base: local Blender geometry/UV/material checks and independent GLB metadata checks passed; three views inspected. 11,998 triangles, one cream material, zero textures. Unity/phone integration pending.
+
+October 14 latest Pip collection validation: isolated topic suite 37/37 PlayMode passed (all ten repeated finish switches, original mesh/paint, actual latest silhouette topology, real Moon star geometry, owned/unowned new-finish shelf routing, fallback/picking/grip/seams); 16/16 EditMode passed. Portable and source checks passed. All ten actual Unity renders inspected. Android build from current owner local snapshot succeeded, walking class/all six JNI methods present. Current snapshot includes Claude's new stage UI and has two recorded UI test failures (37/39 passed); see Codex handoff. Those tests are not reported green and no merge performed.
+
+APK `Builds/Pockle-Pip-Collection.apk` installed on owner phone using `adb install -r` without uninstall/data reset, app launched and process/log activity confirmed. A screenshot attempt while device was Dozing returned black and was discarded; phone visuals/frame time/sensor behavior are not verified. Existing inventory/reward IDs unchanged; six newly available Pip finishes were not awarded automatically.
+
+## October 14 — UX-039 toy-stage runtime
+
+Unity 6000.6.5f1: 40/42 combined PlayMode tests passed. Both new world/light regression tests passed; remaining failures are the previously reported Claude MissingLineup and closed-tray finish-dot tests. EditMode 17/17 passed. Required portable checks passed (including 155 new catalog assertions); source checks passed for 100 files, 3 symbol profiles, 210 GUIDs. Four world renders inspected, Garden overlapping-card depth corrected and recaptured cleanly. Final Android development build succeeded: Builds/Pockle-Toy-Stage.apk. UI tests/combined CI are not green; owner device visuals and frame time are not verified. No engine, package or owner Android settings changed.
+
+UX-039 APK: StepCounter and all six JNI methods packaged; data-preserving phone install succeeded, running app/activity confirmed. No phone visual/frame-time verification claimed.
+
+## October 14 — Painted environment images and emitted light
+
+Built-in imagegen produced three original 1774 × 887 LDR paintings, saved under Resources/Worlds. Real Unity import created stable PNG/asset references and 128px cubemaps. Full PlayMode suite 41/43 passed (remaining two pre-existing Claude UI tests); after final halo tuning, all 3 targeted ToyStageRuntimeTests passed. Required portable/source checks passed: 103 source files / 3 symbol profiles / 224 GUIDs. Final fixed captures inspected: Fox Home, Garden, and rare Fox Midnight with visible halo. Final Android development build succeeded, walking class/six JNI methods packaged. Phone appearance/frame time and a green combined CI suite remain unverified. No Unity version/packages/owner Android settings changes.
+
+Painted-world APK installed successfully as a data-preserving update; launch/process 18763 confirmed. Final implementation commit de7027b on codex/painted-worlds.
+
+## October 14 — owner-requested Pip finish test grant
+
+Portable checks passed (14 new assertions cover all Pip finishes, restart, existing duplicates, other collections and reward state). Unity PlayMode PipOwnerGrantTests passed: durable saved inventory exists before Changed, one-time marker and repeated-call safety. Source checks passed (104 files / 3 profiles / 226 GUIDs). Temporary PipOwnerTestGrant resource fills missing available Pip slots only, including Starlight Glow; no save schema or box-odds change. Disable the owner grant resource before public distribution. Phone result recorded after installation.
+
+Pip grant APK: final Android build and StepCounter/six JNI packaging passed; install -r succeeded, preserving app data. Initial launch logged UnityFoldingFeaturesWrapper duplicate-init exception; a fresh force-stop/relaunch was issued. Phone disconnected before on-device grant count could be confirmed. Grant code/test passes and runs on next successful launch; device ownership/visual confirmation remains pending.
+
+Pip award confirmed after phone reconnect: collection card Complete, 10 of 10; detail 10 of 10 found; Starlight Glow tile Yours to play and secret banner You found Starlight Glow. Observed directly in device screenshots. Prior pending on-device ownership confirmation is resolved.
+
+## October 14 — Fox art set and updated tail model
+
+Latest owner Fox v2 imported and reduced from 251,754 to 30,000 triangles, 20,141 UV-split vertices; stable runtime/paint identities retained. All ten finish renders inspected upright. Fox art-set tests passed: five unique world maps bind correctly, cross-collection selection is rejected, cover/box resources load, native lid opens and calm motion limits it. Isolated PlayMode 44/46 passed (only the two previously recorded old Claude UI fixtures); EditMode 17/17 passed. Required portable/source checks passed: 108 C# files across 3 profiles, 257 GUIDs. Whitespace check passed for changed assets/source/docs.
+
+Cover original is exactly 2172×724 (3:1), visually inspected without text/overlays. Four new Fox paintings complement the existing Fox Hollow and each has a 128px baked reflection cube. Actual 1,253-triangle box exported to GLB with three opening tracks and native Unity FBX/prefab with a 1.958s clip; closed/open 1024px RGBA renders inspected and transparent corner alpha=0 independently checked. Source .blend retained. Final owner-local Android APK builds, StepCounter/six JNI entry points packaged. Five-world picker and separate cover integration remain Claude's work; facial/tail/limb rigs and device frame-time/release acceptance are not claimed complete.
+
+Four Christmas turnaround concepts were generated with imagegen, inspected and saved separately in ArtSource/ChristmasConcepts. They are image references for the owner's Meshy work, not imported runtime models or tested animation rigs.
+
+Fox surprise-box revision: owner requested prominent top/front Pockle branding, anonymous question-mark silhouette and patterned blind-toy packaging matching pockle-folded-box-concepts-02. Three imagegen print panels were applied to the actual carton; GLB/FBX/native prefab and closed/open transparent renders regenerated together. Revised geometry is 874 triangles, three GLB opening tracks, 1.958s Unity clip. Both targeted FoxArtSetTests passed again. Final Android build and walking JNI packaging passed. Source checks: 109 files across 3 profiles / 260 GUIDs. Source .blend packs its three print images for portability. Whitespace normalized after Unity import. Existing inventory preserved; new box art device appearance and broader new Claude UI remain owner review.
+
+Final mystery-box APK installation returned Success; subsequent cold launch/process 20585 confirmed after an initial startup exit. Device appearance/frame-time review remains pending.
+
+Final Pip art checks: targeted Unity PlayMode 8/8 passed; portable Core checks passed; source checks 109 C# files / 290 asset GUIDs, zero failures; git diff --cached --check passed. Phone build/install, combined UI and hosted CI not run. Branch codex/pip-art-set retained for review; no main merge.
+
+Axolotl final pre-device validation: all ten finish/face/gill render captures inspected; five worlds/cover and carton prints/closed/open renders inspected. Initial targeted PlayMode 9/9 passed; final combined owner-UI snapshot 51/53 passed including new event/calm reaction test, all Axolotl tests and grant durability. Corrected stale Pip HomeWorld runtime assertion; focused follow-up 3/4 passed, with only Claude live-preview UI fixture still failing. EditMode 17/17 passed. Portable/source/whitespace passed. Android owner build succeeded (639812855 bytes), walking StepCounter + six JNI entries verified. No hosted CI or main merge. Phone installation follows below.
+
+Final device update: Builds/Pockle-Axolotl-Art-Set.apk installed with adb install -r Success on owner serial28141FDH3000L5, preserving data. Cold launch succeeded; process31246 confirmed. Unity device log: Pockle owner test: Axolotl finishes saved (10/10). Existing Fox10/10 also visible; phone frame time and full Axolotl on-device visual acceptance remain pending. Owner explicitly requested publish after latest Claude note review; push of codex/axolotl-art-set, codex/pip-art-set and codex/live-shelf-background failed with missing GitHub HTTPS Username. Branches remain local, no main merge. Axolotl commit2d0ff69; shelf backdrop c97123e; Pip104e130.
+
+
+October 15 — UX-025/039 free toy viewer: final focused Unity 6000.6.5f1 PlayMode 7/7 and EditMode 17/17 passed in the owner integration snapshot. Required portable Core and source checks passed (135 C# / 494 asset GUIDs). Combined PlayMode 57/61; same four Claude shelf/personality failures as pre-change 55/59, detailed in Codex handoff. Actual front/tilted/rear renders generated; front Fox and tilted Starlight Pip inspected, plate absent/glow centred. Task-file whitespace checks passed; whole owner checkout diff-check still reports pre-existing ProjectSettings.asset whitespace and VISUAL_SYSTEM.md EOF blank line; these owner/Claude files were not edited. Phone gestures, frame time and Android package not verified; no install, hosted CI or merge. See FREE_TOY_VIEW.md.
+
+October 15 Pip reaction preview: Unity PlayMode4/4 passed and portable Core passed. Peak hop, peekaboo blink and bow captures inspected; five Unity-rendered GIFs created. Device/Android unverified; no new full-suite pass claimed. See PIP_REACTIONS.md.
+
+October15 random Pip taps: portable Core passed with exhaustive first/follow-up choice mapping; Unity focused3/3 passed including100 random requests with no consecutive repeat. No Actions tray; no phone/APK update.
+
+October15 owner Android update: current local Assets/Packages/ProjectSettings copied to isolated Unity6000.6.5f1 build snapshot; root settings untouched. Builds/Pockle-Rotation-Pip-Reactions.apk built successfully (235MiB compressed; BuildReport965007011 bytes). Walking APK check passed: StepCounter and six public JNI entries packaged in classes3.dex. Connected Pixel7Pro detected; install -r in progress. Runtime tests from preceding steps remain applicable; no new full-suite/CI claim.
+
+October15 phone update complete: Builds/Pockle-Rotation-Pip-Reactions.apk (235MiB) installed on owner Pixel7Pro with adb install -r Success, no uninstall/clear. Activity launch returned Status ok; running app process22994 confirmed, no matched runtime exception signatures in captured process log. Owner app data retained by in-place update; private save was not independently read because installed app is not debuggable. Build/walking-plugin checks passed. On-device gesture feel, reaction variety, framing and performance remain for owner acceptance; no automated pinch/drag/tap acceptance claim. No root ProjectSettings/Packages changes; build helper/snapshot only.
+
+October15 soft gesture restoration: portable Core and source checks (141 C# / 500 GUIDs) passed; Unity PlayMode5/5 (material routing, rotated/lifted glow, orbit, random reactions, Peach appearance) passed. Initial test used a nonexistent pip.mochi-foam ID; corrected fixture to existing MintId, preserving catalog identity. Android/device update follows.
+
+Material-touch Android build succeeded; walking StepCounter and all six JNI entries packaged. Task files pass whitespace checks. Root settings/packages and Claude UI untouched. Installation/owner feel confirmation recorded separately.
+
+Material-touch phone update complete: adb install -r Success, existing app data retained; launch Status ok and running process31919 confirmed on Pixel7Pro. Captured app log had 1 matching runtime exception signatures. Owner can now compare soft pinch/stretch/down-press/up-lift with rigid zoom/pan. No actual multitouch acceptance/performance claim until owner review.
+
+Device log detail: the matched line is Unity startup ClassNotFoundException for Play Core AssetPackManager, followed by normal initialization and the new “soft pinch/squeeze/lift · rigid zoom/pan” control log. The process continued running; no clean-log claim. APK embeds assets locally; the startup lookup itself was not investigated in this gesture task.
+
+October15 Fox reactions: focused PlayMode7/7 passed after correcting slow-frame animation timing to use full elapsed unscaled time. Portable Core and source checks145C#/504GUIDs passed. Tests cover all ten finishes, visible tail/eye movement, unchanged paws/source, exact neutral restoration,100 random no-repeat requests, finish/character switching and existing controls/Pip. Native jump/wag/tilt/blink captures visually inspected. Device/package verification follows.
+
+Fox reaction Android build succeeded (BuildReport979101246 bytes), walking StepCounter/six JNI entries verified, task whitespace checks passed. Install -r attempt could not start because owner Pixel28141FDH3000L5 is disconnected; no app data changed by the failed attempt. Asked owner to reconnect. APK ready at Builds/Pockle-Fox-Reactions.apk, preview docs/captures/fox-reactions/Fox-five-reactions.gif. No device acceptance/performance claim.
+
+Final Fox APK rebuilt with head-only bow: BuildReport979105217 bytes; walking StepCounter and six JNI entries pass. Focused Unity7/7, portable Core, source145C#/504GUID and task whitespace checks pass. Final native bow/closed eyes/wag/jump/tilt inspected; GIF refreshed. ADB inventory confirms no devices connected; final APK not installed. Ready at Builds/Pockle-Fox-Reactions.apk. Owner phone animation smoothness and gesture acceptance remain pending reconnect.
+
+Final owner integration PlayMode:58/64 passed. All Axolotl/retirement/Fox/Pip/material/viewer runtime checks passed with final shader. Six failures are in Claude CollectionUiTests: four previously recorded (EveryCollectibleHasALayeredPersonality: Firb; HomeAndShelfReflectProgressAndKeepUndiscoveredToysASurprise: old live preview count; PlayRoundTripRestoresShelfScrollAndSettingsKeepVolume: old button text; ShelfSelectionAndUnavailableCheckoutDoNotGrantToys: old four-preview expectation), plus two fixtures now targeting retired collections: CollectionsKeepLineupContextAndUseTheDisabledViewerBackdrop line494 asks for Moss, and ShelfAndLineupRenderForReview line130 asks for Loop. Claude: switch those planned fixtures to Tula and address existing four; no UI test edits were made here. Core/source passed. No full-green/CI/merge claim.
+
+Axolotl/roster final editor validation: EditMode17/17 passed, full PlayMode58/64 (all runtime/action/retirement tests pass; six Claude UI fixtures detailed above), portable Core/source149C#/496GUID and task whitespace pass. Moss/Bop/Nook archives preserve original source/meta GUIDs outside Assets. Final native shoulder-wave, sleepy face and bounce renders inspected; GIFs refreshed. Android combined build in progress; no new inventory grants or root ProjectSettings/Packages changes.
+
+Final combined Android package ready: Builds/Pockle-Axolotl-Reactions-Roster.apk, BuildReport978747971 bytes. Unity6000.6.5f1 Android build and walking StepCounter/all six JNI packaging checks passed. This supersedes the disconnected Fox-only install candidate and includes all three character reaction sets plus the eight-collection roster. ADB shows no connected devices; no phone installation or device animation/performance acceptance this turn. Source/portable/task-whitespace and EditMode17/17 passed; focused10/10, fullPlayMode58/64 with six UI-lane failures listed above.
+
+
+### Firb random tap reactions — October 15
+Implemented BranchWave, StarNod, OrnamentShimmy, HappyHop and SleepySway across all ten finishes, with coordinated facial expressions and no immediate repeat. Calm stays still with a small smile. Native Unity renders inspected for branch, star, shimmy, hop and sleepy face; GIF at docs/captures/firb-reactions/Firb-five-reactions.gif. Source mesh immutable; no save or inventory grant changes.
+
+Verified: portable Core checks passed, source checks passed (153 C# files, 512 asset GUIDs), focused Unity PlayMode 10/10 passed including Firb all-finishes/random/lifecycle and holiday/Fox/Axolotl/Pip/material/viewer regressions; task whitespace checks passed. Unity6000.6.5f1 Android build succeeded (BuildReport978824774 bytes), walking StepCounter and all six JNI packaging checks passed. APK: Builds/Pockle-Firb-Reactions.apk.
+
+Not verified: phone install/animation acceptance/performance (ADB shows no connected device). Full suite/CI was not rerun; six prior Claude UI fixture failures remain recorded above. No full-green CI or merge claim.
+
+
+### Coco random tap reactions — October 15
+Coco has HandleHello, MarshmallowBounce, CreamWobble, HappyHop and CozySway across all ten finishes, with facial expressions, no immediate repeats and a still Calm alternative. The cup and handle keep their shape while above-rim toppings move subtly. Native Unity frames inspected for all five actions; GIF at docs/captures/coco-reactions/Coco-five-reactions.gif.
+
+Verified: portable Core checks passed; source checks passed (157 C# files, 509 GUIDs in the final cleaned snapshot); focused Unity PlayMode13/13 passed, including Coco all-ten-finish random/reset/lifecycle, existing four character reaction sets, holiday art/materials, retired-study exclusion and character switching, material gestures and free viewer. Task whitespace checks passed. Final Unity6000.6.5f1 Android build succeeded (BuildReport979045074 bytes); StepCounter and all six JNI entries pass packaging checks. Final APK: Builds/Pockle-Coco-Reactions.apk. Retired character study files remain outside Assets.
+
+Not verified: phone installation/performance/owner acceptance, as ADB lists no connected devices. No new grants or save changes. Full UI suite/CI was not rerun; prior Claude UI fixture failures remain documented above. No root ProjectSettings/Packages or HUD edits.
+
+
+### Ginger random tap reactions — October 15
+Ginger now has CookieWave, EarWiggle, ButtonDance, HappyHop and SweetBow on all ten finishes, with smiles/surprised mouths/sleepy eyes, no consecutive repeats and a still Calm alternative. Local paw/ear/head shader joints carry the original icing and keep the head bow's feet planted. Source mesh and finish recipes remain unchanged. Native Unity frames inspected for all five actions; GIF at docs/captures/ginger-reactions/Ginger-five-reactions.gif.
+
+Verified: portable Core checks passed; source checks passed (161 C# files, 513 GUIDs); focused Unity PlayMode14/14 passed, including Ginger all-ten-finish/random/reset/lifecycle, the five existing character reaction sets, holiday materials/art, retired-study exclusion/character switching, material gestures and free viewer. Task whitespace checks passed. Unity6000.6.5f1 Android build succeeded (BuildReport979121459 bytes); StepCounter and all six public JNI entries pass packaging checks. APK: Builds/Pockle-Ginger-Reactions.apk.
+
+Not verified: phone installation, animation acceptance and performance (ADB lists no connected devices). Full UI suite/CI was not rerun; prior Claude UI failures remain documented. No new grants, save format changes, root ProjectSettings/Packages or HUD edits.
+
+
+### Snowy random tap reactions — October 15
+Snowy has MittenWave, PomWobble, FrostyShuffle, SnowHop and CozyNod on all ten finishes, with smiles/surprised mouths/sleepy eyes, no consecutive repeats and a still Calm alternative. Mitten, hat/pom and head masks preserve the original paint and source mesh. The final nod is gentle enough to keep the smile readable above the stationary scarf. Native Unity frames inspected for all five actions; GIF at docs/captures/snowy-reactions/Snowy-five-reactions.gif.
+
+Verified: portable Core checks passed; source checks passed (165 C# files, 517 GUIDs); final focused Unity PlayMode15/15 passed, including Snowy all-ten-finish/random/reset/lifecycle, the six existing character reaction sets, holiday material/art checks, retired-study exclusion/character switching, material gestures and free viewer. Task whitespace checks passed. Android build/packaging result follows below.
+
+Not verified: phone installation, animation acceptance and performance. Full UI suite/CI was not rerun; prior Claude UI failures remain documented. No new grants, save changes, root ProjectSettings/Packages or HUD edits.
+
+
+Snowy Android package verified: Builds/Pockle-Snowy-Reactions.apk built successfully in Unity6000.6.5f1 (BuildReport979229961 bytes). StepCounter and all six JNI entry points pass APK packaging checks. ADB reports no connected devices; not installed on the phone. This build includes all seven playable characters' reaction sets, the cleaned roster, and current owner UI snapshot. No owner performance/animation acceptance or full-green CI claim.
+
+
+### Dusk and Sorbet Pip fusion material studies — October 15
+Owner-approved fixed material studies in separate Pip Fusion Lab (`pip.fusion-dusk`, `pip.fusion-sorbet`), preserving regular Pip's ten members, secret/completion and all reward odds. Dusk gradient/pearl/translucency plus peach pearls/blue stars; Sorbet opaque soft marbling and reduced reflections. Native front/65-degree/back renders inspected, saved in docs/captures/pip-fusion-materials. These studies keep existing Pip reactions/expressions; no crafting, parent consumption or inherited personality implementation.
+
+Verified: portable Core checks including isolated membership, exact/idempotent grants and saved rewards passed; source checks169C#/522GUID passed; final Unity EditMode17/17 passed; full PlayMode69/70 passed. Both new PipFusionMaterialTests pass (approved native mesh/material reset/handling/expressions and durable one-time owner grant). All runtime checks pass. The sole remaining failure is Claude CollectionUiTests.CollectionsKeepLineupContextAndUseTheDisabledViewerBackdrop line494, still selecting retired Moss. Runtime Pip collection/grant tests now explicitly target CollectionId=pip, retaining the original ten-member checks alongside dedicated lab checks. Task whitespace checks passed. Android packaging/phone result follows below.
+
+No root ProjectSettings/Packages or HUD edits. Saves remain v2; resource-gated study grant preserves existing copies and saves before marker/HUD refresh. Production fusion remains preview-only. No full-green CI claim.
+
+
+Dusk/Sorbet Android/device result: Unity6000.6.5f1 build succeeded, Builds/Pockle-Pip-Fusion-Materials.apk (BuildReport979480006 bytes). StepCounter/all six JNI entries pass packaging checks. Installed successfully with adb install -r on Pixel7Pro28141FDH3000L5, preserving app data; app launched. Device Unity log at October15 16:33:58.729 (PID28559) confirms "Pockle owner test: Dusk and Sorbet saved for material review." This log occurs after inventory persistence. Existing gesture startup log appears and app remains running. Owner visual/tactile/performance acceptance remains to be done on the phone. Root source check also passed (169C#,528 GUIDs including local archived/source assets); isolated integration source count522 recorded above. No clean-log/CI/full-suite-green claim; the single old Moss UI fixture remains.
+
+
+### Larger soft-toy framing — October15
+Owner reported soft Pip fusion toys too small without pinch zoom. Soft materials now use horizontal half-width1.2 rather than1.5, making width-limited portrait views25% larger. Vertical minimum1.6 is retained for reactions/rotation. Rigid framing/zoom unchanged; soft pinch remains squish/stretch. Reset and material switching use the new default. No HUD/viewport layout, material, inventory or root ProjectSettings/Packages changes.
+
+Verified: portable Core checks pass (portrait scale ratio, invalid bounds, rigid baseline); source170C#/529GUID passes; focused Unity PlayMode7/7 passes (Dusk/Sorbet/rigid/reset/panel framing, viewer/halo/gesture regression, material and durable grant checks, Pip reactions); task whitespace passes. Unity6000.6.5f1 Android build succeeds, Builds/Pockle-Soft-Toy-Framing.apk (BuildReport979746909 bytes); StepCounter/all6JNI packaging passes. Full suite/CI not rerun; previous sole retired-Moss UI fixture remains recorded. Device install result follows. Initial phone screenshot was black (sleeping/locked); no before/after visual acceptance claimed.
+
+
+Soft framing Android update installed successfully with adb install -r on Pixel7Pro28141FDH3000L5, preserving app data; launch requested. Owner visual/tactile acceptance remains pending (no unlocked phone comparison captured). APK Builds/Pockle-Soft-Toy-Framing.apk, BuildReport979746909 bytes. Core/source170C#/529GUID, focused Unity7/7, task whitespace and walking/JNI packaging passed; no full-suite/CI claim.
+
+
+### Honeydew and Eclipse fusion material expansion — October15
+Four fixed Pip Fusion Lab studies now include Honeydew (jade/honey satin sparkle gel) and Eclipse (deep blue pearl jelly, simulated view-parallax golden ribbons, native gold stars, warm night halo). Original regular Pip ten/secret/completion, box odds, reactions/soft gestures and owner-approved larger framing remain intact. New owner grant marker v2 awards only missing studies for prior v1 owners, retaining existing Dusk/Sorbet duplicates and v2 save format. No crafting, parent consumption, production secret designation or personality inheritance.
+
+Verified: portable Core passes (four-member lab, 84 catalog entries/74 playable with regular roster preserved, idempotent save-safe grants); source170C#/529GUID passes; focused Unity12/12 passes including prior-v1 expansion award, all-four material/reset/mesh/handling/reaction checks, warm Eclipse vs subtle Honeydew night halo, regular Pip grants, viewer/framing/gesture regressions. Final native front/65/back and dark-background shader captures inspected and saved under docs/captures/pip-fusion-materials. Dark-background capture shows shader appearance; in-game halo is verified separately. Task whitespace passed. Android/device result follows below. Full suite/CI not rerun; older retired-Moss UI fixture remains previously documented. No root ProjectSettings/Packages or UI/HUD changes.
+
+
+Honeydew/Eclipse Android result: Unity6000.6.5f1 build succeeded, Builds/Pockle-Four-Pip-Fusion-Studies.apk (BuildReport979795045 bytes). StepCounter/all6JNI packaging checks pass. adb install -r returned Success for Pixel7Pro28141FDH3000L5, preserving app data. Subsequent launch command returned device not found: USB disconnected after installation. Therefore device startup/award persistence and appearance acceptance are not verified this turn. The v2 resource-gated startup grant will add missing Honeydew/Eclipse when the owner opens the updated app. No claim of observed phone awards or runtime acceptance.
+
+
+UX-038 Pip fusion review gallery (October15): generated all55 canonical unordered pairs of ten original finishes (45cross+10self), 165 native Unity512px front/turned/dark renders plus10 original-parent references. Exact pair-set coverage, no duplicate canonical keys, four existing factory overrides, finite bounded recipe parameters, PNG headers/dimensions/file completeness and parent image presence checked. Node syntax check passed for embedded gallery script. Unity6000.6.5f1 capture succeeded with PIP_FUSION_GALLERY_OK; source172C#/531GUID passed. Representative Dusk, foam/plush, flock/metal, matte/gloss, metal/glow and glow/self images inspected. Other renders generated but not individually approved. Browser layout/interaction not visually exercised; app browser open queued successfully. Gallery filters, local Keep/Rework and JSON export are review helpers; no runtime/catalog/save/grant/app build changes. No full-suite/CI claim.
+
+
+October15 — UX-037 Pip temperament face previews. Unity6000.6.5f1 editor capture in isolated /private/tmp/pockle-fox-phone-20261014 produced eight styles /48stills /512loop frames successfully (PipTemperamentFaceCapture). Eight ImageIO GIFs encoded at64frames each/0.07s. Generator validates24poses/channel bounds; exact48PNG/8GIF output counts, image dimensions and gallery JavaScript syntax passed. Representative final Sunny/Grumpy/Shy/Show-off/Dreamy/Sleepy/Mischief/Calm face and Shy full-body stills inspected. Faint original sculpted eye outlines remain during closure; editor front-paint projection/smoothed face shading is a design proof, not production face integration. Core checks passed; source175C#/535GUID across3symbol profiles,0failures. Task whitespace checked. Browser opening queued; full browser layout/click handling, all loop transitions, full Unity suites, CI and device behavior not verified. Source mesh/textures, runtime shader/driver, catalog/inventory and phone build unchanged.
+
+
+October16 — UX-037/042 temperament pass02. Native Unity6000.6.5f1 capture succeeded with no shader/C# errors: eight styles,48stills,512frames (/private/tmp/pip-face-preview-02-final.log). Capture now rejects ShaderUtil.ShaderHasError instead of reporting a pink shader render as success. Eight ImageIO loops encoded; exact48PNG/8GIF counts, PNG/GIF dimensions, all64GIF frames per loop,24bounded authored poses, embedded data, prior-pass link and Node JS syntax passed. Representative faces across all eight styles, Sunny full-body view and strong Grumpy/Shy/wink/sleep/star poses visually inspected during refinement; not every animation frame inspected. Core checks passed; source175C#/535GUID/3symbol profiles passed, stable .meta preserved, task whitespace passed. Browser opening queued, browser layout/click interactions not visually verified. Full Unity suites, CI and device not run. Editor-only shader/capture/generator and review artifacts changed; native source mesh/texture, production shader/driver, UI, saves and phone unchanged. Faint original eye traces remain a documented production cleanup item.
+
+
+October16 — UX-037/042 Pip runtime faces. Core checks including new PipFaceChecks passed; source178C#/539GUID/3symbol profiles passed. Unity6000.6.5f1 focused PlayMode15/15: first7face/reaction/appearance/variant tests, then8fusion-material/gesture/framing/latest-model tests. New test covers all14Pip finishes, rest UV coordinates through deformation, eight-style cycle, cancellation and unchanged source mesh/material recipes. Native runtime capture produced24expressions+32finish/front/side/back/squish views. Final representative wink/sleep and angled glow renders inspected: eye traces removed and discarded opaque face patch absent. Depth cleanup uses nearest-shell prepass; production material opacity settings remain intact. Task whitespace/meta checks passed.
+
+Builds/Pockle-Pip-Temperaments.apk built successfully (Unity BuildReport982173920bytes); Android shader build and StepCounter/all6JNI packaging passed. adb install-r returned Success on Pixel7Pro28141FDH3000L5; launch succeeded, PID1595 stayed running and Home was visually observed with existing inventory/shelf. Startup log contains a Unity java.lang.ClassNotFoundException for optional-looking AssetPackManager; no observed fatal crash and app reached Home. Cause was not investigated in this face task. Initial screen capture preceded loading completion; later phone screen was black again after a shelf tap attempt, so actual phone tap-cycle/gesture/appearance acceptance is not claimed. Owner to open any Pip and test all8faces, waiting ~2seconds between accepted taps. APK is a development build; enabled PipTemperamentOwnerTest resource cycles faces without saving them. Full suite/CI and phone frame-time profiling not run. No source-model/texture, inventory/save schema, HUD/UI, ProjectSettings or package edits.
+
+
+Phone follow-up: the later black screenshot was the display sleeping (dumpsys power mWakefulness=Dozing), not an observed app crash. KEYCODE_WAKEUP restored the Home screen; UnityPlayerActivity remained the top resumed activity. Actual Pip tap-cycle and performance acceptance still belongs to the owner.
+
+
+## All playable toy temperament faces — October 16, 2026
+
+All seven playable characters (74 finishes, including four Pip fusion studies) now support the eight authored temperament face sets. Fox, Axolotl, Firb, Coco, Ginger and Snowy use per-character face layouts, cleanup of baked eye paint/normal traces, nose guards and the shared runtime face shader. Their original body actions and material recipes remain intact. The development-only owner flag cycles Sunny → Grumpy → Shy → ShowOff → Dreamy → Sleepy → Mischief → Calm on accepted taps without saving a personality change. Tula stays planned.
+
+Verified: engine-free Core checks and source checks (182 C# files, three symbol profiles, 544 GUIDs, zero failures); 35 existing focused Unity regressions passed. The new lifecycle test initially used a scaled wait against an unscaled clock; after changing it to WaitForSecondsRealtime, its separate rerun passed (1/1). Final Unity 6000.6.5f1 capture produced 276 native images with no shader/compiler errors; representative faces, signature poses, finishes and angles were inspected. Gallery: docs/personality-review/roster-01/index.html. Gallery image existence/dimensions and JavaScript syntax passed; browser layout/interactions not visually verified.
+
+Android build succeeded: Builds/Pockle-All-Toy-Temperaments.apk (BuildReport 982418142 bytes). APK walking check passed StepCounter and all six JNI entrypoints. adb install -r returned Success on Pixel 7 Pro 28141FDH3000L5, and launcher intent was sent successfully. Install preserves app data. Owner phone face-cycle, gesture and performance acceptance remains pending; no full-suite, CI or merge claim. The package uses the earlier UiBuild19 snapshot; Claude's later UiBuild20 walking/framing notes are separate work. No source models/textures, inventory, save schema, root ProjectSettings/Packages or Claude HUD files changed in this task.
+
+
+## Claude UiBuild20 runtime handoff — October 16, 2026
+
+Isolated integration branch codex/walking-stage-framing at /private/tmp/pockle-walking-stage-framing. Scoped runtime/test files integrated into owner checkout. Full-screen camera uses an off-centre orthographic projection with StageViewport only for eased framing; ToyViewGesture uses the screen hit area with existing UI exclusion. WalkingActive API is independent of status text and stored steps, false for editor/read-only/disposed/failed or unregistered trackers. No HUD edits, reward rules, save migration, root settings or package changes.
+
+Verified: Core checks passed; source checks passed (183 C# files, three profiles, 557 GUIDs). Final focused Unity PlayMode run 8/8 passed: StageFramingTests, FreeToyViewTests, SoftToyFramingTests, StageBackdropTests, ToyTemperamentTests, CollectionUiTests.ToyStageShowsCollectionAndSwitchesWorldAndLight. The render test checks an actual magenta fragment above the requested framing rect, matching ray picking, full-screen rect, centring, scale, zoom and invalid-input handling. Initial render test failed because its moved collider needed Physics.SyncTransforms; corrected setup and final rerun passed. Other seven tests also passed on the initial run. XML: /private/tmp/walking-stage-tests-final.xml. Not verified: physical sensor availability/permission-revocation on Android, owner visual/tactile acceptance, full Unity suites or CI. Claude must switch WalkingOn to the new API in his HUD lane. Android packaging/device results follow below.
+
+
+Final packaging/device follow-up (October16): Builds/Pockle-Temperaments-Fullscreen.apk built successfully with Unity6000.6.5f1 (BuildReport982507531bytes), including all-toy faces and Claude UiBuild20 snapshot plus the uncropped camera/API changes. APK StepCounter/all6JNI packaging passed; install-r returned Success on28141FDH3000L5 and launch requested. Final owner source check183C#/545GUID zero failures. Scoped source/doc whitespace check passed; full owner-checkout git diff --check still reports existing Unity ProjectSettings.asset trailing spaces and docs/VISUAL_SYSTEM.md extra EOF blank line (outside this task, left intact). Phone visual/tactile/sensor acceptance and Claude HUD WalkingActive binding remain pending. No full-suite/CI/merge claim.
+
+
+## Winter trio native integration — October 17, 2026
+
+Branch codex/winter-trio-import, isolated owner-snapshot integration at /private/tmp/pockle-winter-trio-import; scoped files copied to owner checkout. Original uploads models/Reiny.glb, Guin.glb and Bundy.glb are unchanged. Blender4.5.3 converts 257250/263354/270892 source triangles respectively to30000 each, preserving UV/paint; per-model PROVENANCE.json records hashes and texture dimensions. Native Unity6000.6.5f1 assets normalize floor to-1 and maximum body extent to the established toy envelope. PNG imports explicitly use2D TextureImporter settings, stable GUIDs.
+
+Verified: engine-free Core checks passed, including catalog uniqueness/counts, three rares, 15 bounded actions, Calm, no-repeat mapping and idempotent thirty-copy grant. Initial portable runs exposed an outdated world fixture assuming every holiday already has art, then a duplicate Firb/Guin idle signature; fixture now distinguishes HasArtSet and Guin has a distinct waddle. Final Core run passed. First Unity integration12/12 passed; final expanded run17/17 passed (WinterTrioTests, ToyTemperamentTests, FreeToyViewTests, SoftToyFramingTests, HolidayCollectionTests, CharacterStudyTests, ToyExpressionTests and the play-card UI contract). This covers all30 finishes/reactions and persisted grant/restart, plus90 non-Pip face-capable finishes with immutable source meshes and unchanged material recipes. XML /private/tmp/winter-trio-tests-final.xml.
+
+Native rendering:138 stills (72 temperament poses, three source faces, three bodies and60 finish angles), 450 action frames encoded into three150-frame GIFs. Representative final body, closed/winking/grumpy faces and articulated action frames inspected; no final shader/compiler errors. Gallery docs/winter-trio-review/index.html; PNG counts/dimensions, referenced face files and gallery JS syntax checked. Browser opening queued; complete browser layout/click behavior and all animation transitions not visually verified. No live AI/network calls in play. No full-suite or CI claim, no physical performance profile. Current trio world/cover/box artwork remains explicitly pending; no full collection-art completion claim. Android/device result follows.
+
+
+Winter trio packaging follow-up (October17): Builds/Pockle-Winter-Trio.apk built successfully, BuildReport994567579bytes, exact Unity6000.6.5f1. StepCounter/all6JNI APK packaging passed. Final owner source checks193C#/582GUID/three profiles zero failures; scoped source/doc whitespace passed. OriginalGLB SHA256 matches provenance for allthree, source4K paint retained with2K runtime texture-import cap. adb install-rSuccess on Pixel7Pro28141FDH3000L5; launch sent. This APK uses the UI snapshot at task claim (before Claude's concurrent StageTalk/BubblePop and WalkingOn binding changes); those newer root UI files were preserved and not overwritten or claimed as verified/packaged. Final runtime grant/startup evidence to follow. Full owner diff whitespace still includes preexisting settings/design-note changes; root settings untouched.
+
+
+Winter trio device confirmation: October17 13:30:59.418 phone log PID27539 reports “Pockle owner test: Reiny, Guin and Bundy finishes saved (30/30).” App PID27539 remained running after launch. Thus install/startup and persisted test grant are verified; owner appearance/gestures/frame-time acceptance still pending. Startup again logs the preexisting AssetPackManager ClassNotFoundException before reaching the grant; no error-free startup claim. Not investigated as part of the model import.
+
+
+## Combined winter toys, art and Claude screens — October 17, 2026
+Isolated branch codex/winter-trio-ui-integration starts at main e19f28a and merges Claude's published b52023f history plus the owner's completed local UiBuild22 screen snapshot. Root Claude checkout/settings are preserved.
+- Exact Unity 6000.6.5f1: full PlayMode **89/89 passed** (/private/tmp/winter-integration-playmode-final.xml); full EditMode **17/17 passed** (/private/tmp/winter-integration-editmode.xml).
+- Initial PlayMode run was 87/89: two old Fox UI tests sought the removed Browse collections control. Integration fixtures now use Home collections · all; inventory/navigation assertions remain. Full rerun passed.
+- Portable Core checks passed. Source checks: 200 C# files, three symbol profiles, 695 GUIDs, zero failures. Whole-tree CI whitespace check passed after normalizing trailing whitespace in 131 text metadata files and an extra visual-system EOF blank line; GUIDs preserved.
+- All 15 native world captures and collection art metadata generated. Covers verified exact 3:1; box transparent alpha, bright RGB print tint and native opening/Calm behavior verified by tests. Image prompts and Blender sources retained.
+- New runtime cue test covers accepted/rejected taps across ten characters, squish/lift/turn/night/idle cues and unchanged inventory. Existing shelf, personality and fusion UI tests pass in the full suite.
+- No ProjectSettings or Packages changes in this integration. CI, combined Android packaging and owner visual/device acceptance remain pending until separately recorded below. Prior installed winter APK did not contain the latest UiBuild22/art snapshot.
+
+
+Combined phone build verified October17: Builds/Pockle-Winter-Integrated.apk built with Unity6000.6.5f1, BuildReport1353845532bytes; walking class/all six JNI entry points passed APK check. adb install-r succeeded on Pixel7Pro28141FDH3000L5 preserving data. Launch reached TactilePrototype controls log at20:33:01.246, PID29110 remained running. This build includes UiBuild22, full winter artwork and speech cues. Owner visual/interaction and physical walking acceptance remain pending. No new grant required: prior winter30-copy persisted grant retained. Publishing integration branch/CI pending.
+
+
+### Winter finish readability correction — October 17, 2026
+Owner device review found the new trio too similar. HolidayFinishMaterial now assigns each non-Classic finish its own character-specific pigment; Classic retains uploaded paint. Reiny spans cranberry/rose/emerald/peach/plum/mint/cobalt/copper, Guin cyan/lilac/coral/buttercream/berry/mint/violet/silver, Bundy honey/vanilla/raspberry/evergreen/lavender/cherry/rose gold, with each collection's rare glow kept distinct. Personality, collectible IDs, ownership, shapes and handling are unchanged.
+HolidayFinish's opt-in winter masks preserve cream patterns, Reiny's nose/hooves, Guin's beak and Bundy's holly/berries. Soft surfaces cover the whole toy while facial ink remains clean: short flock, curled boucle and smooth random foam pores have separate local normal/detail responses. New noise work is skipped on smooth finishes; older holiday characters keep existing material settings. Jelly transparency, confetti intensity and metal gloss increased for clearer differences.
+Review: docs/winter-trio-finish-review/index.html (60 native views, all thirty finishes, angle toggle); original character review and fifteen world captures refreshed. Full final local PlayMode90/90 passed including actual rendered pairwise differences for all thirty variants and material differences with identical pigments. Source202C#/three profiles/697GUIDs/zero failures, gallery targets/JS pass. CI and new phone package pending this revision; previous phone APK remains the pre-correction integrated build until separately recorded.
+
+
+### UiBuild23 final integration — October17
+Claude's completed nine-file snapshot adds BoxHype.Excited/empty-picture hiding to prevent white Home art, transparent cutout blending for fusion moment/reveal, and authored winter trio natures/dials/bubble overlays. Reiny Sunny (Eager and gentle), Guin Calm (Cosy and chilled), Bundy Show-off (Jolly and sweet), with the rare finish temperament differences authored by Claude. This supersedes the generic-trio-personality limitation above. Source personality affects expressions/social behavior, not finish pigment/material.
+Full local combined PlayMode90/90 passed after UiBuild23, including rendered finish comparisons and speech cue integration. Source202C#/three profiles/697GUIDs/zero failures and whitespace pass. The previous finish-correction head's downloaded GitHub XML confirms90/90 PlayMode17/17 EditMode; its Android job was cancelled to include this just-completed UI snapshot. Final replacement CI/APK pending here; owner checkout and settings remain preserved. Fox fixture selectors retained in integration.

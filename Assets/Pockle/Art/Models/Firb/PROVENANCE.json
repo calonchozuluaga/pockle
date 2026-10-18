@@ -1,0 +1,12 @@
+{
+  "source_file": "firb.glb",
+  "source_sha256": "cbbc4bfc43539afbf3638de366efcad81767e59d2871f3860ef9c814e9cf6000",
+  "source_triangles": 262162,
+  "runtime_triangles": 30000,
+  "texture_size": [
+    4096,
+    4096
+  ],
+  "conversion": "Weld source UV seams, decimate to about 30k triangles, retain original paint and UVs. Unity native build normalizes floor and viewer direction.",
+  "source_rigged": false
+}

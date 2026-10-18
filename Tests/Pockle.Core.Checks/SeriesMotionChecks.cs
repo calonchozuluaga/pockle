@@ -18,10 +18,10 @@ internal static class SeriesMotionChecks
         foreach (var series in ToyCatalog.Collections)
         {
             Assert(ToyCatalog.TryGetCollection(series.Id, out var found) && ReferenceEquals(found, series), "Collection lookup differs from presentation.");
-            Assert(series.SeriesNumber == (series.CharacterId == "pip" ? 1 : 0) && series.ReleaseDateUtc == null && series.RetireDateUtc == null, "Pip Series 1 was not preserved, or a date/other public series number was invented.");
+            Assert(series.SeriesNumber == (series.Id == "pip" ? 1 : 0) && series.ReleaseDateUtc == null && series.RetireDateUtc == null, "Pip Series 1 was not preserved, or a date/other public series number was invented.");
             Assert(!series.HasPublishedSchedule && !series.IsReleasedAt(Utc(2026, 10, 9)), "Unscheduled prototype masqueraded as a public release.");
-            Assert(!series.HasSecret && series.Odds.All(o => !o.IsSecret), "Existing regular figures acquired secret status.");
-            Assert(series.Members.Count >= 10 && series.Members.All(id => ToyCatalog.TryGetCollectible(id, out var item) && item.CharacterId == series.CharacterId && item.CollectionId == series.Id), "Collection lacks ten varieties or mixes distinct characters.");
+            Assert(series.HasSecret == (series.CharacterId == "fox" || series.Id == "pip" || series.CharacterId == "axolotl" || HolidayCatalog.IsCharacter(series.CharacterId)) && series.Odds.All(o => !o.IsSecret), "Existing regular figures acquired secret status.");
+            Assert((series.Id == PipFusionStudies.CollectionId ? series.Members.Count == 4 : series.Members.Count >= 10) && series.Members.All(id => ToyCatalog.TryGetCollectible(id, out var item) && item.CharacterId == series.CharacterId && item.CollectionId == series.Id), "Collection lacks ten varieties or mixes distinct characters.");
             Assert(!series.HasApprovedOdds && series.Pool == null && series.Odds.Count == 0, "A draft collection invented full-series draw odds.");
             Assert(series.ProductId.Length == 0 && series.BoxPriceTier.Length == 0, "Unapproved full-collection pricing was invented.");
             foreach (var odds in series.Odds)
@@ -29,7 +29,7 @@ internal static class SeriesMotionChecks
             Assert(!series.TryGetOdds("future.toy", out _) && !series.TryGetOdds(null, out _), "Unknown identity received display odds.");
         }
         Assert(!ToyCatalog.TryGetCollection(null, out _) && !ToyCatalog.TryGetCollection("jelly-garden", out _), "Legacy variant theme was treated as a character collection.");
-        Assert(ToyCatalog.Collectibles.All(c => !c.IsSecret), "A prototype collectible was silently made secret.");
+        Assert(ToyCatalog.Collectibles.Count(c => c.IsSecret) == 10 && ToyCatalog.Collectibles.Where(c => c.IsSecret).All(c => c.Id == ToyCatalog.FoxAuroraId || c.Id == ToyCatalog.PipSpecialId || c.Id == ToyCatalog.AxolotlSpecialId || HolidayCatalog.IsCharacter(c.CharacterId)), "A prototype collectible was silently made secret.");
         Assert(ToyCatalog.TryGetCollection("pip", out var pip) && pip.SeriesNumber == 1 &&
             pip.Members.Contains(ToyCatalog.PeachId) && pip.Members.Contains(ToyCatalog.MoonId) && pip.Members.Contains(ToyCatalog.GoldId),
             "Existing Pip finishes did not join one Series 1 collection.");
@@ -134,7 +134,7 @@ internal static class SeriesMotionChecks
             if (character.LeadFinishId.Contains("vinyl") || character.LeadFinishId == "coated-metallic")
                 Assert(sample.Compression == 0 && sample.Stretch == 0, "Firm lead character received jelly breathing.");
         }
-        Assert(signatures.Count == 12, "Distinct personalities collapsed into the same motion.");
+        Assert(signatures.Count == ToyCatalog.Characters.Count, "Distinct personalities collapsed into the same motion.");
         Neutral(CharacterMotion.Sample("unknown", 1)); Neutral(CharacterMotion.Sample(null, 1));
         // Warm up the static definitions and JIT before measuring the frame path.
         for (int i = 0; i < 1000; i++) CharacterMotion.Sample("pip", i / 60d);

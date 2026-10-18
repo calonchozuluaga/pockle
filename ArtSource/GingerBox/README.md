@@ -1,0 +1,1 @@
+Opening-ready original Ginger carton. Source: GingerCollectionBox.blend; GLB: models/GingerCollectionBox.glb; Unity FBX: Resources/Boxes/GingerCollectionBox.fbx. Frame 1 closed, 48 open; 24 fps. Lid and two dust flaps have independent real hinges. Product PNG renders come from the same geometry/materials. 874 triangles.

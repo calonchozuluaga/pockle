@@ -74,7 +74,8 @@ foreach (string meta in Directory.GetFiles(assets, "*.meta", SearchOption.AllDir
 foreach (string file in Directory.GetFiles(assets, "*", SearchOption.AllDirectories).Where(p => p.EndsWith(".unity") || p.EndsWith(".mat") || p.EndsWith(".pocklemesh.meta")))
 {
     foreach (Match match in Regex.Matches(File.ReadAllText(file), @"guid: ([a-f0-9]{32})"))
-        if (!guids.Contains(match.Groups[1].Value)) { Console.Error.WriteLine("Unresolved asset GUID in " + file); failures++; }
+        // Unity serializes Built-in Standard and other built-in shaders with this reserved GUID.
+        if (match.Groups[1].Value != "0000000000000000f000000000000000" && !guids.Contains(match.Groups[1].Value)) { Console.Error.WriteLine("Unresolved asset GUID in " + file); failures++; }
 }
 using (JsonDocument.Parse(File.ReadAllText(Path.Combine(root, "Packages", "manifest.json")))) { }
 Console.WriteLine($"C# syntax checked: {sources.Length} files across {profiles.Length} symbol profiles (default, Editor, Android). Assembly definitions checked: {assemblies.Length}. Asset GUIDs checked: {guids.Count}. Failures: {failures}.");

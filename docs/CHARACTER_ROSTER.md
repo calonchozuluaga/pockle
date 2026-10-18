@@ -90,3 +90,19 @@ Catalog migration and scalable UI/runtime loading are tracked separately as **UX
 ## Proposed collaboration
 
 Codex can own catalog/save migration, material interaction profiles, Unity runtime integration, and validation. Claude can refine the character/material concepts and collection presentation alongside the proposed UI lane. This extends the earlier proposed split; Claude's model/art scope and exact file ownership still need acknowledgment in their handoff. Avoid both editing the same HUD or generated character assets concurrently.
+
+October 14 refinement: each production collection contains exactly ten Pockles: nine common and one rare included. Required collection art is specified in COLLECTION_ART_STANDARD.md.
+
+## Current active roster — October15 owner update
+
+Pip, Tula, Fox, Axolotl, Firb, Coco, Snowy and Ginger remain:8 collections/80 slots, seven models playable. Loop, Mallow, Moss, Nook, Ripple, Rolo, Sprig, Wisp, Bop and Dew are retired from the app. This supersedes the older active launch-roster counts; historical plans remain above. See ACTIVE_ROSTER.md.
+
+
+## Winter trio import — October 17, 2026
+
+Owner filenames supply the app names: Reiny (reindeer; concept Tavi), Guin (penguin; concept Pogo), Bundy (Christmas pudding; concept Pud). Each is playable in ten finishes, nine common plus one rare glow: Solstice Glow, Polar Glow and Holly Glow respectively. They use the uploaded shapes, independent collections, five character-specific tap actions and eight temperament face sets. The draft gift-box character remains superseded.
+
+Current catalog: 11 characters including planned Tula, ten playable characters, 114 collectible entries/104 available, and 12 collection pages including the four-entry Pip Fusion Lab. These availability counts are not production reward-pool eligibility. Trio cover art, five dedicated worlds per character and 3D opening boxes/PNG renders are still the next art pass; Studio is the current environment. No borrowed collection art is assigned. Review: docs/winter-trio-review/index.html.
+
+
+October 17 art completion: Reiny, Guin and Bundy each have their own five environments (including a dark scene), text-free 3:1 cover, and real opening 3D mystery box with transparent product renders. Review: [winter trio art](winter-trio-art-review/index.html). The earlier Studio-only/art-pending note is superseded. Dedicated personality nature/dial/social copy remains Claude's follow-up; all eight expression styles are supported.

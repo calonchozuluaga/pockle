@@ -1,0 +1,12 @@
+{
+  "source_file": "coco.glb",
+  "source_sha256": "2d37bae6e8139f14d48fc8e96187ce1447311fe3dfa8b99d52d30825a7fbaeed",
+  "source_triangles": 330066,
+  "runtime_triangles": 30000,
+  "texture_size": [
+    4096,
+    4096
+  ],
+  "conversion": "Weld source UV seams, decimate to about 30k triangles, retain original paint and UVs. Unity native build normalizes floor and viewer direction.",
+  "source_rigged": false
+}

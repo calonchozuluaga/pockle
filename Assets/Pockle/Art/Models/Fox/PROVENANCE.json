@@ -1,0 +1,15 @@
+{
+  "source_file": "Meshy_AI_vinyl_toy_red_fox_v2_1014202109_image-to-3d-texture.glb",
+  "source_sha256": "2755f70202d3ee817e46879c6fc715c5ea8ca854925a665b84649a33758bf95d",
+  "source_triangles": 251754,
+  "runtime_triangles": 30000,
+  "runtime_vertices_before_uv_splits": 15000,
+  "welded_source_duplicates": 10370,
+  "texture_size": [
+    65536,
+    4292935692
+  ],
+  "conversion": "Weld, decimate to approximately 30000 triangles, source UVs and base-color texture retained",
+  "material": "Owner source paint retained; gloss vinyl preview roughness 0.25; all ten runtime finish recipes share the updated mesh.",
+  "status": "Owner-approved Fox v2 tail replacement, native Unity runtime rebuilt with existing stable identity."
+}

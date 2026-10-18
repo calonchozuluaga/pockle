@@ -6,13 +6,14 @@ using UnityEngine.UI;
 
 namespace Pockle.Runtime
 {
-    /// <summary>Four visible actors, one disabled camera, and at most four 192px live targets at 15 fps.</summary>
+    /// <summary>Four visible actors, one disabled camera, and at most four 192px live targets at 30 fps.</summary>
     [DisallowMultipleComponent]
     public sealed class ShelfPreviewRuntime : MonoBehaviour
     {
         public const int Capacity = 4;
         public const int Resolution = 192;
-        public const float FramesPerSecond = 15f;
+        // 15 fps read as stutter against the HUD's full-rate motion on device (owner review, October 14).
+        public const float FramesPerSecond = 30f;
         public sealed class Binding
         {
             internal RawImage Picture;
@@ -21,6 +22,8 @@ namespace Pockle.Runtime
             internal string Id, Profile;
             internal bool Found;
             internal float Phase;
+            /// <summary>Clear colour for live frames; null uses the toy's own colour field.</summary>
+            internal Color? Background;
         }
         private sealed class Actor
         {
@@ -48,6 +51,8 @@ namespace Pockle.Runtime
         private float nextFrame;
         private bool disposed;
         public int ActiveCount => budget.ActiveCount;
+        /// <summary>When false, missing silhouettes are left to the HUD's own 2D motion and take no actor slot.</summary>
+        public bool AnimateMissing { get; set; } = true;
         public int ActiveSilhouetteCount { get { int count = 0; foreach (var actor in actors) if (actor.Binding != null && !actor.Binding.Found && actor.Slot != null) count++; return count; } }
         public int AllocatedTargetCount { get { int count = 0; foreach (var actor in actors) if (actor.Target != null) count++; return count; } }
         public int CameraCount => portraitCamera != null ? 1 : 0;
@@ -55,13 +60,17 @@ namespace Pockle.Runtime
 
         public void Initialize(RectTransform visibleViewport) { viewport = visibleViewport; }
         public void SetOcclusion(RectTransform overlay) { occluder = overlay; InvalidateView(); }
-        public Binding Register(RawImage picture, CharacterSilhouetteGraphic silhouette, string id)
+        public Binding Register(RawImage picture, CharacterSilhouetteGraphic silhouette, string id) => Register(picture, silhouette, id, null);
+
+        /// <summary>Registers a toy that stands on a scene colour (the living shelf) rather than its own colour tile.</summary>
+        public Binding Register(RawImage picture, CharacterSilhouetteGraphic silhouette, string id, Color? background)
         {
             if (picture == null || silhouette == null || !ToyCatalog.TryGetCollectible(id, out var definition))
                 throw new ArgumentException("A shelf preview needs a catalog ID and both presentations.");
             silhouette.Configure(definition.CharacterId, definition.IsSecret);
             var binding = new Binding { Picture = picture, Silhouette = silhouette, Id = id,
-                Profile = definition.IsSecret ? "pip" : definition.CharacterId, Fallback = picture.texture, Phase = bindings.Count * .173f };
+                Profile = definition.IsSecret ? "pip" : definition.CharacterId, Fallback = picture.texture, Phase = bindings.Count * .173f,
+                Background = background };
             bindings.Add(binding); return binding;
         }
         public void Unregister(Binding binding)
@@ -72,11 +81,19 @@ namespace Pockle.Runtime
         public void SetFound(Binding binding, bool found)
         {
             found = found && ToyCatalog.TryGetCollectible(binding.Id, out var definition) && definition.Available &&
-                PipVariants.TryFromCollectibleId(binding.Id, out _);
+                CharacterArt.TryLoad(binding.Id, out _);
             if (binding.Found != found)
             { foreach (var actor in actors) if (actor.Binding == binding) Release(actor); binding.Found = found; }
             binding.Picture.gameObject.SetActive(found);
             binding.Silhouette.gameObject.SetActive(!found);
+        }
+        /// <summary>Changes a scene toy's still picture and live clear colour together, e.g. when the shelf turns to night.</summary>
+        public void SetPresentation(Binding binding, Texture fallback, Color background)
+        {
+            if (binding == null) return;
+            binding.Fallback = fallback; binding.Background = background;
+            bool live = false; foreach (var actor in actors) if (actor.Binding == binding) live = true;
+            if (!live && binding.Picture != null) binding.Picture.texture = fallback;
         }
         public void SetCalm(bool value) { if (calm == value) return; calm = value; InvalidateView(); }
         public void SetBlocked(bool value) { if (blocked == value) return; blocked = value; if (value) InvalidateView(); }
@@ -108,7 +125,7 @@ namespace Pockle.Runtime
             { InvalidateView(); return; }
             wanted.Clear(); visibleFound.Clear(); visibleMissing.Clear();
             foreach (var binding in bindings)
-                if (InsideViewport(binding)) { if (binding.Found) visibleFound.Add(binding); else visibleMissing.Add(binding); }
+                if (InsideViewport(binding)) { if (binding.Found) visibleFound.Add(binding); else if (AnimateMissing) visibleMissing.Add(binding); }
             // A tall viewport can show both groups. Reserve room for the eager
             // silhouettes rather than letting the first four found toys starve them.
             int foundLimit = visibleMissing.Count > 0 ? Mathf.Min(2, visibleFound.Count) : Capacity;
@@ -157,7 +174,8 @@ namespace Pockle.Runtime
                 actor.Toy = toyObject.AddComponent<JellyToy>(); actor.Toy.Initialize();
                 actor.Animator = toyObject.AddComponent<ToyLineupAnimator>();
             }
-            actor.Root.SetActive(true); actor.Toy.SetVariant(PipVariants.TryFromCollectibleId(binding.Id, out var choice) ? choice : PipVariant.PeachJelly);
+            actor.Root.SetActive(true);
+            if (!actor.Toy.TrySetCollectible(binding.Id)) { Release(actor); return; }
             foreach (Transform child in actor.Root.GetComponentsInChildren<Transform>(true)) child.gameObject.layer = 30;
             actor.Animator.Configure(actor.Toy, budget, phaseOffset: binding.Phase);
             actor.Animator.SetVisible(true);
@@ -185,7 +203,7 @@ namespace Pockle.Runtime
             }
             portraitCamera.transform.position = actor.Root.transform.position + new Vector3(0, .18f, -5);
             portraitCamera.transform.LookAt(actor.Root.transform.position + new Vector3(0, .05f, 0));
-            portraitCamera.backgroundColor = PockleTheme.FieldFor(actor.Binding.Id);
+            portraitCamera.backgroundColor = actor.Binding.Background ?? PockleTheme.FieldFor(actor.Binding.Id);
             try { portraitCamera.targetTexture = actor.Target; portraitCamera.Render(); RenderedFrameCount++; }
             finally { portraitCamera.targetTexture = null; }
             actor.Binding.Picture.texture = actor.Target;

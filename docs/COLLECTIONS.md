@@ -1,6 +1,6 @@
 # Collections and series
 
-Owner decisions, October 9, 2026, and the UI and catalog plan that follows from them. **A collection is one character in ten or more varieties** (finishes and materials), plus an optional secret; Pip is Series 1. Box pools such as Jelly Garden, Midnight Glow, and Gold Confetti are themed boxes drawn from a collection, not separate collections. The catalog side is delivered in `docs/SERIES_AND_MOTION_API.md`. The screens are in the owner's design canvas "Pockle screens v2" (Collection, Collections, Shelf, Toy). Sample names such as Cloud Bakery and Lantern Night are placeholders, not approved content.
+Owner decisions, October 9, 2026, and the UI and catalog plan that follows from them. **A collection is one character in exactly ten varieties** (finishes and materials): nine common and one rare, included in the ten; Pip is Series 1. Box pools such as Jelly Garden, Midnight Glow, and Gold Confetti are themed boxes drawn from a collection, not separate collections. The catalog side is delivered in `docs/SERIES_AND_MOTION_API.md`. The screens are in the owner's design canvas "Pockle screens v2" (Collection, Collections, Shelf, Toy). Sample names such as Cloud Bakery and Lantern Night are placeholders, not approved content.
 
 ## Product rules (decided)
 
@@ -45,7 +45,7 @@ The box can be opened at any tier; opening it ends the day's upgrades. Higher ti
 
 ## Screens (Claude, UI lane)
 
-- **Collection ("Who's inside")**: one character's full lineup, all ten or more varieties plus the secret slot. Found toys idle with a gentle squish; unfound toys are silhouettes that hop and wave with "!" and "?" bubbles; the box bobs and wiggles; the secret appears as a twinkling silhouette with its odds. Actions: "Open a box" (price) and "Walk for one". Motion stops under Motion calm / reduced motion.
+- **Collection ("Who's inside")**: one character's full lineup, all ten varieties, including the rare slot. Found toys idle with a gentle squish; unfound toys are silhouettes that hop and wave with "!" and "?" bubbles; the box bobs and wiggles; the secret appears as a twinkling silhouette with its odds. Actions: "Open a box" (price) and "Walk for one". Motion stops under Motion calm / reduced motion.
 - **Collections**: newest series (character) as a large card, then "Earlier series" in release order, each with its series number, month, and your progress.
 - **Shelf**: grouped by character collection (newest series first) with per-series progress, collection filter chips with counts, and an Everything / Missing / Duplicates view. Missing shows the gaps in each set as silhouettes.
 - **Toy**: series and first-found date shown with the toy.
@@ -113,3 +113,5 @@ A third use for spares, alongside trading and crafting: fuse two spares into a u
 ## Backend (decided October 9)
 
 **Supabase** is the backend for accounts, server-owned inventory, finite supply, purchase validation, crafting, the ledger, and trading. Inventory and rewards are Codex's lane, so Codex drafts the schema and server functions against the rules above; Claude reviews them and builds the UI on top. Until it's live, the local save stays the source of truth and the UI marks online features as coming soon.
+
+October 14 art-set decision supersedes the earlier ten-plus-secret phrasing. Each collection gets five unique world paintings, a separate text-free 3:1 cover, and a real opening-ready 3D box plus PNG renders. See COLLECTION_ART_STANDARD.md.

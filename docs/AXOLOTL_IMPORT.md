@@ -1,0 +1,9 @@
+# Axolotl plush collection
+
+Owner-uploaded `Meshy_AI_fuzzy_axolotl_plush_3_1014140915_image-to-3d-texture.glb`, authorized October 14. Separate topic `codex/axolotl-plush` extends the completed Fox finish branch. Collection/character ID `axolotl`, available uploaded finish `axolotl.boucle-plush`, display Axolotl. Nine other slots remain concepts. No box-pool, prices, release schedule, inventory grants or save schema changes.
+
+Conversion reduces 3,864,118 source triangles to 30,000; Unity has 48,940 UV-split readable vertices. Original color paint and UVs retained, source seam positions welded, normals smoothed by shared rest position. Native asset uses the full imported FBX root transform plus viewer-facing rotation, uniform scaling capped to fit the phone stage, and a floor at y=-1. Source checksum and conversion details live in the model PROVENANCE.json. Runtime shader is opaque soft plush, with gentle wrapped light/rim and the uploaded painted fuzzy details; no strand-fur simulation. Plush material compliance/recovery are local and distinct from Fox's rigid turn-only interaction.
+
+Runtime `Resources/Characters/Axolotl/Axolotl.asset` and `AxolotlPlush.mat` share one native mesh/paint. Editor Character studies can preview it without altering inventory. Generic non-Pip HUD routing uses catalog titles and collection names; existing Settings untouched. Preview: `docs/captures/axolotl/plush-front.png`.
+
+Regeneration: Blender 4.5.3 `-b --python tools/import-meshy-axolotl.py -- <source.glb>`, sync metadata, then Unity `-executeMethod Pockle.Editor.AxolotlReviewCapture.After`. Existing native asset GUID and mesh subasset identity are preserved on rebuild. Native Unity tests check geometry budget/floor/framing, uploaded face/no Pip features, plush shader/handling, finite deformation and switches. Phone appearance/performance remain pending.

@@ -126,3 +126,9 @@ Start by inspecting the project and available development tools. Explain which p
 Continue the current collecting/UI milestone with organized source files and clear test instructions, using `UI_UX_TASKS.md` to track finished-game work. Distinguish shipped beta behavior, provisional designs, and online integrations still required.
 
 Do not silently replace the Unity app with a website. Keep tactile play satisfying as the mobile menus, collection, rewards, and social plans expand.
+
+Every collection requires exactly ten Pockles (nine common and one rare), five unique environment backgrounds, a separate text-free 3:1 cover illustration, and an opening-ready 3D box with PNG renders. See [COLLECTION_ART_STANDARD.md](COLLECTION_ART_STANDARD.md).
+
+## Current active roster — October15 owner update
+
+Pip, Tula, Fox, Axolotl, Firb, Coco, Snowy and Ginger remain:8 collections/80 slots, seven models playable. Loop, Mallow, Moss, Nook, Ripple, Rolo, Sprig, Wisp, Bop and Dew are retired from the app. This supersedes the older active launch-roster counts; historical plans remain above. See ACTIVE_ROSTER.md.

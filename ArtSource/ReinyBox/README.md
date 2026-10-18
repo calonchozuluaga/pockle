@@ -1,0 +1,1 @@
+Opening-ready original Reiny carton. Source: ReinyCollectionBox.blend; GLB: models/ReinyCollectionBox.glb; Unity FBX: Assets/Pockle/Art/Models/ReinyBox/ReinyCollectionBox.fbx. Frame 1 closed, 48 open; 24 fps. Lid and two dust flaps have independent real hinges. Product PNG renders come from the same geometry/materials. 874 triangles.

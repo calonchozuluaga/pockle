@@ -1,0 +1,1 @@
+Opening-ready original Coco carton. Source: CocoCollectionBox.blend; GLB: models/CocoCollectionBox.glb; Unity FBX: Resources/Boxes/CocoCollectionBox.fbx. Frame 1 closed, 48 open; 24 fps. Lid and two dust flaps have independent real hinges. Product PNG renders come from the same geometry/materials. 874 triangles.

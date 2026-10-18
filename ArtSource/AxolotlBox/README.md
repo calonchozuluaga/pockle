@@ -1,0 +1,1 @@
+Opening-ready original Axolotl carton. Source: AxolotlCollectionBox.blend; GLB: models/AxolotlCollectionBox.glb; Unity FBX: Resources/Boxes/AxolotlCollectionBox.fbx. Frame 1 closed, 48 open; 24 fps. Lid and two dust flaps have independent real hinges. Product PNG renders come from the same geometry/materials. 874 triangles.

@@ -1,0 +1,349 @@
+{
+  "version": 1,
+  "styles": [
+    {
+      "id": "sunny",
+      "name": "Sunny",
+      "restNote": "Open and welcoming",
+      "pokeNote": "A bright greeting smile",
+      "signatureNote": "Friendly smile",
+      "rest": {
+        "blink": 0,
+        "happy": 0.15,
+        "surprise": 0,
+        "lids": 0,
+        "frown": 0,
+        "glanceX": 0,
+        "glanceY": 0,
+        "blush": 0.12,
+        "wink": 0,
+        "mouthScale": 1
+      },
+      "poke": {
+        "blink": 0,
+        "happy": 0.8,
+        "surprise": 0.12,
+        "lids": 0,
+        "frown": 0,
+        "glanceX": 0,
+        "glanceY": 0,
+        "blush": 0.25,
+        "wink": 0,
+        "mouthScale": 1
+      },
+      "signature": {
+        "blink": 0,
+        "happy": 0.55,
+        "surprise": 0,
+        "lids": 0,
+        "frown": 0,
+        "glanceX": 0.2,
+        "glanceY": 0,
+        "blush": 0.2,
+        "wink": 0,
+        "mouthScale": 1
+      }
+    },
+    {
+      "id": "grumpy",
+      "name": "Grumpy",
+      "restNote": "Half lids, pout, looking away",
+      "pokeNote": "A stronger pout and side glance",
+      "signatureNote": "A reluctant little smile",
+      "rest": {
+        "blink": 0,
+        "happy": 0,
+        "surprise": 0,
+        "lids": 0.55,
+        "frown": 1,
+        "glanceX": 0.55,
+        "glanceY": 0,
+        "blush": 0,
+        "wink": 0,
+        "mouthScale": 1
+      },
+      "poke": {
+        "blink": 0,
+        "happy": 0,
+        "surprise": 0,
+        "lids": 0.8,
+        "frown": 1,
+        "glanceX": 0.85,
+        "glanceY": 0,
+        "blush": 0,
+        "wink": 0,
+        "mouthScale": 1
+      },
+      "signature": {
+        "blink": 0,
+        "happy": 0.3,
+        "surprise": 0,
+        "lids": 0.2,
+        "frown": 0,
+        "glanceX": 0.15,
+        "glanceY": 0,
+        "blush": 0.2,
+        "wink": 0,
+        "mouthScale": 0.8
+      }
+    },
+    {
+      "id": "shy",
+      "name": "Shy",
+      "restNote": "Small smile, lowered gaze, blush",
+      "pokeNote": "Looks away and partially closes its eyes",
+      "signatureNote": "Peeks back with a shy smile",
+      "rest": {
+        "blink": 0,
+        "happy": 0,
+        "surprise": 0,
+        "lids": 0.15,
+        "frown": 0,
+        "glanceX": -0.3,
+        "glanceY": -0.35,
+        "blush": 0.55,
+        "wink": 0,
+        "mouthScale": 0.72
+      },
+      "poke": {
+        "blink": 0.35,
+        "happy": 0,
+        "surprise": 0,
+        "lids": 0.4,
+        "frown": 0,
+        "glanceX": -0.75,
+        "glanceY": -0.4,
+        "blush": 0.9,
+        "wink": 0,
+        "mouthScale": 0.65
+      },
+      "signature": {
+        "blink": 0,
+        "happy": 0.3,
+        "surprise": 0,
+        "lids": 0,
+        "frown": 0,
+        "glanceX": 0.2,
+        "glanceY": 0.15,
+        "blush": 0.75,
+        "wink": 0,
+        "mouthScale": 0.8
+      }
+    },
+    {
+      "id": "show-off",
+      "name": "Show-off",
+      "restNote": "A broad confident grin",
+      "pokeNote": "A bigger delighted grin",
+      "signatureNote": "A camera-ready wink",
+      "rest": {
+        "blink": 0,
+        "happy": 0.4,
+        "surprise": 0.1,
+        "lids": 0,
+        "frown": 0,
+        "glanceX": 0,
+        "glanceY": 0,
+        "blush": 0,
+        "wink": 0,
+        "mouthScale": 1
+      },
+      "poke": {
+        "blink": 0,
+        "happy": 0.85,
+        "surprise": 0.25,
+        "lids": 0,
+        "frown": 0,
+        "glanceX": 0,
+        "glanceY": 0,
+        "blush": 0.2,
+        "wink": 0,
+        "mouthScale": 1
+      },
+      "signature": {
+        "blink": 0,
+        "happy": 0.25,
+        "surprise": 0,
+        "lids": 0,
+        "frown": 0,
+        "glanceX": 0.15,
+        "glanceY": 0,
+        "blush": 0.15,
+        "wink": 1,
+        "mouthScale": 1
+      }
+    },
+    {
+      "id": "dreamy",
+      "name": "Dreamy",
+      "restNote": "Soft lids, eyes looking upward",
+      "pokeNote": "A slow, curious surprise",
+      "signatureNote": "A quiet stargazing smile",
+      "rest": {
+        "blink": 0,
+        "happy": 0.1,
+        "surprise": 0,
+        "lids": 0.3,
+        "frown": 0,
+        "glanceX": 0,
+        "glanceY": 0.55,
+        "blush": 0,
+        "wink": 0,
+        "mouthScale": 1
+      },
+      "poke": {
+        "blink": 0,
+        "happy": 0,
+        "surprise": 0.5,
+        "lids": 0.15,
+        "frown": 0,
+        "glanceX": 0,
+        "glanceY": 0.7,
+        "blush": 0,
+        "wink": 0,
+        "mouthScale": 1
+      },
+      "signature": {
+        "blink": 0,
+        "happy": 0.25,
+        "surprise": 0,
+        "lids": 0.25,
+        "frown": 0,
+        "glanceX": 0,
+        "glanceY": 0.9,
+        "blush": 0,
+        "wink": 0,
+        "mouthScale": 1
+      }
+    },
+    {
+      "id": "sleepy",
+      "name": "Sleepy",
+      "restNote": "Heavy lids and a small relaxed mouth",
+      "pokeNote": "Briefly startled awake",
+      "signatureNote": "Eyes drift closed again",
+      "rest": {
+        "blink": 0,
+        "happy": 0,
+        "surprise": 0.25,
+        "lids": 0.85,
+        "frown": 0,
+        "glanceX": 0,
+        "glanceY": 0,
+        "blush": 0,
+        "wink": 0,
+        "mouthScale": 0.78
+      },
+      "poke": {
+        "blink": 0,
+        "happy": 0,
+        "surprise": 0.9,
+        "lids": 0.05,
+        "frown": 0,
+        "glanceX": 0,
+        "glanceY": 0,
+        "blush": 0,
+        "wink": 0,
+        "mouthScale": 1
+      },
+      "signature": {
+        "blink": 0.9,
+        "happy": 0.08,
+        "surprise": 0,
+        "lids": 0.75,
+        "frown": 0,
+        "glanceX": 0,
+        "glanceY": 0,
+        "blush": 0,
+        "wink": 0,
+        "mouthScale": 0.72
+      }
+    },
+    {
+      "id": "mischief",
+      "name": "Mischief",
+      "restNote": "A sideways, knowing smile",
+      "pokeNote": "A cheeky squint",
+      "signatureNote": "An uneven wink and sideways grin",
+      "rest": {
+        "blink": 0,
+        "happy": 0.3,
+        "surprise": 0,
+        "lids": 0.2,
+        "frown": 0,
+        "glanceX": 0.45,
+        "glanceY": 0,
+        "blush": 0,
+        "wink": 0,
+        "mouthScale": 1
+      },
+      "poke": {
+        "blink": 0,
+        "happy": 0.6,
+        "surprise": 0,
+        "lids": 0.35,
+        "frown": 0,
+        "glanceX": 0.75,
+        "glanceY": 0,
+        "blush": 0.1,
+        "wink": 0,
+        "mouthScale": 1
+      },
+      "signature": {
+        "blink": 0,
+        "happy": 0.3,
+        "surprise": 0,
+        "lids": 0,
+        "frown": 0,
+        "glanceX": 0.7,
+        "glanceY": 0,
+        "blush": 0,
+        "wink": 0.8,
+        "mouthScale": 1
+      }
+    },
+    {
+      "id": "calm",
+      "name": "Calm",
+      "restNote": "Relaxed, centered eyes and a gentle smile",
+      "pokeNote": "A small reassuring smile",
+      "signatureNote": "A slow, contented blink",
+      "rest": {
+        "blink": 0,
+        "happy": 0.06,
+        "surprise": 0,
+        "lids": 0.12,
+        "frown": 0,
+        "glanceX": 0,
+        "glanceY": 0,
+        "blush": 0,
+        "wink": 0,
+        "mouthScale": 0.9
+      },
+      "poke": {
+        "blink": 0,
+        "happy": 0.28,
+        "surprise": 0,
+        "lids": 0.12,
+        "frown": 0,
+        "glanceX": 0,
+        "glanceY": 0,
+        "blush": 0.12,
+        "wink": 0,
+        "mouthScale": 0.95
+      },
+      "signature": {
+        "blink": 0.7,
+        "happy": 0.18,
+        "surprise": 0,
+        "lids": 0.12,
+        "frown": 0,
+        "glanceX": 0,
+        "glanceY": 0,
+        "blush": 0,
+        "wink": 0,
+        "mouthScale": 0.9
+      }
+    }
+  ]
+}

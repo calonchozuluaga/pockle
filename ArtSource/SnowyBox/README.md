@@ -1,0 +1,1 @@
+Opening-ready original Snowy carton. Source: SnowyCollectionBox.blend; GLB: models/SnowyCollectionBox.glb; Unity FBX: Resources/Boxes/SnowyCollectionBox.fbx. Frame 1 closed, 48 open; 24 fps. Lid and two dust flaps have independent real hinges. Product PNG renders come from the same geometry/materials. 874 triangles.
