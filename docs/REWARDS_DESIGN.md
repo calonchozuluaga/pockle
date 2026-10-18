@@ -43,10 +43,23 @@ Items marked **CHANGED** replace an earlier rule in `COLLECTIONS.md` or `AGENT_C
 
 ## 6. Badges (pin board)
 
-- **Look:** 3D **enamel pins**. **One base pin model** in Unity; swap the icon and colours per badge. Pins spin and shine when tapped or unlocked. Players can later display pins on the shelf.
-- **Tiers:** bronze, silver and gold rims on the same pin. One model covers three rewards.
+- **Look:** 3D **enamel pins**. **One base pin model** in Unity; swap the icon, face colour and **rim material** per badge. Pins spin and shine when tapped or unlocked. Players can later display pins on the shelf.
+- **Ten ranks (like Biotadex).** **CHANGED** (was bronze, silver and gold). Every rank is the **same pin model with a different material**:
+
+  | Rank | Material | Rank | Material |
+  | --- | --- | --- | --- |
+  | 1 | Wood | 6 | Gold |
+  | 2 | Clay | 7 | Rose gold |
+  | 3 | Copper | 8 | Jelly (the toys' own jelly material) |
+  | 4 | Bronze | 9 | Pearl |
+  | 5 | Silver | 10 | Holographic |
+
+  - **Counter pins** (steps walked, boxes opened, fusions made, days played, recipes found) climb **all ten ranks**. Thresholds are proposed in the mockup; the owner tunes them. Example for steps: 10k, 25k, 50k, 100k, 150k, 250k, 500k, 750k, 1M, 2M.
+  - **Toy pins** use only **three** ranks because a toy has just 10 variants (below).
+  - **One-off pins** (first fusion, first 10k day, rivals made up, a finished series) are earned once at a **single fixed rank** chosen by how hard they are. Series pins sit at rank 9 (Pearl).
+  - Each earned pin shows its **rank number**, and the selected pin shows the full ten-step ladder with its current rank.
 - **Categories (tabs):**
-  - **Toys:** bronze at 5 of 10 variants, silver at 9 of 10, gold with the secret (all 10). The 5/9/10 thresholds are proposed. **CONFIRM.**
+  - **Toys:** rank 4 Bronze at 5 of 10 variants, rank 6 Gold at 9 of 10, rank 10 Holographic with the secret (all 10). Thresholds are proposed. **CONFIRM.**
   - **Series:** complete a whole collection. These are the big ones. When a series retires, its pins show a **VAULTED** stamp and can't be earned anymore.
   - **Traits:** every temperament, every material, a set of one temperament. These cut across series.
   - **Fusion:** first fusion, 10 fusions, discover every fusion in a collection.
@@ -57,7 +70,7 @@ Items marked **CHANGED** replace an earlier rule in `COLLECTIONS.md` or `AGENT_C
 ## 7. Milestones (progress wall)
 
 - **Lifetime counters that only go up:** steps walked, boxes opened, Pockles collected, fusions made, days played.
-- Each counter has **checkpoints**. Hitting one gives a **free box** or moves an Activity pin up a tier. No new art is needed.
+- Each counter has **checkpoints**. Hitting one gives a **free box** or moves a counter pin up a rank. No new art is needed.
 - **Screen:** one row per counter with a chunky bar and evenly spaced checkpoint dots, plus a chip with the next reward. Tapping a row lists every checkpoint and what it gives.
 - **Where:** You tab, next to the pin board.
 

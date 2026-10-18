@@ -11,6 +11,8 @@ October 16, 2026: rewards, badges, milestones and challenges designed (docs only
 
 The owner and I settled the reward and progression design. Full spec: [`../REWARDS_DESIGN.md`](../REWARDS_DESIGN.md). Mockups are in "Pockle screens v2", row "Badges, milestones and challenges" (`PinBoard`, `MilestoneWall`, `Challenges`). This branch is **docs only**; no code changed.
 
+**Update (October 17):** badges use **10 ranks** (Wood → Holographic), not bronze/silver/gold. Counter pins climb all ten, toy pins use ranks 4/6/10, one-off pins sit at one fixed rank. Details in `REWARDS_DESIGN.md` §6.
+
 **Rules that change earlier docs (owner still to confirm, see `REWARDS_DESIGN.md`):**
 - Walking box every **3 hours** at 1,000 steps (was daily).
 - Odds **75 / 22 / 3** (common / rare / secret) with 6 / 3 / 1 variants per toy. 3% is about 1 in 33, versus the 1-in-72 rule in `COLLECTIONS.md`.
@@ -19,14 +21,14 @@ The owner and I settled the reward and progression design. Full spec: [`../REWAR
 **What I'll build next (my lane, after the owner confirms):** HUD pages for the pin board, milestones wall and challenges, the Home quest entry with a claimable count, the claim moment (flip, confetti, sound hook), and the drop-rate panel on the paid box screen.
 
 **Requests for Codex:**
-1. **Definitions catalog:** data for badges (category, tier thresholds, icon, colours, series it belongs to), milestone counters with checkpoints and rewards, and challenge templates (cadence, goal type, target, reward).
+1. **Definitions catalog:** data for badges (category, kind = counter / toy / one-off, rank thresholds for up to 10 ranks or the single fixed rank, icon, colours, series it belongs to), milestone counters with checkpoints and rewards, and challenge templates (cadence, goal type, target, reward).
 2. **Progress and claims:** lifetime counters (steps, boxes opened, collected, fusions, days played) and per-challenge progress. Claims should be granted **exactly once** and saved before the reveal animation. Server-authoritative in the Supabase plan.
 3. **Resets:** daily, weekly and monthly reset times. Which timezone? Please propose.
-4. **Reward grants:** free box, shelf prop (new inventory type), exclusive Pockle, badge tier up.
+4. **Reward grants:** free box, shelf prop (new inventory type), exclusive Pockle, badge rank up (1–10).
 5. **Boxes:** the 3-hour walking cadence, odds from catalog weights, and an API the HUD can read for the drop-rate table (including remaining supply for capped series). Region gating so paid boxes are off in Belgium.
 6. **Serial numbers** per copy (already in the backend plan; confirm the HUD can read them).
 7. **Shelf events** for the Traits and Activity badges and the weekly shelf puzzles (for example, "two rivals made up", "2 calm next to 1 grumpy").
-8. **Pin prefab:** one enamel pin mesh with swappable icon texture and rim colour. Fine if that lands in my lane instead; say which you prefer.
+8. **Pin prefab:** one enamel pin mesh with a swappable icon texture and **ten rim materials** (Wood, Clay, Copper, Bronze, Silver, Gold, Rose gold, Jelly, Pearl, Holographic). Jelly should reuse `JellyCandy.shader`; Holographic needs a view-angle rainbow. Fine if this lands in my lane instead; say which you prefer.
 
 ## Pip render vs. concept, side by side (owner review of #11, October 10)
 
