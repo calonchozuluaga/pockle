@@ -10,6 +10,10 @@ namespace Pockle.Editor
         public static void Build()
         {
             WinterTrioWorldImport.Build();WinterTrioArtSetBuild.Build();
+            CaptureWorlds();
+        }
+        public static void CaptureWorlds()
+        {
             const string output="/private/tmp/winter-trio-art-review";Directory.CreateDirectory(output);
             foreach(string id in new[]{"reiny","guin","bundy"})
             {

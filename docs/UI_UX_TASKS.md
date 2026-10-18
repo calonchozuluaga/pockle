@@ -222,3 +222,6 @@ October17 ART-002/UX-005/037: Reiny/Guin/Bundy uploaded models imported as nativ
 
 
 October 17 ART-004/005 and UX-037/038 integration: all three winter collection art sets complete (15 painted worlds/reflections, three 3:1 covers, three opening box models and six transparent renders). Combined latest Claude UiBuild22/live shelf/fusion board and runtime speech cues pass 89/89 PlayMode and 17/17 EditMode tests locally. This supersedes the winter art-pending status above. Production fusion crafting remains preview-only. CI and combined phone packaging status are recorded in VALIDATION and Codex's handoff.
+
+
+October17 winter finish readability: character-specific per-finish pigments and opt-in whole-toy flock/plush/foam surfaces now distinguish all thirty Reiny/Guin/Bundy variants. Native side-by-side gallery: [finish review](winter-trio-finish-review/index.html). Original Classic paint, character markings, IDs/inventory/personality and older holiday finishes preserved. Full local PlayMode90/90 passes; latest CI/phone status in VALIDATION.

@@ -66,6 +66,9 @@ Shader "Pockle/Holiday Finish"
         _WinterNod ("Winter bow", Float) = 0
         _Gloss ("Glaze", Range(0,1)) = .3
         _Opacity ("Body opacity", Range(0,1)) = 1
+        _WinterPalette ("Winter finish pigment mask", Float) = 0
+        _SurfaceRelief ("Phone-scale surface relief", Range(0,1)) = 0
+        _LoopPile ("Curled boucle pile", Range(0,1)) = 0
         _Fuzz ("Velvet pile", Range(0,1)) = 0
         _Grain ("Foam grain", Range(0,1)) = 0
         _Metallic ("Brushed copper", Range(0,1)) = 0
@@ -84,6 +87,7 @@ Shader "Pockle/Holiday Finish"
     half _GingerPaw, _GingerEars, _GingerHead;
     half _SnowyMitten, _SnowyPom, _SnowyHead;
     half _WinterWave, _WinterFeature, _WinterNod;
+    half _WinterPalette, _SurfaceRelief, _LoopPile;
     half _Gloss, _Opacity, _Fuzz, _Grain, _Metallic, _Pearl, _Crystal, _Iridescence, _Glitter;
     #include "Assets/Pockle/Shaders/TemperamentFace.cginc"
     struct appdata { float4 vertex:POSITION; float3 normal:NORMAL; float2 uv:TEXCOORD0; float3 faceRest:TEXCOORD1; };
@@ -193,9 +197,30 @@ Shader "Pockle/Holiday Finish"
         o.local=v.vertex.xyz; o.normal=UnityObjectToWorldNormal(v.normal); o.uv=v.uv; o.face=v.faceRest; return o;
     }
     float hash(float3 p) { return frac(sin(dot(p,float3(127.1,311.7,74.7)))*43758.5453); }
+    float4 foamNoise(float3 p)
+    {
+        float3 cell=floor(p),f=frac(p),u=f*f*(3-2*f),du=6*f*(1-f);
+        float a=hash(cell),b=hash(cell+float3(1,0,0)),c=hash(cell+float3(0,1,0)),d=hash(cell+float3(1,1,0));
+        float e=hash(cell+float3(0,0,1)),g=hash(cell+float3(1,0,1)),h=hash(cell+float3(0,1,1)),j=hash(cell+float3(1,1,1));
+        float x00=lerp(a,b,u.x),x10=lerp(c,d,u.x),x01=lerp(e,g,u.x),x11=lerp(h,j,u.x);
+        float z0=lerp(x00,x10,u.y),z1=lerp(x01,x11,u.y);
+        float3 gradient=float3(lerp(lerp(b-a,d-c,u.y),lerp(g-e,j-h,u.y),u.z)*du.x,
+            lerp(x10-x00,x11-x01,u.z)*du.y,(z1-z0)*du.z);
+        return float4(lerp(z0,z1,u.z),gradient);
+    }
     half bodyMask(half3 paint)
     {
         half bright=smoothstep(.13,.36,max(paint.r,max(paint.g,paint.b)));
+        if (_WinterPalette > .5)
+        {
+            // Preserve cream bibs/muzzles, dark features and saturated red accessories.
+            half visible = smoothstep(.055,.20,max(paint.r,max(paint.g,paint.b)));
+            if (_PigmentKind > 2.5)
+                return visible * smoothstep(.16,.38,(paint.b-paint.r)/(paint.b+.03));
+            half warmth = (paint.r-paint.g)/(paint.r+.03);
+            return visible * smoothstep(.14,.31,warmth) * (1-smoothstep(.72,.9,warmth))
+                * smoothstep(.10,.27,(paint.r-paint.b)/(paint.r+.03));
+        }
         if(_PigmentKind<.5)return bright*smoothstep(.015,.12,paint.g-paint.r)*smoothstep(-.02,.10,paint.g-paint.b);
         if(_PigmentKind<1.5)return bright*smoothstep(.04,.18,paint.r-paint.g)*smoothstep(.03,.15,paint.r-paint.b)*(1-smoothstep(.65,.88,paint.r));
         if(_PigmentKind>2.5)return bright*smoothstep(.02,.12,paint.b-paint.r)*smoothstep(-.01,.06,paint.b-paint.g);
@@ -204,8 +229,37 @@ Shader "Pockle/Holiday Finish"
     fixed4 finish(v2f i, bool back)
     {
         half3 paint=TemperClean(i.face,tex2D(_MainTex,i.uv).rgb); half body=bodyMask(paint);
+        if (_WinterPalette > .5)
+        {
+            half front = 1-smoothstep(_TemperFront-.02,_TemperFront+.08,i.face.z);
+            body *= lerp(1,TemperKeepNose(i.face.xy),front);
+            if (_MotionKind < 4.5) body *= smoothstep(-.83,-.70,i.face.y);
+            if (_MotionKind > 5.5) body *= 1-smoothstep(.34,.43,i.face.y);
+        }
         if(back) { clip(.999-_Opacity); clip(body-.3); }
         half3 n=TemperNormal(i.face,normalize(i.normal)); if(back) n=-n;
+        // Body-local fibers/pile stay attached during rotation and animation.
+        half surface = _WinterPalette > .5 ? 1-TemperFeatures(i.face).a : body;
+        half3 fiber=0,curls=0;
+        half poreAmount=0;
+        // Uniform branches keep the additional surface work off smooth vinyl/jelly/metal.
+        if (_SurfaceRelief > .001)
+        {
+            if (_WinterPalette > .5 && _Grain > .5)
+            {
+                float4 pores=foamNoise(i.local*72);
+                fiber=pores.yzw*.4;
+                poreAmount=smoothstep(.55,.78,pores.x);
+            }
+            else
+            {
+                half fiberScale=lerp(110,48,_Grain);
+                fiber=half3(hash(floor(i.local*fiberScale)),hash(floor(i.local.yzx*fiberScale)+17),hash(floor(i.local.zxy*fiberScale)+39))-.5;
+            }
+        }
+        if (_LoopPile > .001) curls=sin(i.local.yzx*145+sin(i.local.zxy*81)*1.8);
+        half3 relief = fiber*_SurfaceRelief*.8+curls*_LoopPile*.20;
+        n=normalize(n+surface*(relief-n*dot(n,relief)));
         half3 view=normalize(_WorldSpaceCameraPos.xyz-i.world);
         half facing=saturate(dot(n,view)); half rim=1-facing;
         half3 key=normalize(half3(.64,.70,-.66));
@@ -214,10 +268,10 @@ Shader "Pockle/Holiday Finish"
         half brush=sin(i.local.y*680+i.local.x*8)*.5+.5;
         half detail=dot(paint,half3(.3,.5,.2));
         half gill=saturate((paint.r-paint.g)*2.0);
-        half3 pigment=_BodyColor.rgb*(.65+.35*detail)*(1-gill*.23);
+        half3 pigment=_BodyColor.rgb*lerp((.65+.35*detail)*(1-gill*.23),.88+.12*detail,_WinterPalette);
         half3 base=lerp(paint,pigment,body*_TintStrength);
         base*=.70+.30*wrapped;
-        base*=1-body*((grain-.5)*(_Fuzz*.08+_Grain*.07)+_Metallic*brush*.035);
+        base*=1-surface*((grain-.5)*(_Fuzz*.08+_Grain*.07)+_Metallic*brush*.035);
         half3 reflected=reflect(-view,n);
         half3 studio=lerp(texCUBE(_StudioCube,reflected).rgb,texCUBE(_StageEnvironment,reflected).rgb,_StageEnvironmentStrength);
         half3 across=normalize(cross(key,half3(0,1,0))); half3 along=cross(across,key);
@@ -228,7 +282,11 @@ Shader "Pockle/Holiday Finish"
         half3 spec=lerp(half3(1,.98,.95),_BodyColor.rgb,_Metallic*body*.8);
         base+=spec*glaze*(1-TemperFeatures(i.face).a);
         base+=body*_Metallic*(studio*_BodyColor.rgb*.55+spec*softbox*.20);
-        base+=body*_Fuzz*pow(rim,2)*half3(.25,.18,.14);
+        half loops = dot(curls,curls)/3;
+        base *= 1-surface*(_LoopPile*(.10+.20*loops)+_SurfaceRelief*_Grain*(.05+.10*abs(fiber.x)));
+        base+=surface*_Fuzz*pow(rim,2)*lerp(half3(.25,.18,.14),_BodyColor.rgb*.30+half3(.12,.12,.12),_WinterPalette);
+        base+=surface*_LoopPile*pow(saturate(1-loops),3)*.10;
+        base*=1-surface*_Grain*_WinterPalette*poreAmount*.12;
         half3 pearl=.5+.5*cos(half3(0,2,4)+facing*6);
         base+=body*_Pearl*pearl*(.06+.12*rim);
         half3 aurora=.5+.5*cos(half3(.5,2.4,4.4)+facing*9+i.local.y*1.8);
