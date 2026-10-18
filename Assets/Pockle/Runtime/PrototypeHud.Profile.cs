@@ -78,8 +78,7 @@ namespace Pockle.Runtime
             next.anchorMin = next.anchorMax = next.pivot = new Vector2(1, .5f); next.anchoredPosition = new Vector2(-18, 0);
 
             profileLinks = Rect("Your profile links", profileRoot);
-            RowButton("Badges", "Coming later", "Heart", profileLinks,
-                () => ShowDialog("Your future badge cabinet", "Earned badges will live here once their rules and rewards are ready. No badges have been awarded in this beta."), out _, true);
+            RowButton("Badges", "0 of " + BadgeBook.All.Count + " earned", "Heart", profileLinks, OpenBadges, out badgesRowDetail, true);
             RowButton("Cloud save", "Saved on this device", "Shelf", profileLinks,
                 () => ShowDialog("Your shelf stays here for now", "Accounts and cloud save are coming later. Your toys and profile are saved on this device. Clearing app data or uninstalling can erase them."), out _, true);
             RefreshProfile();

@@ -37,6 +37,9 @@ namespace Pockle.Runtime
         private Button stageCollectionPill;
         private Text stageCollectionText, stageEyebrow, stageRarityText, stageCount, stageCollectionTitle, stageWorldNote, stageLightNote;
         private RectTransform stageRarity, stageTray, stagePanel, stageRail;
+        private Image stageRarityFace, stageRarityRing;
+        private RawImage stageRarityIcon;
+        private const float RarityHeight = 26;
         // Rail order top to bottom, and each button's icon (Resources/UI/Icons).
         private static readonly int[] RailOrder = { 1, 2, 0, 3 };
         private static readonly string[] RailIcons = { "Collection", "World", "Light", "About" };
@@ -98,9 +101,17 @@ namespace Pockle.Runtime
             stageCollectionText = stageCollectionPill.GetComponentInChildren<Text>();
 
             stageEyebrow = Label("", safeRoot, PockleTheme.SmallSize, MutedInk, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, new Vector2(300, 20));
-            stageRarity = Rect("Rarity", safeRoot); Surface(stageRarity, PockleTheme.Confetti, 14);
-            stageRarityText = Label("", stageRarity, PockleTheme.SmallSize, Ink, FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
-            Stretch(stageRarityText.rectTransform);
+            // Rarity: a solid badge in its tier colour with an icon and a thin bright rim (RarityLook), unlike the glassy chips.
+            stageRarity = Rect("Rarity", safeRoot);
+            var rim = Rect("Rarity rim", stageRarity); Stretch(rim); rim.offsetMin = new Vector2(-1.5f, -1.5f); rim.offsetMax = new Vector2(1.5f, 1.5f);
+            stageRarityRing = Surface(rim, Color.white, RarityHeight / 2 + 1.5f);
+            var face = Rect("Rarity face", stageRarity); Stretch(face);
+            stageRarityFace = Surface(face, PockleTheme.Confetti, RarityHeight / 2);
+            var icon = Rect("Rarity icon", stageRarity); LeftLabel(icon, new Vector2(8, -5), new Vector2(16, 16));
+            stageRarityIcon = icon.gameObject.AddComponent<RawImage>(); stageRarityIcon.raycastTarget = false;
+            stageRarityText = Label("", stageRarity, 12, Ink, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
+            stageRarityText.horizontalOverflow = HorizontalWrapMode.Overflow; stageRarityText.resizeTextForBestFit = false;
+            Stretch(stageRarityText.rectTransform); stageRarityText.rectTransform.offsetMin = new Vector2(29, 0); stageRarityText.rectTransform.offsetMax = new Vector2(-10, 0);
             BuildStageTalk(); // temperament badge, traits, "handle with care" chip and the speech bubble
 
             // A soft dark shade behind the title when a painted world fills the screen, so white words stay readable.
@@ -198,16 +209,6 @@ namespace Pockle.Runtime
             string name = toy.FinishDisplayName;
             int dot = name.IndexOf(" · ", StringComparison.Ordinal);
             return dot > 0 ? name.Substring(0, dot) : name;
-        }
-
-        private static string RarityText(CollectibleDefinition toy)
-        {
-            if (FusionCatalog.TryGet(toy.Id, out _)) return "Fusion";
-            string name = toy.FinishDisplayName;
-            int dot = name.IndexOf(" · ", StringComparison.Ordinal);
-            string label = dot > 0 ? name.Substring(dot + 3) : "";
-            if (toy.IsSecret) return label.Length > 0 ? "Secret · " + label : "Secret";
-            return label;
         }
 
         private string StageTitle => StageSelection(out var toy, out _) ? FinishName(toy) : SelectedToyName;
@@ -368,8 +369,15 @@ namespace Pockle.Runtime
             stageTray.gameObject.SetActive(play && known && trayTab != TrayClosed);
             stageRail.gameObject.SetActive(play && known);
             RefreshStageTalk(play && known, known ? toy.Id : null);
-            string rarity = known ? RarityText(toy) : "";
-            stageRarity.gameObject.SetActive(play && rarity.Length > 0);
+            var rarity = known ? RarityLook.Of(toy) : RarityLook.For(RarityTier.Common, false, "");
+            stageRarity.gameObject.SetActive(play && rarity.Shown);
+            if (rarity.Shown)
+            {
+                stageRarityFace.color = rarity.Fill; stageRarityRing.color = rarity.Ring; stageRarityText.color = rarity.Ink;
+                stageRarityIcon.texture = PockleTheme.Icon(rarity.Icon); stageRarityIcon.color = rarity.Ink;
+                stageRarityIcon.enabled = stageRarityIcon.texture != null;
+                stageRarity.name = "Rarity · " + rarity.Tier;
+            }
             if (!play) { heading.resizeTextForBestFit = false; heading.color = Ink; headingShadow.enabled = false; stageShade.gameObject.SetActive(false); return; }
 
             // Over a painting the words turn white on a soft shade; over the flat studio colour they stay plum.
@@ -391,7 +399,7 @@ namespace Pockle.Runtime
             for (int i = 0; i < collection.Members.Count; i++) if (collection.Members[i] == toy.Id) number = i + 1;
             string series = collection.SeriesNumber > 0 ? " · Series " + collection.SeriesNumber : "";
             stageEyebrow.text = (collection.DisplayName + series + (number > 0 ? " · No. " + number : "")).ToUpperInvariant();
-            stageRarityText.text = rarity;
+            stageRarityText.text = rarity.Text;
 
             int found = FoundCount(collection);
             stageCollectionText.text = collection.DisplayName + " collection · " + found + " of " + collection.Members.Count;
@@ -548,12 +556,19 @@ namespace Pockle.Runtime
             // Title block: eyebrow, finish name with its rarity badge, then the ways to play.
             LeftLabel(stageEyebrow.rectTransform, new Vector2(left, -72), new Vector2(width, 20));
             LeftLabel(heading.rectTransform, new Vector2(left, -94), new Vector2(width, 44));
-            float nameWidth = Mathf.Min(width - 130, heading.preferredWidth);
-            float badgeWidth = stageRarityText.preferredWidth + 24;
-            LeftLabel(stageRarity, new Vector2(left + nameWidth + 12, -102), new Vector2(badgeWidth, 28));
-            if (left + nameWidth + 12 + badgeWidth > size.x - left) LeftLabel(stageRarity, new Vector2(left, -142), new Vector2(badgeWidth, 28));
-            if (FusionCatalog.TryGet(selectedCollectibleId, out _)) LeftLabel(stageRarity, new Vector2(left, -142), new Vector2(badgeWidth, 28));
-            float titleBottom = stageRarity.gameObject.activeSelf && stageRarity.anchoredPosition.y < -120 ? 170 : 140;
+            // The rarity badge goes beside the name when it fits, else at the end of the eyebrow line, else on its own line
+            // under the name. The block below always starts under it, so nothing overlaps.
+            float titleBottom = 140;
+            if (stageRarity.gameObject.activeSelf)
+            {
+                float badgeWidth = Mathf.Min(width, 29 + stageRarityText.preferredWidth + 12);
+                float nameWidth = Mathf.Min(width, heading.preferredWidth);
+                float eyebrowWidth = Mathf.Min(width, stageEyebrow.preferredWidth);
+                bool fused = FusionCatalog.TryGet(selectedCollectibleId, out _);
+                if (!fused && nameWidth + 12 + badgeWidth <= width) LeftLabel(stageRarity, new Vector2(left + nameWidth + 12, -(116 - RarityHeight / 2)), new Vector2(badgeWidth, RarityHeight));
+                else if (eyebrowWidth + 10 + badgeWidth <= width) LeftLabel(stageRarity, new Vector2(left + eyebrowWidth + 10, -(82 - RarityHeight / 2)), new Vector2(badgeWidth, RarityHeight));
+                else { LeftLabel(stageRarity, new Vector2(left, -142), new Vector2(badgeWidth, RarityHeight)); titleBottom = 142 + RarityHeight + 12; }
+            }
             titleBottom = LayoutStageTalk(left, width, titleBottom);
 
             // Title shade across the top of the screen.

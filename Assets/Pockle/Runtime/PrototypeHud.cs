@@ -110,9 +110,9 @@ namespace Pockle.Runtime
             settingsRoot = Rect("Settings page", content);
             collectionsRoot = Rect("Collections page", content); collectionRoot = Rect("Collection lineup", content);
             personalityRoot = Rect("Toy personality", content); fusionRoot = Rect("Fuse spares", content); fusionRevealRoot = Rect("Fusion reveal", content);
-            shelfPickRoot = Rect("Pick your live shelf", content);
+            shelfPickRoot = Rect("Pick your live shelf", content); badgesRoot = Rect("Badges page", content);
             BuildShelf(); BuildLivingShelf(); BuildStore(); BuildHome(); BuildRewards(); BuildProfile(); BuildSocial(); BuildSettings(); BuildCollections();
-            BuildPersonality(); BuildFusion(); BuildShelfPick();
+            BuildPersonality(); BuildFusion(); BuildShelfPick(); BuildBadges();
             // The Shelf tab's header link to every collection.
             collectionsPill = CreateButton("All collections", safeRoot, Vector2.zero, new Vector2(140, 44), Quiet, () => Navigate(AppPage.Collections), out _, 15);
             navigation = Rect("Navigation", safeRoot); Surface(navigation, Primary, 32);
@@ -272,7 +272,7 @@ namespace Pockle.Runtime
             collectionsRoot.gameObject.SetActive(page == AppPage.Collections); collectionRoot.gameObject.SetActive(page == AppPage.Collection);
             personalityRoot.gameObject.SetActive(page == AppPage.Personality); fusionRoot.gameObject.SetActive(page == AppPage.Fusion);
             fusionRevealRoot.gameObject.SetActive(page == AppPage.FusionReveal);
-            shelfPickRoot.gameObject.SetActive(page == AppPage.ShelfPick);
+            shelfPickRoot.gameObject.SetActive(page == AppPage.ShelfPick); badgesRoot.gameObject.SetActive(page == AppPage.Badges);
             // The daily card is shared, so both destinations always show the same claim state.
             walkCard.SetParent(page == AppPage.Rewards ? rewardsRoot : boxesRoot, false);
             switch (page)
@@ -288,6 +288,7 @@ namespace Pockle.Runtime
                 case AppPage.Social: heading.text = "Friends"; subtitle.text = ""; break;
                 case AppPage.Profile: heading.text = ""; subtitle.text = ""; break;
                 case AppPage.Settings: heading.text = "Settings"; subtitle.text = ""; break;
+                case AppPage.Badges: heading.text = "Badges"; subtitle.text = ""; break; // RefreshBadges fills in "N of 15 earned"
                 case AppPage.Boxes: heading.text = "Boxes"; subtitle.text = "Walk for a free box every day, or pick one to buy."; break;
                 case AppPage.Collections: heading.text = "Collections"; subtitle.text = "Meet the little characters for your shelf."; break;
                 case AppPage.Collection:
@@ -300,10 +301,10 @@ namespace Pockle.Runtime
             StyleTab(shelfTab, page == AppPage.Shelf || page == AppPage.Collections || page == AppPage.Collection || page == AppPage.ShelfPick
                 || page == AppPage.Personality || page == AppPage.Fusion || page == AppPage.FusionReveal);
             StyleTab(boxesTab, page == AppPage.Boxes);
-            StyleTab(youTab, page == AppPage.Profile || page == AppPage.Settings);
+            StyleTab(youTab, page == AppPage.Profile || page == AppPage.Settings || page == AppPage.Badges);
             RefreshShelf(); RefreshProfile(); RefreshSettings(); RefreshWalkingCard(); RefreshHome(); RefreshCollections();
             RefreshPersonality(); RefreshFusion(); if (page == AppPage.FusionReveal) RefreshFusionReveal();
-            RefreshShelfPick();
+            RefreshShelfPick(); RefreshBadges();
             if (!play && trayTab != TrayClosed) SetTrayTab(TrayClosed);
             RefreshStage();
             content.anchoredPosition = new Vector2(0, navigator.Scroll);
@@ -422,6 +423,7 @@ namespace Pockle.Runtime
                 case AppPage.Fusion: height = LayoutFusion(width); break;
                 case AppPage.FusionReveal: height = LayoutFusionReveal(width); break;
                 case AppPage.ShelfPick: height = LayoutShelfPick(width); break;
+                case AppPage.Badges: height = LayoutBadges(width); break;
                 default: height = LayoutShelf(width); break;
             }
             // Leave room to scroll the last row clear of the floating tab bar.

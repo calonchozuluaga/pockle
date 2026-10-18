@@ -138,26 +138,49 @@ namespace Pockle.Runtime
         {
             if (talkTraits == null || !talkTraits.gameObject.activeSelf) return titleBottom;
             float y = titleBottom - 4;
-            LeftLabel(talkTraits, new Vector2(left, -y), new Vector2(width, TalkChipHeight));
-            float x = 0;
-            float tempWidth = 5 + 18 + 6 + talkTemperamentText.preferredWidth + 12;
+            // Chips flow left to right and wrap onto a second line instead of overlapping or vanishing; a chip wider than
+            // the screen is capped and its words shrink to fit. Only a third line is dropped.
+            float x = 0, row = 0;
+            float tempWidth = Mathf.Min(width, 5 + 18 + 6 + talkTemperamentText.preferredWidth + 12);
             var temperament = talkTemperamentFace.rectTransform;
             LeftLabel(temperament, new Vector2(0, 0), new Vector2(tempWidth, TalkChipHeight));
-            LeftLabel(talkTemperamentText.rectTransform, new Vector2(29, 0), new Vector2(tempWidth - 29, TalkChipHeight));
+            LeftLabel(talkTemperamentText.rectTransform, new Vector2(29, 0), new Vector2(tempWidth - 29 - 8, TalkChipHeight));
+            FitChipText(talkTemperamentText, tempWidth - 29 - 8);
             x = tempWidth + 6;
             for (int i = 0; i < talkTraitFaces.Length; i++)
             {
-                if (!talkTraitFaces[i].gameObject.activeSelf) continue;
-                float chipWidth = talkTraitTexts[i].preferredWidth + 22;
-                if (x + chipWidth > width) { talkTraitFaces[i].gameObject.SetActive(false); continue; }
-                LeftLabel(talkTraitFaces[i].rectTransform, new Vector2(x, 0), new Vector2(chipWidth, TalkChipHeight));
+                if (talkTraitTexts[i].text.Length == 0) { talkTraitFaces[i].gameObject.SetActive(false); continue; }
+                float chipWidth = Mathf.Min(width, talkTraitTexts[i].preferredWidth + 22);
+                if (x > 0 && x + chipWidth > width) { x = 0; row++; }
+                bool fits = row < 2;
+                talkTraitFaces[i].gameObject.SetActive(fits);
+                if (!fits) continue;
+                LeftLabel(talkTraitFaces[i].rectTransform, new Vector2(x, -row * (TalkChipHeight + 6)), new Vector2(chipWidth, TalkChipHeight));
+                FitChipText(talkTraitTexts[i], chipWidth - 16);
                 x += chipWidth + 6;
             }
-            y += TalkChipHeight + TalkGap;
-            float warningWidth = Mathf.Min(width, 9 + 16 + 7 + talkWarningText.preferredWidth + 12);
-            LeftLabel(talkWarning, new Vector2(left, -y), new Vector2(warningWidth, TalkWarningHeight));
-            LeftLabel(talkWarningText.rectTransform, new Vector2(32, 0), new Vector2(warningWidth - 38, TalkWarningHeight));
-            return y + TalkWarningHeight + TalkGap;
+            float rowsHeight = TalkChipHeight + Mathf.Min(row, 1) * (TalkChipHeight + 6);
+            LeftLabel(talkTraits, new Vector2(left, -y), new Vector2(width, rowsHeight));
+            y += rowsHeight + TalkGap;
+
+            // The warning stays one line when it fits, otherwise wraps onto two inside a taller chip.
+            float single = 9 + 16 + 7 + talkWarningText.preferredWidth + 12;
+            bool wrap = single > width;
+            float warningWidth = Mathf.Min(width, single);
+            talkWarningText.horizontalOverflow = wrap ? HorizontalWrapMode.Wrap : HorizontalWrapMode.Overflow;
+            talkWarningText.alignment = TextAnchor.MiddleLeft;
+            float warningHeight = wrap ? 46 : TalkWarningHeight;
+            LeftLabel(talkWarning, new Vector2(left, -y), new Vector2(warningWidth, warningHeight));
+            LeftLabel(talkWarningText.rectTransform, new Vector2(32, 0), new Vector2(warningWidth - 32 - 10, warningHeight));
+            talkWarningIcon.rectTransform.anchoredPosition = new Vector2(9, -(warningHeight - 16) / 2);
+            return y + warningHeight + TalkGap;
+        }
+
+        /// <summary>Shrinks a chip's words (down to 11) when even a full-width chip can't hold them.</summary>
+        private static void FitChipText(Text text, float room)
+        {
+            text.fontSize = PockleTheme.CaptionSize;
+            while (text.fontSize > PockleTheme.MinimumTextSize && text.preferredWidth > room) text.fontSize--;
         }
 
         /// <summary>

@@ -28,7 +28,7 @@ namespace Pockle.Tests
         private int previousWorld, previousLight;
         // Live shelf picks and per-collection worlds are presentation preferences; restored after each test.
         private static readonly string[] stringPrefs = { PrototypeHud.LiveShelfKey, PrototypeHud.LiveShelfSeenKey,
-            "pockle.stage.environment.v1.pip", "pockle.stage.environment.v1.fox", "pockle.stage.environment.v1.axolotl", LocalActivityFeed.LogKey, ShelfFriendships.Key };
+            "pockle.stage.environment.v1.pip", "pockle.stage.environment.v1.fox", "pockle.stage.environment.v1.axolotl", LocalActivityFeed.LogKey, ShelfFriendships.Key, BadgeCabinet.Key };
         private readonly System.Collections.Generic.Dictionary<string, string> savedPrefs = new System.Collections.Generic.Dictionary<string, string>();
         private string previousMoments;
         private float previousVolume, observedVolume;
@@ -651,6 +651,33 @@ namespace Pockle.Tests
         }
 
         [UnityTest]
+        public IEnumerator StageTitleChipsNeverOverlapOnANarrowScreen()
+        {
+            // A big UI scale makes the screen narrow in canvas units, so the chips have to wrap.
+            var scaler = root.GetComponentInChildren<CanvasScaler>();
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize; scaler.scaleFactor = Screen.width / 300f;
+            yield return null;
+            Assert.IsTrue(hud.ShowToy(ToyCatalog.GoldId));
+            yield return null; Canvas.ForceUpdateCanvases(); yield return null;
+            var shown = root.GetComponentsInChildren<RectTransform>()
+                .Where(r => r.gameObject.activeInHierarchy && (r.name.StartsWith("Temperament · ") || r.name == "Trait" || r.name.StartsWith("Handle with care") || r.name.StartsWith("Rarity · ")))
+                .Select(WorldRect).ToList();
+            Assert.GreaterOrEqual(shown.Count, 3, "Temperament, at least one trait and the warning are on screen.");
+            for (int i = 0; i < shown.Count; i++)
+                for (int j = i + 1; j < shown.Count; j++)
+                    Assert.IsFalse(shown[i].Overlaps(shown[j]), "Title chips must not overlap: " + shown[i] + " / " + shown[j]);
+            var safe = WorldRect((RectTransform)root.GetComponentInChildren<Canvas>().transform);
+            foreach (var chip in shown) Assert.LessOrEqual(chip.xMax, safe.xMax + 1, "Chips stay on screen.");
+        }
+
+        private static Rect WorldRect(RectTransform rect)
+        {
+            var corners = new Vector3[4]; rect.GetWorldCorners(corners);
+            // Shrink by half a unit so chips that merely touch don't count as overlapping.
+            return Rect.MinMaxRect(corners[0].x + .5f, corners[0].y + .5f, corners[2].x - .5f, corners[2].y - .5f);
+        }
+
+        [UnityTest]
         public IEnumerator ToyCalloutsSitLowerAndStayClearOfHeaderAndTray()
         {
             var scaler = root.GetComponentInChildren<CanvasScaler>();
@@ -794,6 +821,46 @@ namespace Pockle.Tests
             Assert.AreEqual(3, hud.LiveShelf.Count);
             Assert.IsFalse(hud.LiveShelf.Contains(ToyCatalog.MoonId));
             CollectionAssert.AreEquivalent(inventory, session.OwnedCounts, "Arranging the shelf never changes the inventory.");
+        }
+
+        [UnityTest]
+        public IEnumerator BadgeCabinetOpensFromYouAndShowsEarnedAndLockedBadges()
+        {
+            ButtonWithText("You").onClick.Invoke();
+            yield return null;
+            Assert.IsTrue(VisibleText("0 of 15 earned"), "The You page row counts badges instead of saying \"Coming later\".");
+            ButtonWithText("Badges").onClick.Invoke();
+            yield return null;
+            Assert.AreEqual(AppPage.Badges, hud.CurrentPage);
+            Assert.IsTrue(VisibleText("Badges") && VisibleText("Still to earn") && VisibleText("None yet. The one above is closest."));
+            Assert.IsTrue(VisibleText("NEXT UP"), "With nothing earned, the card shows the closest badge.");
+            Assert.AreEqual(15, root.GetComponentsInChildren<Button>().Count(b => b.name.StartsWith("Badge · ") && b.name.EndsWith(" · locked")));
+            Assert.IsTrue(VisibleText("Arrives with trading"), "Badges waiting on a feature say so honestly.");
+            Assert.IsTrue(hud.GoBack());
+            Assert.AreEqual(AppPage.Profile, hud.CurrentPage);
+
+            // Restart with a secret already earned on Oct 13: it leads the cabinet in colour, with its date.
+            PlayerPrefs.SetString(BadgeCabinet.Key, "secret-finder=20374");
+            Object.Destroy(root); yield return null;
+            root = new GameObject("Restarted badge test");
+            session = root.AddComponent<CollectionSession>(); session.Initialize();
+            hud = root.AddComponent<PrototypeHud>(); hud.Initialize(_ => { }, _ => { }, _ => { }); hud.Bind(session);
+            yield return null;
+            ButtonWithText("You").onClick.Invoke();
+            Assert.IsTrue(VisibleText("1 of 15 earned"));
+            ButtonWithText("Badges").onClick.Invoke();
+            yield return null;
+            Assert.AreEqual("secret-finder", hud.FeaturedBadge);
+            Assert.IsTrue(VisibleText("LATEST · OCT 13") && VisibleText("Secret finder") && VisibleText("Oct 13"));
+            Assert.IsFalse(VisibleText("None yet. The one above is closest."));
+            var earned = ButtonNamed("Badge · Secret finder · earned");
+            Assert.AreEqual(Color.white, earned.GetComponentsInChildren<RawImage>().First(r => r.name == "Art").color, "Earned badges show in full colour.");
+            Assert.IsFalse(earned.transform.Find("Art/Locked").gameObject.activeSelf);
+
+            ButtonNamed("Badge · Fox collection · locked").onClick.Invoke();
+            Assert.AreEqual("fox-collection", hud.FeaturedBadge, "Tapping any badge features it.");
+            Assert.IsTrue(VisibleText("STILL TO EARN") && VisibleText("Collect every fox."));
+            Assert.AreEqual(1, hud.EarnedBadgeCount);
         }
 
         [Test]

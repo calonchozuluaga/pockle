@@ -474,9 +474,8 @@ namespace Pockle.Runtime
         {
             rewardNote = Label("Daily boxes reset at midnight UTC. Steps count while Pockle is open; keep it open on your walk for now.",
                 rewardsRoot, PockleTheme.BodySize, MutedInk, FontStyle.Normal, TextAnchor.UpperLeft, Vector2.zero, new Vector2(330, 72)).rectTransform;
-            badgeEntry = RowButton("Badges and milestones", "Coming later", "Heart", rewardsRoot,
-                () => ShowDialog("More little milestones", "Badges and milestone rewards are coming later. Your daily walking box is the reward you can earn today."),
-                out _, true).GetComponent<RectTransform>();
+            badgeEntry = RowButton("Badges and milestones", "0 of " + BadgeBook.All.Count + " earned", "Heart", rewardsRoot, OpenBadges,
+                out rewardsBadgeDetail, true).GetComponent<RectTransform>();
         }
 
         private float LayoutRewards(float width)
