@@ -41,6 +41,7 @@ SnowyReactionChecks.Run();
 PipFusionStudyChecks.Run();
 PipFaceChecks.Run();
 WinterTrioChecks.Run();
+FusionReviewSpareChecks.Run();
             return 0;
         }
         catch (Exception exception)

@@ -36,7 +36,9 @@ namespace Pockle.Runtime
                 SetRadius(face, 14);
                 pickSpots[i].name = "Spot " + (i + 1);
                 pickSpots[i].gameObject.AddComponent<Mask>().showMaskGraphic = true;
-                var picture = Rect("Toy", pickSpots[i].transform); Stretch(picture);
+                // A square picture centred in the spot, so wide spots (tablets) never stretch the toy.
+                var picture = Rect("Toy", pickSpots[i].transform);
+                picture.anchorMin = picture.anchorMax = picture.pivot = new Vector2(.5f, .5f);
                 pickSpotPictures[i] = picture.gameObject.AddComponent<RawImage>(); pickSpotPictures[i].raycastTarget = false;
                 TintMirror.Follow(pickSpots[i], pickSpotPictures[i]);
                 pickSpotPlus[i] = pickSpots[i].GetComponentInChildren<Text>(); pickSpotPlus[i].fontSize = 22; pickSpotPlus[i].color = MutedInk;
@@ -138,10 +140,17 @@ namespace Pockle.Runtime
         {
             float y = 0;
             LeftLabel(pickCount.rectTransform, new Vector2(width - 100, -y), new Vector2(100, 24)); y += 30;
-            LeftLabel(pickSpotsRow, new Vector2(0, -y), new Vector2(width, 68));
+            // Spots keep a toy-friendly shape: about square on phones, never shorter than 52 or taller than 96.
             float spot = (width - 16 - 6 * (LiveShelfSpots - 1)) / LiveShelfSpots;
-            for (int i = 0; i < LiveShelfSpots; i++) LeftLabel(pickSpots[i].GetComponent<RectTransform>(), new Vector2(8 + i * (spot + 6), -8), new Vector2(spot, 52));
-            y += 68 + 14;
+            float spotHeight = Mathf.Clamp(Mathf.Round(spot * .92f), 52, 96);
+            LeftLabel(pickSpotsRow, new Vector2(0, -y), new Vector2(width, spotHeight + 16));
+            for (int i = 0; i < LiveShelfSpots; i++)
+            {
+                LeftLabel(pickSpots[i].GetComponent<RectTransform>(), new Vector2(8 + i * (spot + 6), -8), new Vector2(spot, spotHeight));
+                float picture = Mathf.Min(spot, spotHeight) - 4;
+                pickSpotPictures[i].rectTransform.sizeDelta = new Vector2(picture, picture);
+            }
+            y += spotHeight + 16 + 14;
             LeftLabel(pickFilters, new Vector2(0, -y), new Vector2(width, 36));
             float x = 0;
             foreach (var chip in pickFilterButtons)
@@ -152,9 +161,10 @@ namespace Pockle.Runtime
             }
             y += 36 + 14;
             int columns = width >= 450 ? 5 : 4;
-            const float gap = 8;
-            float tileWidth = (width - gap * (columns - 1)) / columns, tileHeight = Mathf.Round(tileWidth * 1.22f);
-            LeftLabel(pickGrid, new Vector2(0, -y), new Vector2(width, 0));
+            const float gap = 8, ringRoom = 4; // the selected ring sits 3 px outside its tile: keep it inside the page
+            float tileWidth = (width - ringRoom * 2 - gap * (columns - 1)) / columns, tileHeight = Mathf.Round(tileWidth * 1.22f);
+            LeftLabel(pickGrid, new Vector2(ringRoom, -(y + ringRoom)), new Vector2(width - ringRoom * 2, 0));
+            y += ringRoom;
             for (int i = 0; i < pickOrder.Count; i++)
             {
                 var tile = pickTiles[pickOrder[i]];

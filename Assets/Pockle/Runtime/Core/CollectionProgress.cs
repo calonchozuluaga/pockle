@@ -184,6 +184,23 @@ namespace Pockle.Core
                 {counts[toy.Id]=1;changed=true;}
             if(changed)SynchronizeInventory();return changed;
         }
+        /// <summary>Owner fusion review: keep one display copy plus two spares of varied finishes in six collections.</summary>
+        public bool EnsureFusionReviewSpares()
+        {
+            bool changed = false;
+            foreach (var toy in ToyCatalog.Collectibles)
+            {
+                bool collection = toy.CollectionId == "pip" || toy.CollectionId == "fox" || toy.CollectionId == "axolotl"
+                    || toy.CollectionId == "reiny" || toy.CollectionId == "guin" || toy.CollectionId == "bundy";
+                bool finish = toy.FinishId == "clear-jelly" || toy.FinishId == "gloss-vinyl" || toy.FinishId == "coated-metallic";
+                if (!collection || !finish || !toy.Available || GetOwnedCount(toy.Id) >= 3) continue;
+                counts[toy.Id] = 3;
+                changed = true;
+            }
+            if (changed) SynchronizeInventory();
+            return changed;
+        }
+
         private static int BoundedCount(int count) => Math.Max(0, Math.Min(9999, count));
         private static CollectionSave StarterSave()
         {

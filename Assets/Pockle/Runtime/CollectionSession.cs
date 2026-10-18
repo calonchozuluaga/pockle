@@ -63,7 +63,27 @@ namespace Pockle.Runtime
             tracker = new AndroidWalkingTracker();
             if (!readOnlySave) tracker.ResumeIfAllowed();
             Persist();
-            if (!Application.isBatchMode) { TryApplyOwnerFoxTestGrant(); TryApplyOwnerFoxFinishesGrant(); TryApplyOwnerPipFinishesGrant(); TryApplyOwnerAxolotlFinishesGrant(); TryApplyOwnerPipFusionStudiesGrant(); TryApplyOwnerWinterTrioGrant(); }
+            if (!Application.isBatchMode) { TryApplyOwnerFoxTestGrant(); TryApplyOwnerFoxFinishesGrant(); TryApplyOwnerPipFinishesGrant(); TryApplyOwnerAxolotlFinishesGrant(); TryApplyOwnerPipFusionStudiesGrant(); TryApplyOwnerWinterTrioGrant(); TryApplyOwnerFusionReviewSpares(); }
+        }
+
+        public const string FusionReviewSparesKey = "pockle.owner-test.fusion-review-spares.v1";
+        public bool TryApplyOwnerFusionReviewSpares()
+        {
+            if (!(Application.isEditor || Debug.isDebugBuild) || Progress == null || readOnlySave
+                || PlayerPrefs.GetInt(FusionReviewSparesKey, 0) == 1) return false;
+            var flag = Resources.Load<TextAsset>("FusionReviewOwnerTestGrant");
+            if (flag == null || flag.text.Trim() != "enabled") return false;
+            bool granted = Progress.EnsureFusionReviewSpares();
+            Persist(); // Minimum counts make interrupted save/marker retries safe, without refilling on each launch.
+            PlayerPrefs.SetInt(FusionReviewSparesKey, 1); PlayerPrefs.Save();
+            foreach (var item in Progress.OwnedCounts)
+                if (ToyCatalog.TryGetCollectible(item.Key, out var toy)
+                    && (toy.CollectionId == "pip" || toy.CollectionId == "fox" || toy.CollectionId == "axolotl"
+                        || HolidayCatalog.IsWinterTrio(toy.CharacterId))
+                    && (toy.FinishId == "clear-jelly" || toy.FinishId == "gloss-vinyl" || toy.FinishId == "coated-metallic"))
+                    Debug.Log("Pockle fusion review saved: " + toy.Id + " copies=" + item.Value);
+            Changed?.Invoke();
+            return granted;
         }
 
         public const string WinterTrioGrantKey="pockle.owner-test.winter-trio.v1";
