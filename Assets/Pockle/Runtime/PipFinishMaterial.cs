@@ -12,6 +12,7 @@ namespace Pockle.Runtime
         }
         public static void Apply(Material material, string id)
         {
+            if (FusionCatalog.TryGet(id, out var fused)) { FusionMaterial.Apply(material, fused); return; }
             material.SetFloat("_FusionMode",0);
             material.SetColor("_FusionColorA",Color.white);material.SetColor("_FusionColorB",Color.white);
             material.SetColor("_FinishTint", Color.white);

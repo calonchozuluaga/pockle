@@ -187,6 +187,9 @@ namespace Pockle.Runtime
             if (session == null) return list;
             foreach (string id in SceneOrder) if (session.IsOwnedAndPlayable(id)) list.Add(id);
             foreach (var toy in ToyCatalog.Collectibles) if (!list.Contains(toy.Id) && session.IsOwnedAndPlayable(toy.Id)) list.Add(toy.Id);
+            if (session.Progress.Save.Fusions != null)
+                foreach (var fused in session.Progress.Save.Fusions)
+                    if (fused != null && !list.Contains(fused.Id) && session.IsOwnedAndPlayable(fused.Id)) list.Add(fused.Id);
             return list;
         }
 

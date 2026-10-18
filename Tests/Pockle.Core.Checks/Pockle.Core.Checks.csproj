@@ -34,5 +34,6 @@
     <Compile Include="PipFaceChecks.cs" />
     <Compile Include="WinterTrioChecks.cs" />
     <Compile Include="FusionReviewSpareChecks.cs" />
+    <Compile Include="PersistentFusionChecks.cs" />
   </ItemGroup>
 </Project>

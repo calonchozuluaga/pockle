@@ -42,6 +42,7 @@ PipFusionStudyChecks.Run();
 PipFaceChecks.Run();
 WinterTrioChecks.Run();
 FusionReviewSpareChecks.Run();
+PersistentFusionChecks.Run();
             return 0;
         }
         catch (Exception exception)

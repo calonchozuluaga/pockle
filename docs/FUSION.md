@@ -1,6 +1,19 @@
-# Fusion (proposal)
+# Fusion
 
-October 9, 2026. **Screens approved by the owner on October 12** ("Fuse spares" and "Fusion reveal"); the UI is built in UX-038 against a preview-only service. The fusion runtime is still to be built. Originally a proposal. Owner direction: two spare toys can combine into a unique toy you can't buy, and the result depends on what you mix. Design by Claude; the art generation and runtime are Codex's lane (see "Who builds what"). This builds on [PERSONALITIES.md](PERSONALITIES.md) and the rules in [COLLECTIONS.md](COLLECTIONS.md).
+October 9, 2026. **Screens approved by the owner on October 12** ("Fuse spares" and "Fusion reveal"); the UI is built in UX-038 against a preview-only service. The current local runtime is described below; earlier preview-only notes are historical. Originally a proposal. Owner direction: two spare toys can combine into a unique toy you can't buy, and the result depends on what you mix. Design by Claude; the art generation and runtime are Codex's lane (see "Who builds what"). This builds on [PERSONALITIES.md](PERSONALITIES.md) and the rules in [COLLECTIONS.md](COLLECTIONS.md).
+
+## Local beta implementation — October17, 2026
+
+Owner approved consuming spares and keeping the resulting toy, with combinations restricted to one character. `TactilePrototype` now binds `LocalFusionService`; isolated HUD previews still default to `PreviewOnlyFusion`.
+
+- Choose two extra copies of available regular/secret finishes from the same character. Two identical ingredients need three owned copies. Each transaction keeps at least one of each parent. Fusion Lab studies, other fused toys, unavailable and unknown IDs cannot be ingredients.
+- The service canonicalizes the parent pair. A new `fusion.<character>-<uuid>` ID, both parent IDs, recipe version, material/name, resolved personality dials/temperament/hybrid and pending reveal are saved in the same version3 JSON as the decremented counts. One `FusedToy` receipt represents one consumption of both ingredients; beta copies do not have production serials.
+- A private candidate is saved before it replaces the visible collection or starts the moment. Failed validation/write starts no reveal. Pending receipts block repeat commits. Restart resumes an interrupted reveal with its already-owned result. Acknowledging the reveal does not grant another copy.
+- Version1 and version2 inventories migrate without losing IDs, larger stacks, walking progress or reveal state. The original JSON is kept as `.before-v3`. Newer/unsupported or damaged saves stay read-only. Older APKs do not understand version3; downgrading is not supported.
+- Native fused materials use the approved character mesh and a versioned blend of the parents' surface parameters; Pip's approved Dusk/Sorbet/Honeydew/Eclipse recipes are reused for their matching pairs. Palette/material resolution uses no personality input. The authored personality rule resolves once at creation and its snapshot drives faces and social dials after restart. The development eight-face cycle remains for ordinary toys, but fused toys use their inherited face.
+- Results appear under **Fusions · yours to keep**, above collection cards, can be played and placed on the live shelf, and use the character's worlds/reactions. They do not join finite collection members, complete collections, enter reward pools or change odds. Fusing them again, trading and selling remain disabled.
+
+The sections below retain the original design discussion; proposals about cross-character shapes, production serial ledgers and accounts are not implemented by this local beta.
 
 ## The idea
 
@@ -67,7 +80,7 @@ As built (UX-038): the HUD calls `IFusionService` (`Runtime/FusionService.cs`). 
 | Fusion rules, recipe list, how fused toys look and feel, the fusion screen and reveal | **Claude** (design and UI) |
 | Rule-based art (combining meshes, materials, colours), the fusion runtime, save and ledger changes, server validation | **Codex** (runtime, art pipeline, inventory) |
 
-This is more technically ambitious than anything scoped so far, especially the shape and material blending. **Codex: please don't start building until the owner approves the approach.** After that, a short technical spike on blending two materials and attaching one parent's detail to the other's body would tell us how far the rules can go.
+This is more technically ambitious than anything scoped so far, especially the shape and material blending. **Owner approved the local same-character implementation October17.** After that, a short technical spike on blending two materials and attaching one parent's detail to the other's body would tell us how far the rules can go.
 
 
 October 15 material-test update: owner approved Dusk and Sorbet for on-device appearance review. Fixed Pip Fusion Lab studies are implemented separately from IFusionService, with owner-only grants and existing Pip reactions. No parent consumption, personality inheritance, crafting, or production fusion persistence is implemented by this spike. See PIP_FUSION_MATERIAL_STUDIES.md.

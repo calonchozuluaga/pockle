@@ -194,6 +194,7 @@ namespace Pockle.Runtime
         /// <summary>"Aurora · Super rare" becomes "Aurora"; the rarity moves to its own badge.</summary>
         private static string FinishName(CollectibleDefinition toy)
         {
+            if (FusionCatalog.TryGet(toy.Id, out _)) return toy.FinishDisplayName;
             string name = toy.FinishDisplayName;
             int dot = name.IndexOf(" · ", StringComparison.Ordinal);
             return dot > 0 ? name.Substring(0, dot) : name;
@@ -201,6 +202,7 @@ namespace Pockle.Runtime
 
         private static string RarityText(CollectibleDefinition toy)
         {
+            if (FusionCatalog.TryGet(toy.Id, out _)) return "Fusion";
             string name = toy.FinishDisplayName;
             int dot = name.IndexOf(" · ", StringComparison.Ordinal);
             string label = dot > 0 ? name.Substring(dot + 3) : "";
@@ -368,7 +370,7 @@ namespace Pockle.Runtime
             RefreshStageTalk(play && known, known ? toy.Id : null);
             string rarity = known ? RarityText(toy) : "";
             stageRarity.gameObject.SetActive(play && rarity.Length > 0);
-            if (!play) { heading.color = Ink; headingShadow.enabled = false; stageShade.gameObject.SetActive(false); return; }
+            if (!play) { heading.resizeTextForBestFit = false; heading.color = Ink; headingShadow.enabled = false; stageShade.gameObject.SetActive(false); return; }
 
             // Over a painting the words turn white on a soft shade; over the flat studio colour they stay plum.
             stagePainted = false;
@@ -376,6 +378,8 @@ namespace Pockle.Runtime
             foreach (var choice in worldChoices) if (choice.Key == shownKey && choice.Art != null) stagePainted = true;
             bool dark = stagePainted || StageLook.IsDark(stageWorld, stageLight);
             heading.color = dark ? PockleTheme.OnPlum : Ink;
+            heading.resizeTextForBestFit = known && FusionCatalog.TryGet(toy.Id, out _);
+            heading.resizeTextMinSize = 18; heading.resizeTextMaxSize = PockleTheme.TitleSize;
             headingShadow.enabled = dark;
             stageShade.gameObject.SetActive(dark);
             StyleStageTalk(dark);
@@ -548,6 +552,7 @@ namespace Pockle.Runtime
             float badgeWidth = stageRarityText.preferredWidth + 24;
             LeftLabel(stageRarity, new Vector2(left + nameWidth + 12, -102), new Vector2(badgeWidth, 28));
             if (left + nameWidth + 12 + badgeWidth > size.x - left) LeftLabel(stageRarity, new Vector2(left, -142), new Vector2(badgeWidth, 28));
+            if (FusionCatalog.TryGet(selectedCollectibleId, out _)) LeftLabel(stageRarity, new Vector2(left, -142), new Vector2(badgeWidth, 28));
             float titleBottom = stageRarity.gameObject.activeSelf && stageRarity.anchoredPosition.y < -120 ? 170 : 140;
             titleBottom = LayoutStageTalk(left, width, titleBottom);
 

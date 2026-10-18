@@ -87,6 +87,16 @@ namespace Pockle.Runtime
                 // Retain the four reviewed Pip presets' existing feel in this first
                 // new-character pass. Their finish-specific handling can be reviewed separately.
                 if (ToyCatalog.IsFoxCollectible(collectibleId)) return MaterialHandling.Firm;
+                if (FusionCatalog.TryGet(collectibleId, out var fused)
+                    && ToyCatalog.TryGetCollectible(fused.First, out var first) && ToyCatalog.TryGetCollectible(fused.Second, out var second))
+                {
+                    var a = MaterialHandling.ForFinish(first.FinishId); var b = MaterialHandling.ForFinish(second.FinishId);
+                    if (a == MaterialHandling.Firm && b == MaterialHandling.Firm) return MaterialHandling.Firm;
+                    if (a == MaterialHandling.Gel || b == MaterialHandling.Gel) return MaterialHandling.Gel;
+                    if (a == MaterialHandling.Plush || b == MaterialHandling.Plush) return MaterialHandling.Plush;
+                    if (a == MaterialHandling.Foam || b == MaterialHandling.Foam) return MaterialHandling.Foam;
+                    return MaterialHandling.Flock;
+                }
                 if (ToyCatalog.TryGetLegacyIndex(collectibleId, out _)) return MaterialHandling.Gel;
                 return ToyCatalog.TryGetCollectible(collectibleId, out var definition)
                     ? MaterialHandling.ForFinish(definition.FinishId) : MaterialHandling.Gel;
@@ -719,16 +729,16 @@ namespace Pockle.Runtime
         private void BuildSuspendedAccents()
         {
             if (characterAsset != null && characterAsset.CharacterId != "pip") return;
-            if(collectibleId==PipFusionStudies.HoneydewId)return; // Fine sparkle is shaded in one shell pass.
-            if(collectibleId==PipFusionStudies.EclipseId)
+            if(FusionMaterial.AppearanceId(collectibleId)==PipFusionStudies.HoneydewId)return; // Fine sparkle is shaded in one shell pass.
+            if(FusionMaterial.AppearanceId(collectibleId)==PipFusionStudies.EclipseId)
             {
                 var gold=CreateFlatMaterial("Eclipse suspended gold stars",new Color(1,.73f,.25f));gold.renderQueue=2990;
                 Vector3[] eclipseStars={new Vector3(-.34f,-.53f,-.24f),new Vector3(.28f,-.35f,-.29f),new Vector3(-.22f,.30f,-.22f),new Vector3(.34f,.22f,-.26f)};
                 for(int i=0;i<eclipseStars.Length;i++)AddAccent("Eclipse gold star "+i,eclipseStars[i],Vector3.one*(.04f+i*.004f),gold,starMesh,false).localRotation=Quaternion.Euler(i*11,i*19,i*31);
                 return;
             }
-            if(collectibleId==PipFusionStudies.SorbetId)return; // Opaque marbling has no floating contents.
-            if(collectibleId==PipFusionStudies.DuskId)
+            if(FusionMaterial.AppearanceId(collectibleId)==PipFusionStudies.SorbetId)return; // Opaque marbling has no floating contents.
+            if(FusionMaterial.AppearanceId(collectibleId)==PipFusionStudies.DuskId)
             {
                 Vector3[] duskPearls={new Vector3(-.38f,-.40f,-.24f),new Vector3(.16f,-.60f,-.25f),new Vector3(.40f,-.30f,-.13f)};
                 for(int i=0;i<duskPearls.Length;i++)AddAccent("Dusk peach pearl "+i,duskPearls[i],Vector3.one*(.065f+i*.014f),bubbleMaterial,accentMesh,false);
@@ -807,7 +817,8 @@ namespace Pockle.Runtime
             if (HasBakedSurface && !UsesMeshyPeach)
             {
                 Material vinyl;
-                if (HolidayCatalog.IsCharacter(characterAsset.CharacterId)) vinyl = HolidayFinishMaterial.Create(collectibleId, characterAsset.BaseColorTexture, studioReflection);
+                if (FusionCatalog.TryGet(collectibleId, out var fused)) vinyl = FusionMaterial.Create(fused, characterAsset.BaseColorTexture, studioReflection);
+                else if (HolidayCatalog.IsCharacter(characterAsset.CharacterId)) vinyl = HolidayFinishMaterial.Create(collectibleId, characterAsset.BaseColorTexture, studioReflection);
                 else if (ToyCatalog.IsFoxCollectible(collectibleId)) vinyl = FoxFinishMaterial.Create(collectibleId, characterAsset.BaseColorTexture, studioReflection);
                 else
                 {
@@ -869,7 +880,7 @@ namespace Pockle.Runtime
             if (UsesMeshyPeach)
             {
                 PipFinishMaterial.Apply(bodyMaterial, collectibleId);
-                if(collectibleId==PipFusionStudies.DuskId)
+                if(FusionMaterial.AppearanceId(collectibleId)==PipFusionStudies.DuskId)
                 {
                     SetColor(bubbleMaterial,"_Color",new Color(1,.66f,.66f));SetColor(bubbleMaterial,"_TopColor",new Color(1,.86f,.78f));SetColor(bubbleMaterial,"_BottomColor",new Color(.94f,.42f,.52f));
                     SetColor(silverMaterial,"_Color",new Color(.50f,.65f,1));SetColor(silverMaterial,"_TopColor",new Color(.72f,.80f,1));SetColor(silverMaterial,"_BottomColor",new Color(.35f,.45f,.78f));return;

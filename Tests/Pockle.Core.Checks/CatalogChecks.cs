@@ -171,7 +171,7 @@ internal static class CatalogChecks
             // A version-1 payload may have no new fields at all, as JsonUtility will see during real upgrades.
             string raw = "{\"Version\":1,\"Counts\":[0,17,3,9],\"Day\":" + day + ",\"Steps\":837,\"Claimed\":true,\"SensorTotal\":4421,\"SensorUptime\":2500,\"SensorBoot\":3,\"PendingReveal\":" + pending + "}";
             var migrated = new CollectionProgress(JsonSerializer.Deserialize<CollectionSave>(raw, Json), day);
-            Assert(migrated.Save.Version == 2 && migrated.Save.Inventory!.Count == 4, "Legacy schema was not migrated to ID inventory.");
+            Assert(migrated.Save.Version == CollectionProgress.SaveVersion && migrated.Save.Inventory!.Count == 4, "Legacy schema was not migrated to ID inventory.");
             Assert(migrated.Save.Counts.SequenceEqual(old.Counts), "Migration changed counts or gave missing starter toys.");
             for (int i = 0; i < 4; i++) Assert(migrated.GetOwnedCount(ToyCatalog.LegacyCollectibleId(i)) == old.Counts[i], "Legacy ID received another toy's count.");
             Assert(migrated.Save.Steps == 837 && migrated.Save.Day == day && migrated.Save.Claimed, "Migration reset daily progress or eligibility.");
@@ -231,7 +231,7 @@ internal static class CatalogChecks
             Assert(migrated.Save.PendingRevealId == (pending < 0 ? "" : ToyCatalog.LegacyCollectibleId(pending)), "Reordered inventory changed reveal identity.");
         }
         bool rejected = false;
-        try { _ = new CollectionProgress(new CollectionSave { Version = 3 }, day); } catch (ArgumentException) { rejected = true; }
+        try { _ = new CollectionProgress(new CollectionSave { Version = CollectionProgress.SaveVersion + 1 }, day); } catch (ArgumentException) { rejected = true; }
         Assert(rejected, "Unknown schemas were silently migrated as current saves.");
     }
     private static void ProfileReferences()

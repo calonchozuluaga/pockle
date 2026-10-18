@@ -11,6 +11,7 @@ namespace Pockle.Runtime
         private const string SaveKey = "pockle.collection.v1";
         public CollectionProgress Progress { get; private set; }
         public event Action Changed;
+        public int FusionsMade => Progress != null ? Progress.FusionsMade : 0;
         public string WalkingStatus => readOnlySave ? "This build cannot update your saved collection. Use a compatible Pockle version before earning more boxes."
             : Progress != null && PendingRevealId.Length > 0 && !IsOwnedAndAvailable(PendingRevealId)
                 ? "An unfinished reveal isn't available in this build. Your saved collection is preserved."
@@ -47,13 +48,15 @@ namespace Pockle.Runtime
                 }
                 if (!readOnlySave && saved.Version == 1 && !PlayerPrefs.HasKey(SaveKey + ".before-v2"))
                     PlayerPrefs.SetString(SaveKey + ".before-v2", json);
-                if (saved != null && saved.Version != 1 && saved.Version != CollectionProgress.SaveVersion)
+                if (!readOnlySave && saved != null && (saved.Version == 1 || saved.Version == 2)
+                    && !PlayerPrefs.HasKey(SaveKey + ".before-v3")) PlayerPrefs.SetString(SaveKey + ".before-v3", json);
+                if (saved != null && saved.Version != 1 && saved.Version != 2 && saved.Version != CollectionProgress.SaveVersion)
                 {
                     // Do not overwrite a newer schema. Show its legacy snapshot without allowing rewards.
                     PlayerPrefs.SetString(SaveKey + ".backup", json); readOnlySave = true;
                     saved = LegacySnapshot(saved);
                 }
-                else if (saved.Version == CollectionProgress.SaveVersion && saved.Inventory == null)
+                else if ((saved.Version == 2 || saved.Version == CollectionProgress.SaveVersion) && saved.Inventory == null)
                 {
                     PlayerPrefs.SetString(SaveKey + ".backup", json); readOnlySave = true;
                     saved = LegacySnapshot(saved);
@@ -64,6 +67,40 @@ namespace Pockle.Runtime
             if (!readOnlySave) tracker.ResumeIfAllowed();
             Persist();
             if (!Application.isBatchMode) { TryApplyOwnerFoxTestGrant(); TryApplyOwnerFoxFinishesGrant(); TryApplyOwnerPipFinishesGrant(); TryApplyOwnerAxolotlFinishesGrant(); TryApplyOwnerPipFusionStudiesGrant(); TryApplyOwnerWinterTrioGrant(); TryApplyOwnerFusionReviewSpares(); }
+        }
+
+        /// <summary>Persistence can be replaced in tests; production always saves the complete candidate as one JSON value.</summary>
+        internal bool CommitFusion(FusedToy result, Action<string> saveCandidate = null)
+        {
+            if (readOnlySave || Progress == null) return false;
+            string before = JsonUtility.ToJson(Progress.Save);
+            var candidate = new CollectionProgress(JsonUtility.FromJson<CollectionSave>(before), Today);
+            if (!candidate.TryFuse(result)) { FusionCatalog.Restore(Progress.Save.Fusions); return false; }
+            string json = JsonUtility.ToJson(candidate.Save);
+            try
+            {
+                if (saveCandidate != null) saveCandidate(json);
+                else { PlayerPrefs.SetString(SaveKey, json); PlayerPrefs.Save(); }
+            }
+            catch (Exception exception)
+            {
+                // Retain the original in-memory collection and undo any unflushed preference mutation.
+                PlayerPrefs.SetString(SaveKey, before);
+                FusionCatalog.Restore(Progress.Save.Fusions);
+                Debug.LogWarning("Fusion was not committed: " + exception.GetType().Name);
+                return false;
+            }
+            Progress = candidate;
+            FusionCatalog.Restore(Progress.Save.Fusions);
+            dirty = false;
+            Changed?.Invoke();
+            return true;
+        }
+
+        public bool FinishFusion(string id)
+        {
+            if (readOnlySave || !Progress.FinishFusion(id)) return false;
+            Persist(); Changed?.Invoke(); return true;
         }
 
         public const string FusionReviewSparesKey = "pockle.owner-test.fusion-review-spares.v1";

@@ -12,7 +12,7 @@ namespace Pockle.Tests
     public sealed class CatalogMigrationTests
     {
         private const string SaveKey = "pockle.collection.v1";
-        private readonly string[] textKeys = { SaveKey, SaveKey + ".backup", SaveKey + ".before-v2",
+        private readonly string[] textKeys = { SaveKey, SaveKey + ".backup", SaveKey + ".before-v2", SaveKey + ".before-v3",
             "pockle.profile.local.name", "pockle.profile.local.avatarId", "pockle.profile.local.favoriteId" };
         private readonly string[] intKeys = { "pockle.profile.local.avatar", "pockle.profile.local.favorite" };
         private readonly Dictionary<string, string> oldText = new Dictionary<string, string>();
@@ -52,7 +52,7 @@ namespace Pockle.Tests
             string old = "{\"Version\":1,\"Counts\":[0,17,3,9],\"Day\":" + today + ",\"Steps\":837,\"Claimed\":true,\"SensorTotal\":4421,\"SensorUptime\":2500,\"SensorBoot\":3,\"PendingReveal\":1}";
             PlayerPrefs.SetString(SaveKey, old);
             var session = StartSession();
-            Assert.AreEqual(2, session.Progress.Save.Version);
+            Assert.AreEqual(CollectionProgress.SaveVersion, session.Progress.Save.Version);
             Assert.AreEqual(17, session.GetOwnedCount(ToyCatalog.MoonId));
             CollectionAssert.AreEqual(new[] { 0, 17, 3, 9 }, session.Progress.Save.Counts);
             Assert.AreEqual(ToyCatalog.MoonId, session.PendingRevealId);

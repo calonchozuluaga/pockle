@@ -46,7 +46,7 @@ namespace Pockle.Core
         public bool Available { get; }
         /// <summary>The character collection; membership does not grant art availability or reward eligibility.</summary>
         public string CollectionId { get; }
-        public CatalogColor SwatchColor => ToyCatalog.FinishSwatch(Id, FinishId);
+        public CatalogColor SwatchColor => FusionCatalog.TryGet(Id, out var fused) ? FusionCatalog.Swatch(fused) : ToyCatalog.FinishSwatch(Id, FinishId);
         /// <summary>Derived from the character collection's explicit secret identity.</summary>
         public bool IsSecret => ToyCatalog.TryGetCollection(CollectionId, out var collection) && collection.SecretId == Id;
         internal CollectibleDefinition(string id, CharacterDefinition character, FinishDefinition finish,
@@ -242,7 +242,7 @@ namespace Pockle.Core
         public static bool TryGetFinish(string? id, out FinishDefinition finish)
         { finish = null!; return id != null && finishesById.TryGetValue(id, out finish!); }
         public static bool TryGetCollectible(string? id, out CollectibleDefinition collectible)
-        { collectible = null!; return id != null && collectiblesById.TryGetValue(id, out collectible!); }
+        { collectible = null!; return id != null && (collectiblesById.TryGetValue(id, out collectible!) || FusionCatalog.TryGetDefinition(id, out collectible)); }
         public static string LegacyCollectibleId(int index)
         {
             if (index < 0 || index >= legacyIds.Length) throw new ArgumentOutOfRangeException(nameof(index));

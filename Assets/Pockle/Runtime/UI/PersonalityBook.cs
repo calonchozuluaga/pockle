@@ -142,6 +142,15 @@ namespace Pockle.Runtime
         public static bool TryGet(string id, out ToyPersonality personality)
         {
             id = id ?? "";
+            if (FusionCatalog.TryGet(id, out var fused) && TryGet(fused.First, out var parent))
+            {
+                personality = new ToyPersonality(id, parent.Nature, fused.Material,
+                    new[] { fused.Personality, parent.Nature }, parent.Voice, parent.VoicePitch, parent.Motion,
+                    new[] { "Tap", "Shows its own expression", "With friends", "Shares a moment" }, fused.Personality, fused.Material, fused.PersonalityLine)
+                { CharacterId = parent.CharacterId, NatureDetail = parent.NatureDetail, TouchName = "Fused personality",
+                    TouchTrait = fused.Personality, TouchDetail = fused.PersonalityLine, Summary = fused.PersonalityLine };
+                return true;
+            }
             if (toys.TryGetValue(id, out personality)) { EnsureLayers(personality); return true; }
             if (composed.TryGetValue(id, out personality)) return true;
             if (!ToyCatalog.TryGetCollectible(id, out var toy)) return false;
@@ -298,7 +307,7 @@ namespace Pockle.Runtime
         private static readonly Dictionary<string, string> pairNames = new Dictionary<string, string>
         {
             [Key(Peach, Moon)] = "Dusk Pip", [Key(Peach, Gold)] = "Sunrise Pip", [Key(Peach, Mint)] = "Sorbet Pip",
-            [Key(Moon, Gold)] = "Starlight Pip", [Key(Moon, Mint)] = "Sea Glass Pip", [Key(Gold, Mint)] = "Honeydew Pip",
+            [Key(Moon, Gold)] = "Eclipse Pip", [Key(Moon, Mint)] = "Sea Glass Pip", [Key(Gold, Mint)] = "Honeydew Pip",
             [Key(Peach, Peach)] = "Deep Peach Pip", [Key(Moon, Moon)] = "Full Moon Pip", [Key(Gold, Gold)] = "Treasure Pip",
             [Key(Mint, Mint)] = "Deep Mint Pip"
         };
@@ -312,15 +321,20 @@ namespace Pockle.Runtime
         public static FusionOutcome DescribeFusion(string first, string second)
         {
             if (!TryGet(first, out var a) || !TryGet(second, out var b)) return null;
+            if (!ToyCatalog.TryGetCollectible(first, out var firstToy) || !ToyCatalog.TryGetCollectible(second, out var secondToy)
+                || firstToy.CharacterId != secondToy.CharacterId) return null;
             bool same = first == second;
+            string character = ToyCatalog.TryGetCharacter(firstToy.CharacterId, out var body) ? body.DisplayName : firstToy.CharacterId;
+            bool legacyPair = ToyCatalog.TryGetLegacyIndex(first, out _) && ToyCatalog.TryGetLegacyIndex(second, out _);
             bool opaque = first == Mint || second == Mint;
             var outcome = new FusionOutcome
             {
-                Name = pairNames.TryGetValue(Key(first, second), out var name) ? name : "Fusion Pip",
-                Body = "Pip",
+                Name = pairNames.TryGetValue(Key(first, second), out var name) ? name : character + " · " + firstToy.FinishDisplayName + " × " + secondToy.FinishDisplayName,
+                Body = character,
                 // Read top to bottom: the second spare tints the top, the first settles below.
                 Colour = same ? "Deep " + a.Colour : Capitalise(b.Colour) + " to " + a.Colour,
-                Material = same && opaque ? "Soft gel" : opaque ? "Pearl gel" : "Pearl jelly",
+                Material = legacyPair ? (same && opaque ? "Soft gel" : opaque ? "Pearl gel" : "Pearl jelly")
+                    : same ? firstToy.FinishDisplayName : firstToy.FinishDisplayName + " + " + secondToy.FinishDisplayName,
                 Secret = IsSecretRecipe(first, second)
             };
             DescribeFusedPersonality(first, second, out string personality, out string line);

@@ -36,9 +36,16 @@ namespace Pockle.Runtime
         {
             bool glow=ToyCatalog.TryGetCollectible(id,out var toy)&&toy.FinishId=="glow-jelly";
             bool glitter=toy!=null&&(toy.FinishId=="confetti-gel"||id=="fox.clear-jelly");
+            string appearance = FusionMaterial.AppearanceId(id);
+            if (FusionCatalog.TryGet(id, out var fused))
+            {
+                ToyCatalog.TryGetCollectible(fused.First, out var first); ToyCatalog.TryGetCollectible(fused.Second, out var second);
+                glow = first.FinishId == "glow-jelly" || second.FinishId == "glow-jelly" || appearance == PipFusionStudies.EclipseId;
+                glitter = first.FinishId == "confetti-gel" || second.FinishId == "confetti-gel";
+            }
             Strength=light==StageLight.Night?(glow?.50f:glitter?.07f:0):glow?.08f:0;
             Color colour=toy!=null&&HolidayCatalog.IsCharacter(toy.CharacterId)?HolidayFinishMaterial.GlowTint(toy.CharacterId):glitter?new Color(1,.70f,.25f):toy!=null&&toy.CharacterId=="fox"?new Color(.65f,.44f,1):new Color(.25f,.88f,1);
-            if(id==PipFusionStudies.EclipseId)colour=new Color(1,.65f,.23f);
+            if(appearance==PipFusionStudies.EclipseId)colour=new Color(1,.65f,.23f);
             colour.a=Strength;haloMaterial.color=colour;colour.a=Strength*.8f;poolMaterial.color=colour;
             halo.gameObject.SetActive(Strength>0);pool.gameObject.SetActive(Strength>0);
         }

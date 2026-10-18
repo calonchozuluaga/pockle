@@ -146,6 +146,9 @@ namespace Pockle.Runtime
             ApplyStage();
             hud.DailyBoxRequested += OpenDailyBox;
             hud.Bind(collection);
+            hud.SetFusionService(new LocalFusionService(collection));
+            hud.ResumeSavedFusion();
+            if (Application.isEditor || Debug.isDebugBuild) Debug.Log("Pockle fusion ready: persistent same-character fusion, save v" + collection.Progress.Save.Version);
 
             BuildRevealBox();
             audioSource = gameObject.AddComponent<AudioSource>();

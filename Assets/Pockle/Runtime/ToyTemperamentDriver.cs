@@ -35,7 +35,7 @@ namespace Pockle.Runtime
         {
             material=target;
             var resource=(Application.isEditor||Debug.isDebugBuild)?Resources.Load<TextAsset>("PipTemperamentOwnerTest"):null;
-            CycleEnabled=resource!=null&&resource.text.Trim()=="enabled";
+            CycleEnabled=resource!=null&&resource.text.Trim()=="enabled"&&!FusionCatalog.TryGet(collectibleId,out _);
             CurrentTemperament=CycleEnabled?PipTemperament.Sunny:Assigned(collectibleId);
             Apply(default);
         }
@@ -55,6 +55,8 @@ namespace Pockle.Runtime
         }
         public void SetCollectible(string id)
         {
+            var resource=(Application.isEditor||Debug.isDebugBuild)?Resources.Load<TextAsset>("PipTemperamentOwnerTest"):null;
+            CycleEnabled=resource!=null&&resource.text.Trim()=="enabled"&&!FusionCatalog.TryGet(id,out _);
             if(!CycleEnabled)CurrentTemperament=Assigned(id);
             Apply(default);
         }

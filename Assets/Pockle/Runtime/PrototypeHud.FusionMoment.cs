@@ -142,8 +142,9 @@ namespace Pockle.Runtime
             for (int i = 0; i < momentBits.Length; i++) momentBits[i].color = i % 3 == 0 ? Color.white : i % 3 == 1 ? a : secret ? PockleTheme.FieldGold : b;
             // The fused toy: the stand-in blended picture the reveal also uses until Codex's fused materials exist.
             momentChild.texture = FusedPicture(fuseFirst, fuseSecond);
-            momentEyebrow.text = outcome != null ? outcome.Name.ToUpperInvariant() : "";
-            string line = outcome != null ? outcome.PersonalityLine ?? "" : "";
+            FusionCatalog.TryGet(lastFusedId, out var saved);
+            momentEyebrow.text = saved != null && !lastFusionWasPreview ? saved.Name.ToUpperInvariant() : outcome != null ? outcome.Name.ToUpperInvariant() : "";
+            string line = saved != null && !lastFusionWasPreview ? saved.PersonalityLine : outcome != null ? outcome.PersonalityLine ?? "" : "";
             int bang = line.IndexOf("! ", System.StringComparison.Ordinal);
             momentTitle.text = bang > 0 ? line.Substring(0, bang + 1) : line;
             momentLine.text = bang > 0 ? line.Substring(bang + 2) : "";
@@ -157,6 +158,7 @@ namespace Pockle.Runtime
         /// </summary>
         private Texture FusedPicture(string first, string second)
         {
+            if (!lastFusionWasPreview && FusionCatalog.TryGet(lastFusedId, out var fused)) return CutoutPortrait(fused.Id);
             if (revealTexture != null) { Destroy(revealTexture); revealTexture = null; }
             revealTexture = BlendCutouts(CutoutPortrait(second) as Texture2D, CutoutPortrait(first) as Texture2D);
             return revealTexture != null ? revealTexture : CutoutPortrait(first);

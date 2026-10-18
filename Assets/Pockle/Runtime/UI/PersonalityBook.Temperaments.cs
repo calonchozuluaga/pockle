@@ -115,6 +115,7 @@ namespace Pockle.Runtime
         /// <summary>A toy's four dials: its character's base plus its finish's nudge.</summary>
         public static PersonalityDials Dials(string id)
         {
+            if (FusionCatalog.TryGet(id, out var fused)) return new PersonalityDials(fused.Energy, fused.Mood, fused.Boldness, fused.Bedtime);
             string character = "pip", finish = "clear-jelly";
             if (ToyCatalog.TryGetCollectible(id, out var toy)) { character = toy.CharacterId; finish = toy.FinishId; }
             else if (!toys.ContainsKey(id ?? "")) return new PersonalityDials(50, 70, 50, 45);
@@ -170,6 +171,7 @@ namespace Pockle.Runtime
 
         public static Temperament TemperamentOf(string id)
         {
+            if (FusionCatalog.TryGet(id, out var fused)) return (Temperament)fused.Temperament;
             string character = ToyCatalog.TryGetCollectible(id, out var toy) ? toy.CharacterId : "pip";
             var tie = characterDials.TryGetValue(character, out var baseDials) ? Nearest(baseDials) : Temperament.Calm;
             return Nearest(Dials(id), tie);

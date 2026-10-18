@@ -141,6 +141,7 @@ namespace Pockle.Runtime
             float y = LayoutLivingShelf(width, 0);
             shelfViews.gameObject.SetActive(false); shelfSection.gameObject.SetActive(false); shelfEmpty.gameObject.SetActive(false);
             foreach (var tile in toyTiles) tile.gameObject.SetActive(false);
+            y = LayoutSavedFusions(width, y);
             y = LayoutShelfCollections(width, y);
             TopCentered(shelfRoot, Vector2.zero, new Vector2(width, y + 8));
             RefreshShelf();

@@ -113,3 +113,9 @@ October17 winter finish readability: character-specific per-finish pigments and 
 
 
 October17 UiBuild23 integrated: authored winter trio personalities/dials/speech now replace the fallback limitation, Home null-art/BoxHype picture mirroring fixes white boxes, and fusion previews blend readable transparent cutouts. Full local combined PlayMode90/90 passes; final CI/APK status in VALIDATION.
+
+
+## Saved same-character fusion (October17, UX-038/042)
+`CollectionProgress.SaveVersion` is3. `CollectionSave.Fusions` contains engine-free `FusedToy` receipt/profile records and `PendingFusionId` tracks an unfinished fusion reveal independently of daily box reveals. Version1/2 remain migration inputs; CollectionSession retains `.before-v3` JSON before upgrading. Unsupported versions remain read-only.
+`LocalFusionService` validates playable same-character base ingredients and resolves authored personality once. `CollectionSession.CommitFusion` mutates a private candidate, persists the entire JSON, then publishes it and raises Changed. No UI reveal precedes persistence. `CollectionProgress.TryFuse` atomically decrements extras and adds exactly one result/receipt; pending reveal and duplicate-ID guards prevent repeated commits.
+`FusionCatalog` restores the active save's validated dynamic definitions, resolves art through parent character IDs, and caches those definitions. It never adds results to ToyCatalog.Collectibles/Collections or reward pools. Native FusionMaterial blends source surface recipes; it reads no personality fields. PersonalityBook reads saved fusion dials/temperament and faces retain that profile rather than the owner development cycle. HUD previews remain available without a real service; the runtime binds LocalFusionService. Saved-fusion shelf cards, live-shelf candidates and recovery route through the normal owned/playable gate.

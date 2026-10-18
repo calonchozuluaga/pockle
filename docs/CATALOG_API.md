@@ -131,3 +131,9 @@ October 14 — Pip HomeWorld is pip-jelly-garden; Worlds exposes five unique env
 October 14 — Axolotl now has ten available members with AxolotlSpecialId axolotl.glow-jelly. HomeWorld axolotl-blossom-pond, Worlds five, CoverArt Collections/Axolotl/Cover, BoxArt UI/Boxes/Collection-axolotl, BoxModel Boxes/AxolotlCollectionBox. Availability and test grants do not approve box pools.
 
 October15 owner roster: 8 active characters/collections,80 slots,70 playable finishes; ten retired definitions removed, historical save IDs preserved. See ACTIVE_ROSTER.md. AxolotlReactions/Driver now dispatch local face/arm/gill/tail poses on tap alongside Pip/Fox; see AXOLOTL_REACTIONS.md.
+
+
+## Version3 fusion extension — October17
+`CollectionProgress.SaveVersion` is now3; versions1/2 migrate with a raw `.before-v3` backup. Existing inventory/reward fields retain their meaning. `CollectionSave.Fusions` stores result receipts/profile snapshots and `PendingFusionId` stores an interrupted reveal. `FusionCatalog.TryGet(id, out FusedToy)` resolves active-save metadata; `ToyCatalog.TryGetCollectible` also resolves these validated dynamic IDs. They deliberately do not appear in `ToyCatalog.Collectibles`, collection member lists or reward pools. Enumerate saved fusions through `session.Progress.Save.Fusions` and check `session.IsOwnedAndPlayable(id)` before offering play. `session.FinishFusion(id)` only acknowledges a reveal; it never grants inventory. Personal fused toys and Fusion Lab studies are excluded from fusion ingredients. See FUSION.md for the transaction and downgrade constraints.
+
+`session.FusionsMade` reports distinct valid saved fusion receipts for Claude's badge facts. It does not count owner-granted fixed Fusion Lab studies.

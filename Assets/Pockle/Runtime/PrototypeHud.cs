@@ -206,6 +206,7 @@ namespace Pockle.Runtime
         {
             if (modal.gameObject.activeSelf) { CloseModal(); return true; }
             if (FusionMomentPlaying) { moment.Skip(); return true; } // Back skips the fusion moment to the reveal
+            if (page == AppPage.FusionReveal) LeaveSavedFusion();
             if (!backButton.interactable) return true;
             // The phone's Back closes an open play-screen card before it leaves the toy.
             if (page == AppPage.Play && trayTab != TrayClosed) { SetTrayTab(TrayClosed); return true; }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Pockle.Core;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,13 +13,15 @@ namespace Pockle.Runtime
     /// </summary>
     public sealed partial class PrototypeHud
     {
-        private static readonly string[] FusionOrder = { PersonalityBook.Peach, PersonalityBook.Moon, PersonalityBook.Gold, PersonalityBook.Mint };
+        private static readonly string[] FusionOrder = ToyCatalog.Collectibles.Where(t => FusionCatalog.IsSource(t.Id)).Select(t => t.Id).ToArray();
         private IFusionService fusion = new PreviewOnlyFusion();
         /// <summary>Runtime hook for Codex's fusion service; the HUD keeps a preview-only default.</summary>
         public void SetFusionService(IFusionService service) { fusion = service ?? new PreviewOnlyFusion(); RefreshFusion(); }
 
         private string fuseFirst, fuseSecond;
         private bool lastFusionWasPreview = true;
+        private bool fusionCommitBusy;
+        private string lastFusedId;
 
         // The fusion card (owner-approved canvas "Fuse spares, redesigned", October 16): a dark lab with both picks standing
         // on soft pedestals, a blurred "?" toy in the parents' colours, and three hint chips. Who it is stays a surprise.
@@ -33,11 +36,11 @@ namespace Pockle.Runtime
         private Image fusionColourSwatchBottom;
         private RawImage fusionColourSwatchTop;
         private PersonalityMotion fusionMysteryMotion;
-        private readonly Button[] spareTiles = new Button[4];
-        private readonly Image[] spareRings = new Image[4], spareFaces = new Image[4];
-        private readonly RawImage[] sparePictures = new RawImage[4];
-        private readonly Text[] spareNames = new Text[4], spareLabels = new Text[4], spareBadges = new Text[4];
-        private readonly RectTransform[] spareBadgeRects = new RectTransform[4];
+        private readonly Button[] spareTiles = new Button[FusionOrder.Length];
+        private readonly Image[] spareRings = new Image[FusionOrder.Length], spareFaces = new Image[FusionOrder.Length];
+        private readonly RawImage[] sparePictures = new RawImage[FusionOrder.Length];
+        private readonly Text[] spareNames = new Text[FusionOrder.Length], spareLabels = new Text[FusionOrder.Length], spareBadges = new Text[FusionOrder.Length];
+        private readonly RectTransform[] spareBadgeRects = new RectTransform[FusionOrder.Length];
         private static readonly Color LabTop = new Color32(0x54, 0x47, 0x9A, 0xFF), LabDeep = new Color32(0x2A, 0x14, 0x30, 0xFF);
         private static readonly Color LabGlass = new Color(1, 1, 1, .12f), LabMuted = new Color32(0xD9, 0xCB, 0xE0, 0xFF);
         private const float FusionCardHeight = 300, SlotWidth = 128, SpareTileHeight = 136;
@@ -191,7 +194,9 @@ namespace Pockle.Runtime
         private void PickSpare(string id)
         {
             int spares = SpareCount(id);
-            if (spares <= 0) return;
+            if (spares <= 0 || !FusionCatalog.IsSource(id)) return;
+            if (fuseFirst != null && ToyCatalog.TryGetCollectible(fuseFirst, out var firstToy)
+                && ToyCatalog.TryGetCollectible(id, out var nextToy) && firstToy.CharacterId != nextToy.CharacterId) return;
             int picked = (fuseFirst == id ? 1 : 0) + (fuseSecond == id ? 1 : 0);
             bool full = fuseFirst != null && fuseSecond != null;
             if (picked > 0 && (picked >= spares || full))
@@ -207,10 +212,32 @@ namespace Pockle.Runtime
 
         private void Fuse()
         {
-            if (fuseFirst == null || fuseSecond == null) return;
-            // A real service persists the fused toy before anything animates; the preview uses nothing.
-            lastFusionWasPreview = !(fusion.Available && fusion.TryFuse(fuseFirst, fuseSecond));
-            StartFusionMoment(); // the 4-second moment, then the reveal (PrototypeHud.FusionMoment.cs)
+            if (fuseFirst == null || fuseSecond == null || fusionCommitBusy || FusionMomentPlaying || page != AppPage.Fusion) return;
+            string first = fuseFirst, second = fuseSecond;
+            if (!ToyCatalog.TryGetCollectible(first, out var a) || !ToyCatalog.TryGetCollectible(second, out var b) || a.CharacterId != b.CharacterId) return;
+            fusionCommitBusy = true;
+            try
+            {
+                lastFusionWasPreview = !fusion.Available;
+                if (!lastFusionWasPreview && !fusion.TryFuse(first, second))
+                { fusionGoNote.text = "Fusion couldn't be saved. Your spares were kept. Check your picks and try again."; return; }
+                fuseFirst = first; fuseSecond = second;
+                lastFusedId = lastFusionWasPreview ? null : session.Progress.Save.PendingFusionId;
+                StartFusionMoment();
+            }
+            finally { fusionCommitBusy = false; }
+        }
+
+        public void ResumeSavedFusion()
+        {
+            if (session == null || !FusionCatalog.TryGet(session.Progress.Save.PendingFusionId, out var record)) return;
+            lastFusedId = record.Id; fuseFirst = record.First; fuseSecond = record.Second; lastFusionWasPreview = false;
+            Navigate(AppPage.FusionReveal);
+        }
+
+        private void LeaveSavedFusion()
+        {
+            if (session != null && !string.IsNullOrEmpty(lastFusedId)) session.FinishFusion(lastFusedId);
         }
 
         private void RefreshFusion()
@@ -218,8 +245,8 @@ namespace Pockle.Runtime
             if (fusionGo == null) return;
             // Drop picks that are no longer spares (for example after a trade elsewhere).
             int Picked(string id) => (fuseFirst == id ? 1 : 0) + (fuseSecond == id ? 1 : 0);
-            if (fuseSecond != null && Picked(fuseSecond) > SpareCount(fuseSecond)) fuseSecond = null;
-            if (fuseFirst != null && Picked(fuseFirst) > SpareCount(fuseFirst)) fuseFirst = null;
+            if (!fusionCommitBusy && !FusionMomentPlaying && page != AppPage.FusionReveal && fuseSecond != null && Picked(fuseSecond) > SpareCount(fuseSecond)) fuseSecond = null;
+            if (!fusionCommitBusy && !FusionMomentPlaying && page != AppPage.FusionReveal && fuseFirst != null && Picked(fuseFirst) > SpareCount(fuseFirst)) fuseFirst = null;
             ShowSlot(fusionSlotA, fusionSlotPictureA, fusionSlotEmptyA, fusionSlotNameA, fusionSlotTempA, fusionSlotTempPillA, fuseFirst);
             ShowSlot(fusionSlotB, fusionSlotPictureB, fusionSlotEmptyB, fusionSlotNameB, fusionSlotTempB, fusionSlotTempPillB, fuseSecond);
             bool ready = fuseFirst != null && fuseSecond != null;
@@ -245,8 +272,9 @@ namespace Pockle.Runtime
             {
                 string id = FusionOrder[i];
                 int owned = session != null ? session.GetOwnedCount(id) : 0;
-                bool playable = session != null && session.TryGetPlayableVariant(id, out _);
-                bool has = owned > 1 && playable;
+                bool playable = session != null && session.IsOwnedAndPlayable(id);
+                bool matches = fuseFirst == null || (ToyCatalog.TryGetCollectible(fuseFirst, out var chosen) && ToyCatalog.TryGetCollectible(id, out var candidate) && chosen.CharacterId == candidate.CharacterId);
+                bool has = owned > 1 && playable && matches;
                 if (owned == 1 && playable) noSpare.Add(PersonalityBook.ShortName(id));
                 spareTiles[i].gameObject.SetActive(has);
                 if (!has) continue;
@@ -272,7 +300,7 @@ namespace Pockle.Runtime
             fusionGo.GetComponentInChildren<Text>().text = ready ? "Fuse " + FirstName(fuseFirst) + " + " + FirstName(fuseSecond) : "Pick two spares";
             fusionGo.GetComponent<Image>().color = ready ? PockleTheme.Plum : PockleTheme.FillDeep;
             fusionGo.GetComponentInChildren<Text>().color = ready ? PockleTheme.OnPlum : MutedInk;
-            fusionGoNote.text = ready ? "Uses one spare of each. It can't be undone or traded." : "Your last copy of a toy is never used.";
+            fusionGoNote.text = ready ? "Uses one spare of each. It can't be undone or traded." : "Pick two spares of the same character. Your last copy stays.";
         }
 
         /// <summary>A toy's own colour (its finish swatch), for the mystery toy and the fusion moment.</summary>
@@ -383,7 +411,7 @@ namespace Pockle.Runtime
                 MutedInk, FontStyle.Normal, TextAnchor.UpperLeft, Vector2.zero, new Vector2(300, 36));
             revealPreviewNote = Label("Preview: fusion isn't switched on yet, so your spares weren't used.", revealSheet, PockleTheme.SmallSize,
                 PockleTheme.JellyInk, FontStyle.Bold, TextAnchor.UpperLeft, Vector2.zero, new Vector2(300, 36));
-            revealAdd = CreateButton("Add to shelf", revealSheet, Vector2.zero, new Vector2(200, 54), PockleTheme.Plum, () => SelectTab(AppPage.Shelf), out _);
+            revealAdd = CreateButton("Add to shelf", revealSheet, Vector2.zero, new Vector2(200, 54), PockleTheme.Plum, () => { LeaveSavedFusion(); SelectTab(AppPage.Shelf); }, out _);
             revealAgain = CreateButton("Fuse again", revealSheet, Vector2.zero, new Vector2(130, 54), Quiet, () => GoBack(), out _, PockleTheme.BodySize);
         }
 
@@ -402,20 +430,21 @@ namespace Pockle.Runtime
             if (revealName == null || fuseFirst == null || fuseSecond == null) return;
             var outcome = PersonalityBook.DescribeFusion(fuseFirst, fuseSecond);
             if (outcome == null) return;
-            PipVariants.TryFromCollectibleId(fuseFirst, out var a);
-            PipVariants.TryFromCollectibleId(fuseSecond, out var b);
-            revealName.text = outcome.Name;
-            revealPersonalityLine.text = outcome.PersonalityLine;
-            revealParentA.texture = previews[(int)a]; revealParentFaceA.color = PockleTheme.FieldFor(fuseFirst);
-            revealParentB.texture = previews[(int)b]; revealParentFaceB.color = PockleTheme.FieldFor(fuseSecond);
-            revealParentsLine.text = "Fused from " + ToyName(a) + " and " + ToyName(b);
+            FusionCatalog.TryGet(lastFusedId, out var saved);
+            if (saved != null) outcome = PersonalityBook.DescribeFusion(saved.First, saved.Second);
+            revealName.text = saved != null ? saved.Name : outcome.Name;
+            revealPersonalityLine.text = saved != null ? saved.PersonalityLine : outcome.PersonalityLine;
+            revealParentA.texture = CutoutPortrait(fuseFirst); revealParentFaceA.color = PockleTheme.FieldFor(fuseFirst);
+            revealParentB.texture = CutoutPortrait(fuseSecond); revealParentFaceB.color = PockleTheme.FieldFor(fuseSecond);
+            revealParentsLine.text = "Fused from " + PersonalityBook.ShortName(fuseFirst) + " and " + PersonalityBook.ShortName(fuseSecond);
             revealTraitValues[0].text = outcome.Body; revealTraitValues[1].text = outcome.Colour;
-            revealTraitValues[2].text = outcome.Material; revealTraitValues[3].text = outcome.Personality;
+            revealTraitValues[2].text = saved != null ? saved.Material : outcome.Material; revealTraitValues[3].text = saved != null ? saved.Personality : outcome.Personality;
             revealPreviewNote.gameObject.SetActive(lastFusionWasPreview);
             revealAdd.interactable = !lastFusionWasPreview;
+            revealAdd.GetComponentInChildren<Text>().text = lastFusionWasPreview ? "Add to shelf" : "View on shelf";
             if (PersonalityBook.TryGet(fuseFirst, out var personality)) revealMotion.SetStyle(personality.Motion == PersonalityMotionStyle.Show
                 ? PersonalityMotionStyle.Show : PersonalityMotionStyle.Calm);
-            revealPicture.texture = FusedPicture(fuseFirst, fuseSecond); // clear background, no square behind the toy
+            revealPicture.texture = saved != null ? CutoutPortrait(saved.Id) : FusedPicture(fuseFirst, fuseSecond); // clear background, no square behind the toy
         }
 
         /// <summary>

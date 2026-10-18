@@ -18,6 +18,8 @@ namespace Pockle.Core
     public sealed class CollectionSave
     {
         public int Version = 1;
+        public List<FusedToy>? Fusions;
+        public string PendingFusionId = "";
         // Version-1 compatibility projections. ID inventory is authoritative in version 2.
         public int[] Counts = new int[4];
         public List<OwnedCollectible>? Inventory;
@@ -36,16 +38,27 @@ namespace Pockle.Core
     {
         public const int DailyTarget = 1000;
         public CollectionSave Save { get; }
-        public const int SaveVersion = 2;
+        public int FusionsMade
+        {
+            get
+            {
+                var receipts = new HashSet<string>(StringComparer.Ordinal);
+                if (Save.Fusions != null) foreach (var record in Save.Fusions)
+                    if (FusionCatalog.Valid(record)) receipts.Add(record.Id);
+                return receipts.Count;
+            }
+        }
+        public const int SaveVersion = 3;
         private readonly Dictionary<string, int> counts = new Dictionary<string, int>(StringComparer.Ordinal);
         public IReadOnlyDictionary<string, int> OwnedCounts { get; }
-        public bool CanClaim => Save.Steps >= DailyTarget && !Save.Claimed && Save.PendingRevealId.Length == 0;
+        public bool CanClaim => Save.Steps >= DailyTarget && !Save.Claimed && Save.PendingRevealId.Length == 0 && string.IsNullOrEmpty(Save.PendingFusionId);
         public int GetOwnedCount(string? id) => id != null && counts.TryGetValue(id, out int count) ? count : 0;
 
         public CollectionProgress(CollectionSave? saved, int day)
         {
             Save = saved ?? StarterSave();
-            if (Save.Version != 1 && Save.Version != SaveVersion) throw new ArgumentException("Unsupported collection save version.");
+            if (Save.Version != 1 && Save.Version != 2 && Save.Version != SaveVersion) throw new ArgumentException("Unsupported collection save version.");
+            FusionCatalog.Restore(Save.Fusions);
             if (Save.Version == 1)
             {
                 for (int i = 0; i < 4; i++)
@@ -61,6 +74,7 @@ namespace Pockle.Core
                     counts[entry.Id] = Math.Max(GetOwnedCount(entry.Id), BoundedCount(entry.Count));
                 }
             }
+            Save.PendingFusionId = ToyCatalog.IsValidId(Save.PendingFusionId) ? Save.PendingFusionId : "";
             Save.Version = SaveVersion;
             Save.PendingRevealId = ToyCatalog.IsValidId(Save.PendingRevealId) ? Save.PendingRevealId : "";
             Save.Steps = Math.Max(0, Math.Min(DailyTarget, Save.Steps));
@@ -199,6 +213,29 @@ namespace Pockle.Core
             }
             if (changed) SynchronizeInventory();
             return changed;
+        }
+
+        /// <summary>Apply to a private candidate save; the session persists that candidate before publishing it.</summary>
+        public bool TryFuse(FusedToy result)
+        {
+            if (!FusionCatalog.Valid(result) || Save.PendingRevealId.Length > 0 || Save.PendingFusionId.Length > 0
+                || GetOwnedCount(result.Id) > 0 || (Save.Fusions != null && Save.Fusions.Exists(f => f != null && f.Id == result.Id))) return false;
+            int needed = result.First == result.Second ? 3 : 2;
+            if (GetOwnedCount(result.First) < needed || GetOwnedCount(result.Second) < needed) return false;
+            counts[result.First]--; counts[result.Second]--;
+            counts[result.Id] = 1;
+            if (Save.Fusions == null) Save.Fusions = new List<FusedToy>();
+            Save.Fusions.Add(result);
+            Save.PendingFusionId = result.Id;
+            SynchronizeInventory();
+            return true;
+        }
+
+        public bool FinishFusion(string id)
+        {
+            if (string.IsNullOrEmpty(id) || Save.PendingFusionId != id || GetOwnedCount(id) < 1) return false;
+            Save.PendingFusionId = "";
+            return true;
         }
 
         private static int BoundedCount(int count) => Math.Max(0, Math.Min(9999, count));
