@@ -651,6 +651,61 @@ namespace Pockle.Tests
         }
 
         [UnityTest]
+        public IEnumerator ToyCalloutsSitLowerAndStayClearOfHeaderAndTray()
+        {
+            var scaler = root.GetComponentInChildren<CanvasScaler>();
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize; scaler.scaleFactor = .5f;
+            yield return null;
+            Assert.IsTrue(hud.ShowToy(ToyCatalog.GoldId));
+            yield return null; Canvas.ForceUpdateCanvases();
+            var bubble = root.GetComponentsInChildren<RectTransform>(true).Single(t => t.name == "Toy bubble");
+            var corners = new Vector3[4];
+            for (int tray = 0; tray < 2; tray++)
+            {
+                if (tray == 1) ButtonNamed("Stage tab · Light").onClick.Invoke();
+                Canvas.ForceUpdateCanvases();
+                hud.ShowToyExpression(ReactionCue.PickUp, hud.StageViewport.center);
+                bubble.GetWorldCorners(corners);
+                Assert.Less(RectTransformUtility.WorldToScreenPoint(null, corners[0]).y, hud.StageViewport.center.y,
+                    "The tail sits closer to the toy, below its supplied anchor.");
+                foreach (float anchorY in new[] { -100000f, 100000f })
+                {
+                    hud.ShowToyExpression(ReactionCue.PickUp, new Vector2(hud.StageViewport.center.x, anchorY));
+                    bubble.GetWorldCorners(corners);
+                    Assert.GreaterOrEqual(RectTransformUtility.WorldToScreenPoint(null, corners[0]).y, hud.StageViewport.yMin);
+                    Assert.LessOrEqual(RectTransformUtility.WorldToScreenPoint(null, corners[1]).y, hud.StageViewport.yMax);
+                }
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator PaintedWorldHeaderKeepsContrastThroughSubtitleAndFadesOut()
+        {
+            Assert.IsTrue(hud.ShowToy(ToyCatalog.MoonId));
+            yield return null;
+            ButtonNamed("Stage tab · World").onClick.Invoke();
+            root.GetComponentsInChildren<Button>().First(b => b.name.StartsWith("Stage world · pip-")).onClick.Invoke();
+            Canvas.ForceUpdateCanvases();
+            var shade = root.GetComponentsInChildren<RawImage>().Single(i => i.name == "Stage title shade");
+            Assert.IsFalse(shade.raycastTarget, "The scrim must not intercept play gestures.");
+            Assert.AreEqual(Vector3.one, shade.transform.localScale, "Header fade is authored top-to-bottom without flipping its layout.");
+            var prior = RenderTexture.active;
+            var target = RenderTexture.GetTemporary(1, 64, 0);
+            var readback = new Texture2D(1, 64, TextureFormat.RGBA32, false);
+            try
+            {
+                Graphics.Blit(shade.texture, target); RenderTexture.active = target;
+                readback.ReadPixels(new Rect(0, 0, 1, 64), 0, 0); readback.Apply();
+                Assert.Less(readback.GetPixel(0, 0).a, .02f, "No hard lower edge over the world.");
+                Assert.Greater(readback.GetPixel(0, 32).a, .95f, "Contrast remains behind the lower title lines.");
+                Assert.Greater(readback.GetPixel(0, 63).a, .95f);
+            }
+            finally { RenderTexture.active = prior; RenderTexture.ReleaseTemporary(target); Object.Destroy(readback); }
+            hud.GoBack(); hud.GoBack(); yield return null;
+            Assert.IsFalse(shade.gameObject.activeInHierarchy, "Other screens keep their own backgrounds.");
+        }
+
+        [UnityTest]
         public IEnumerator ToyStageShowsCollectionAndSwitchesWorldAndLight()
         {
             var backdrops = new System.Collections.Generic.List<Color>();

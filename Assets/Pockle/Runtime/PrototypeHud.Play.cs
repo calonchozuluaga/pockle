@@ -44,6 +44,7 @@ namespace Pockle.Runtime
         private Text stageTrayTitle, stageTrayNote;
         private Button stageTrayClose;
         private RectTransform stageShade;
+        private static Texture2D stageTitleFade;
         private Shadow headingShadow;
         private bool stagePainted;
         private readonly RectTransform[] stagePanels = new RectTransform[4];
@@ -104,8 +105,8 @@ namespace Pockle.Runtime
 
             // A soft dark shade behind the title when a painted world fills the screen, so white words stay readable.
             stageShade = Rect("Stage title shade", safeRoot); stageShade.SetAsFirstSibling();
-            var shade = stageShade.gameObject.AddComponent<RawImage>(); shade.texture = UiShapes.FadeDown; shade.raycastTarget = false;
-            shade.color = new Color(.16f, .08f, .19f, .42f); shade.rectTransform.localScale = new Vector3(1, -1, 1); // dark at the top
+            var shade = stageShade.gameObject.AddComponent<RawImage>(); shade.texture = StageTitleFade(); shade.raycastTarget = false;
+            shade.color = new Color(.16f, .08f, .19f, .52f);
             stageShade.gameObject.SetActive(false);
             headingShadow = heading.gameObject.GetComponent<Shadow>() ?? heading.gameObject.AddComponent<Shadow>();
             headingShadow.effectColor = new Color(.10f, .04f, .12f, .35f); headingShadow.effectDistance = new Vector2(0, -1); headingShadow.enabled = false;
@@ -375,8 +376,8 @@ namespace Pockle.Runtime
             foreach (var choice in worldChoices) if (choice.Key == shownKey && choice.Art != null) stagePainted = true;
             bool dark = stagePainted || StageLook.IsDark(stageWorld, stageLight);
             heading.color = dark ? PockleTheme.OnPlum : Ink;
-            headingShadow.enabled = stagePainted;
-            stageShade.gameObject.SetActive(stagePainted);
+            headingShadow.enabled = dark;
+            stageShade.gameObject.SetActive(dark);
             StyleStageTalk(dark);
             stageEyebrow.color = dark ? PockleTheme.OnPlumMuted : MutedInk;
             playHint.color = Ink;
@@ -512,6 +513,25 @@ namespace Pockle.Runtime
             finishContent.sizeDelta = new Vector2(collection.Members.Count * (FinishTileWidth + 8) + 6, FinishTileHeight + 6);
         }
 
+        // Keep the title, eyebrow and personality lines over a consistent scrim, then fade below them.
+        // This dedicated ramp leaves the shared collection/banner gradients unchanged.
+        private static Texture2D StageTitleFade()
+        {
+            if (stageTitleFade != null) return stageTitleFade;
+            const int height = 64;
+            stageTitleFade = new Texture2D(1, height, TextureFormat.RGBA32, false)
+            { name = "Stage header fade", filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Clamp };
+            var pixels = new Color32[height];
+            for (int y = 0; y < height; y++)
+            {
+                float alpha = Mathf.SmoothStep(0, 1, Mathf.Clamp01(y / ((height - 1f) * .30f)));
+                pixels[y] = new Color32(255, 255, 255, (byte)(255 * alpha));
+            }
+            stageTitleFade.SetPixels32(pixels);
+            stageTitleFade.Apply(false, true);
+            return stageTitleFade;
+        }
+
         /// <summary>Header pill, title block and tray positions on the play page.</summary>
         private void LayoutStage(Vector2 size, float left, float width)
         {
@@ -532,8 +552,8 @@ namespace Pockle.Runtime
             titleBottom = LayoutStageTalk(left, width, titleBottom);
 
             // Title shade across the top of the screen.
-            stageShade.anchorMin = new Vector2(0, 1); stageShade.anchorMax = new Vector2(1, 1); stageShade.pivot = new Vector2(.5f, .5f); // flipped about its centre
-            stageShade.offsetMin = new Vector2(-left, -(titleBottom + 70)); stageShade.offsetMax = new Vector2(left, 60);
+            stageShade.anchorMin = new Vector2(0, 1); stageShade.anchorMax = new Vector2(1, 1); stageShade.pivot = new Vector2(.5f, .5f);
+            stageShade.offsetMin = new Vector2(-left, -(titleBottom + 120)); stageShade.offsetMax = new Vector2(left, 60);
 
             // The card: header row, then the open button's panel. Only one is open at a time.
             float trayWidth = Mathf.Min(size.x - 24, 400);

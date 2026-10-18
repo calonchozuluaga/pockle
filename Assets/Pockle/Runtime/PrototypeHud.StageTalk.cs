@@ -186,13 +186,24 @@ namespace Pockle.Runtime
             stickerRect.anchorMin = stickerRect.anchorMax = new Vector2(0, .5f); stickerRect.pivot = new Vector2(0, .5f);
             stickerRect.anchoredPosition = new Vector2(16 + textWidth + gap, 0); stickerRect.sizeDelta = new Vector2(stickerSize, stickerSize);
 
-            // Screen point → safe-area local point; the bubble's bottom (its tail) sits just above the head.
-            Vector2 screen = headScreen ?? new Vector2(StageViewport.center.x, StageViewport.yMax - StageViewport.height * .16f);
+            // Keep callouts closer to the toy; arrivals and reaction anchors both sit lower.
+            // Clamp the entire bubble inside the free stage area, including when a tray is open.
+            Vector2 screen = headScreen ?? new Vector2(StageViewport.center.x, StageViewport.yMax - StageViewport.height * .22f);
             var cam = canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay ? canvas.worldCamera : null;
             if (RectTransformUtility.ScreenPointToLocalPointInRectangle(safeRoot, screen, cam, out var local))
             {
                 float half = safeRoot.rect.width / 2 - bubbleWidth / 2 - 12;
-                talkBubble.anchoredPosition = new Vector2(Mathf.Clamp(local.x, -half, half), local.y + 14);
+                float y = local.y - 10;
+                if (RectTransformUtility.ScreenPointToLocalPointInRectangle(safeRoot, new Vector2(screen.x, StageViewport.yMin), cam, out var bottom)
+                    && RectTransformUtility.ScreenPointToLocalPointInRectangle(safeRoot, new Vector2(screen.x, StageViewport.yMax), cam, out var top))
+                {
+                    float minY = bottom.y + 10;
+                    float maxY = top.y - talkBubble.sizeDelta.y - 10;
+                    // On very short layouts, keep the header and tray usable instead of overlapping them.
+                    if (maxY < minY) { talkPop.Hide(); return expression; }
+                    y = Mathf.Clamp(y, minY, maxY);
+                }
+                talkBubble.anchoredPosition = new Vector2(Mathf.Clamp(local.x, -half, half), y);
             }
             talkBubble.SetAsLastSibling();
             talkPop.Play(delay, reducedMotionEnabled);

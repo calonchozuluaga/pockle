@@ -228,3 +228,5 @@ October17 winter finish readability: character-specific per-finish pigments and 
 
 
 October17 UiBuild23 integrated: authored winter trio personalities/dials/speech now replace the fallback limitation, Home null-art/BoxHype picture mirroring fixes white boxes, and fusion previews blend readable transparent cutouts. Full local combined PlayMode90/90 passes; final CI/APK status in VALIDATION.
+
+UX-025/042 October17 owner callout/readability follow-up: approved direct HUD edits on codex/play-callout-readability lower speech/hello positions, keep bubbles clear of the header and tray (quiet when there is no room), and extend a dedicated plum fade through the title/personality lines over painted and dark worlds. Local checks and device review status are in VALIDATION.md.
