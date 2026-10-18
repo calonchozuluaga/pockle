@@ -98,7 +98,7 @@ namespace Pockle.Runtime
             homeShelfPeek.gameObject.AddComponent<Mask>().showMaskGraphic = true;
             var backdrop = Rect("Shelf art", homeShelfPeek.transform);
             homePeekBackdrop = backdrop.gameObject.AddComponent<RawImage>(); homePeekBackdrop.raycastTarget = false;
-            homePeekBackdrop.texture = Resources.Load<Texture2D>(ShelfBackdropPath);
+            SetPicture(homePeekBackdrop, Resources.Load<Texture2D>(ShelfBackdropPath));
             homePeekBackdrop.enabled = homePeekBackdrop.texture != null;
             for (int i = 0; i < homePeekToys.Length; i++)
             {
@@ -243,7 +243,7 @@ namespace Pockle.Runtime
             LeftLabel(card.Root, new Vector2(index * (ActivityCardWidth + 10), 0), new Vector2(ActivityCardWidth, ActivityCardHeight));
             card.Root.name = "Activity · " + item.Kind + " · " + item.Who;
             card.Who.text = item.Who; card.When.text = LocalActivityFeed.Ago(item.WhenUtc);
-            card.Avatar.texture = StillPortrait(item.AvatarId); card.AvatarFace.color = PockleTheme.FieldFor(item.AvatarId);
+            SetPicture(card.Avatar, StillPortrait(item.AvatarId)); card.AvatarFace.color = PockleTheme.FieldFor(item.AvatarId);
             string[] kinds = { "NEW TOY", "FUSION", "COMPLETE", "BADGE", "MILESTONE" };
             card.Kind.text = item.Detail == "SECRET" ? "SECRET" : kinds[(int)item.Kind];
             card.Caption.text = item.Caption;
@@ -256,12 +256,12 @@ namespace Pockle.Runtime
                 case ActivityKind.Complete:
                     ToyCatalog.TryGetCollection(item.CollectionId, out var done);
                     card.ArtFace.color = done != null ? CatalogUnityColor(done.FieldColor) : PockleTheme.FieldPeach;
-                    card.Picture.texture = done != null ? CollectionLook.Box(done, out _) : null;
+                    SetPicture(card.Picture, done != null ? CollectionLook.Box(done, out _) : null);
                     PlaceCentered(card.Picture.rectTransform, Vector2.zero, new Vector2(84, 84));
                     break;
                 case ActivityKind.Fusion:
                     card.ArtFace.color = Color.Lerp(PockleTheme.FieldFor(item.CollectibleId), PockleTheme.FieldFor(item.SecondId), .5f);
-                    card.Picture.texture = StillPortrait(item.CollectibleId); card.Second.texture = StillPortrait(item.SecondId);
+                    SetPicture(card.Picture, StillPortrait(item.CollectibleId)); SetPicture(card.Second, StillPortrait(item.SecondId));
                     PlaceCentered(card.Picture.rectTransform, new Vector2(-48, 0), new Vector2(72, 72));
                     PlaceCentered(card.Plus.rectTransform, Vector2.zero, new Vector2(24, 24));
                     PlaceCentered(card.Second.rectTransform, new Vector2(48, 0), new Vector2(72, 72));
@@ -275,7 +275,7 @@ namespace Pockle.Runtime
                     break;
                 default:
                     card.ArtFace.color = PockleTheme.FieldFor(item.CollectibleId);
-                    card.Picture.texture = StillPortrait(item.CollectibleId);
+                    SetPicture(card.Picture, StillPortrait(item.CollectibleId));
                     PlaceCentered(card.Picture.rectTransform, Vector2.zero, new Vector2(88, 88));
                     break;
             }
@@ -509,7 +509,7 @@ namespace Pockle.Runtime
             homeBoxArt.enabled = homeBoxArt.texture != null;
             homeBoxTitle.text = (daily != null ? daily.DisplayName : "Pip") + " box";
             homeBoxFace.color = ready ? PockleTheme.Jelly : Color.Lerp(PockleTheme.Jelly, Color.white, .3f);
-            homeBoxHype.enabled = ready; // the box only shakes and sparkles when it can be opened
+            homeBoxHype.Excited = ready; // the box only glows, shakes and sparkles when it can be opened
             homeOpen.gameObject.SetActive(ready); homeOpen.interactable = ready;
             homeWalk.gameObject.SetActive(walking);
             homeSteps.gameObject.SetActive(walking);
@@ -527,7 +527,7 @@ namespace Pockle.Runtime
             {
                 string id = PeekId(i);
                 homePeekToys[i].transform.parent.parent.gameObject.SetActive(id != null);
-                homePeekToys[i].texture = id != null ? ScenePortrait(id, false) : null;
+                SetPicture(homePeekToys[i], id != null ? ScenePortrait(id, false) : null);
             }
             ShelfMoment moment = null;
             for (int i = 0; i + 1 < homePeekToys.Length && moment == null; i++)
@@ -611,7 +611,7 @@ namespace Pockle.Runtime
                 int found = FoundCount(collection), total = collection.Members.Count;
                 card.Button.name = "Home collection · " + collection.Id;
                 LeftLabel(card.Button.GetComponent<RectTransform>(), new Vector2(i * (CollectWidth + 10), 0), new Vector2(CollectWidth, CollectHeight));
-                card.Cover.texture = CollectionLook.Banner(collection);
+                SetPicture(card.Cover, CollectionLook.Banner(collection));
                 card.Cover.enabled = card.Cover.texture != null;
                 card.Cover.uvRect = CollectionLook.Cover(card.Cover.texture, CollectWidth / CollectHeight, .5f, .45f);
                 card.Box.texture = CollectionLook.Box(collection, out _); card.Box.enabled = card.Box.texture != null;
@@ -637,7 +637,7 @@ namespace Pockle.Runtime
             }
             homeNewBanner.gameObject.SetActive(fresh.Count > 0);
             if (fresh.Count == 0) return;
-            homeNewCover.texture = CollectionLook.Banner(fresh[0]);
+            SetPicture(homeNewCover, CollectionLook.Banner(fresh[0]));
             homeNewName.text = fresh.Count > 1 ? "New collections" : fresh[0].DisplayName;
             var names = new List<string>(); foreach (var c in fresh) names.Add(c.DisplayName);
             homeNewLine.text = names.Count > 1 ? string.Join(", ", names.GetRange(0, names.Count - 1).ToArray()) + " and " + names[names.Count - 1] : "A new collection";
@@ -645,7 +645,7 @@ namespace Pockle.Runtime
             {
                 bool has = i < fresh.Count;
                 homeNewBoxes[i].transform.parent.gameObject.SetActive(has);
-                if (has) homeNewBoxes[i].texture = CollectionLook.Box(fresh[i], out _);
+                if (has) SetPicture(homeNewBoxes[i], CollectionLook.Box(fresh[i], out _));
             }
         }
 
@@ -660,6 +660,17 @@ namespace Pockle.Runtime
         {
             var remaining = System.DateTime.UtcNow.Date.AddDays(1) - System.DateTime.UtcNow;
             return "Next box in " + (int)remaining.TotalHours + "h " + remaining.Minutes + "m.";
+        }
+
+        /// <summary>
+        /// Sets a picture and hides it while there is none: an empty RawImage draws a white square (owner, October 17:
+        /// white boxes where art hadn't loaded).
+        /// </summary>
+        private static void SetPicture(RawImage image, Texture texture)
+        {
+            if (image == null) return;
+            image.texture = texture;
+            image.enabled = texture != null;
         }
     }
 }

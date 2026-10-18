@@ -40,7 +40,7 @@ namespace Pockle.Runtime
                 var texture = new Texture2D(width, height, TextureFormat.RGBA32, false)
                 { name = "Cutout · " + id, filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Clamp };
                 texture.SetPixels32(pixels);
-                texture.Apply(false, true);
+                texture.Apply(false, false); // stays readable: fusion blends two cut-outs (small, cached once per toy)
                 return texture;
             }
             finally

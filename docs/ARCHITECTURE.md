@@ -110,3 +110,6 @@ TactilePrototype routes accepted toy reactions and squish/lift/turn/night/idle c
 
 
 October17 winter finish readability: character-specific per-finish pigments and opt-in whole-toy flock/plush/foam surfaces now distinguish all thirty Reiny/Guin/Bundy variants. Native side-by-side gallery: [finish review](winter-trio-finish-review/index.html). Original Classic paint, character markings, IDs/inventory/personality and older holiday finishes preserved. Full local PlayMode90/90 passes; latest CI/phone status in VALIDATION.
+
+
+October17 UiBuild23 integrated: authored winter trio personalities/dials/speech now replace the fallback limitation, Home null-art/BoxHype picture mirroring fixes white boxes, and fusion previews blend readable transparent cutouts. Full local combined PlayMode90/90 passes; final CI/APK status in VALIDATION.

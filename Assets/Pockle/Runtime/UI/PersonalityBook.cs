@@ -218,7 +218,17 @@ namespace Pockle.Runtime
                 Reactions = new[] { "Tap", "Waves a mitten", "Tap again", "Wobbles its pom", "Left for a while", "Nods off" } },
             ["ginger"] = new CharacterNature { Name = "ginger", Nature = "Sweet and playful", Summary = "Sweet", Voice = "Crunchy giggle", Pitch = 1.15f, Motion = PersonalityMotionStyle.Show,
                 Detail = "Every Ginger waves an iced paw, wiggles its ears and does a button dance.", Traits = new[] { "Sweet", "Playful" },
-                Reactions = new[] { "Tap", "Waves an iced paw", "Tap again", "Does a button dance", "Left for a while", "Takes a sweet bow" } }
+                Reactions = new[] { "Tap", "Waves an iced paw", "Tap again", "Does a button dance", "Left for a while", "Takes a sweet bow" } },
+            // Winter trio (first drafts, October 17, from Codex's five actions per character; the owner may rename any line).
+            ["reiny"] = new CharacterNature { Name = "Reiny", Nature = "Eager and gentle", Summary = "Eager", Voice = "Jingly snort", Pitch = 1.05f, Motion = PersonalityMotionStyle.Curious,
+                Detail = "Every Reiny says hello with a hoof, nods its antlers and prances when it's happy.", Traits = new[] { "Eager", "Gentle" },
+                Reactions = new[] { "Tap", "Hoof hello", "Tap again", "Antler nod", "Left for a while", "Prances in place" } },
+            ["guin"] = new CharacterNature { Name = "Guin", Nature = "Cosy and chilled", Summary = "Cosy", Voice = "Soft squawk", Pitch = .95f, Motion = PersonalityMotionStyle.Calm,
+                Detail = "Every Guin waves a flipper, wiggles its earmuffs and waddles somewhere warm.", Traits = new[] { "Cosy", "Chilled" },
+                Reactions = new[] { "Tap", "Flipper hello", "Tap again", "Earmuff wiggle", "Left for a while", "Cozy waddle" } },
+            ["bundy"] = new CharacterNature { Name = "Bundy", Nature = "Jolly and sweet", Summary = "Jolly", Voice = "Wobbly giggle", Pitch = 1.1f, Motion = PersonalityMotionStyle.Show,
+                Detail = "Every Bundy wobbles its holly, jiggles its pudding and takes a thank-you bow.", Traits = new[] { "Jolly", "Sweet" },
+                Reactions = new[] { "Tap", "Holly wobble", "Tap again", "Pudding jiggle", "Left for a while", "Thank-you bow" } }
         };
 
         public static CharacterNature NatureOf(string characterId) => natures.TryGetValue(characterId ?? "", out var nature) ? nature : FallbackNature(characterId);

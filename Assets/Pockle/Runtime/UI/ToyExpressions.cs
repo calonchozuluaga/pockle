@@ -94,6 +94,9 @@ namespace Pockle.Runtime
             new Overlay(new[] { "chill" }, new[] { ReactionCue.Poke, ReactionCue.Squish }, E("s'all good")),
             new Overlay(new[] { "festive" }, new[] { ReactionCue.Poke, ReactionCue.Squish }, E("jingle!", Star)),
             new Overlay(new[] { "cosy", "warm" }, new[] { ReactionCue.Squish, ReactionCue.PickUp }, E("toasty~", Heart)),
+            new Overlay(new[] { "jolly" }, new[] { ReactionCue.Poke, ReactionCue.Squish }, E("jiggle!"), E("ho ho!", Star)),
+            new Overlay(new[] { "chilled", "chilly" }, new[] { ReactionCue.Poke, ReactionCue.Squish }, E("brr!")),
+            new Overlay(new[] { "eager" }, new[] { ReactionCue.Poke, ReactionCue.Hello }, E("hi hi hi!")),
         };
 
         /// <summary>How likely a cue is to show a bubble at all (0..1): bolder toys talk more; Hello always speaks.</summary>

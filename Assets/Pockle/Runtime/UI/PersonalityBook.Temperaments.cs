@@ -57,7 +57,10 @@ namespace Pockle.Runtime
             ["firb"] = new PersonalityDials(78, 74, 86, 42),    // Show-off
             ["coco"] = new PersonalityDials(42, 80, 44, 40),    // Calm
             ["snowy"] = new PersonalityDials(72, 86, 56, 30),   // Sunny
-            ["ginger"] = new PersonalityDials(82, 62, 72, 52)   // Mischief
+            ["ginger"] = new PersonalityDials(82, 62, 72, 52),  // Mischief
+            ["reiny"] = new PersonalityDials(64, 82, 46, 40),   // Sunny, a little shy (its "shy bow")
+            ["guin"] = new PersonalityDials(38, 76, 42, 42),    // Calm
+            ["bundy"] = new PersonalityDials(78, 78, 84, 42)    // Show-off
         };
 
         /// <summary>What every finish adds unless a toy has its own line below (small nudges, so the character still shows).</summary>

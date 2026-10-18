@@ -151,16 +151,32 @@ namespace Pockle.Runtime
             moment.Play(secret);
         }
 
-        /// <summary>The blended stand-in picture for the fused toy (Pip finishes have live previews; others use the first parent).</summary>
+        /// <summary>
+        /// The stand-in picture for the fused toy until Codex's fused materials exist: the second parent's cut-out fading
+        /// into the first's from the top, on a clear background (owner, October 17: no square behind the revealed toy).
+        /// </summary>
         private Texture FusedPicture(string first, string second)
         {
-            if (PipVariants.TryFromCollectibleId(first, out var a) && PipVariants.TryFromCollectibleId(second, out var b) && previews[(int)a] != null && previews[(int)b] != null)
+            if (revealTexture != null) { Destroy(revealTexture); revealTexture = null; }
+            revealTexture = BlendCutouts(CutoutPortrait(second) as Texture2D, CutoutPortrait(first) as Texture2D);
+            return revealTexture != null ? revealTexture : CutoutPortrait(first);
+        }
+
+        /// <summary>Blends two same-size cut-outs top to bottom, keeping their transparency. Null when they can't be read.</summary>
+        private static Texture2D BlendCutouts(Texture2D top, Texture2D bottom)
+        {
+            if (top == null || bottom == null || !top.isReadable || !bottom.isReadable || top.width != bottom.width || top.height != bottom.height) return null;
+            int width = top.width, height = top.height;
+            Color32[] upper = top.GetPixels32(), lower = bottom.GetPixels32(), blend = new Color32[upper.Length];
+            for (int y = 0; y < height; y++)
             {
-                if (revealTexture != null) Destroy(revealTexture);
-                revealTexture = BlendPortraits(previews[(int)b], previews[(int)a]);
-                return revealTexture;
+                float k = Mathf.Clamp01((y / (float)height - .38f) / .3f); // texture rows run bottom to top
+                k = k * k * (3 - 2 * k);
+                for (int x = 0; x < width; x++) { int i = y * width + x; blend[i] = Color32.Lerp(lower[i], upper[i], k); }
             }
-            return CutoutPortrait(first);
+            var texture = new Texture2D(width, height, TextureFormat.RGBA32, false) { name = "Pockle fused cut-out", wrapMode = TextureWrapMode.Clamp };
+            texture.SetPixels32(blend); texture.Apply(false, true);
+            return texture;
         }
 
         /// <summary>A soft two-colour swirl for the orb (gold-flecked for a secret recipe). Made once per fusion.</summary>

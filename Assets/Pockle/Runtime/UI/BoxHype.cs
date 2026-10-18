@@ -17,6 +17,13 @@ namespace Pockle.Runtime
         private RectTransform pictureRect;
         private Color glowColour;
         private float phase;
+        private readonly System.Collections.Generic.List<GameObject> sparkles = new System.Collections.Generic.List<GameObject>();
+
+        /// <summary>
+        /// False keeps the box picture but drops the glow, sparkles and shake (a box that can't be opened yet). Use this
+        /// rather than disabling the component: the child draws the picture, so a disabled one showed a blank white square.
+        /// </summary>
+        public bool Excited { get; set; } = true;
 
         /// <summary>Adds the effect to <paramref name="box"/>. <paramref name="colour"/> tints the glow (the collection's accent).</summary>
         public static BoxHype Add(RawImage box, Color colour, float phaseSeconds = 0f)
@@ -40,6 +47,7 @@ namespace Pockle.Runtime
             pictureRect = Child("Box picture", Vector2.zero, Vector2.one);
             pictureRect.pivot = new Vector2(.5f, .08f);
             picture = pictureRect.gameObject.AddComponent<RawImage>(); picture.raycastTarget = false;
+            picture.enabled = false; glow.enabled = false; // nothing until the first mirror: an empty RawImage draws white
 
             // Sparkles around the box (anchor = place on the box, size in px, colour, phase).
             Sparkle(new Vector2(.06f, .86f), 18, Color.white, 0f);
@@ -64,6 +72,7 @@ namespace Pockle.Runtime
             var rect = Child("Box sparkle", at, at); rect.sizeDelta = new Vector2(size, size);
             var image = rect.gameObject.AddComponent<RawImage>(); image.texture = UiShapes.Sparkle; image.color = colour; image.raycastTarget = false;
             rect.gameObject.AddComponent<PersonalityMotion>().Configure(PersonalityMotion.Kind.Twinkle, phaseSeconds: phase + sparklePhase);
+            sparkles.Add(rect.gameObject);
             return rect;
         }
 
@@ -73,8 +82,10 @@ namespace Pockle.Runtime
             // Mirror whatever the page set on the box (texture, crop, visible or not).
             picture.texture = source.texture; picture.uvRect = source.uvRect;
             bool shown = source.enabled && source.texture != null;
-            picture.enabled = shown; glow.enabled = shown;
+            picture.enabled = shown; glow.enabled = shown && Excited;
             if (source.color.a > 0) source.color = Color.clear;
+            foreach (var sparkle in sparkles) if (sparkle.activeSelf != (shown && Excited)) sparkle.SetActive(shown && Excited);
+            if (!Excited) { pictureRect.localRotation = Quaternion.identity; pictureRect.localScale = Vector3.one; return; }
 
             bool calm = SquishFeedback.Calm;
             float time = Time.unscaledTime + phase;

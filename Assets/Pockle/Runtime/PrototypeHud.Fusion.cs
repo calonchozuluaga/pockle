@@ -415,9 +415,7 @@ namespace Pockle.Runtime
             revealAdd.interactable = !lastFusionWasPreview;
             if (PersonalityBook.TryGet(fuseFirst, out var personality)) revealMotion.SetStyle(personality.Motion == PersonalityMotionStyle.Show
                 ? PersonalityMotionStyle.Show : PersonalityMotionStyle.Calm);
-            if (revealTexture != null) Destroy(revealTexture);
-            revealTexture = BlendPortraits(previews[(int)b], previews[(int)a]);
-            revealPicture.texture = revealTexture;
+            revealPicture.texture = FusedPicture(fuseFirst, fuseSecond); // clear background, no square behind the toy
         }
 
         /// <summary>
