@@ -20,6 +20,7 @@ namespace Pockle.Core
         public int Version = 1;
         public List<FusedToy>? Fusions;
         public string PendingFusionId = "";
+        public BadgeRuntimeSave? BadgeState;
         // Version-1 compatibility projections. ID inventory is authoritative in version 2.
         public int[] Counts = new int[4];
         public List<OwnedCollectible>? Inventory;
@@ -34,7 +35,7 @@ namespace Pockle.Core
     }
 
     /// <summary>Local beta inventory. Production rewards need server validation.</summary>
-    public sealed class CollectionProgress
+    public sealed partial class CollectionProgress
     {
         public const int DailyTarget = 1000;
         public CollectionSave Save { get; }
@@ -48,7 +49,7 @@ namespace Pockle.Core
                 return receipts.Count;
             }
         }
-        public const int SaveVersion = 3;
+        public const int SaveVersion = 4;
         private readonly Dictionary<string, int> counts = new Dictionary<string, int>(StringComparer.Ordinal);
         public IReadOnlyDictionary<string, int> OwnedCounts { get; }
         public bool CanClaim => Save.Steps >= DailyTarget && !Save.Claimed && Save.PendingRevealId.Length == 0 && string.IsNullOrEmpty(Save.PendingFusionId);
@@ -57,7 +58,7 @@ namespace Pockle.Core
         public CollectionProgress(CollectionSave? saved, int day)
         {
             Save = saved ?? StarterSave();
-            if (Save.Version != 1 && Save.Version != 2 && Save.Version != SaveVersion) throw new ArgumentException("Unsupported collection save version.");
+            if (Save.Version < 1 || Save.Version > SaveVersion) throw new ArgumentException("Unsupported collection save version.");
             FusionCatalog.Restore(Save.Fusions);
             if (Save.Version == 1)
             {
@@ -78,6 +79,7 @@ namespace Pockle.Core
             Save.Version = SaveVersion;
             Save.PendingRevealId = ToyCatalog.IsValidId(Save.PendingRevealId) ? Save.PendingRevealId : "";
             Save.Steps = Math.Max(0, Math.Min(DailyTarget, Save.Steps));
+            InitializeBadgeFacts(day);
             OwnedCounts = new ReadOnlyDictionary<string, int>(counts);
             SynchronizeInventory();
             AdvanceDay(day);
@@ -89,6 +91,7 @@ namespace Pockle.Core
             if (day <= Save.Day) return false;
             Save.Day = day;
             Save.Steps = 0;
+            Save.BadgeState!.DailyWalkingSteps = 0;
             Save.Claimed = false;
             Save.SensorTotal = -1; // Never assign an interval across midnight to either day.
             Save.SensorUptime = -1;
@@ -114,7 +117,10 @@ namespace Pockle.Core
                 long delta = total - previous;
                 // Reject implausible batches, but tolerate sensor batching and pocket walks.
                 if (delta > 0 && delta <= Math.Max(20d, elapsed * 4d))
-                    Save.Steps = (int)Math.Min(DailyTarget, Save.Steps + delta);
+                {
+                    Save.Steps = (int)Math.Min(DailyTarget, Save.Steps + Math.Min(delta, DailyTarget));
+                    RecordWalking(delta);
+                }
             }
             return changed || total != previous || reset;
         }
@@ -131,7 +137,10 @@ namespace Pockle.Core
             if (day != Save.Day || !CanClaim || !ToyCatalog.IsDailyEligible(collectibleId)) return false;
             Save.Claimed = true;
             string id = collectibleId!;
-            counts[id] = BoundedCount(GetOwnedCount(id) + 1);
+            int before = GetOwnedCount(id);
+            counts[id] = BoundedCount(before + 1);
+            if (counts[id] > before) MarkEarned(id);
+            if (!Save.BadgeState!.WalkingBoxDays.Contains(day)) Save.BadgeState.WalkingBoxDays.Add(day);
             Save.PendingRevealId = id; // Persist ownership before animation; interruption cannot grant twice.
             SynchronizeInventory();
             return true;
@@ -222,8 +231,9 @@ namespace Pockle.Core
                 || GetOwnedCount(result.Id) > 0 || (Save.Fusions != null && Save.Fusions.Exists(f => f != null && f.Id == result.Id))) return false;
             int needed = result.First == result.Second ? 3 : 2;
             if (GetOwnedCount(result.First) < needed || GetOwnedCount(result.Second) < needed) return false;
-            counts[result.First]--; counts[result.Second]--;
-            counts[result.Id] = 1;
+            ConsumeSpareProvenance(result.First); counts[result.First]--;
+            ConsumeSpareProvenance(result.Second); counts[result.Second]--;
+            counts[result.Id] = 1; MarkEarned(result.Id);
             if (Save.Fusions == null) Save.Fusions = new List<FusedToy>();
             Save.Fusions.Add(result);
             Save.PendingFusionId = result.Id;
@@ -250,6 +260,7 @@ namespace Pockle.Core
             var ids = new List<string>(counts.Keys); ids.Sort(StringComparer.Ordinal);
             Save.Inventory = new List<OwnedCollectible>(ids.Count);
             foreach (string id in ids) Save.Inventory.Add(new OwnedCollectible(id, counts[id]));
+            SynchronizeBadgeFacts();
             Save.Counts = new int[4];
             for (int i = 0; i < 4; i++) Save.Counts[i] = GetOwnedCount(ToyCatalog.LegacyCollectibleId(i));
             Save.PendingReveal = GetOwnedCount(Save.PendingRevealId) > 0 && ToyCatalog.TryGetLegacyIndex(Save.PendingRevealId, out int index) ? index : -1;

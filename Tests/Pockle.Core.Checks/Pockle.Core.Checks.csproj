@@ -35,5 +35,6 @@
     <Compile Include="WinterTrioChecks.cs" />
     <Compile Include="FusionReviewSpareChecks.cs" />
     <Compile Include="PersistentFusionChecks.cs" />
+    <Compile Include="BadgeRuntimeChecks.cs" />
   </ItemGroup>
 </Project>

@@ -9,9 +9,18 @@ namespace Pockle.Runtime
     public sealed class CollectionSession : MonoBehaviour
     {
         private const string SaveKey = "pockle.collection.v1";
+        public const string BadgePreferenceKey = "pockle.badges.earned.v1";
         public CollectionProgress Progress { get; private set; }
         public event Action Changed;
         public int FusionsMade => Progress != null ? Progress.FusionsMade : 0;
+        public IReadOnlyDictionary<string, int> BadgeEligibleOwnedCounts => Progress.BadgeEligibleOwnedCounts;
+        public long LifetimeSteps => Progress != null ? Progress.LifetimeSteps : 0;
+        public int DailyWalkingSteps => Progress != null ? Progress.DailyWalkingSteps : 0;
+        public int BestDailySteps => Progress != null ? Progress.BestDailySteps : 0;
+        public IReadOnlyList<int> WalkingDays => Progress.WalkingDays;
+        public IReadOnlyList<int> WalkingBoxDays => Progress.WalkingBoxDays;
+        public int LongestWalkingStreak => Progress != null ? Progress.LongestWalkingStreak : 0;
+        public int LongestWalkingBoxStreak => Progress != null ? Progress.LongestWalkingBoxStreak : 0;
         public string WalkingStatus => readOnlySave ? "This build cannot update your saved collection. Use a compatible Pockle version before earning more boxes."
             : Progress != null && PendingRevealId.Length > 0 && !IsOwnedAndAvailable(PendingRevealId)
                 ? "An unfinished reveal isn't available in this build. Your saved collection is preserved."
@@ -50,13 +59,15 @@ namespace Pockle.Runtime
                     PlayerPrefs.SetString(SaveKey + ".before-v2", json);
                 if (!readOnlySave && saved != null && (saved.Version == 1 || saved.Version == 2)
                     && !PlayerPrefs.HasKey(SaveKey + ".before-v3")) PlayerPrefs.SetString(SaveKey + ".before-v3", json);
-                if (saved != null && saved.Version != 1 && saved.Version != 2 && saved.Version != CollectionProgress.SaveVersion)
+                if (!readOnlySave && saved != null && saved.Version >= 1 && saved.Version < 4
+                    && !PlayerPrefs.HasKey(SaveKey + ".before-v4")) PlayerPrefs.SetString(SaveKey + ".before-v4", json);
+                if (saved != null && (saved.Version < 1 || saved.Version > CollectionProgress.SaveVersion))
                 {
                     // Do not overwrite a newer schema. Show its legacy snapshot without allowing rewards.
                     PlayerPrefs.SetString(SaveKey + ".backup", json); readOnlySave = true;
                     saved = LegacySnapshot(saved);
                 }
-                else if ((saved.Version == 2 || saved.Version == CollectionProgress.SaveVersion) && saved.Inventory == null)
+                else if (saved.Version >= 2 && saved.Inventory == null)
                 {
                     PlayerPrefs.SetString(SaveKey + ".backup", json); readOnlySave = true;
                     saved = LegacySnapshot(saved);
@@ -64,7 +75,7 @@ namespace Pockle.Runtime
             }
             Progress = new CollectionProgress(saved, Today);
             tracker = new AndroidWalkingTracker();
-            if (!readOnlySave) tracker.ResumeIfAllowed();
+            if (!readOnlySave) { tracker.ResumeIfAllowed(); CaptureBadgeDates(); }
             Persist();
             if (!Application.isBatchMode) { TryApplyOwnerFoxTestGrant(); TryApplyOwnerFoxFinishesGrant(); TryApplyOwnerPipFinishesGrant(); TryApplyOwnerAxolotlFinishesGrant(); TryApplyOwnerPipFusionStudiesGrant(); TryApplyOwnerWinterTrioGrant(); TryApplyOwnerFusionReviewSpares(); }
         }
@@ -73,6 +84,7 @@ namespace Pockle.Runtime
         internal bool CommitFusion(FusedToy result, Action<string> saveCandidate = null)
         {
             if (readOnlySave || Progress == null) return false;
+            CaptureBadgeDates();
             string before = JsonUtility.ToJson(Progress.Save);
             var candidate = new CollectionProgress(JsonUtility.FromJson<CollectionSave>(before), Today);
             if (!candidate.TryFuse(result)) { FusionCatalog.Restore(Progress.Save.Fusions); return false; }
@@ -252,11 +264,25 @@ namespace Pockle.Runtime
                 changed |= Progress.ObserveSteps(Today, total, uptime, boot);
             if (changed) dirty = true;
             Changed?.Invoke(); // Permission and availability can change independently of steps.
-            if (dirty && Time.unscaledTime >= nextSave) { Persist(); nextSave = Time.unscaledTime + 10f; }
+            bool badgesChanged = CaptureBadgeDates();
+            if (badgesChanged || (dirty && Time.unscaledTime >= nextSave)) { Persist(); nextSave = Time.unscaledTime + 10f; }
         }
 
+        private bool CaptureBadgeDates()
+        {
+            if (readOnlySave || Progress == null) return false;
+            string local = PlayerPrefs.GetString(BadgePreferenceKey, "");
+            string merged = BadgeSaveLedger.Merge(Progress.Save.BadgeState.EarnedBadges, local);
+            bool changed = merged != Progress.Save.BadgeState.EarnedBadges || merged != local;
+            Progress.Save.BadgeState.EarnedBadges = merged;
+            if (local != merged) PlayerPrefs.SetString(BadgePreferenceKey, merged);
+            return changed;
+        }
         private void Persist()
-        { if (!readOnlySave) PlayerPrefs.SetString(SaveKey, JsonUtility.ToJson(Progress.Save)); PlayerPrefs.Save(); dirty = false; }
+        {
+            if (!readOnlySave) { CaptureBadgeDates(); PlayerPrefs.SetString(SaveKey, JsonUtility.ToJson(Progress.Save)); }
+            PlayerPrefs.Save(); dirty = false;
+        }
 
         private void OnApplicationPause(bool paused) { if (paused && Progress != null) Persist(); }
         private void OnApplicationFocus(bool focused) { if (focused && tracker != null && !readOnlySave) tracker.ResumeIfAllowed(); }

@@ -43,6 +43,7 @@ PipFaceChecks.Run();
 WinterTrioChecks.Run();
 FusionReviewSpareChecks.Run();
 PersistentFusionChecks.Run();
+BadgeRuntimeChecks.Run();
             return 0;
         }
         catch (Exception exception)
