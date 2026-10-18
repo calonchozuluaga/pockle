@@ -18,7 +18,7 @@ namespace Pockle.Runtime
         private Text volumeLabel, permissionStatus, walkingHelp;
         private Action<float> volumeCallback;
         private readonly RectTransform[] feelRows = new RectTransform[4];
-        public const string UiBuild = "v2 screens 01";
+        public const string UiBuild = "v2 screens 02";
 
         private void BuildSettings()
         {
