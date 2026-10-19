@@ -41,7 +41,7 @@ namespace Pockle.Tests
                     }
                     CollectionAssert.AreEqual(original,source.BodyMesh.vertices,"Imported model stays immutable");count++;
                 }
-                Assert.That(count,Is.EqualTo(90));Assert.That(tested.Count,Is.EqualTo(9));
+                Assert.That(count,Is.EqualTo(100));Assert.That(tested.Count,Is.EqualTo(10));
                 var last=toy.GetComponentInChildren<ToyTemperamentDriver>();last.BeginTap(.1f);yield return new WaitForSecondsRealtime(.25f);yield return null;Assert.That(last.IsReacting,Is.False);
             }
             finally{Object.Destroy(obj);}

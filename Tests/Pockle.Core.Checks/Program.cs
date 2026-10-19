@@ -38,6 +38,7 @@ FirbReactionChecks.Run();
 CocoReactionChecks.Run();
 GingerReactionChecks.Run();
 SnowyReactionChecks.Run();
+WallyChecks.Run();
 PipFusionStudyChecks.Run();
 PipFaceChecks.Run();
 WinterTrioChecks.Run();

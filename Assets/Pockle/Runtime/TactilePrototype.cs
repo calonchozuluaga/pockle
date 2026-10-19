@@ -35,6 +35,7 @@ namespace Pockle.Runtime
         private GingerReactionDriver gingerReactions;
         private SnowyReactionDriver snowyReactions;
         private WinterTrioReactionDriver winterReactions;
+        private WallyReactionDriver wallyReactions;
         public event System.Action<ReactionCue,Vector2?> ToyReactionStarted;
         private float lastToyActivity;
         private bool leftAloneSaid,pairSquishSaid,pairLiftSaid;
@@ -98,6 +99,7 @@ namespace Pockle.Runtime
             gingerReactions=toyObject.AddComponent<GingerReactionDriver>();gingerReactions.Initialize(toy);
             snowyReactions=toyObject.AddComponent<SnowyReactionDriver>();snowyReactions.Initialize(toy);
             winterReactions=toyObject.AddComponent<WinterTrioReactionDriver>();winterReactions.Initialize(toy);
+            wallyReactions=toyObject.AddComponent<WallyReactionDriver>();wallyReactions.Initialize(toy);
             toyView=gameObject.AddComponent<ToyViewGesture>();
             toyView.Initialize(viewCamera,turntable,toy,pressed =>
             {
@@ -115,7 +117,7 @@ namespace Pockle.Runtime
             toyView.SurfaceEnded=complete=>{materialTouch.End(complete);if(complete)Play(releaseClip);};
             toyView.Tapped=PlayTapReaction;
             toyView.TurnStarted=()=>SayToyCue(ReactionCue.Turn);
-            toyView.GestureStarted=()=>{RecordToyActivity();pipReactions.Cancel();foxReactions.Cancel();axolotlReactions.Cancel();firbReactions.Cancel();cocoReactions.Cancel();gingerReactions.Cancel();snowyReactions.Cancel();winterReactions.Cancel();};
+            toyView.GestureStarted=()=>{RecordToyActivity();pipReactions.Cancel();foxReactions.Cancel();axolotlReactions.Cancel();firbReactions.Cancel();cocoReactions.Cancel();gingerReactions.Cancel();snowyReactions.Cancel();winterReactions.Cancel();wallyReactions.Cancel();};
             toyView.SoftManipulationStarted=position =>
             {
                 pairSquishSaid=pairLiftSaid=false;
@@ -267,11 +269,11 @@ namespace Pockle.Runtime
             }
             hud.ShowToyExpression(cue,head);ToyReactionStarted?.Invoke(cue,head);RecordToyActivity();
         }
-        private bool AnyReactionPlaying => pipReactions.IsPlaying||foxReactions.IsPlaying||axolotlReactions.IsPlaying||firbReactions.IsPlaying||cocoReactions.IsPlaying||gingerReactions.IsPlaying||snowyReactions.IsPlaying||winterReactions.IsPlaying;
+        private bool AnyReactionPlaying => pipReactions.IsPlaying||foxReactions.IsPlaying||axolotlReactions.IsPlaying||firbReactions.IsPlaying||cocoReactions.IsPlaying||gingerReactions.IsPlaying||snowyReactions.IsPlaying||winterReactions.IsPlaying||wallyReactions.IsPlaying;
         private void PlayTapReaction()
         {
             if(AnyReactionPlaying)return;
-            if(ToyCatalog.IsFoxCollectible(toy.CollectibleId))foxReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var tapped)&&tapped.CharacterId=="axolotl")axolotlReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var firb)&&firb.CharacterId=="firb")firbReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var coco)&&coco.CharacterId=="coco")cocoReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var ginger)&&ginger.CharacterId=="ginger")gingerReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var snowy)&&snowy.CharacterId=="snowy")snowyReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var winter)&&HolidayCatalog.IsWinterTrio(winter.CharacterId))winterReactions.PlayRandom();else pipReactions.PlayRandom();
+            if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var wally)&&wally.CharacterId=="wally")wallyReactions.PlayRandom();else if(ToyCatalog.IsFoxCollectible(toy.CollectibleId))foxReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var tapped)&&tapped.CharacterId=="axolotl")axolotlReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var firb)&&firb.CharacterId=="firb")firbReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var coco)&&coco.CharacterId=="coco")cocoReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var ginger)&&ginger.CharacterId=="ginger")gingerReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var snowy)&&snowy.CharacterId=="snowy")snowyReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var winter)&&HolidayCatalog.IsWinterTrio(winter.CharacterId))winterReactions.PlayRandom();else pipReactions.PlayRandom();
             if(AnyReactionPlaying)
                 SayToyCue(ReactionCue.Poke);
         }
@@ -311,7 +313,7 @@ namespace Pockle.Runtime
         {
             if (toy == null) return;
             ReleasePointer(false);
-            pipReactions?.Cancel();foxReactions?.Cancel();axolotlReactions?.Cancel();firbReactions?.Cancel();cocoReactions?.Cancel();gingerReactions?.Cancel();snowyReactions?.Cancel();winterReactions?.Cancel();
+            pipReactions?.Cancel();foxReactions?.Cancel();axolotlReactions?.Cancel();firbReactions?.Cancel();cocoReactions?.Cancel();gingerReactions?.Cancel();snowyReactions?.Cancel();winterReactions?.Cancel();wallyReactions?.Cancel();
             revealing = false;
             boxRoot.gameObject.SetActive(false);
             toyMount.localScale = Vector3.one;

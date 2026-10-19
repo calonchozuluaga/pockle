@@ -106,3 +106,10 @@ Current catalog: 11 characters including planned Tula, ten playable characters, 
 
 
 October 17 art completion: Reiny, Guin and Bundy each have their own five environments (including a dark scene), text-free 3:1 cover, and real opening 3D mystery box with transparent product renders. Review: [winter trio art](winter-trio-art-review/index.html). The earlier Studio-only/art-pending note is superseded. Dedicated personality nature/dial/social copy remains Claude's follow-up; all eight expression styles are supported.
+
+
+## Wally — October 19, 2026
+
+Owner-approved name: **Wally**, the rounded ocean-blue whale. The approved reference-based Meshy model is imported with ten finishes (nine common, one special), eight temperament expressions and five random/no-repeat tap reactions: breach jump, tail splash, flipper wave, curious roll and sleepy bob. The phone mesh has 30,000 triangles versus 120,262 in the source; source paint/UVs and proportions are retained. Tail and flippers move locally without a paid auto-rig stage.
+
+Current catalog: **12 characters including planned Tula, 11 playable characters, 124 fixed entries / 114 available, 13 collection pages including Pip Fusion Lab**. Persisted fusions are additional runtime records. Wally's special is Deep Sea Glow; no collection draw odds, release numbering, grants or inventory migration are introduced. Its dedicated cover, five worlds and mystery box remain pending. Native review: [Wally](wally-review/index.html).

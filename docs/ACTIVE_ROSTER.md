@@ -15,3 +15,6 @@ Owner material studies (October 15): the eight regular collections remain unchan
 
 
 Owner fusion lab expansion: nine UI collections/84 entries/74 playable including four fixed studies. Regular eight collections/80 entries/70 playable and their secrets/odds remain intact. Honeydew/Eclipse join Dusk/Sorbet; not production collection slots or crafting outcomes.
+
+
+October19 current roster supersedes the earlier counts: Pip, Tula (planned), Fox, Axolotl, Firb, Coco, Snowy, Ginger, Reiny, Guin, Bundy and Wally. Twelve character collections /120 regular finish slots; eleven models /110 regular finishes playable. Pip Fusion Lab adds four fixed studies and one page:13 pages,124 fixed entries,114 available. No retired definition is reactivated, existing saved historical IDs remain intact, and Wally does not enter the three legacy Pip reward pools.

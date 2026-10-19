@@ -112,9 +112,9 @@ internal static class CatalogChecks
     }
     private static void Definitions()
     {
-        Assert(ToyCatalog.Characters.Count == 11 && ToyCatalog.Finishes.Count == 10 && ToyCatalog.Collectibles.Count == 114, "Roster is not eleven active characters with ten finishes.");
-        Assert(ToyCatalog.Collectibles.Select(c => c.Id).Distinct(StringComparer.Ordinal).Count() == 114, "Collectible IDs collide.");
-        Assert(ToyCatalog.Collectibles.Count(c => c.Available) == 104, "Planned art was marked playable.");
+        Assert(ToyCatalog.Characters.Count == 12 && ToyCatalog.Finishes.Count == 10 && ToyCatalog.Collectibles.Count == 124, "Roster is not twelve active characters with ten finishes.");
+        Assert(ToyCatalog.Collectibles.Select(c => c.Id).Distinct(StringComparer.Ordinal).Count() == 124, "Collectible IDs collide.");
+        Assert(ToyCatalog.Collectibles.Count(c => c.Available) == 114, "Planned art was marked playable.");
         foreach (var definition in ToyCatalog.Collectibles)
         {
             Assert(ToyCatalog.IsValidId(definition.Id), "Catalog has an invalid persistence ID.");
@@ -159,7 +159,7 @@ internal static class CatalogChecks
             Assert(ToyCatalog.TryGetCollectionForPool(box.Id, out var collection) && collection.Id == "pip" && box.Entries.All(e => ToyCatalog.TryGetCollectible(e.CollectibleId, out var item) && item.Available && item.CollectionId == collection.Id), "Legacy Pip sub-pool includes an unapproved/mismatched concept.");
         bool immutable = false;
         try { ((IList<CollectibleDefinition>)ToyCatalog.Collectibles).Clear(); } catch (NotSupportedException) { immutable = true; }
-        Assert(immutable && ToyCatalog.Collectibles.Count == 114, "A HUD consumer mutated the shared catalog.");
+        Assert(immutable && ToyCatalog.Collectibles.Count == 124, "A HUD consumer mutated the shared catalog.");
     }
     private static void Migration()
     {

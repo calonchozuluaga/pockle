@@ -109,7 +109,7 @@ namespace Pockle.Runtime
             Initialize();
             if (!CharacterArt.TryLoad(id, out var asset)) return false;
             if (id == collectibleId) return true;
-            if (asset == characterAsset && asset.CharacterId != "pip" && asset.CharacterId != "fox" && asset.CharacterId != "axolotl" && !HolidayCatalog.IsCharacter(asset.CharacterId))
+            if (asset == characterAsset && asset.CharacterId != "pip" && asset.CharacterId != "fox" && asset.CharacterId != "axolotl" && asset.CharacterId != "wally" && !HolidayCatalog.IsCharacter(asset.CharacterId))
             {
                 // Alternate finishes share a body and face: only change the recipe
                 // and replay the unscaled pose under the new handling profile.
@@ -818,6 +818,7 @@ namespace Pockle.Runtime
             {
                 Material vinyl;
                 if (FusionCatalog.TryGet(collectibleId, out var fused)) vinyl = FusionMaterial.Create(fused, characterAsset.BaseColorTexture, studioReflection);
+                else if (characterAsset.CharacterId == "wally") vinyl = WallyFinishMaterial.Create(collectibleId, characterAsset.BaseColorTexture, studioReflection);
                 else if (HolidayCatalog.IsCharacter(characterAsset.CharacterId)) vinyl = HolidayFinishMaterial.Create(collectibleId, characterAsset.BaseColorTexture, studioReflection);
                 else if (ToyCatalog.IsFoxCollectible(collectibleId)) vinyl = FoxFinishMaterial.Create(collectibleId, characterAsset.BaseColorTexture, studioReflection);
                 else

@@ -47,7 +47,8 @@ namespace Pockle.Core
             new CharacterIdleDefinition("ginger", "Gingerbread cheerful bounce", 4.5f, 3.5f, 0, .5f, 2.5f, 3.2f, .06f),
             new CharacterIdleDefinition("reiny", "Reindeer curious nod", 5.4f, 3.8f, 0, 2, 4, 1.1f, .05f),
             new CharacterIdleDefinition("guin", "Penguin cozy waddle", 5.8f, 4.2f, 0, .8f, 2.2f, 3.4f, .035f),
-            new CharacterIdleDefinition("bundy", "Pudding gentle wobble", 6.1f, 4.5f, 0, 1, 1.5f, 2, .045f)
+            new CharacterIdleDefinition("bundy", "Pudding gentle wobble", 6.1f, 4.5f, 0, 1, 1.5f, 2, .045f),
+            new CharacterIdleDefinition("wally", "Whale gentle ocean bob", 6.4f, 4.8f, 0, 2.5f, 3, 1.6f, .06f)
         };
         private static readonly Dictionary<string, CharacterIdleDefinition> byId = BuildLookup();
         public static IReadOnlyList<CharacterIdleDefinition> Profiles { get; } = Array.AsReadOnly(profiles);

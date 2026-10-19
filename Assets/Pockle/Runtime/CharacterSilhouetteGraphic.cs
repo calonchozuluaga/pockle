@@ -16,9 +16,9 @@ namespace Pockle.Runtime
         public void Configure(string characterId, bool secret = false)
         {
             CharacterId = characterId; ConcealsSecret = secret; raycastTarget = false;
-            if (!secret && (characterId == "pip" || characterId == "fox"))
+            if (!secret && (characterId == "pip" || characterId == "fox" || characterId == "wally"))
             {
-                var asset = Resources.Load<PipCharacterAsset>(characterId == "fox" ? "Characters/Fox/Fox" : PipCharacterAsset.MeshyResourcePath);
+                var asset = Resources.Load<PipCharacterAsset>(characterId == "wally" ? "Characters/Wally/Wally" : characterId == "fox" ? "Characters/Fox/Fox" : PipCharacterAsset.MeshyResourcePath);
                 if (asset == null && characterId == "pip") asset = Resources.Load<PipCharacterAsset>(PipCharacterAsset.ResourcePath);
                 if (asset != null && asset.BodyMesh != null && asset.BodyMesh.isReadable)
                 {

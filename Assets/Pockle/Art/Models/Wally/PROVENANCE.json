@@ -1,0 +1,16 @@
+{
+  "source_file": "whale-pockle.glb",
+  "source_sha256": "8300a6dd03de46d640b6cc562ef5eca7e6c5438fe493bc70ac47b7b1c6142720",
+  "source_resource": "image-to-3d",
+  "source_task_id": "01a1546c-77f0-7110-9bef-148ea8809008",
+  "source_triangles": 120262,
+  "runtime_triangles": 30000,
+  "runtime_vertices_before_uv_splits": 15002,
+  "texture_size": [
+    2048,
+    2048
+  ],
+  "conversion": "Weld UV seams, reduce to approximately 30000 triangles, preserve paint/UVs, normalize proportionally. No paid generation or source edits.",
+  "source_rigged": false,
+  "source_animations": 0
+}

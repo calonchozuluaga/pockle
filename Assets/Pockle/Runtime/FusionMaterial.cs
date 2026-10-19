@@ -17,6 +17,7 @@ namespace Pockle.Runtime
         private static Material Parent(string id, Texture paint, Cubemap studio)
         {
             ToyCatalog.TryGetCollectible(id, out var toy);
+            if (toy.CharacterId == "wally") return WallyFinishMaterial.Create(id, paint, studio);
             if (toy.CharacterId == "fox") return FoxFinishMaterial.Create(id, paint, studio);
             if (toy.CharacterId == "axolotl") return AxolotlFinishMaterial.Create(id, paint, studio);
             if (HolidayCatalog.IsCharacter(toy.CharacterId)) return HolidayFinishMaterial.Create(id, paint, studio);

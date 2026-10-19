@@ -156,7 +156,8 @@ namespace Pockle.Core
                 new CharacterDefinition("ginger", "Ginger", 0xd69b64, "matte-vinyl"),
                 new CharacterDefinition("reiny", "Reiny", 0xc39365, "matte-vinyl"),
                 new CharacterDefinition("guin", "Guin", 0x7397b5, "matte-vinyl"),
-                new CharacterDefinition("bundy", "Bundy", 0x99674d, "matte-vinyl")
+                new CharacterDefinition("bundy", "Bundy", 0x99674d, "matte-vinyl"),
+                new CharacterDefinition("wally", "Wally", 0x69bfe7, "gloss-vinyl")
             };
             Characters = Array.AsReadOnly(characters); Finishes = Array.AsReadOnly(finishes);
             foreach (var character in characters) charactersById.Add(character.Id, character);
@@ -173,7 +174,7 @@ namespace Pockle.Core
                     bool existing = character.Id == "pip" && index < legacyIds.Length;
                     string id = existing ? legacyIds[index] : character.Id + "." + finish.Id;
                     var collectible = new CollectibleDefinition(id, character, finish,
-                        existing ? pipLabels[index] : id == PipSpecialId ? "Starlight Glow · Ultra rare" : character.Id == "fox" ? foxLabels[index] : character.Id == "axolotl" ? axolotlLabels[index] : HolidayCatalog.IsCharacter(character.Id) ? (finish.Id == "matte-vinyl" ? "Classic" : finish.Id == "glow-jelly" ? HolidayCatalog.SpecialLabel(character.Id) + " · Ultra rare" : finish.DisplayName) : finish.DisplayName, character.Id == "pip" || character.Id == "fox" || character.Id == "axolotl" || HolidayCatalog.IsCharacter(character.Id), character.Id);
+                        character.Id == "wally" ? WallyCatalog.Label(index) : existing ? pipLabels[index] : id == PipSpecialId ? "Starlight Glow · Ultra rare" : character.Id == "fox" ? foxLabels[index] : character.Id == "axolotl" ? axolotlLabels[index] : HolidayCatalog.IsCharacter(character.Id) ? (finish.Id == "matte-vinyl" ? "Classic" : finish.Id == "glow-jelly" ? HolidayCatalog.SpecialLabel(character.Id) + " · Ultra rare" : finish.DisplayName) : finish.DisplayName, character.Id == "pip" || character.Id == "fox" || character.Id == "axolotl" || character.Id == "wally" || HolidayCatalog.IsCharacter(character.Id), character.Id);
                     collectibles.Add(collectible); collectiblesById.Add(id, collectible);
                 }
             }
@@ -198,9 +199,9 @@ namespace Pockle.Core
             {
                 var members = new List<string>(finishes.Length);
                 foreach (var item in collectibles) if (item.CollectionId == character.Id) members.Add(item.Id);
-                uint field = character.Id == "pip" ? 0xf8d9c6u : character.Id == "fox" ? 0xffe0cbu : 0xfaf5eeu;
+                uint field = character.Id == "wally" ? 0xdff2f8u : character.Id == "pip" ? 0xf8d9c6u : character.Id == "fox" ? 0xffe0cbu : 0xfaf5eeu;
                 collections.Add(new CollectionDefinition(character.Id, character.DisplayName, character.Id, members,
-                    seriesNumber: character.Id == "pip" ? 1 : 0, secretId: character.Id == "fox" ? FoxAuroraId : character.Id == "pip" ? PipSpecialId : character.Id == "axolotl" ? AxolotlSpecialId : HolidayCatalog.IsCharacter(character.Id) ? character.Id + ".glow-jelly" : "", fieldColor: field, inkColor: character.Id == "fox" ? 0x7a3210u : character.Id == "pip" ? 0x7a2a4eu : character.Id == "axolotl" ? 0x2a2a5au : 0x49344cu));
+                    seriesNumber: character.Id == "pip" ? 1 : 0, secretId: character.Id == "wally" ? WallyCatalog.SpecialId : character.Id == "fox" ? FoxAuroraId : character.Id == "pip" ? PipSpecialId : character.Id == "axolotl" ? AxolotlSpecialId : HolidayCatalog.IsCharacter(character.Id) ? character.Id + ".glow-jelly" : "", fieldColor: field, inkColor: character.Id == "fox" ? 0x7a3210u : character.Id == "pip" ? 0x7a2a4eu : character.Id == "axolotl" ? 0x2a2a5au : 0x49344cu));
             }
             collections.Add(new CollectionDefinition(PipFusionStudies.CollectionId,"Pip Fusion Lab", "pip",
                 PipFusionStudies.Ids,fieldColor:0xf7e2de,inkColor:0x7a2a4e));
@@ -214,6 +215,7 @@ namespace Pockle.Core
             if (id == PipFusionStudies.EclipseId) return new CatalogColor(0x444185);
             if (id == PipFusionStudies.DuskId) return new CatalogColor(0xb99cde);
             if (id == PipFusionStudies.SorbetId) return new CatalogColor(0xb3dac1);
+            if (id.StartsWith("wally.", StringComparison.Ordinal)) return WallyCatalog.Swatch(finish);
             if (id == PeachId) return new CatalogColor(0xf5b89c);
             if (id == MoonId) return new CatalogColor(0x73b8f5);
             if (id == GoldId) return new CatalogColor(0xffb02e);

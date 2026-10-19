@@ -51,7 +51,7 @@ namespace Pockle.Core
         public string CoverArt => Id == "fox" ? "Collections/Fox/Cover" : (Id == "pip" || Id == PipFusionStudies.CollectionId) ? "Collections/Pip/Cover" : Id == "axolotl" ? "Collections/Axolotl/Cover" : HolidayCatalog.HasArtSet(Id) ? "Collections/" + HolidayCatalog.Title(Id) + "/Cover" : "";
         public string BoxArt => Id == "fox" ? "UI/Boxes/Collection-fox" : Id == "pip" ? "UI/Boxes/Collection-pip" : Id == "axolotl" ? "UI/Boxes/Collection-axolotl" : HolidayCatalog.HasArtSet(Id) ? "UI/Boxes/Collection-" + Id : "";
         public string BoxModel => Id == "fox" ? "Boxes/FoxCollectionBox" : Id == "pip" ? "Boxes/PipCollectionBox" : Id == "axolotl" ? "Boxes/AxolotlCollectionBox" : HolidayCatalog.HasArtSet(Id) ? "Boxes/" + HolidayCatalog.Title(Id) + "CollectionBox" : "";
-        public CatalogColor AccentColor => HolidayCatalog.IsCharacter(Id) ? HolidayCatalog.Accent(Id) : new CatalogColor(Id == "fox" ? 0xec7951u : Id == "pip" ? 0xe8508au : Id == "axolotl" ? 0xf493b5u : 0x49344cu);
+        public CatalogColor AccentColor => Id == "wally" ? new CatalogColor(0x69bfe7) : HolidayCatalog.IsCharacter(Id) ? HolidayCatalog.Accent(Id) : new CatalogColor(Id == "fox" ? 0xec7951u : Id == "pip" ? 0xe8508au : Id == "axolotl" ? 0xf493b5u : 0x49344cu);
         public CatalogColor FieldColor { get; }
         public CatalogColor InkColor { get; }
 

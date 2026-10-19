@@ -16,6 +16,7 @@ namespace Pockle.Runtime
         {
             switch(character)
             {
+                case "wally":layout=new Layout(new Vector4(-.30f,-.19f,.074f,.097f),new Vector4(.46f,-.19f,.074f,.097f),new Vector4(.08f,-.30f,.095f,.033f),-.7f);return true;
                 case "reiny":layout=new Layout(new Vector4(-.275f,.19f,.068f,.09f),new Vector4(.275f,.19f,.068f,.09f),new Vector4(0,.01f,.073f,.026f),-.12f);return true;
                 case "guin":layout=new Layout(new Vector4(-.283f,.284f,.068f,.09f),new Vector4(.283f,.284f,.068f,.09f),new Vector4(0,.129f,.075f,.026f),-.12f);return true;
                 case "bundy":layout=new Layout(new Vector4(-.325f,-.285f,.08f,.10f),new Vector4(.325f,-.285f,.08f,.10f),new Vector4(0,-.361f,.073f,.027f),-.12f);return true;
