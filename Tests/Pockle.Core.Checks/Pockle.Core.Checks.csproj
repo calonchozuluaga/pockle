@@ -36,5 +36,6 @@
     <Compile Include="FusionReviewSpareChecks.cs" />
     <Compile Include="PersistentFusionChecks.cs" />
     <Compile Include="BadgeRuntimeChecks.cs" />
+    <Compile Include="MaterialTouchChecks.cs" />
   </ItemGroup>
 </Project>

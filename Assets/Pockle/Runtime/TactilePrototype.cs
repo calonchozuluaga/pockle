@@ -24,6 +24,9 @@ namespace Pockle.Runtime
         private Transform toyMount;
         private Transform turntable;
         private ToyViewGesture toyView;
+        private readonly MaterialTouch materialTouch = new MaterialTouch();
+        private Vector3 brushFrom,brushTo,brushDirection;
+        private bool brushHasPoint;
         private PipReactionDriver pipReactions;
         private FoxReactionDriver foxReactions;
         private AxolotlReactionDriver axolotlReactions;
@@ -101,6 +104,15 @@ namespace Pockle.Runtime
                 compression.Target=pressed&&toy.Handling!=MaterialHandling.Firm?.23f:0;
                 if(pressed){Play(pressClip);SayToyCue(ReactionCue.Squish);}else Play(releaseClip);
             },ResetToy);
+            toyView.SurfaceStarted=()=> {materialTouch.Begin(MaterialTouch.ForToy(toy.CollectibleId));brushHasPoint=false;Play(pressClip);Vibrate();};
+            toyView.SurfaceStroked=(position,delta)=> {
+                if(!toy.RaycastBody(viewCamera.ScreenPointToRay(position),out var hit))return;
+                var point=toy.BodyRenderer.transform.InverseTransformPoint(hit);
+                brushFrom=brushHasPoint?brushTo:point;brushTo=point;brushHasPoint=true;
+                brushDirection=toy.transform.InverseTransformDirection(viewCamera.transform.right*delta.x+viewCamera.transform.up*delta.y).normalized;
+                materialTouch.Stroke(delta.x,delta.y,point.x,point.y+.12f);RecordToyActivity();
+            };
+            toyView.SurfaceEnded=complete=>{materialTouch.End(complete);if(complete)Play(releaseClip);};
             toyView.Tapped=PlayTapReaction;
             toyView.TurnStarted=()=>SayToyCue(ReactionCue.Turn);
             toyView.GestureStarted=()=>{RecordToyActivity();pipReactions.Cancel();foxReactions.Cancel();axolotlReactions.Cancel();firbReactions.Cancel();cocoReactions.Cancel();gingerReactions.Cancel();snowyReactions.Cancel();winterReactions.Cancel();};
@@ -212,6 +224,8 @@ namespace Pockle.Runtime
             float tz = reducedMotion ? tiltZ.Target : tiltZ.Value;
             Vector3 wobble = toy.transform.InverseTransformDirection(
                 viewCamera.transform.right * jiggleX.Value + viewCamera.transform.forward * jiggleZ.Value);
+            materialTouch.Step(dt,reducedMotion);
+            toy.SetSurfaceRock(materialTouch.RockX,materialTouch.RockY);
             tx += wobble.x;
             tz += wobble.z;
             // A released squash briefly stretches past rest; a released stretch softly
@@ -226,6 +240,7 @@ namespace Pockle.Runtime
             ApplyLift();
             if (hanging > 0f && visibleLift < clearance - .0001f)
                 toy.SetDeformation(squash, elongation, tx, tz, contactX, contactZ, p, pinchAxis, hanging, gripPoint, visibleLift);
+            toy.SetSurfacePlay(materialTouch.Phase,brushFrom,brushTo,brushDirection,materialTouch.Nap);
             if (!revealing) lift.ConstrainHeight(visibleLift);
         }
 
@@ -264,6 +279,11 @@ namespace Pockle.Runtime
         {
             get
             {
+                switch(MaterialTouch.ForToy(toy.CollectibleId)) {
+                    case MaterialTouchKind.Wobble: return "Hold, then nudge to wobble · drag to turn";
+                    case MaterialTouchKind.Swirl: return "Hold, then circle to stir · drag to turn";
+                    case MaterialTouchKind.Brush: return "Hold, then stroke to brush · drag to turn";
+                }
                 return toy.Handling==MaterialHandling.Firm
                     ? "Tap · drag to turn · pinch to zoom"
                     : "Tap · drag to turn · pinch to squish";
@@ -278,6 +298,7 @@ namespace Pockle.Runtime
         private void ReleasePointer(bool feedback)
         {
             if(toyView!=null)toyView.Cancel();
+            if(!feedback){materialTouch.Reset();brushHasPoint=false;}
             compression.Target = stretch.Target = tiltX.Target = tiltZ.Target = 0f;
             lift.Target = pinch.Target = 0f;
             dropFeedback = false;
@@ -407,6 +428,7 @@ namespace Pockle.Runtime
 
         private void ConfigureHandling()
         {
+            materialTouch.Reset();brushHasPoint=false;
             RecordToyActivity();
             MaterialHandling h = toy.Handling;
             bool gel = h == MaterialHandling.Gel;
@@ -484,7 +506,7 @@ namespace Pockle.Runtime
         {
             reducedMotion = enabled;
             ApplyStage();
-            if (enabled) { ClearMotion(); toyView?.Orbit.Stop(); }
+            if (enabled) { ClearMotion(); materialTouch.Reset();toyView?.Cancel();toyView?.Orbit.Stop(); }
             SaveSetting("reducedMotion", enabled);
         }
         private static void SaveSetting(string key, bool enabled)

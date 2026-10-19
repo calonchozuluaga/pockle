@@ -2,6 +2,14 @@ Shader "Pockle/Holiday Finish"
 {
     Properties
     {
+        _BrushTrailWeights ("Recovering stroke trail", Vector) = (0,0,0,0)
+        _SurfaceKind ("Touch response: none / wobble / contents / nap", Float) = 0
+        _ContentsPhase ("Interior flow angle", Float) = 0
+        _BrushAmount ("Recovering nap", Range(0,1)) = 0
+        _BrushFrom ("Brush segment start", Vector) = (0,0,0,0)
+        _BrushTo ("Brush segment end", Vector) = (0,0,0,0)
+        _BrushDirection ("Nap direction", Vector) = (0,1,0,0)
+
         _FusionDetailA ("First parent detail", Vector) = (0,0,0,0)
         _FusionDetailB ("Second parent detail", Vector) = (0,0,0,0)
         _FusionAccentA ("First parent accent", Vector) = (0,0,0,0)
@@ -89,6 +97,7 @@ Shader "Pockle/Holiday Finish"
     }
     CGINCLUDE
     #include "UnityCG.cginc"
+    #include "Assets/Pockle/Shaders/SurfacePlay.cginc"
     #include "Assets/Pockle/Shaders/FusionPattern.cginc"
     half4 _StageTint; half _StageEmission; samplerCUBE _StageEnvironment; half _StageEnvironmentStrength;
     sampler2D _MainTex; samplerCUBE _StudioCube;
@@ -240,6 +249,7 @@ Shader "Pockle/Holiday Finish"
     fixed4 finish(v2f i, bool back)
     {
         half4 fusionSurface=FusionSurface(i.face,half4(_Gloss,_Metallic,_Fuzz,_Opacity));
+            fusionSurface.z*=1-BrushMask(i.face)*.8;
             half4 fusionDetail=FusionDetail(i.face,half4(_Grain,_Pearl,_Iridescence,_Glitter));
             half4 fusionAccent=FusionAccent(i.face,half4(_SurfaceRelief,_LoopPile,_Crystal,0));
         half3 fusionPigment=FusionPigment(i.face,_BodyColor.rgb);
@@ -307,12 +317,13 @@ Shader "Pockle/Holiday Finish"
         base+=body*fusionDetail.y*pearl*(.06+.12*rim);
         half3 aurora=.5+.5*cos(half3(.5,2.4,4.4)+facing*9+i.local.y*1.8);
         base=lerp(base,base*.6+aurora*.45,body*fusionDetail.z*(.35+.65*rim));
-        half facet=hash(floor(i.local*24));
+        half facet=hash(floor(ContentsCoordinate(i.local)*24));
         base+=body*fusionAccent.z*smoothstep(.92,.99,facet)*(.06+.16*glaze)*half3(1,.7,.85);
-        half fleck=smoothstep(.996,.999,grain);
+        half fleck=smoothstep(.996,.999,hash(floor(ContentsCoordinate(i.local)*480)));
         base+=body*fusionDetail.w*fleck*half3(.8,.55,.16);
         base+=body*texCUBE(_StageEnvironment,refract(-view,n,.74)).rgb*_StageEnvironmentStrength*(1-fusionSurface.w)*.24;
         half alpha=lerp(1,fusionSurface.w+(1-fusionSurface.w)*rim*.42,body);
+        base=BrushNap(i.face,base,smoothstep(.05,.20,max(paint.r,max(paint.g,paint.b)))*(1-TemperFeatures(i.face).a));base+=ContentsLight(i.face,view)*body;
         if(back) alpha*=.32;
         else { base=TemperFinish(i.face,base);alpha=max(alpha,TemperFeatures(i.face).a); }
         return fixed4(saturate(base * _StageTint.rgb + _StageEmission * fusionPigment * body),alpha);

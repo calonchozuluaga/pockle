@@ -9,7 +9,7 @@ namespace Pockle.Runtime
     /// Blender supplies the rest mesh and anchors; interaction remains entirely local.
     /// </summary>
     [DisallowMultipleComponent]
-    public sealed class JellyToy : MonoBehaviour
+    public sealed partial class JellyToy : MonoBehaviour
     {
         private const int LatitudeSegments = 28;
         private const int LongitudeSegments = 36;
@@ -394,7 +394,7 @@ namespace Pockle.Runtime
             haveDeformation = true;
             // Keep cached inputs unscaled: switching finish replays the original pose.
             MaterialHandling handling = Handling;
-            visualRoot.localRotation = Quaternion.Euler(tiltZ * handling.RockDegrees, 0, -tiltX * handling.RockDegrees);
+            visualRoot.localRotation = Quaternion.Euler((tiltZ+surfaceRockY) * handling.RockDegrees, 0, -(tiltX+surfaceRockX) * handling.RockDegrees);
             compression *= handling.Compression;
             stretch *= handling.Stretch;
             pinch *= handling.Pinch;
@@ -445,7 +445,7 @@ namespace Pockle.Runtime
             for (int i = 0; i < accents.Count; i++)
             {
                 var accent = accents[i];
-                accent.Transform.localPosition = Deform(accent.Rest, compression, stretch, tiltX, tiltZ, contactX, contactZ, directional, suspension);
+                accent.Transform.localPosition = Deform(SurfaceRest(accent.Rest,accent.IsSurface), compression, stretch, tiltX, tiltZ, contactX, contactZ, directional, suspension);
                 accent.Transform.localScale = Vector3.Scale(accent.Scale, featureScale);
                 if (accent.IsSurface) accent.Transform.localRotation = featureRotation;
             }

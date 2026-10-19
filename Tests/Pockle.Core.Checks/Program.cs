@@ -44,6 +44,7 @@ WinterTrioChecks.Run();
 FusionReviewSpareChecks.Run();
 PersistentFusionChecks.Run();
 BadgeRuntimeChecks.Run();
+MaterialTouchChecks.Run();
             return 0;
         }
         catch (Exception exception)

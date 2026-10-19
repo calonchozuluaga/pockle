@@ -2,6 +2,14 @@ Shader "Pockle/Textured Peach Jelly"
 {
     Properties
     {
+        _BrushTrailWeights ("Recovering stroke trail", Vector) = (0,0,0,0)
+        _SurfaceKind ("Touch response: none / wobble / contents / nap", Float) = 0
+        _ContentsPhase ("Interior flow angle", Float) = 0
+        _BrushAmount ("Recovering nap", Range(0,1)) = 0
+        _BrushFrom ("Brush segment start", Vector) = (0,0,0,0)
+        _BrushTo ("Brush segment end", Vector) = (0,0,0,0)
+        _BrushDirection ("Nap direction", Vector) = (0,1,0,0)
+
         _FusionDetailA ("First parent detail", Vector) = (0,0,0,0)
         _FusionDetailB ("Second parent detail", Vector) = (0,0,0,0)
         _FusionAccentA ("First parent accent", Vector) = (0,0,0,0)
@@ -62,6 +70,7 @@ Shader "Pockle/Textured Peach Jelly"
         Tags { "RenderType"="Transparent" "Queue"="Transparent" }
         CGINCLUDE
         #include "UnityCG.cginc"
+    #include "Assets/Pockle/Shaders/SurfacePlay.cginc"
     #include "Assets/Pockle/Shaders/FusionPattern.cginc"
     half4 _StageTint; half _StageEmission; samplerCUBE _StageEnvironment; half _StageEnvironmentStrength;
         sampler2D _MainTex;
@@ -195,6 +204,7 @@ Shader "Pockle/Textured Peach Jelly"
         fixed4 fragFront(v2f i) : SV_Target
         {
             half4 fusionSurface=FusionSurface(i.local,half4(_Roughness,_Metallic,_Fuzz,_Opacity));
+            fusionSurface.z*=1-BrushMask(i.local)*.8;
             half4 fusionDetail=FusionDetail(i.local,half4(_ReflectionStrength,_PearlSheen,_Iridescence,_GlitterStrength));
             half4 fusionAccent=FusionAccent(i.local,half4(_Transmission,_SpeckEmission,_Glow,0));
 
@@ -226,7 +236,7 @@ Shader "Pockle/Textured Peach Jelly"
             half gold = smoothstep(.55,.8,paint.r)*smoothstep(.45,.65,paint.g)
                 *(1-smoothstep(.16,.3,paint.b))*smoothstep(.68,.86,paint.g/max(paint.r,.001));
             color += half3(1,.65,.16)*gold*fusionAccent.y;
-            half noise = frac(sin(dot(floor(i.local*100),float3(127.1,311.7,74.7)))*43758.5453);
+            half noise = frac(sin(dot(floor(ContentsCoordinate(i.local)*100),float3(127.1,311.7,74.7)))*43758.5453);
             color += fusionDetail.w*smoothstep(.98,.997,noise)*(.3+.7*softbox)*half3(1,.81,.31)*(1-pigment);
             half3 pearl = .5+.5*cos(half3(0,2,4)+facing*6);
             color += fusionDetail.y*pearl*(.05+.12*rim)*(1-pigment);
@@ -253,6 +263,7 @@ Shader "Pockle/Textured Peach Jelly"
             half alpha = lerp(saturate(fusionSurface.w+.22*rim),.98,pigment);
             half reflectedAlpha = fusionDetail.x*(max(studio.r,max(studio.g,studio.b))*.55+softbox*.65);
             alpha = max(alpha,saturate(reflectedAlpha));
+            color=BrushNap(i.local,color,1-pigment);color+=ContentsLight(i.local,view)*(1-pigment);
             return fixed4(saturate(color * _StageTint.rgb + _StageEmission * half3(.23,.65,.64) * (1-pigment)),alpha);
         }
         ENDCG

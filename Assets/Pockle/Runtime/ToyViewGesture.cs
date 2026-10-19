@@ -8,7 +8,7 @@ namespace Pockle.Runtime
     public sealed class ToyViewGesture : MonoBehaviour
     {
         public ToyOrbit Orbit { get; } = new ToyOrbit();
-        public bool IsHolding => holding||softPair;
+        public bool IsHolding => holding||softPair||surfaceReady;
         public bool Calm;
         public bool Suspended;
         private Camera viewer;
@@ -19,6 +19,10 @@ namespace Pockle.Runtime
         public Action Tapped;
         public Action GestureStarted;
         public Action TurnStarted;
+        public Action SurfaceStarted;
+        public Action<Vector2,Vector2> SurfaceStroked;
+        public Action<bool> SurfaceEnded;
+        private bool surfaceReady,surfaceActive;
         public Action<Vector2> SoftManipulationStarted;
         public Action<SoftToyPose,Vector3> SoftManipulated;
         public Action<bool> SoftManipulationEnded;
@@ -39,6 +43,7 @@ namespace Pockle.Runtime
             if(!Allowed(p,id))return;
             GestureStarted?.Invoke();
             first=id;start=previous=p;began=Time.unscaledTime;moved=paired=holding=false;
+            surfaceReady=surfaceActive=false;
             tapOnBody=toy.RaycastBody(viewer.ScreenPointToRay(p),out _);
             onBody=toy.Handling!=MaterialHandling.Firm&&tapOnBody;Orbit.Stop();
         }
@@ -46,6 +51,16 @@ namespace Pockle.Runtime
         {
             bool wasMoved=moved;
             if((p-start).sqrMagnitude>Slop*Slop)moved=true;
+            if(surfaceReady&&!paired)
+            {
+                if(moved) {
+                    if(!surfaceActive) {surfaceActive=true;if(holding){holding=false;press?.Invoke(false);}SurfaceStarted?.Invoke();}
+                    SurfaceStroked?.Invoke(p,(p-previous)/Mathf.Max(1,Mathf.Min(Screen.width,Screen.height)));
+                }
+                previous=p;return;
+            }
+            if(!moved&&!paired&&tapOnBody&&Time.unscaledTime-began>=.35f&&MaterialTouch.ForToy(toy.CollectibleId)!=MaterialTouchKind.None)
+                surfaceReady=true;
             if(moved&&!wasMoved&&!holding)TurnStarted?.Invoke();
             if(moved&&!holding)
             {
@@ -58,9 +73,11 @@ namespace Pockle.Runtime
         }
         private void End(bool completed)
         {
-            bool tap=completed&&!moved&&!paired&&!holding&&Time.unscaledTime-began<.35f;
+            bool tap=completed&&!moved&&!paired&&!holding&&!surfaceReady&&Time.unscaledTime-began<.35f;
             if(holding)press?.Invoke(false);
             if(softPair)SoftManipulationEnded?.Invoke(completed);
+            if(surfaceActive)SurfaceEnded?.Invoke(completed);
+            if(surfaceReady)Orbit.Stop();surfaceReady=surfaceActive=false;
             softPair=false;
             if(!completed||holding||paired||Time.unscaledTime-began>.35f&&(previous-start).sqrMagnitude<Slop*Slop)Orbit.Stop();
             first=second=-999;holding=false;
@@ -72,7 +89,7 @@ namespace Pockle.Runtime
             }
             else {lastTap=-10;pendingTap=-1;}
         }
-        public void Cancel(){if(holding)press?.Invoke(false);if(softPair)SoftManipulationEnded?.Invoke(false);softPair=false;first=second=-999;holding=false;suppressUntilLift=true;Orbit.Stop();lastTap=-10;pendingTap=-1;}
+        public void Cancel(){if(surfaceActive)SurfaceEnded?.Invoke(false);surfaceReady=surfaceActive=false;if(holding)press?.Invoke(false);if(softPair)SoftManipulationEnded?.Invoke(false);softPair=false;first=second=-999;holding=false;suppressUntilLift=true;Orbit.Stop();lastTap=-10;pendingTap=-1;}
         public void ResetView(){Cancel();Orbit.Reset();viewer?.GetComponent<ToyStageEnvironment>()?.ResetView();Apply();}
         public void ReadInput()
         {
@@ -113,6 +130,7 @@ namespace Pockle.Runtime
         }
         private void BeginPair(Vector2 a,Vector2 b,int id)
         {
+            if(surfaceActive)SurfaceEnded?.Invoke(false);surfaceReady=surfaceActive=false;
             if(holding){holding=false;press?.Invoke(false);}
             second=id;paired=true;Orbit.Stop();pendingTap=-1;
             pairDistance=Mathf.Max(Slop,Vector2.Distance(a,b));pairCentre=(a+b)*.5f;
