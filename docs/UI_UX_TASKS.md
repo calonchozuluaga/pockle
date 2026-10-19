@@ -239,3 +239,6 @@ UX-021/024 October17: Codex badge runtime support on codex/badge-runtime-facts s
 
 
 October19 UX-025/029/042 follow-up: Wally integrated as an independent ten-finish collection with one special, native readable mesh, eight local temperament expressions, own shelf idle/silhouette and five random/no-repeat whale tap actions. Existing gestures and material handling retained, no grants/save changes. Native review: [Wally](wally-review/index.html). Dedicated collection art and authored Wally personality presentation remain follow-ups; this does not complete the broader UX task acceptance. Verification details are in VALIDATION.md.
+
+
+October19 ART-005/UX-033 Wally art follow-up: cover/five worlds/baked reflections/real branded opening box and transparent product PNGs wired through the existing catalog resource paths, without HUD edits. Source and native review at [Wally art set](wally-art-review/index.html). Validation is recorded in VALIDATION.md; physical-phone acceptance and authored personality copy remain separate.

@@ -9,6 +9,8 @@ internal static class WallyChecks
         Check(ToyCatalog.TryGetCollection("wally",out var c)&&c.DisplayName=="Wally"&&c.Members.Count==10&&c.SecretId==WallyCatalog.SpecialId,"Wally needs ten own finishes and one secret.");
         Check(c.Members.All(id=>ToyCatalog.TryGetCollectible(id,out var t)&&t.Available&&t.CharacterId=="wally"&&!ToyCatalog.IsDailyEligible(id)),"Wally art cannot change rewards.");
         Check(ToyCatalog.TryGetCharacter("wally",out var ch)&&ch.LeadFinishId=="gloss-vinyl","Wally should lead with the approved blue whale.");
+        Check(c.Worlds.Count==5 && c.HomeWorld=="wally-coral-cove" && c.Worlds[4].Id=="wally-midnight-trench","Wally needs five own worlds including a dark one.");
+        Check(c.CoverArt=="Collections/Wally/Cover" && c.BoxArt=="UI/Boxes/Collection-wally" && c.BoxModel=="Boxes/WallyCollectionBox","Wally needs its own cover and real carton resource bindings.");
         Check(CharacterMotion.TryGetProfile("wally",out _),"Wally needs its own shelf idle.");
         foreach(WallyAction action in Enum.GetValues(typeof(WallyAction)))
         {

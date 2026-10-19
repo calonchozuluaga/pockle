@@ -1,0 +1,1 @@
+Opening-ready original Wally carton. Source: WallyCollectionBox.blend; GLB: models/WallyCollectionBox.glb; Unity FBX: Assets/Pockle/Art/Models/WallyBox/WallyCollectionBox.fbx. Frame 1 closed, 48 open; 24 fps. Lid and two dust flaps have independent real hinges. Product PNG renders come from the same geometry/materials. 874 triangles.

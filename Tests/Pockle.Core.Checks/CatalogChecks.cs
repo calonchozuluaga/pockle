@@ -71,7 +71,7 @@ internal static class CatalogChecks
     private static void StageMetadata()
     {
         foreach(var collection in ToyCatalog.Collections)
-            Assert(collection.HomeWorld == (collection.CharacterId == "fox" ? "fox-hollow" : collection.CharacterId == "pip" ? "pip-jelly-garden" : collection.CharacterId == "axolotl" ? "axolotl-blossom-pond" : HolidayCatalog.HasArtSet(collection.CharacterId) ? HolidayCatalog.Worlds(collection.CharacterId)[0].Id : "studio"), "Collection home world fallback changed.");
+            Assert(collection.HomeWorld == (collection.CharacterId == "fox" ? "fox-hollow" : collection.CharacterId == "pip" ? "pip-jelly-garden" : collection.CharacterId == "axolotl" ? "axolotl-blossom-pond" : collection.CharacterId == "wally" ? "wally-coral-cove" : HolidayCatalog.HasArtSet(collection.CharacterId) ? HolidayCatalog.Worlds(collection.CharacterId)[0].Id : "studio"), "Collection home world fallback changed.");
         foreach(var toy in ToyCatalog.Collectibles)
         {
             var c=toy.SwatchColor;

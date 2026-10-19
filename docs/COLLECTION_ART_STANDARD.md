@@ -20,3 +20,6 @@ Every toy needs eye and mouth expression controls, including blink and expressio
 ## Surprise-box packaging direction
 
 Owner's packaging reference is docs/packaging/pockle-folded-box-concepts-02.png. Use the recognizable Pockle wordmark prominently at the top/front and on the lid, an anonymous toy silhouette with a question mark to tease the contents, and colorful collection-specific motifs around the carton. It should read as a real blind surprise toy box. Keep the revealed character cover illustration separate from the mystery packaging. Use printed panel textures on the actual hinged box geometry so collection/walk PNGs and opening animation share the same design.
+
+
+October19 Wally art set follows this standard: original text-free2160×720 cover, five toy-free ocean paintings with baked128px reflections (including Midnight Trench), and a real printed carton with branded lid/front, mystery whale silhouettes, three hinges and transparent1024px closed/open renders. Sources and exact built-in image_gen prompts are retained in ArtSource/WallyArt and ArtSource/WallyBox. Review: docs/wally-art-review/index.html. Availability does not approve reward odds or grant ownership.

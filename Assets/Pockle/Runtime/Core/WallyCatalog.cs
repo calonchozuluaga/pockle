@@ -1,9 +1,17 @@
 using System;
+using System.Collections.Generic;
 namespace Pockle.Core
 {
     /// <summary>Wally's ocean finishes. Availability never changes ownership or daily reward pools.</summary>
     public static class WallyCatalog
     {
+        public static IReadOnlyList<CollectionWorldDefinition> Worlds { get; } = Array.AsReadOnly(new[] {
+            new CollectionWorldDefinition("wally-coral-cove","Coral Cove"),
+            new CollectionWorldDefinition("wally-pearl-grotto","Pearl Grotto"),
+            new CollectionWorldDefinition("wally-kelp-garden","Kelp Garden"),
+            new CollectionWorldDefinition("wally-sunset-shallows","Sunset Shallows"),
+            new CollectionWorldDefinition("wally-midnight-trench","Midnight Trench")
+        });
         public const string ClassicId = "wally.gloss-vinyl";
         public const string SpecialId = "wally.glow-jelly";
         private static readonly string[] labels = { "Lagoon Jelly", "Moon Pearl", "Coral Glitter", "Seafoam Mochi", "Lavender Flock", "Cloud Plush", "Reef Matte", "Classic Blue", "Sunken Gold", "Deep Sea Glow · Ultra rare" };
