@@ -245,3 +245,6 @@ October19 ART-005/UX-033 Wally art follow-up: cover/five worlds/baked reflection
 
 
 October19 UX-025/029/038 Wally test delivery: complete character/art Android build prepared with a one-time persisted development grant (all ten finishes, twelve spares across six materials). Unity120/120 PlayMode,17/17 EditMode and persistence/portable checks pass. Actual phone delivery/award awaits USB reconnection; VALIDATION.md records exact build and remaining checks.
+
+
+October19 Wally phone delivery complete: latest character/art build installed in place and all ten finishes plus twelve spares saved and restart-verified. Eight existing fusion receipts retained; exact device verification details and concurrent daily reward note are in VALIDATION.md. Owner interaction acceptance remains pending.
