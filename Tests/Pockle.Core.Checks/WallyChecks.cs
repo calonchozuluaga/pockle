@@ -33,6 +33,17 @@ internal static class WallyChecks
         Check(WallyReactions.Sample(WallyAction.BreachJump,.5f,false).Lift>.35f,"Breach must jump.");
         Check(Math.Abs(WallyReactions.Sample(WallyAction.TailSplash,.25f,false).Tail)>.49f,"Tail splash must articulate.");
         Check(WallyReactions.Sample(WallyAction.FlipperWave,.5f,false).Flipper>.69f,"Greeting must wave a flipper.");
+        var progress=new CollectionProgress(null,42);progress.Save.Steps=571;progress.Save.Claimed=true;progress.Save.PendingRevealId=ToyCatalog.MoonId;
+        var untouched=progress.OwnedCounts.ToDictionary(x=>x.Key,x=>x.Value);
+        Check(progress.EnsureWallyTestCopies(),"Wally copies are granted.");
+        Check(progress.OwnedCounts.Count(x=>x.Key.StartsWith("wally.")&&x.Value==3)==6,"Six finishes have a display copy and two spares.");
+        Check(progress.OwnedCounts.Count(x=>x.Key.StartsWith("wally.")&&x.Value==1)==4,"The four other finishes keep a single test copy.");
+        Check(!progress.EnsureWallyTestCopies(),"Grant minimums are idempotent.");
+        foreach(var old in untouched)Check(progress.GetOwnedCount(old.Key)==old.Value,"Unrelated inventory remains unchanged.");
+        Check(progress.Save.Steps==571&&progress.Save.Claimed&&progress.Save.PendingRevealId==ToyCatalog.MoonId,"Walking and pending reveals survive the grant.");
+        Check(!progress.Save.BadgeState!.EarnedCopies.Any(x=>x.Id.StartsWith("wally.")),"Owner test gifts are not earned rewards.");
+        progress.Save.Inventory!.Single(x=>x.Id==WallyCatalog.ClassicId).Count=7;
+        var restarted=new CollectionProgress(progress.Save,42);Check(!restarted.EnsureWallyTestCopies()&&restarted.GetOwnedCount(WallyCatalog.ClassicId)==7,"Larger existing stacks are preserved across restart.");
         Console.WriteLine("PASS: Wally collection, ten finishes, five local whale reactions, Calm and no-repeat random choice.");
     }
 }

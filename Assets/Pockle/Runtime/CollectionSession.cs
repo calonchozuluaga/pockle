@@ -77,7 +77,7 @@ namespace Pockle.Runtime
             tracker = new AndroidWalkingTracker();
             if (!readOnlySave) { tracker.ResumeIfAllowed(); CaptureBadgeDates(); }
             Persist();
-            if (!Application.isBatchMode) { TryApplyOwnerFoxTestGrant(); TryApplyOwnerFoxFinishesGrant(); TryApplyOwnerPipFinishesGrant(); TryApplyOwnerAxolotlFinishesGrant(); TryApplyOwnerPipFusionStudiesGrant(); TryApplyOwnerWinterTrioGrant(); TryApplyOwnerFusionReviewSpares(); }
+            if (!Application.isBatchMode) { TryApplyOwnerFoxTestGrant(); TryApplyOwnerFoxFinishesGrant(); TryApplyOwnerPipFinishesGrant(); TryApplyOwnerAxolotlFinishesGrant(); TryApplyOwnerPipFusionStudiesGrant(); TryApplyOwnerWinterTrioGrant(); TryApplyOwnerFusionReviewSpares(); TryApplyOwnerWallyTestGrant(); }
         }
 
         /// <summary>Persistence can be replaced in tests; production always saves the complete candidate as one JSON value.</summary>
@@ -113,6 +113,36 @@ namespace Pockle.Runtime
         {
             if (readOnlySave || !Progress.FinishFusion(id)) return false;
             Persist(); Changed?.Invoke(); return true;
+        }
+
+        public const string WallyTestGrantKey="pockle.owner-test.wally-fusion-spares.v1";
+        /// <summary>Owner development grant. Save the private candidate before the marker and any visible refresh.</summary>
+        public bool TryApplyOwnerWallyTestGrant(Action<string> saveCandidate=null)
+        {
+            if(!(Application.isEditor||Debug.isDebugBuild)||Progress==null||readOnlySave||PlayerPrefs.GetInt(WallyTestGrantKey,0)==1)return false;
+            var flag=Resources.Load<TextAsset>("WallyOwnerTestGrant");
+            if(flag==null||flag.text.Trim()!="enabled")return false;
+            CaptureBadgeDates();
+            string before=JsonUtility.ToJson(Progress.Save);
+            var candidate=new CollectionProgress(JsonUtility.FromJson<CollectionSave>(before),Today);
+            bool granted=candidate.EnsureWallyTestCopies();
+            try
+            {
+                string json=JsonUtility.ToJson(candidate.Save);
+                if(saveCandidate!=null)saveCandidate(json);
+                else{PlayerPrefs.SetString(SaveKey,json);PlayerPrefs.Save();}
+                PlayerPrefs.SetInt(WallyTestGrantKey,1);PlayerPrefs.Save();
+            }
+            catch(Exception exception)
+            {
+                PlayerPrefs.SetString(SaveKey,before);PlayerPrefs.DeleteKey(WallyTestGrantKey);
+                FusionCatalog.Restore(Progress.Save.Fusions);
+                Debug.LogWarning("Wally test grant was not committed: "+exception.GetType().Name);
+                return false;
+            }
+            Progress=candidate;dirty=false;
+            Debug.Log("Pockle owner test: all ten Wally finishes saved; two spares each for Lagoon Jelly, Coral Glitter, Cloud Plush, Classic Blue, Sunken Gold and Deep Sea Glow.");
+            Changed?.Invoke();return granted;
         }
 
         public const string FusionReviewSparesKey = "pockle.owner-test.fusion-review-spares.v1";

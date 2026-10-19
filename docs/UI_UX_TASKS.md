@@ -242,3 +242,6 @@ October19 UX-025/029/042 follow-up: Wally integrated as an independent ten-finis
 
 
 October19 ART-005/UX-033 Wally art follow-up: cover/five worlds/baked reflections/real branded opening box and transparent product PNGs wired through the existing catalog resource paths, without HUD edits. Source and native review at [Wally art set](wally-art-review/index.html). Validation is recorded in VALIDATION.md; physical-phone acceptance and authored personality copy remain separate.
+
+
+October19 UX-025/029/038 Wally test delivery: complete character/art Android build prepared with a one-time persisted development grant (all ten finishes, twelve spares across six materials). Unity120/120 PlayMode,17/17 EditMode and persistence/portable checks pass. Actual phone delivery/award awaits USB reconnection; VALIDATION.md records exact build and remaining checks.
