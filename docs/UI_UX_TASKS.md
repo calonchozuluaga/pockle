@@ -248,3 +248,6 @@ October19 UX-025/029/038 Wally test delivery: complete character/art Android bui
 
 
 October19 Wally phone delivery complete: latest character/art build installed in place and all ten finishes plus twelve spares saved and restart-verified. Eight existing fusion receipts retained; exact device verification details and concurrent daily reward note are in VALIDATION.md. Owner interaction acceptance remains pending.
+
+
+October20 UX-029/033 silhouette follow-up: all11 active collections now project their actual playable body model through CharacterArt. Unfound rare slots share the correct character shape and still reveal no face/finish. Focused native normal/rare geometry test and all11 side-by-side capture reviews passed. [Review](silhouette-review/index.html); limits in VALIDATION.md. No phone update or broader UI-suite completion claimed.

@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using Pockle.Core;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Pockle.Runtime
 {
-    /// <summary>Face-free character outlines. Pip projects its real body; planned shapes follow ART-001's silhouette study.</summary>
+    /// <summary>Face-free outlines projected from each available character's actual body mesh.</summary>
     [RequireComponent(typeof(RectTransform), typeof(CanvasRenderer))]
     public sealed class CharacterSilhouetteGraphic : MaskableGraphic
     {
@@ -16,21 +17,25 @@ namespace Pockle.Runtime
         public void Configure(string characterId, bool secret = false)
         {
             CharacterId = characterId; ConcealsSecret = secret; raycastTarget = false;
-            if (!secret && (characterId == "pip" || characterId == "fox" || characterId == "wally"))
+            // Rarity hides the finish and face, not the collection's known body shape.
+            // Resolve through the same registry as the playable toy, including Pip's model preference.
+            if (ToyCatalog.TryGetCollection(characterId, out var collection))
             {
-                var asset = Resources.Load<PipCharacterAsset>(characterId == "wally" ? "Characters/Wally/Wally" : characterId == "fox" ? "Characters/Fox/Fox" : PipCharacterAsset.MeshyResourcePath);
-                if (asset == null && characterId == "pip") asset = Resources.Load<PipCharacterAsset>(PipCharacterAsset.ResourcePath);
-                if (asset != null && asset.BodyMesh != null && asset.BodyMesh.isReadable)
+                foreach (string id in collection.Members)
                 {
-                    var vertices = asset.BodyMesh.vertices; points = new Vector2[vertices.Length];
-                    var bounds = asset.BodyMesh.bounds;
+                    if (!CharacterArt.TryLoad(id, out var asset)) continue;
+                    var mesh = asset.BodyMesh;
+                    var vertices = mesh.vertices;
+                    var bounds = mesh.bounds;
                     float size = Mathf.Max(bounds.size.x, bounds.size.y);
+                    if (size <= Mathf.Epsilon) continue;
+                    points = new Vector2[vertices.Length];
                     for (int i = 0; i < points.Length; i++)
                         points[i] = new Vector2(vertices[i].x - bounds.center.x, vertices[i].y - bounds.center.y) / size;
-                    indices = asset.BodyMesh.triangles; SetVerticesDirty(); return;
+                    indices = mesh.triangles; SetVerticesDirty(); return;
                 }
             }
-            // Outline-only studies, not models or available collectibles. Secret identity never enters this switch.
+            // Historical/concept IDs without a playable model retain a safe outline fallback.
             float[] outline;
             switch (secret ? "mystery" : characterId)
             {
