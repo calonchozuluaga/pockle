@@ -63,19 +63,21 @@ namespace Pockle.Runtime
                 card.Banner = banner.GetComponent<RectTransform>();
                 var cover = Rect("Cover", card.Banner); Stretch(cover); cover.SetAsFirstSibling();
                 card.Cover = cover.gameObject.AddComponent<RawImage>(); card.Cover.raycastTarget = false;
-                var fade = Rect("Fade", card.Banner); Stretch(fade); fade.SetSiblingIndex(1); fade.anchorMax = new Vector2(.82f, 1);
+                // Covers get a dark plum gradient and white words, so the painting shows through (owner, October 19).
+                var fade = Rect("Fade", card.Banner); Stretch(fade); fade.SetSiblingIndex(1); fade.anchorMax = new Vector2(.86f, 1);
                 var fadeImage = fade.gameObject.AddComponent<RawImage>(); fadeImage.texture = UiShapes.FadeRight; fadeImage.raycastTarget = false;
-                fadeImage.color = new Color(PockleTheme.Milk.r, PockleTheme.Milk.g, PockleTheme.Milk.b, .95f);
+                fadeImage.color = new Color(PockleTheme.Plum.r, PockleTheme.Plum.g, PockleTheme.Plum.b, .78f);
                 var boxRect = Rect("Box", card.Banner);
                 card.Box = boxRect.gameObject.AddComponent<RawImage>(); card.Box.raycastTarget = false;
                 BoxHype.Add(card.Box, Color.Lerp(CollectionLook.Accent(collection), Color.white, .25f), shelfCards.Count * 1.1f);
-                card.Name = banner.GetComponentInChildren<Text>(); card.Name.alignment = TextAnchor.UpperLeft; card.Name.color = Ink;
+                card.Name = banner.GetComponentInChildren<Text>(); card.Name.alignment = TextAnchor.UpperLeft; card.Name.color = Color.white;
+                var nameShadow = card.Name.gameObject.AddComponent<Shadow>(); nameShadow.effectColor = new Color(0, 0, 0, .35f); nameShadow.effectDistance = new Vector2(0, -1);
                 var name = card.Name.rectTransform; name.anchorMin = name.anchorMax = name.pivot = new Vector2(0, 1);
                 name.anchoredPosition = new Vector2(16, -14); name.sizeDelta = new Vector2(190, 28);
-                var track = Rect("Progress track", card.Banner); Surface(track, new Color(1, 1, 1, .9f), 5);
+                var track = Rect("Progress track", card.Banner); Surface(track, new Color(1, 1, 1, .32f), 5);
                 track.anchorMin = track.anchorMax = track.pivot = new Vector2(0, 1); track.anchoredPosition = new Vector2(16, -54); track.sizeDelta = new Vector2(140, 10);
-                card.Fill = ProgressFill(track, CatalogUnityColor(collection.AccentColor));
-                card.Count = Label("", card.Banner, PockleTheme.SmallSize, CatalogUnityColor(collection.InkColor), FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, new Vector2(60, 20));
+                card.Fill = ProgressFill(track, Color.white);
+                card.Count = Label("", card.Banner, PockleTheme.SmallSize, Color.white, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, new Vector2(60, 20));
                 card.Count.rectTransform.anchorMin = card.Count.rectTransform.anchorMax = card.Count.rectTransform.pivot = new Vector2(0, 1);
                 card.Count.rectTransform.anchoredPosition = new Vector2(164, -49); card.Count.rectTransform.sizeDelta = new Vector2(60, 20);
 

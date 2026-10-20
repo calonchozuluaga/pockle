@@ -35,6 +35,9 @@ namespace Pockle.Runtime
 
         public void SetColour(Color colour) { glowColour = colour; }
 
+        /// <summary>Tints the drawn box: white for the real box, a dusky purple for tomorrow's mystery box.</summary>
+        public Color Tint { get; set; } = Color.white;
+
         private void Build(RawImage box, Color colour, float phaseSeconds)
         {
             if (source != null) { glowColour = colour; return; }
@@ -80,7 +83,7 @@ namespace Pockle.Runtime
         {
             if (source == null) return;
             // Mirror whatever the page set on the box (texture, crop, visible or not).
-            picture.texture = source.texture; picture.uvRect = source.uvRect;
+            picture.texture = source.texture; picture.uvRect = source.uvRect; picture.color = Tint;
             bool shown = source.enabled && source.texture != null;
             picture.enabled = shown; glow.enabled = shown && Excited;
             if (source.color.a > 0) source.color = Color.clear;

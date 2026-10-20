@@ -240,6 +240,16 @@ namespace Pockle.Runtime
             if (session != null && !string.IsNullOrEmpty(lastFusedId)) session.FinishFusion(lastFusedId);
         }
 
+        /// <summary>Which spare tiles, the empty message and the no-spare row are showing, as a compact key.</summary>
+        private string FusionVisibleSet()
+        {
+            var key = new System.Text.StringBuilder(spareTiles.Length + 2);
+            foreach (var tile in spareTiles) key.Append(tile != null && tile.gameObject.activeSelf ? '1' : '0');
+            key.Append(fusionEmpty != null && fusionEmpty.gameObject.activeSelf ? '1' : '0');
+            key.Append(fusionNoSpareRow != null && fusionNoSpareRow.gameObject.activeSelf ? '1' : '0');
+            return key.ToString();
+        }
+
         private void RefreshFusion()
         {
             if (fusionGo == null) return;
@@ -268,6 +278,7 @@ namespace Pockle.Runtime
 
             int shown = 0;
             var noSpare = new List<string>();
+            var visibleBefore = FusionVisibleSet();
             for (int i = 0; i < spareTiles.Length; i++)
             {
                 string id = FusionOrder[i];
@@ -295,6 +306,10 @@ namespace Pockle.Runtime
             fusionNoSpareText.text = noSpare.Count == 0 ? "" :
                 (noSpare.Count == 1 ? noSpare[0] + " has no spare yet." : string.Join(" and ", noSpare.GetRange(0, Mathf.Min(2, noSpare.Count))) + (noSpare.Count > 2 ? " and more have" : " have") + " no spares yet.")
                 + " A spare is an extra copy; your last one always stays on your shelf.";
+
+            // Picking a toy narrows the list to its character: when the visible tiles change, lay the page out again so the
+            // remaining spares pack from the top left instead of keeping their old slots (owner, October 18 and 19).
+            if (page == AppPage.Fusion && lastLayoutSize.x > 0 && FusionVisibleSet() != visibleBefore) AdaptLayout();
 
             fusionGo.interactable = ready;
             fusionGo.GetComponentInChildren<Text>().text = ready ? "Fuse " + FirstName(fuseFirst) + " + " + FirstName(fuseSecond) : "Pick two spares";
@@ -384,8 +399,8 @@ namespace Pockle.Runtime
             var motion = Rect("Motion", revealToy); Stretch(motion); motion.pivot = new Vector2(.5f, SceneBase);
             revealMotion = motion.gameObject.AddComponent<PersonalityMotion>();
             revealMotion.Configure(PersonalityMotion.Kind.Toy, PersonalityMotionStyle.Calm);
-            var frame = Rect("Frame", motion); Stretch(frame); Surface(frame, Color.white, 44);
-            frame.gameObject.AddComponent<Mask>().showMaskGraphic = true;
+            // No frame or mask: the fused toy is a cut-out with a clear background (owner, October 19: no box behind it).
+            var frame = Rect("Frame", motion); Stretch(frame);
             var picture = Rect("Blend", frame); Stretch(picture);
             revealPicture = picture.gameObject.AddComponent<RawImage>(); revealPicture.raycastTarget = false;
 

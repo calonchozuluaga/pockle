@@ -251,3 +251,6 @@ October19 Wally phone delivery complete: latest character/art build installed in
 
 
 October20 UX-029/033 silhouette follow-up: all11 active collections now project their actual playable body model through CharacterArt. Unfound rare slots share the correct character shape and still reveal no face/finish. Focused native normal/rare geometry test and all11 side-by-side capture reviews passed. [Review](silhouette-review/index.html); limits in VALIDATION.md. No phone update or broader UI-suite completion claimed.
+
+
+October20 UX-003/004/025/033 follow-up: Claude Ui27/28 integrated with all five approved feature paintings, big Home buttons, Fuse main tab, large Arrange/Fuse shelf buttons, countdown and dark collection cover gradients. Tula/rare silhouette fixes retained. Full PlayMode125/125, EditMode17/17 and native Home/Shelf/Fuse review passed; phone delivery evidence in VALIDATION.md. Collection rotation remains separate runtime work.

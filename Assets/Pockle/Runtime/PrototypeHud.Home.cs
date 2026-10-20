@@ -17,7 +17,7 @@ namespace Pockle.Runtime
         private RectTransform homeBox, homeSteps, homeTrack;
         private RawImage homeBoxArt;
         private BoxHype homeBoxHype;
-        private Text homeBoxLabel, homeBoxTitle, homeStepCount, homeStepSuffix, homeStatus;
+        private Text homeBoxLabel, homeBoxTitle, homeStepCount, homeStepSuffix, homeStatus, homeCountdown, homeMystery;
         private Image homeFill, homeBoxFace;
         private Button homeOpen, homeWalk;
         // Live shelf peek.
@@ -87,6 +87,13 @@ namespace Pockle.Runtime
                 () => { if (session != null && session.Progress.CanClaim) DailyBoxRequested?.Invoke(); }, out _, 18);
             homeWalk = CreateButton("Keep walking", homeBox, Vector2.zero, new Vector2(300, 48), new Color(1, 1, 1, .72f), () => Navigate(AppPage.Rewards), out _, 15);
             homeWalk.name = "Home keep walking";
+            // After today's box is opened: tomorrow's box as a mystery silhouette with a "?" and a live countdown.
+            homeMystery = Label("?", homeBox, 54, PockleTheme.FieldGold, FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, new Vector2(80, 70));
+            homeMystery.name = "Mystery mark";
+            homeCountdown = Label("", homeBox, 36, PockleTheme.FieldGold, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, new Vector2(180, 44));
+            homeCountdown.name = "Next box countdown"; homeCountdown.horizontalOverflow = HorizontalWrapMode.Overflow; homeCountdown.resizeTextForBestFit = false;
+            homeCountdown.gameObject.AddComponent<CountdownText>().Target = homeCountdown;
+            BuildHomeFeatures();
 
             // Your live shelf: a strip of the shelf art with the top row of toys and the moment they share.
             homeShelfTitle = Label("Your live shelf", homeRoot, PockleTheme.HeadingSize, Ink, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, new Vector2(200, 30));
@@ -355,7 +362,13 @@ namespace Pockle.Runtime
                 action.anchorMin = action.anchorMax = action.pivot = new Vector2(.5f, 0);
                 action.anchoredPosition = new Vector2(0, 18); action.sizeDelta = new Vector2(w - 36, action == open ? 54 : 48);
             }
-            y += boxHeight + 22;
+            LeftLabel(homeCountdown.rectTransform, new Vector2(18, -100), new Vector2(textWidth, 44));
+            var mystery = homeMystery.rectTransform; mystery.anchorMin = mystery.anchorMax = mystery.pivot = new Vector2(1, 1);
+            mystery.sizeDelta = new Vector2(boxSize, boxSize * .8f); mystery.anchoredPosition = new Vector2(2, -28 - boxSize * .1f);
+            y += boxHeight + 16;
+
+            // The big picture sections: Play, Fuse, Boxes, Badges.
+            y = LayoutHomeFeatures(left, w, y) + 22;
 
             // Live shelf peek.
             LeftLabel(homeShelfTitle.rectTransform, new Vector2(left, -y), new Vector2(w - 100, 30));
@@ -506,8 +519,16 @@ namespace Pockle.Runtime
             ToyCatalog.TryGetCollection("pip", out var daily);
             homeBoxArt.texture = daily != null ? CollectionLook.Box(daily, out _) : null;
             homeBoxArt.enabled = homeBoxArt.texture != null;
-            homeBoxTitle.text = (daily != null ? daily.DisplayName : "Pip") + " box";
-            homeBoxFace.color = ready ? PockleTheme.Jelly : Color.Lerp(PockleTheme.Jelly, Color.white, .3f);
+            bool opened = today && !ready && !walking;
+            homeBoxTitle.text = opened ? "Mystery box" : (daily != null ? daily.DisplayName : "Pip") + " box";
+            homeBoxLabel.text = opened ? "NEXT BOX" : "TODAY'S BOX";
+            homeBoxFace.color = opened ? (Color)new Color32(0x3A, 0x2B, 0x6A, 0xFF) : ready ? PockleTheme.Jelly : Color.Lerp(PockleTheme.Jelly, Color.white, .3f);
+            homeBoxLabel.color = opened ? PockleTheme.OnPlumMuted : PockleTheme.JellyInk;
+            homeBoxTitle.color = opened ? PockleTheme.OnPlum : Ink;
+            homeStatus.color = opened ? PockleTheme.OnPlumMuted : PockleTheme.JellyInk;
+            homeBoxHype.Tint = opened ? new Color(.45f, .38f, .8f, 1f) : Color.white;
+            homeMystery.gameObject.SetActive(opened && homeBoxArt.enabled);
+            homeCountdown.gameObject.SetActive(opened);
             homeBoxHype.Excited = ready; // the box only glows, shakes and sparkles when it can be opened
             homeOpen.gameObject.SetActive(ready); homeOpen.interactable = ready;
             homeWalk.gameObject.SetActive(walking);
@@ -519,7 +540,7 @@ namespace Pockle.Runtime
             if (homeSteps.sizeDelta.x > 0) PlaceStepSuffix();
             homeFill.fillAmount = Mathf.Clamp01(saved.Steps / (float)target);
             homeStatus.text = !today ? "Check your device date to keep walking." : ready ? "Your box is ready!"
-                : walking ? "Opens at " + target.ToString("N0") + " steps." : "Opened today. " + NextBoxIn();
+                : walking ? "Opens at " + target.ToString("N0") + " steps." : "A new box arrives in";
 
             // Live shelf peek: the first three spots and the moment the first neighbours share.
             for (int i = 0; i < homePeekToys.Length; i++)
@@ -535,6 +556,7 @@ namespace Pockle.Runtime
             if (moment != null) homePeekChipText.text = moment.Caption;
             homePeekEmpty.gameObject.SetActive(liveShelf.Count == 0);
 
+            RefreshHomeFeatures();
             RefreshHomeActivity();
             RefreshHomeCollections();
             if (page == AppPage.Home && subtitle != null) subtitle.text = HomeLine();

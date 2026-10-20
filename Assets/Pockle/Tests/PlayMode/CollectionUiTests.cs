@@ -129,8 +129,8 @@ namespace Pockle.Tests
                 Assert.That(hud.ShelfPreviews.ActiveSilhouetteCount, Is.Zero, "Silhouettes take no 3D actor slot.");
                 hud.SetSettings(true, false, true);
                 yield return null; CaptureShelfUi(canvas, camera, target, "motion-calm");
-                hud.GoBack(); ButtonNamed("Collection · tula").onClick.Invoke();
-                yield return null; FocusFirstSilhouette(scroll); yield return null; CaptureShelfUi(canvas, camera, target, "planned-tula");
+                hud.GoBack(); ButtonNamed("Collection · wally").onClick.Invoke();
+                yield return null; FocusFirstSilhouette(scroll); yield return null; CaptureShelfUi(canvas, camera, target, "unfound-wally");
                 Assert.That(hud.ShelfPreviews.AllocatedTargetCount, Is.LessThanOrEqualTo(ShelfPreviewRuntime.Capacity));
                 Debug.Log("SHELF_REVIEW_CAPTURES " + SystemInfo.graphicsDeviceName);
             }
@@ -293,8 +293,8 @@ namespace Pockle.Tests
             yield return new WaitForSecondsRealtime(.2f);
             Assert.That(hud.ShelfPreviews.ActiveCount, Is.Zero);
             Assert.IsTrue(silhouettes.Select((graphic, index) => graphic.rectTransform.anchoredPosition == calmPositions[index]).All(value => value));
-            outline.Configure("tula", secret: true);
-            Assert.IsTrue(outline.ConcealsSecret, "Secret placeholders must not use the secret's character outline.");
+            outline.Configure("pip", secret: true);
+            Assert.IsTrue(outline.ConcealsSecret, "Secret metadata still conceals the finish and face; body follows the collection.");
             Assert.IsFalse(hud.ShowToy("pip.glow-jelly"));
             CollectionAssert.AreEquivalent(inventory, session.OwnedCounts);
         }
@@ -322,6 +322,93 @@ namespace Pockle.Tests
             Assert.IsTrue(root.GetComponentsInChildren<Text>().Any(text => text.text.Contains("Nothing will be charged")));
             hud.GoBack();
             Assert.IsTrue(hud.StoreVisible, "Closing purchase dialog must retain box browsing.");
+        }
+
+        [UnityTest]
+        public IEnumerator FuseIsATabAndHomeHasBigPictureSections()
+        {
+            Assert.AreEqual(AppPage.Home, hud.CurrentPage);
+            var tabs = root.GetComponentsInChildren<RectTransform>().First(r => r.name == "Navigation").GetComponentsInChildren<Button>();
+            CollectionAssert.AreEqual(new[] { "Home", "Shelf", "Fuse", "Boxes", "You" }, tabs.Select(b => b.GetComponentInChildren<Text>().text).ToArray(),
+                "Five tabs, Fuse in the middle (owner, October 19).");
+            foreach (string word in new[] { "Play", "Fuse", "Boxes", "Badges" })
+                Assert.IsTrue(ButtonNamed("Home feature · " + word).gameObject.activeInHierarchy, word + " has its own big section on Home.");
+
+            ButtonNamed("Home feature · Fuse").onClick.Invoke();
+            yield return null;
+            Assert.AreEqual(AppPage.Fusion, hud.CurrentPage);
+            Assert.IsTrue(tabs[2].gameObject.activeInHierarchy, "Fuse keeps the tab bar now that it is a tab.");
+            Assert.IsFalse(ButtonNamed("Back", true).gameObject.activeSelf, "A tab page shows the tab bar, not a back button.");
+            tabs[0].onClick.Invoke();
+            ButtonNamed("Home feature · Play").onClick.Invoke();
+            Assert.AreEqual(AppPage.Shelf, hud.CurrentPage);
+            tabs[2].onClick.Invoke();
+            Assert.AreEqual(AppPage.Fusion, hud.CurrentPage, "The Fuse tab opens Fuse from anywhere.");
+            tabs[0].onClick.Invoke();
+            ButtonNamed("Home feature · Badges").onClick.Invoke();
+            Assert.AreEqual(AppPage.Badges, hud.CurrentPage);
+        }
+
+        [UnityTest]
+        public IEnumerator PaintedHomeAndArrangeFeaturesLoadAndNavigate()
+        {
+            foreach (string word in new[] { "Play", "Fuse", "Boxes", "Badges" })
+            {
+                var button = ButtonNamed("Home feature · " + word);
+                var painting = button.GetComponentsInChildren<RawImage>().Single(image => image.name == "Painting");
+                Assert.AreSame(Resources.Load<Texture2D>("UI/Features/Feature" + word), painting.texture);
+                Assert.IsTrue(painting.enabled);
+            }
+            var canvas = root.GetComponentInChildren<Canvas>(); var scaler = canvas.GetComponent<CanvasScaler>();
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize; scaler.scaleFactor = 2;
+            var view = new GameObject("Ui28 review camera", typeof(Camera)); var camera = view.GetComponent<Camera>();
+            camera.enabled = false; camera.clearFlags = CameraClearFlags.SolidColor; camera.backgroundColor = PrototypeStage.Background;
+            camera.cullingMask = 1 << 29;
+            var target = new RenderTexture(780, 1688, 24); target.Create(); camera.targetTexture = target;
+            canvas.renderMode = RenderMode.ScreenSpaceCamera; canvas.worldCamera = camera; canvas.planeDistance = 1;
+            try
+            {
+                yield return null; Canvas.ForceUpdateCanvases();
+                CaptureShelfUi(canvas, camera, target, "ui28-home");
+                ButtonWithText("Shelf").onClick.Invoke(); yield return null;
+                var arrange = ButtonNamed("Edit shelf");
+                Assert.AreSame(Resources.Load<Texture2D>("UI/Features/FeatureArrange"), arrange.GetComponentsInChildren<RawImage>().Single(image => image.name == "Painting").texture);
+                Assert.That(arrange.GetComponent<RectTransform>().rect.height, Is.GreaterThanOrEqualTo(110));
+                var scroll = root.GetComponentsInChildren<ScrollRect>().Single();
+                var bounds = RectTransformUtility.CalculateRelativeRectTransformBounds(scroll.content, arrange.transform);
+                scroll.content.anchoredPosition = new Vector2(0, Mathf.Clamp(-bounds.center.y - scroll.viewport.rect.height * .5f, 0, Mathf.Max(0,scroll.content.rect.height-scroll.viewport.rect.height)));
+                yield return null; CaptureShelfUi(canvas, camera, target, "ui28-shelf-arrange");
+                arrange.onClick.Invoke(); Assert.AreEqual(AppPage.ShelfPick, hud.CurrentPage);
+                hud.GoBack(); ButtonNamed("Shelf feature · Fuse").onClick.Invoke(); yield return null;
+                Assert.AreEqual(AppPage.Fusion, hud.CurrentPage);
+                CaptureShelfUi(canvas, camera, target, "ui28-fuse");
+            }
+            finally
+            {
+                canvas.renderMode = RenderMode.ScreenSpaceOverlay; canvas.worldCamera = null;
+                camera.targetTexture = null; target.Release(); Object.Destroy(target); Object.Destroy(view);
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator OpenedBoxCountsDownToTomorrowsMysteryBox()
+        {
+            Object.Destroy(root); yield return null;
+            var save = new CollectionSave { Version = CollectionProgress.SaveVersion, Day = CollectionSession.Today, Steps = CollectionProgress.DailyTarget, Claimed = true,
+                Inventory = new System.Collections.Generic.List<OwnedCollectible> { new OwnedCollectible(ToyCatalog.PeachId, 1) } };
+            PlayerPrefs.SetString(SaveKey, JsonUtility.ToJson(save));
+            root = new GameObject("Countdown test");
+            session = root.AddComponent<CollectionSession>(); session.Initialize();
+            hud = root.AddComponent<PrototypeHud>(); hud.Initialize(_ => { }, _ => { }, _ => { }); hud.Bind(session);
+            yield return null; yield return null;
+            Assert.IsTrue(VisibleText("NEXT BOX") && VisibleText("Mystery box") && VisibleText("A new box arrives in"));
+            var countdown = root.GetComponentsInChildren<Text>().First(t => t.name == "Next box countdown");
+            StringAssert.IsMatch(@"^\d{1,2}:\d\d:\d\d$", countdown.text, "A live h:mm:ss countdown to the next UTC day.");
+            var left = CountdownText.UntilNextBox(System.DateTime.UtcNow);
+            Assert.That(left.TotalHours, Is.InRange(0, 24));
+            Assert.AreEqual("0:00:00", CountdownText.Format(System.TimeSpan.FromSeconds(-5)));
+            Assert.AreEqual("7:05:09", CountdownText.Format(new System.TimeSpan(7, 5, 9)));
+            Assert.IsFalse(root.GetComponentsInChildren<Button>().Any(b => b.name == "Home keep walking"), "Nothing to walk for once today's box is open.");
         }
 
         [UnityTest]
@@ -493,10 +580,11 @@ namespace Pockle.Tests
                 Assert.AreEqual(AppPage.Collections, hud.CurrentPage);
                 Assert.AreEqual(90, scroll.content.anchoredPosition.y, .1f);
 
-                ButtonNamed("Collection · tula").onClick.Invoke();
+                Assert.IsFalse(root.GetComponentsInChildren<Button>().Any(b => b.name == "Collection · tula"));
+                ButtonNamed("Collection · wally").onClick.Invoke();
                 Assert.AreEqual(AppPage.Collection, hud.CurrentPage);
                 Assert.IsFalse(root.GetComponentsInChildren<Button>().Any(button => button.name.StartsWith("Collectible · ") && button.interactable));
-                Assert.IsFalse(ButtonNamed("Collection boxes").interactable, "A collection without boxes on sale offers none.");
+                Assert.IsFalse(ButtonNamed("Collection boxes").interactable, "An unapproved collection reward pool offers no boxes.");
                 Assert.IsFalse(ButtonWithText("Walk for one").interactable);
                 Assert.AreEqual(0, scroll.content.anchoredPosition.y, .1f, "A different series should start at its top.");
                 Assert.IsFalse(hud.ShowToy("moss.velvet-flock"));
@@ -563,6 +651,42 @@ namespace Pockle.Tests
         }
 
         [UnityTest]
+        public IEnumerator PickingASpareRepacksTheListAndTheRevealHasNoBoxBehindTheToy()
+        {
+            string fox = ToyCatalog.Collectibles.First(c => c.CharacterId == "fox" && c.Available && FusionCatalog.IsSource(c.Id)).Id;
+            Object.Destroy(root); yield return null;
+            var save = new CollectionSave { Version = CollectionProgress.SaveVersion, Day = CollectionSession.Today,
+                Inventory = new System.Collections.Generic.List<OwnedCollectible> {
+                    new OwnedCollectible(ToyCatalog.PeachId, 2), new OwnedCollectible(ToyCatalog.MoonId, 2), new OwnedCollectible(fox, 3) } };
+            PlayerPrefs.SetString(SaveKey, JsonUtility.ToJson(save));
+            root = new GameObject("Fusion repack test");
+            session = root.AddComponent<CollectionSession>(); session.Initialize();
+            hud = root.AddComponent<PrototypeHud>(); hud.Initialize(_ => { }, _ => { }, _ => { }); hud.Bind(session);
+            yield return null;
+            ButtonWithText("Shelf").onClick.Invoke();
+            ButtonNamed("Shelf feature · Fuse").onClick.Invoke();
+            yield return null;
+            var firstSlot = ButtonNamed("Spare · " + ToyCatalog.PeachId).GetComponent<RectTransform>().anchoredPosition;
+            var foxTile = ButtonNamed("Spare · " + fox).GetComponent<RectTransform>();
+            Assert.AreNotEqual(firstSlot, foxTile.anchoredPosition, "Before picking, the fox comes after the Pips.");
+
+            foxTile.GetComponent<Button>().onClick.Invoke();
+            yield return null;
+            Assert.IsFalse(root.GetComponentsInChildren<Button>().Any(b => b.name == "Spare · " + ToyCatalog.PeachId), "Picking a fox hides the Pips.");
+            Assert.AreEqual(firstSlot, foxTile.anchoredPosition, "The remaining spares pack into the first slots, with no gaps.");
+
+            foxTile.GetComponent<Button>().onClick.Invoke(); // the fox's second spare
+            ButtonNamed("Fuse").onClick.Invoke();
+            yield return null;
+            if (hud.FusionMomentPlaying) { ButtonNamed("Fusion moment").onClick.Invoke(); yield return null; }
+            Assert.AreEqual(AppPage.FusionReveal, hud.CurrentPage);
+            var toy = root.GetComponentsInChildren<RectTransform>().First(r => r.name == "Fused toy");
+            var frame = toy.GetComponentsInChildren<RectTransform>().First(r => r.name == "Frame");
+            Assert.IsNull(frame.GetComponent<Image>(), "No white box behind the revealed toy.");
+            Assert.IsNull(frame.GetComponent<Mask>());
+        }
+
+        [UnityTest]
         public IEnumerator FusionPreviewShowsTheResultWithoutUsingSpares()
         {
             Object.Destroy(root); yield return null;
@@ -577,7 +701,7 @@ namespace Pockle.Tests
             yield return null;
             var inventory = session.OwnedCounts.ToDictionary(pair => pair.Key, pair => pair.Value);
             ButtonWithText("Shelf").onClick.Invoke();
-            ButtonWithText("Fuse spares").onClick.Invoke();
+            ButtonNamed("Shelf feature · Fuse").onClick.Invoke();
             Assert.AreEqual(AppPage.Fusion, hud.CurrentPage);
             var fuse = ButtonNamed("Fuse");
             Assert.IsFalse(fuse.interactable, "Fusing needs two spares.");

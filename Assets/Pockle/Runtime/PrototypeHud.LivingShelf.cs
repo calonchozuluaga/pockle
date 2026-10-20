@@ -37,6 +37,7 @@ namespace Pockle.Runtime
         private RectTransform timeSwitch, scene, sceneMoon, momentsCard, momentsTrack, sceneEmpty, spotsChip;
         private Image sceneFace, momentsFill, dayFace, nightFace;
         private Button dayButton, nightButton, fuseRow, editShelf;
+        private FeatureTile shelfArrangeFeature, shelfFuseFeature;
         private Text momentsLabel, spotsLabel;
         private RawImage shelfBackdrop;
         private readonly RectTransform[] planks = new RectTransform[2];
@@ -83,7 +84,8 @@ namespace Pockle.Runtime
             dayButton.name = "Shelf time · day";
             nightButton = CreateButton("Night", timeSwitch, Vector2.zero, new Vector2(100, 38), Paper, () => SetShelfNight(true), out nightFace, 15);
             nightButton.name = "Shelf time · night";
-            editShelf = CreateButton("Edit shelf", shelfRoot, Vector2.zero, new Vector2(120, 46), Quiet, () => Navigate(AppPage.ShelfPick), out _, 15);
+            shelfArrangeFeature = BuildFeature("Arrange", "Edit shelf", "FeatureArrange", "pip", "Shelf", Quiet, () => Navigate(AppPage.ShelfPick), false, shelfRoot);
+            editShelf = shelfArrangeFeature.Button;
             editShelf.name = "Edit shelf";
 
             // The scene: a shelf (Codex's backdrop when present, else a colour wall and two planks), six spots, marks.
@@ -144,7 +146,8 @@ namespace Pockle.Runtime
             hint.rectTransform.SetParent(momentsTrack, false); Stretch(hint.rectTransform);
             momentsFill = null;
 
-            fuseRow = RowButton("Fuse spares", "Make a one-of-a-kind toy", "Box", shelfRoot, () => Navigate(AppPage.Fusion), out _, true);
+            shelfFuseFeature = BuildFeature("Fuse", "Shelf feature · Fuse", "FeatureFuse", "snowy", "Fuse", PockleTheme.Midnight, () => SelectTab(AppPage.Fusion), true, shelfRoot);
+            fuseRow = shelfFuseFeature.Button;
         }
 
         private RectTransform SceneMark(string text, Transform parent, float phase)
@@ -267,12 +270,10 @@ namespace Pockle.Runtime
         /// <summary>Lays out the switch, scene, moments card and fuse row from <paramref name="y"/>; returns the new y.</summary>
         private float LayoutLivingShelf(float width, float y)
         {
-            float editWidth = Mathf.Min(130, editShelf.GetComponentInChildren<Text>().preferredWidth + 36);
-            float switchWidth = width - editWidth - 10, half = (switchWidth - 12) / 2;
+            float switchWidth = width, half = (switchWidth - 12) / 2;
             LeftLabel(timeSwitch, new Vector2(0, -y), new Vector2(switchWidth, 46));
             LeftLabel(dayFace.rectTransform, new Vector2(4, -4), new Vector2(half, 38));
             LeftLabel(nightFace.rectTransform, new Vector2(8 + half, -4), new Vector2(half, 38));
-            LeftLabel(editShelf.GetComponent<RectTransform>(), new Vector2(width - editWidth, -y), new Vector2(editWidth, 46));
             y += 46 + 14;
 
             float k = width / 350f;
@@ -303,8 +304,13 @@ namespace Pockle.Runtime
             LeftLabel(momentsLabel.rectTransform, new Vector2(52, -12), new Vector2(width - 64, 22));
             LeftLabel(momentsTrack, new Vector2(52, -34), new Vector2(width - 64, 20));
             y += 64 + 12;
-            LeftLabel(fuseRow.GetComponent<RectTransform>(), new Vector2(0, -y), new Vector2(width, 60));
-            y += 60 + 24;
+            float featureWidth = (width - 12) / 2;
+            float featureHeight = Mathf.Clamp(Mathf.Round(featureWidth * .7f), 110, 140);
+            LeftLabel(editShelf.GetComponent<RectTransform>(), new Vector2(0, -y), new Vector2(featureWidth, featureHeight));
+            LeftLabel(fuseRow.GetComponent<RectTransform>(), new Vector2(featureWidth + 12, -y), new Vector2(featureWidth, featureHeight));
+            foreach (var feature in new[] { shelfArrangeFeature, shelfFuseFeature })
+                feature.Art.uvRect = CollectionLook.Cover(feature.Art.texture, featureWidth / featureHeight, .5f, .5f);
+            y += featureHeight + 24;
             RefreshLivingShelf();
             return y;
         }
@@ -313,6 +319,10 @@ namespace Pockle.Runtime
         {
             if (scene == null) return;
             SyncLiveShelf();
+            if (page == AppPage.Shelf && shelfArrangeFeature != null && shelfFuseFeature != null)
+                foreach (var feature in new[] { shelfArrangeFeature, shelfFuseFeature })
+                    if (feature.Art.texture == null)
+                        SetPicture(feature.Art, Resources.Load<Texture2D>("UI/Features/" + feature.ArtName) ?? CollectionLook.Banner(feature.FallbackCover));
             bool backdrop = shelfBackdrop.texture != null;
             sceneFace.color = shelfNight ? SceneNight : SceneDay;
             shelfBackdrop.color = shelfNight ? new Color(.45f, .45f, .7f, 1f) : Color.white;

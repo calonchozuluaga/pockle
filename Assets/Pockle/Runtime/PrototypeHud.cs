@@ -35,7 +35,7 @@ namespace Pockle.Runtime
         private RawImage favoriteGlyph;
         private Text heading, subtitle, playHint, modalTitle, modalText;
         private Button settingsButton, backButton;
-        private Image homeTab, shelfTab, boxesTab, youTab;
+        private Image homeTab, shelfTab, fuseTab, boxesTab, youTab;
         private RectTransform backIcon;
         private RectTransform shelfRoot, boxesRoot, homeRoot, rewardsRoot, socialRoot, profileRoot, settingsRoot, collectionsRoot, collectionRoot;
         private RectTransform personalityRoot, fusionRoot, fusionRevealRoot;
@@ -115,9 +115,10 @@ namespace Pockle.Runtime
             BuildPersonality(); BuildFusion(); BuildShelfPick(); BuildBadges();
             // The Shelf tab's header link to every collection.
             collectionsPill = CreateButton("All collections", safeRoot, Vector2.zero, new Vector2(140, 44), Quiet, () => Navigate(AppPage.Collections), out _, 15);
-            navigation = Rect("Navigation", safeRoot); Surface(navigation, Primary, 32);
+            navigation = Rect("Navigation", safeRoot); Surface(navigation, Primary, 38);
             BuildTab("Home", "Home", () => SelectTab(AppPage.Home), out homeTab);
             BuildTab("Shelf", "Shelf", () => SelectTab(AppPage.Shelf), out shelfTab);
+            BuildTab("Fuse", "Fuse", () => SelectTab(AppPage.Fusion), out fuseTab); // owner, October 19: kids couldn't find Fuse
             BuildTab("Boxes", "Box", () => SelectTab(AppPage.Boxes), out boxesTab);
             BuildTab("You", "You", () => SelectTab(AppPage.Profile), out youTab);
             shelfPreviews.SetOcclusion(navigation);
@@ -250,10 +251,10 @@ namespace Pockle.Runtime
             browsing.gameObject.SetActive(!play);
             pageGround.gameObject.SetActive(!play);
             // Tab pages show the tab bar; pages reached from them show a back button instead.
-            bool tabRoot = page == AppPage.Home || page == AppPage.Shelf || page == AppPage.Boxes || page == AppPage.Profile;
+            bool tabRoot = page == AppPage.Home || page == AppPage.Shelf || page == AppPage.Fusion || page == AppPage.Boxes || page == AppPage.Profile;
             bool fullBleed = FullBleed;
-            // Personality and fusion pages are focused moments without the tab bar, as on the approved canvas.
-            navigation.gameObject.SetActive(!play && (!fullBleed || page == AppPage.Collection) && page != AppPage.Fusion);
+            // Personality and the fusion reveal are focused moments without the tab bar. Fuse is a tab now (October 19), so it keeps it.
+            navigation.gameObject.SetActive(!play && (!fullBleed || page == AppPage.Collection));
             playHintPill.gameObject.SetActive(play);
             // On the toy's stage and full-bleed colour fields, header buttons are translucent milk; elsewhere the neutral fill.
             backButton.GetComponent<Image>().color = play || fullBleed ? new Color(1, 1, 1, .6f) : Quiet;
@@ -299,7 +300,8 @@ namespace Pockle.Runtime
             StyleTab(homeTab, page == AppPage.Home || page == AppPage.Rewards || page == AppPage.Social);
             // Collection browsing lives under the Shelf tab.
             StyleTab(shelfTab, page == AppPage.Shelf || page == AppPage.Collections || page == AppPage.Collection || page == AppPage.ShelfPick
-                || page == AppPage.Personality || page == AppPage.Fusion || page == AppPage.FusionReveal);
+                || page == AppPage.Personality);
+            StyleTab(fuseTab, page == AppPage.Fusion || page == AppPage.FusionReveal);
             StyleTab(boxesTab, page == AppPage.Boxes);
             StyleTab(youTab, page == AppPage.Profile || page == AppPage.Settings || page == AppPage.Badges);
             RefreshShelf(); RefreshProfile(); RefreshSettings(); RefreshWalkingCard(); RefreshHome(); RefreshCollections();
@@ -398,13 +400,13 @@ namespace Pockle.Runtime
             TopCentered(browsing, new Vector2(0, -top), new Vector2(width, viewportHeight));
             // Floating plum tab bar; the scroll area runs beneath it with bottom padding.
             navigation.anchorMin = navigation.anchorMax = new Vector2(.5f, 0); navigation.pivot = new Vector2(.5f, 0);
-            navigation.anchoredPosition = new Vector2(0, 20); navigation.sizeDelta = new Vector2(Mathf.Min(390 - gutter * 2, width), 68);
+            navigation.anchoredPosition = new Vector2(0, 16); navigation.sizeDelta = new Vector2(Mathf.Min(420, size.x - 24), 76);
             float navWidth = navigation.sizeDelta.x;
-            // Four tabs, each an icon over its label.
-            var tabButtons = new[] { homeTab, shelfTab, boxesTab, youTab };
+            // Five tabs, each a big icon over a one-word label (kid-friendly pass, October 19).
+            var tabButtons = new[] { homeTab, shelfTab, fuseTab, boxesTab, youTab };
             float tabWidth = (navWidth - 12 - 4 * (tabButtons.Length - 1)) / tabButtons.Length;
             for (int i = 0; i < tabButtons.Length; i++)
-                LeftLabel(tabButtons[i].rectTransform, new Vector2(6 + i * (tabWidth + 4), -6), new Vector2(tabWidth, 56));
+                LeftLabel(tabButtons[i].rectTransform, new Vector2(6 + i * (tabWidth + 4), -6), new Vector2(tabWidth, 64));
             playHintPill.sizeDelta = new Vector2(Mathf.Min(width, 360), 40);
             LayoutStage(size, left, width);
             LayoutCompactHeader(left);
@@ -427,7 +429,7 @@ namespace Pockle.Runtime
                 default: height = LayoutShelf(width); break;
             }
             // Leave room to scroll the last row clear of the floating tab bar.
-            height += tabs ? 108 : 24;
+            height += tabs ? 116 : 24;
             content.sizeDelta = new Vector2(0, Mathf.Max(viewportHeight, height));
             content.anchoredPosition = new Vector2(0, Mathf.Clamp(content.anchoredPosition.y, 0, Mathf.Max(0, height - viewportHeight)));
             if (modal.gameObject.activeSelf) LayoutModal();
@@ -651,8 +653,8 @@ namespace Pockle.Runtime
         {
             var button = CreateButton(title, navigation, Vector2.zero, new Vector2(80, 56), PockleTheme.Jelly, click, out background, PockleTheme.SmallSize);
             SetRadius(background, 22);
-            // Icon above, label below, so four tabs fit the bar.
-            var glyph = AddIcon(button.transform, icon, 22, Ink);
+            // Icon above, label below, so five tabs fit the bar; icons are big enough to read without the word.
+            var glyph = AddIcon(button.transform, icon, 28, Ink);
             glyph.anchorMin = glyph.anchorMax = glyph.pivot = new Vector2(.5f, 1);
             glyph.anchoredPosition = new Vector2(0, -8);
             var label = button.GetComponentInChildren<Text>();
