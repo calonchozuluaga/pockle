@@ -147,7 +147,6 @@ namespace Pockle.Core
             };
             var characters = new[] {
                 new CharacterDefinition("pip", "Pip", 0xf5b89c, "clear-jelly"),
-                new CharacterDefinition("tula", "Tula", 0xabcaae, "mochi-foam"),
                 new CharacterDefinition("fox", "Fox", 0xec7951, "gloss-vinyl"),
                 new CharacterDefinition("axolotl", "Axolotl", 0xeeb2cb, "boucle-plush"),
                 new CharacterDefinition("firb", "Firb", 0x548b66, "matte-vinyl"),

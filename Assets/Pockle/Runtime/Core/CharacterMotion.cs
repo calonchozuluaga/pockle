@@ -38,7 +38,6 @@ namespace Pockle.Core
     {
         private static readonly CharacterIdleDefinition[] profiles = {
             new CharacterIdleDefinition("pip", "Jelly breath and curious bounce", 4f, 3.6f, .020f, 0, 3, 2, .10f),
-            new CharacterIdleDefinition("tula", "Slow nod and tiny lift", 6.4f, 5.2f, .012f, 4, 0, 1, .035f),
             new CharacterIdleDefinition("fox", "Alert fox glance and gentle rock", 4.7f, 3.7f, 0, 2, 8, 1, .045f),
             new CharacterIdleDefinition("axolotl", "Soft plush sway", 5.8f, 4.2f, 0, 1, 5, .5f, .025f),
             new CharacterIdleDefinition("firb", "Evergreen branch sway", 5.3f, 4.1f, 0, 1, 2, 2.5f, .035f),

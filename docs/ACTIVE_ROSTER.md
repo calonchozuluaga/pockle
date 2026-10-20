@@ -18,3 +18,7 @@ Owner fusion lab expansion: nine UI collections/84 entries/74 playable including
 
 
 October19 current roster supersedes the earlier counts: Pip, Tula (planned), Fox, Axolotl, Firb, Coco, Snowy, Ginger, Reiny, Guin, Bundy and Wally. Twelve character collections /120 regular finish slots; eleven models /110 regular finishes playable. Pip Fusion Lab adds four fixed studies and one page:13 pages,124 fixed entries,114 available. No retired definition is reactivated, existing saved historical IDs remain intact, and Wally does not enter the three legacy Pip reward pools.
+
+
+## October20 — Tula retired
+This supersedes earlier active-roster counts and the earlier decision to keep Tula planned. Active characters: **Pip, Fox, Axolotl, Firb, Coco, Snowy, Ginger, Reiny, Guin, Bundy and Wally**. Eleven character collections /110 regular finish slots, all playable. Pip Fusion Lab adds four fixed studies and one page: **12 pages,114 fixed entries,114 available**. Tula and its ten planned finishes no longer resolve in catalog or idle-profile lookups; catalog-driven screens no longer offer them. Saved historical Tula ownership is retained across reload just like the other retired IDs. No save-format change or reward-pool change. Claude's UI tests that specifically navigate to planned Tula need their fixture blocks updated; requested in Codex's handoff.
