@@ -1,0 +1,5 @@
+# Home and shelf feature paintings
+
+Five original environment paintings generated using built-in `image_gen` for Claude’s UiBuild28 handoff: Play, Fuse, Boxes, Badges and Arrange. The exact prompts, generated source paths and project/resource destinations are recorded in `generated-manifest.json`. Originals are1338×1176 PNGs; Unity imports the corresponding UI/Features resources at1024×900 with aspect retained, sRGB, no mipmaps, clamp and bilinear filtering. No toys, words or interface are baked in.
+
+Review: `docs/home-feature-art-review/index.html`, with optional label/shade and phone-size previews. These are HTML art/crop previews, not native HUD screenshots. All five images were visually inspected; Unity imported all five at1024×900. Current HomeFeatures.cs in the owner checkout already requests the four Home names, but Ui28 integration/Unity screen acceptance/Android build remains separate. Arrange is ready for Claude’s shelf hookup. Owner's phone still has Ui26 plus the silhouette/Tula update.
