@@ -43,7 +43,9 @@ namespace Pockle.Tests
                 toy.transform.localPosition=mount.InverseTransformVector(Vector3.up*.4f);
                 yield return null;yield return null;
                 var halo=mount.Find("Toy emitted halo");
-                Assert.That(Vector3.Distance(halo.position,toy.VisualRoot.position+camera.transform.forward*.85f),Is.LessThan(.001f),"Halo follows a lifted toy without rotating its offset.");
+                Vector3 f=camera.transform.forward,e=toy.SurfaceBounds.extents;
+                float depth=Vector3.Dot(new Vector3(Mathf.Abs(f.x),Mathf.Abs(f.y),Mathf.Abs(f.z)),e);
+                Assert.That(Vector3.Distance(halo.position,toy.SurfaceBounds.center+f*(depth+.08f)),Is.LessThan(.001f),"Halo follows the lifted body bounds behind its shell.");
             }
             finally{Object.Destroy(root);}
             yield return null;

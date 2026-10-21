@@ -16,6 +16,7 @@ namespace Pockle.Tests
         [UnityTest]
         public IEnumerator EveryPlayableCharacterFeedsAcceptedReactionsToClaudeSpeechWithoutChangingInventory()
         {
+            const string onboard="pockle.onboarding.v1.completed";bool hadOnboard=PlayerPrefs.HasKey(onboard);int priorOnboard=PlayerPrefs.GetInt(onboard);
             const string key="pockle.collection.v1";bool had=PlayerPrefs.HasKey(key);string prior=PlayerPrefs.GetString(key);
             bool hadVariant=PlayerPrefs.HasKey(PipVariants.Preference);int variant=PlayerPrefs.GetInt(PipVariants.Preference);
             var ambient=RenderSettings.ambientLight;var mode=RenderSettings.ambientMode;bool fog=RenderSettings.fog;
@@ -26,6 +27,7 @@ namespace Pockle.Tests
                 var save=new CollectionSave{Version=CollectionProgress.SaveVersion,Day=CollectionSession.Today,
                     Inventory=ToyCatalog.Collectibles.Where(t=>t.Available).Select(t=>new OwnedCollectible(t.Id,1)).ToList()};
                 PlayerPrefs.SetString(key,JsonUtility.ToJson(save));PlayerPrefs.SetInt(PipVariants.Preference,0);
+                OnboardingState.Complete();
                 var runtime=root.AddComponent<TactilePrototype>();yield return null;yield return null;
                 var hud=(PrototypeHud)Field(runtime,"hud");var toy=(JellyToy)Field(runtime,"toy");var input=root.GetComponent<ToyViewGesture>();
                 var cues=new List<ReactionCue>();var heads=new List<Vector2?>();runtime.ToyReactionStarted+=(cue,head)=>{cues.Add(cue);heads.Add(head);};
@@ -50,6 +52,7 @@ namespace Pockle.Tests
             finally
             {
                 Object.DestroyImmediate(root);
+                if(hadOnboard)PlayerPrefs.SetInt(onboard,priorOnboard);else PlayerPrefs.DeleteKey(onboard);
                 if(had)PlayerPrefs.SetString(key,prior);else PlayerPrefs.DeleteKey(key);
                 if(hadVariant)PlayerPrefs.SetInt(PipVariants.Preference,variant);else PlayerPrefs.DeleteKey(PipVariants.Preference);
                 PlayerPrefs.Save();RenderSettings.ambientLight=ambient;RenderSettings.ambientMode=mode;RenderSettings.fog=fog;

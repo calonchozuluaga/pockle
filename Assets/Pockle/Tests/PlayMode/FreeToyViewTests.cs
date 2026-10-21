@@ -31,9 +31,11 @@ namespace Pockle.Tests
                     Assert.That(Vector3.Distance(mount.position,rest),Is.LessThan(.001f),"Toy centre must not orbit the floor.");
                     Assert.That(shadow.position,Is.EqualTo(ground));
                     var halo=mount.Find("Toy emitted halo");
-                    Vector3 offset=camera.transform.InverseTransformVector(halo.position-mount.position);
+                    Vector3 offset=camera.transform.InverseTransformVector(halo.position-toy.SurfaceBounds.center);
                     Assert.That(offset.x,Is.EqualTo(0).Within(.001f));Assert.That(offset.y,Is.EqualTo(0).Within(.001f));
-                    Assert.That(offset.z,Is.EqualTo(.85f).Within(.001f));
+                    Vector3 f=camera.transform.forward,e=toy.SurfaceBounds.extents;
+                    float depth=Vector3.Dot(new Vector3(Mathf.Abs(f.x),Mathf.Abs(f.y),Mathf.Abs(f.z)),e);
+                    Assert.That(offset.z,Is.EqualTo(depth+.08f).Within(.001f));
                     Assert.That(Quaternion.Angle(halo.rotation,camera.transform.rotation),Is.LessThan(.01f));
                 }
                 input.Calm=true;float before=input.Orbit.Yaw;yield return null;Assert.That(input.Orbit.Yaw,Is.EqualTo(before));
