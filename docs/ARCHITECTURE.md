@@ -166,3 +166,6 @@ CollectionProgress.EnsureWallyTestCopies adds only missing minimums: one of each
 
 
 October20 Ui28 integration: Home presents four painted feature buttons (Play/Fuse/Boxes/Badges), main navigation now has Home/Shelf/Fuse/Boxes/You, and Core.MenuNavigation.SelectTab accepts Fusion while clearing nested history. A shared feature-tile builder serves Home and large Arrange/Fuse shelf actions; Arrange uses its own painting and opens ShelfPick. The opened daily box shows the existing UTC-midnight countdown. The UI still uses the current daily reward logic; collection rotation/weighted completion are separate runtime work. Exact model silhouettes/rare shapes and Tula retirement are retained. No save schema change.
+
+
+October20 Ui29 refinement: approved complete feature illustrations replace the Ui28 environment/live-overlay composition. HomeFeatures now loads one image per button with real accessible word/icon labels and no extra subjects/equations/spare chip or blanket shades. Arrange/Fuse shelf cards use the same generous art height as Home with lower labels/crop focus to keep faces clear. These are decorative feature illustrations; live collection, fusion and inventory data remain on their respective screens. Resource paths/GUIDs and routes unchanged.

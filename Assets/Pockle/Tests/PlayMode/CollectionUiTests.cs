@@ -358,6 +358,9 @@ namespace Pockle.Tests
                 var painting = button.GetComponentsInChildren<RawImage>().Single(image => image.name == "Painting");
                 Assert.AreSame(Resources.Load<Texture2D>("UI/Features/Feature" + word), painting.texture);
                 Assert.IsTrue(painting.enabled);
+                Assert.AreEqual(Color.white, painting.color, "Complete paintings retain their approved brightness.");
+                Assert.IsNull(button.transform.Find("Pictures"), "No duplicate toy/box/badge overlays on complete artwork.");
+                Assert.IsNull(button.transform.Find("Shade"), "No blanket background tint on complete artwork.");
             }
             var canvas = root.GetComponentInChildren<Canvas>(); var scaler = canvas.GetComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize; scaler.scaleFactor = 2;
@@ -369,7 +372,7 @@ namespace Pockle.Tests
             try
             {
                 yield return null; Canvas.ForceUpdateCanvases();
-                CaptureShelfUi(canvas, camera, target, "ui28-home");
+                CaptureShelfUi(canvas, camera, target, "ui29-home");
                 ButtonWithText("Shelf").onClick.Invoke(); yield return null;
                 var arrange = ButtonNamed("Edit shelf");
                 Assert.AreSame(Resources.Load<Texture2D>("UI/Features/FeatureArrange"), arrange.GetComponentsInChildren<RawImage>().Single(image => image.name == "Painting").texture);
@@ -377,11 +380,11 @@ namespace Pockle.Tests
                 var scroll = root.GetComponentsInChildren<ScrollRect>().Single();
                 var bounds = RectTransformUtility.CalculateRelativeRectTransformBounds(scroll.content, arrange.transform);
                 scroll.content.anchoredPosition = new Vector2(0, Mathf.Clamp(-bounds.center.y - scroll.viewport.rect.height * .5f, 0, Mathf.Max(0,scroll.content.rect.height-scroll.viewport.rect.height)));
-                yield return null; CaptureShelfUi(canvas, camera, target, "ui28-shelf-arrange");
+                yield return null; CaptureShelfUi(canvas, camera, target, "ui29-shelf-arrange");
                 arrange.onClick.Invoke(); Assert.AreEqual(AppPage.ShelfPick, hud.CurrentPage);
                 hud.GoBack(); ButtonNamed("Shelf feature · Fuse").onClick.Invoke(); yield return null;
                 Assert.AreEqual(AppPage.Fusion, hud.CurrentPage);
-                CaptureShelfUi(canvas, camera, target, "ui28-fuse");
+                CaptureShelfUi(canvas, camera, target, "ui29-fuse");
             }
             finally
             {

@@ -84,7 +84,7 @@ namespace Pockle.Runtime
             dayButton.name = "Shelf time · day";
             nightButton = CreateButton("Night", timeSwitch, Vector2.zero, new Vector2(100, 38), Paper, () => SetShelfNight(true), out nightFace, 15);
             nightButton.name = "Shelf time · night";
-            shelfArrangeFeature = BuildFeature("Arrange", "Edit shelf", "FeatureArrange", "pip", "Shelf", Quiet, () => Navigate(AppPage.ShelfPick), false, shelfRoot);
+            shelfArrangeFeature = BuildFeature("Arrange", "Edit shelf", "FeatureArrange", "pip", "Shelf", Quiet, () => Navigate(AppPage.ShelfPick), shelfRoot);
             editShelf = shelfArrangeFeature.Button;
             editShelf.name = "Edit shelf";
 
@@ -146,7 +146,7 @@ namespace Pockle.Runtime
             hint.rectTransform.SetParent(momentsTrack, false); Stretch(hint.rectTransform);
             momentsFill = null;
 
-            shelfFuseFeature = BuildFeature("Fuse", "Shelf feature · Fuse", "FeatureFuse", "snowy", "Fuse", PockleTheme.Midnight, () => SelectTab(AppPage.Fusion), true, shelfRoot);
+            shelfFuseFeature = BuildFeature("Fuse", "Shelf feature · Fuse", "FeatureFuse", "snowy", "Fuse", PockleTheme.Midnight, () => SelectTab(AppPage.Fusion), shelfRoot);
             fuseRow = shelfFuseFeature.Button;
         }
 
@@ -305,11 +305,14 @@ namespace Pockle.Runtime
             LeftLabel(momentsTrack, new Vector2(52, -34), new Vector2(width - 64, 20));
             y += 64 + 12;
             float featureWidth = (width - 12) / 2;
-            float featureHeight = Mathf.Clamp(Mathf.Round(featureWidth * .7f), 110, 140);
+            float featureHeight = Mathf.Clamp(Mathf.Round(featureWidth * .86f), 120, 180);
             LeftLabel(editShelf.GetComponent<RectTransform>(), new Vector2(0, -y), new Vector2(featureWidth, featureHeight));
             LeftLabel(fuseRow.GetComponent<RectTransform>(), new Vector2(featureWidth + 12, -y), new Vector2(featureWidth, featureHeight));
             foreach (var feature in new[] { shelfArrangeFeature, shelfFuseFeature })
-                feature.Art.uvRect = CollectionLook.Cover(feature.Art.texture, featureWidth / featureHeight, .5f, .5f);
+            {
+                feature.Art.uvRect = CollectionLook.Cover(feature.Art.texture, featureWidth / featureHeight, .5f, 0f);
+                feature.Label.anchoredPosition = new Vector2(10, 4);
+            }
             y += featureHeight + 24;
             RefreshLivingShelf();
             return y;
