@@ -257,3 +257,6 @@ October20 UX-003/004/025/033 follow-up: Claude Ui27/28 integrated with all five 
 
 
 October20 ART-005/UX-003/004/025: approved complete button illustrations integrated as Ui29, retaining accessible labels and removing duplicate subject layers/shades. Native Home/Shelf review passed; Android APK ready. Phone installation pending USB reconnect; delivery evidence in VALIDATION.md.
+
+
+October20 Ui29 phone delivery complete, superseding pending USB: approved complete feature artwork installed;87 inventory entries and13 fusions preserved. Owner visual test next.
