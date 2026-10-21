@@ -140,15 +140,55 @@ namespace Pockle.Tests
             Assert.That(hud.OnboardingVisible, Is.False);
         }
 
+        [UnityTest]
+        public IEnumerator SettingsCanRenameSignOutAndDeleteWithConfirmation()
+        {
+            OnboardingState.ConfirmAge(); OnboardingState.Complete();
+            var service = new FakeAccounts(); hud.SetAccountService(service);
+            service.SignIn(AccountProvider.Google, _ => { }); service.ClaimUsername("Comet_Mochi", _ => { });
+            hud.SendMessage("ShowSettings"); yield return null;
+            Click("Change collector name");
+            Assert.That(Visible("Onboarding · Username"), Is.True);
+            Field("Collector name").text = "Sunny_Jelly7"; Click("That's me!");
+            Assert.That(hud.OnboardingVisible, Is.False, "renaming returns to Settings, not the tutorial");
+            Assert.That(PlayerPrefs.GetString(NameKey), Is.EqualTo("Sunny_Jelly7"));
+            Click("Delete account");
+            Assert.That(Visible("Confirm backdrop"), Is.True, "deleting always asks first");
+            Assert.That(hud.GoBack(), Is.True); // Back cancels the confirmation
+            Assert.That(service.DeletionRequested, Is.False);
+            Click("Delete account"); Click("Confirm");
+            Assert.That(service.DeletionRequested, Is.True);
+            Assert.That(Visible("Onboarding · SignIn"), Is.True, "after deletion the player is signed out");
+        }
+
+        [Test]
+        public void NotificationChoicesDefaultOnAndPersist()
+        {
+            const string key = "pockle.notifications.v1.trades";
+            bool had = PlayerPrefs.HasKey(key); int prior = PlayerPrefs.GetInt(key);
+            try
+            {
+                PlayerPrefs.DeleteKey(key);
+                Assert.That(NotificationPrefs.IsOn(NotificationPrefs.Trades), Is.True);
+                NotificationPrefs.Set(NotificationPrefs.Trades, false);
+                Assert.That(NotificationPrefs.IsOn(NotificationPrefs.Trades), Is.False);
+            }
+            finally { if (had) PlayerPrefs.SetInt(key, prior); else PlayerPrefs.DeleteKey(key); }
+        }
+
         private sealed class FakeAccounts : IAccountService
         {
             public AccountResult Next = new AccountResult(AccountStatus.SignedIn);
             public UsernameCheck Claim = UsernameCheck.Available;
             public AccountProvider LastProvider;
             public bool IsSignedIn { get; private set; }
+            public string Username { get; private set; }
+            public bool DeletionRequested;
+            public void SignOut(Action done) { IsSignedIn = false; done(); }
+            public void RequestDeletion(Action<bool> done) { DeletionRequested = true; IsSignedIn = false; done(true); }
             public void SignIn(AccountProvider provider, Action<AccountResult> done)
             { LastProvider = provider; IsSignedIn = Next.Status == AccountStatus.SignedIn; done(Next); }
-            public void ClaimUsername(string username, Action<UsernameCheck> done) => done(Claim);
+            public void ClaimUsername(string username, Action<UsernameCheck> done) { if (Claim == UsernameCheck.Available) Username = username; done(Claim); }
         }
 
         private void EnterBirthday(int year)

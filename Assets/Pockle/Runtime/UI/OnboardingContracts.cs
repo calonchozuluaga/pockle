@@ -28,11 +28,18 @@ namespace Pockle.Runtime
     public interface IAccountService
     {
         bool IsSignedIn { get; }
+        /// <summary>The claimed collector name, or null before one is claimed.</summary>
+        string Username { get; }
         /// <summary>Signs in or creates the account. A phone with an existing local save must link that save to the account,
         /// never discard it.</summary>
         void SignIn(AccountProvider provider, Action<AccountResult> done);
         /// <summary>Reserves the username for this account (also checks moderation). Available means it is now claimed.</summary>
         void ClaimUsername(string username, Action<UsernameCheck> done);
+        /// <summary>Ends the session on this phone. The account and its shelf stay on the server.</summary>
+        void SignOut(Action done);
+        /// <summary>Requests permanent deletion (finished within 30 days, as playpockle.com/delete-account says) and signs
+        /// out. False if the request couldn't be made (for example, offline).</summary>
+        void RequestDeletion(Action<bool> done);
     }
 
     /// <summary>Pure rules for the age gate and usernames, so they can be tested without a scene.</summary>

@@ -18,10 +18,11 @@ namespace Pockle.Runtime
         private Text volumeLabel, permissionStatus, walkingHelp, motionHelpText;
         private Action<float> volumeCallback;
         private readonly RectTransform[] feelRows = new RectTransform[4];
-        public const string UiBuild = "v2 screens 31";
+        public const string UiBuild = "v2 screens 33";
 
         private void BuildSettings()
         {
+            BuildAccountSettings(); // UX-051
             feelHeading = GroupLabel("Feel", settingsRoot);
             feelGroup = Rect("Comfort settings", settingsRoot); Surface(feelGroup, Quiet, 24);
             feelRows[0] = SwitchRow("Sound", feelGroup, () => { SetSettings(!soundEnabled, hapticsEnabled, reducedMotionEnabled); soundCallback?.Invoke(soundEnabled); },
@@ -54,11 +55,12 @@ namespace Pockle.Runtime
                 walkingSettings, PockleTheme.CaptionSize, MutedInk, FontStyle.Normal, TextAnchor.UpperLeft, Vector2.zero, new Vector2(300, 60));
             walkingButton = CreateButton("Enable walking", walkingSettings, Vector2.zero, new Vector2(280, 44), Paper, () => session?.EnableWalking(), out _, PockleTheme.BodySize);
 
+            BuildNotificationSettings(); // UX-051
             aboutHeading = GroupLabel("About", settingsRoot);
             aboutCard = Rect("About and help", settingsRoot); Surface(aboutCard, Quiet, 24);
             LinkRow("How to play", aboutCard, ShowTutorialAgain); // UX-050: the onboarding tutorial pages
-            LinkRow("Your save and account", aboutCard, () => ShowDialog("Saved on this device",
-                "Your shelf, walking progress, and profile are saved here. Accounts and cloud save are coming later. Purchases aren't available yet, and no charges can be made."));
+            LinkRow("Privacy and terms", aboutCard, () => Application.OpenURL("https://playpockle.com/privacy/"));
+            LinkRow("Help and support", aboutCard, () => Application.OpenURL("https://playpockle.com/support/"));
             if (Debug.isDebugBuild || Application.isEditor) LinkRow("Restart sign-up (test build)", aboutCard, RestartOnboardingForTesting);
             var version = Rect("Version row", aboutCard);
             var versionTitle = Label("Version", version, 17, Ink, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero); Stretch(versionTitle.rectTransform);
@@ -159,6 +161,7 @@ namespace Pockle.Runtime
             bool walking = WalkingOn;
             walkingButton.interactable = !walking;
             walkingButton.GetComponentInChildren<Text>().text = walking ? "Walking is on" : "Enable walking";
+            RefreshAccountSettings();
         }
 
         private float LayoutSettings(float width)
@@ -166,6 +169,7 @@ namespace Pockle.Runtime
             float w = Mathf.Min(width, 480);
             float left = (width - w) / 2, inner = w - 32;
             float y = 4;
+            y = LayoutAccountSettings(left, w, inner, y);
             LeftLabel(feelHeading, new Vector2(left + 4, -y), new Vector2(w, 22)); y += 30;
             float[] heights = { 60, 56, 60, 124 };
             float rowY = 0;
@@ -185,6 +189,7 @@ namespace Pockle.Runtime
             LeftLabel(walkingHelp.rectTransform, new Vector2(16, -42), new Vector2(inner, 40));
             LeftLabel(walkingButton.GetComponent<RectTransform>(), new Vector2(16, -92), new Vector2(inner, 44));
             LeftLabel(walkingSettings, new Vector2(left, -y), new Vector2(w, 152)); y += 152 + 22;
+            y = LayoutNotificationSettings(left, w, inner, y);
 
             LeftLabel(aboutHeading, new Vector2(left + 4, -y), new Vector2(w, 22)); y += 30;
             for (int i = 0; i < aboutCard.childCount; i++)

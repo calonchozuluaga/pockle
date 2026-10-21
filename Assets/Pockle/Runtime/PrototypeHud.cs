@@ -136,6 +136,7 @@ namespace Pockle.Runtime
             backButton.transform.SetAsLastSibling(); favoriteToggle.transform.SetAsLastSibling(); stageCollectionPill.transform.SetAsLastSibling();
             BuildModal();
             BuildOnboarding(); // UX-050 first run; sits above the pages, below dialogs
+            BuildConfirm(); // UX-051 two-choice confirm (sign out, delete account)
             if (EventSystem.current == null)
             {
                 ownedEventSystem = new GameObject("Pockle event system", typeof(EventSystem), typeof(StandaloneInputModule));
@@ -207,6 +208,7 @@ namespace Pockle.Runtime
         public bool GoBack()
         {
             if (modal.gameObject.activeSelf) { CloseModal(); return true; }
+            if (ConfirmVisible) { CloseConfirm(); return true; }
             if (OnboardingVisible) return OnboardingBack();
             if (FusionMomentPlaying) { moment.Skip(); return true; } // Back skips the fusion moment to the reveal
             if (page == AppPage.FusionReveal) LeaveSavedFusion();

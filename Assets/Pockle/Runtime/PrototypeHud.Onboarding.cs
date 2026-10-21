@@ -20,11 +20,13 @@ namespace Pockle.Runtime
 
         private RectTransform onboarding, onboardingSafe;
         private Image onboardingGround;
+        private RawImage onboardingPainting;
         private readonly Dictionary<OnboardingStep, RectTransform> obSteps = new Dictionary<OnboardingStep, RectTransform>();
         private readonly RectTransform[] obPages = new RectTransform[TutorialPages];
         private readonly Image[] obDots = new Image[TutorialPages];
         private readonly List<KeyValuePair<RawImage, int>> obToys = new List<KeyValuePair<RawImage, int>>();
         private readonly List<string> obHeroes = new List<string>();
+        private readonly List<KeyValuePair<Text, int>> obNames = new List<KeyValuePair<Text, int>>();
         private OnboardingStep obStep;
         private int obPage;
         private bool obTutorialOnly, obBusy, obToysReady;
@@ -35,7 +37,7 @@ namespace Pockle.Runtime
         private readonly Button[] obMonths = new Button[12];
         private int obMonth;
         private InputField obDay, obYear, obName;
-        private Text obBirthdayError, obSignInError, obNameError, obNextLabel;
+        private Text obNameTitle, obBirthdayError, obSignInError, obNameError, obNextLabel;
         private Button obBirthdayNext, obApple, obGoogle, obTestContinue, obClaim;
 
         public bool OnboardingVisible => onboarding != null && onboarding.gameObject.activeSelf;
@@ -56,6 +58,11 @@ namespace Pockle.Runtime
             onboarding = Rect("First-run onboarding", canvas.transform); Stretch(onboarding);
             onboardingGround = onboarding.gameObject.AddComponent<Image>(); onboardingGround.color = PockleTheme.Jelly;
             onboardingGround.raycastTarget = true; // nothing underneath can be touched
+            // Painted backdrop per step, loaded by name from Resources/UI/Onboarding (see SetOnboardingPainting); the colour
+            // field shows until the art exists.
+            var painting = Rect("Onboarding painting", onboarding); Stretch(painting);
+            onboardingPainting = painting.gameObject.AddComponent<RawImage>(); onboardingPainting.raycastTarget = false;
+            onboardingPainting.enabled = false;
             onboardingSafe = Rect("Onboarding safe area", onboarding); Stretch(onboardingSafe);
             onboarding.gameObject.AddComponent<OnboardingSwipe>().Swiped = OnboardingSwiped;
 
@@ -291,7 +298,10 @@ namespace Pockle.Runtime
             {
                 SetSignInBusy(false);
                 if (!OnboardingVisible) return;
-                if (result.Status == AccountStatus.SignedIn) ShowOnboardingStep(result.HasUsername ? OnboardingStep.Tutorial : OnboardingStep.Username);
+                // A returning player who finished onboarding before (signed out, or a new phone with the same account
+                // after the tutorial) goes straight back in.
+                if (result.Status == AccountStatus.SignedIn && result.HasUsername && OnboardingState.Completed) { FinishOnboarding(); RefreshAccountSettings(); }
+                else if (result.Status == AccountStatus.SignedIn) ShowOnboardingStep(result.HasUsername ? OnboardingStep.Tutorial : OnboardingStep.Username);
                 else if (result.Status == AccountStatus.Failed) obSignInError.text = string.IsNullOrEmpty(result.Message) ? "Couldn't sign in. Try again." : result.Message;
             });
         }
@@ -310,7 +320,7 @@ namespace Pockle.Runtime
             ObHalo(root, .5f, .80f, 190);
             ObToy(root, 0, .5f, .80f, 180, .6f);
             ObIcon(root, "StickerSparkle", .70f, .88f, 34, PockleTheme.Heart, 1.2f);
-            ObTitle("Pick a collector name", root, .61f, .68f);
+            obNameTitle = ObTitle("Pick a collector name", root, .61f, .68f);
             ObBody("Friends see it when you trade. Don't use your real name.", root, .55f, .61f, PockleTheme.CaptionSize + 1);
             var row = Rect("Name row", root); Place(row, 0, .44f, 1, .53f, 24, 0, 24, 0);
             var fieldRect = Rect("Collector name", row); Place(fieldRect, 0, 0, 1, 1, 0, 0, 64, 0);
@@ -356,6 +366,7 @@ namespace Pockle.Runtime
         {
             profile.SetName(name);
             if (profileName != null) profileName.SetTextWithoutNotify(profile.Name);
+            if (obRenaming) { obRenaming = false; onboarding.gameObject.SetActive(false); RefreshAccountSettings(); return; }
             ShowOnboardingStep(OnboardingStep.Tutorial);
         }
 
@@ -367,7 +378,7 @@ namespace Pockle.Runtime
             {
                 "Every box hides a surprise toy. Some are super rare!",
                 "Your toys live on your shelf. Squish them, spin them, play!",
-                "Walking unlocks a free box every few hours.",
+                "Every walk fills the ring. When it's full, a box is yours.",
                 "Swap your spares with friends to finish a collection.",
             };
             for (int i = 0; i < TutorialPages; i++)
@@ -417,23 +428,75 @@ namespace Pockle.Runtime
                     ObIcon(art, "Heart", .5f, .82f, 34, PockleTheme.Heart, .9f);
                     break;
                 }
-                case 2: // A toy out for a walk.
+                case 2: // A walk filling the ring around the next box (owner-approved mockup, October 21).
                 {
-                    ObHalo(art, .5f, .50f, 260);
-                    ObToy(art, 4, .5f, .50f, 190, .5f, 9);
-                    ObIcon(art, "Steps", .20f, .26f, 46, Ink, .1f);
-                    ObIcon(art, "Steps", .80f, .74f, 40, Ink, 1.3f);
-                    ObIcon(art, "Box", .80f, .26f, 46, PockleTheme.Heart, 2.1f);
+                    var ring = Rect("Walk ring", art); ring.anchorMin = ring.anchorMax = new Vector2(.5f, .70f); ring.pivot = new Vector2(.5f, .5f);
+                    ring.sizeDelta = new Vector2(200, 200);
+                    var disc = Rect("Disc", ring); Place(disc, 0, 0, 1, 1, 20, 20, 20, 20); Surface(disc, new Color(1, 1, 1, .85f), 80);
+                    ObRawImage(ring, UiShapes.Ring, new Color(1, 1, 1, .7f));
+                    ObRawImage(ring, UiShapes.ProgressArc(.7f), Color.white);
+                    var shown = ShownCollections();
+                    var wally = shown.Find(c => c.Id == "wally") ?? (shown.Count > 0 ? shown[0] : null);
+                    float aspect = 1;
+                    var box = wally != null ? CollectionLook.Box(wally, out aspect) : null;
+                    ObPicture(ring, box, .5f, .52f, 104, Mathf.Clamp(aspect, .3f, 3f), .6f);
+                    // Pill: steps toward this box (1,000 steps per box, owner, October 21).
+                    var pill = Rect("Steps pill", art); pill.anchorMin = pill.anchorMax = new Vector2(.5f, .45f); pill.pivot = new Vector2(.5f, .5f);
+                    pill.sizeDelta = new Vector2(250, 40); Surface(pill, Paper, 20);
+                    var steps = AddIcon(pill, "Steps", 20, PockleTheme.Heart); steps.anchorMin = steps.anchorMax = new Vector2(0, .5f); steps.anchoredPosition = new Vector2(26, 0);
+                    var words = Label("700 / 1,000 steps", pill, PockleTheme.BodySize, Ink, FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
+                    Place(words.rectTransform, 0, 0, 1, 1, 40, 0, 14, 0);
+                    // A dotted trail from the toy up to the pill.
+                    for (int i = 0; i < 4; i++)
+                    {
+                        float t = (i + 1) / 5f;
+                        var dot = Rect("Trail dot", art); dot.anchorMin = dot.anchorMax = new Vector2(Mathf.Lerp(.38f, .47f, t * t), Mathf.Lerp(.30f, .40f, t));
+                        dot.pivot = new Vector2(.5f, .5f); dot.sizeDelta = new Vector2(7, 7); Surface(dot, new Color(1, 1, 1, .95f), 3.5f);
+                    }
+                    ObToy(art, 4, .5f, .17f, 140, .5f, 7);
+                    ObIcon(art, "StickerSparkle", .80f, .86f, 26, Color.white, .2f);
+                    ObIcon(art, "StickerSparkle", .20f, .62f, 18, Color.white, 1.4f);
                     break;
                 }
-                default: // Two toys swapping.
+                default: // Two toys each holding up the spare they're offering, with a swap badge between.
                 {
-                    ObToy(art, 0, .26f, .50f, 150, .4f); ObToy(art, 3, .74f, .50f, 150, 1.9f);
-                    var right = ObIcon(art, "Next", .5f, .57f, 34, Ink);
-                    var left = ObIcon(art, "Next", .5f, .43f, 34, Ink); left.localScale = new Vector3(-1, 1, 1);
-                    ObIcon(art, "Friends", .5f, .82f, 40, PockleTheme.Heart, .8f);
+                    ObToy(art, 1, .25f, .80f, 128, .4f, 5); ObToy(art, 3, .75f, .80f, 128, 1.9f, -5);
+                    ObTradeCard(art, 2, .25f, -4, PockleTheme.FieldMoon, 2);
+                    ObTradeCard(art, 0, .75f, 4, PockleTheme.FieldPeach, 1);
+                    var halo = Rect("Swap halo", art); halo.anchorMin = halo.anchorMax = new Vector2(.5f, .45f); halo.pivot = new Vector2(.5f, .5f);
+                    halo.sizeDelta = new Vector2(88, 88); Surface(halo, new Color(1, 1, 1, .65f), 44);
+                    var badge = Rect("Swap badge", halo); Place(badge, 0, 0, 1, 1, 7, 7, 7, 7); Surface(badge, Primary, 37);
+                    var glyph = Rect("Swap", badge); Place(glyph, 0, 0, 1, 1, 15, 15, 15, 15);
+                    var swap = glyph.gameObject.AddComponent<RawImage>(); swap.texture = UiShapes.Swap; swap.color = PockleTheme.OnPlum; swap.raycastTarget = false;
+                    ObIcon(art, "StickerSparkle", .55f, .62f, 22, Color.white, .3f);
+                    ObIcon(art, "StickerSparkle", .43f, .30f, 16, Color.white, 1.6f);
                     break;
                 }
+            }
+        }
+
+        private RawImage ObRawImage(RectTransform parent, Texture texture, Color tint)
+        {
+            var rect = Rect(texture != null ? texture.name : "Image", parent); Stretch(rect);
+            var raw = rect.gameObject.AddComponent<RawImage>(); raw.texture = texture; raw.color = tint; raw.raycastTarget = false; return raw;
+        }
+
+        /// <summary>A tilted milk card showing the toy being offered, its name and its spares as dots.</summary>
+        private void ObTradeCard(RectTransform art, int hero, float cx, float tilt, Color field, int spares)
+        {
+            var card = Rect("Trade card", art); card.anchorMin = card.anchorMax = new Vector2(cx, .45f); card.pivot = new Vector2(.5f, .5f);
+            card.sizeDelta = new Vector2(128, 150); card.localRotation = Quaternion.Euler(0, 0, tilt);
+            Surface(card, new Color(.984f, .973f, .961f, .94f), 26);
+            var swatch = Rect("Field", card); swatch.anchorMin = new Vector2(0, 1); swatch.anchorMax = new Vector2(1, 1); swatch.pivot = new Vector2(.5f, 1);
+            swatch.offsetMin = new Vector2(10, -106); swatch.offsetMax = new Vector2(-10, -10); Surface(swatch, field, 20);
+            var toy = ObToy(swatch, hero, .5f, .5f, 90, hero * .7f, 0); toy.GetComponentInChildren<OnboardingFloat>().Amplitude = 2;
+            var name = Label("", card, PockleTheme.CaptionSize, Ink, FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
+            Place(name.rectTransform, 0, 0, 1, 0, 8, 10, 8, 0); name.rectTransform.offsetMax = new Vector2(-8 - spares * 10, 36);
+            obNames.Add(new KeyValuePair<Text, int>(name, hero));
+            for (int i = 0; i < spares; i++)
+            {
+                var dot = Rect("Spare", card); dot.anchorMin = dot.anchorMax = new Vector2(1, 0); dot.pivot = new Vector2(.5f, .5f);
+                dot.anchoredPosition = new Vector2(-14 - (spares - 1 - i) * 10, 23); dot.sizeDelta = new Vector2(7, 7); Surface(dot, PockleTheme.Heart, 3.5f);
             }
         }
 
@@ -453,6 +516,7 @@ namespace Pockle.Runtime
                 obDots[i].rectTransform.sizeDelta = new Vector2(i == obPage ? 10 : 8, i == obPage ? 10 : 8);
             }
             onboardingGround.color = PageFields[obPage];
+            SetOnboardingPainting("Tutorial" + (obPage + 1));
             obNextLabel.text = obPage == TutorialPages - 1 ? (obTutorialOnly ? "Got it!" : "Start collecting!") : "Next";
         }
 
@@ -499,11 +563,13 @@ namespace Pockle.Runtime
                 case OnboardingStep.SignIn: field = PockleTheme.FieldMoon; obSignInError.text = ""; obTestContinue.gameObject.SetActive(TestBuildSignIn); break;
                 case OnboardingStep.Username:
                     field = PockleTheme.FieldMint;
+                    obNameTitle.text = obRenaming ? "Change your collector name" : "Pick a collector name";
                     if (string.IsNullOrEmpty(obName.text)) obName.text = profile.Name != "Collector" && OnboardingRules.UsernameProblem(profile.Name) == null ? profile.Name : OnboardingRules.SuggestUsername(obRandom);
                     obNameError.text = ""; break;
                 case OnboardingStep.Blocked: field = PockleTheme.Fill; break;
             }
             onboardingGround.color = field;
+            SetOnboardingPainting(step.ToString());
             if (step == OnboardingStep.Tutorial) ShowTutorialPage(0);
             LayoutOnboarding();
         }
@@ -527,8 +593,32 @@ namespace Pockle.Runtime
                     if (obPage > 0) ShowTutorialPage(obPage - 1);
                     else if (obTutorialOnly) FinishOnboarding();
                     return true;
+                case OnboardingStep.Username when obRenaming: obRenaming = false; onboarding.gameObject.SetActive(false); return true;
                 default: return true; // signed in: the name is next, there's no going back to sign-in
             }
+        }
+
+        /// <summary>
+        /// Shows Resources/UI/Onboarding/Onboarding{name}.png (Splash, Birthday, SignIn, Username, Blocked, Tutorial1-4)
+        /// cropped to fill the whole screen, or just the colour field when that painting doesn't exist yet.
+        /// </summary>
+        private void SetOnboardingPainting(string name)
+        {
+            var art = Resources.Load<Texture2D>("UI/Onboarding/Onboarding" + name);
+            onboardingPainting.texture = art; onboardingPainting.enabled = art != null;
+            FitOnboardingPainting();
+        }
+
+        /// <summary>Cover fit: fills the screen and trims the overflow evenly, never stretching the painting.</summary>
+        private void FitOnboardingPainting()
+        {
+            var art = onboardingPainting != null ? onboardingPainting.texture : null;
+            var size = onboarding != null ? onboarding.rect.size : Vector2.zero;
+            if (art == null || size.x < 1 || size.y < 1) return;
+            float screen = size.x / size.y, picture = (float)art.width / Mathf.Max(1, art.height);
+            onboardingPainting.uvRect = picture > screen
+                ? new Rect((1 - screen / picture) / 2, 0, screen / picture, 1)
+                : new Rect(0, (1 - picture / screen) / 2, 1, picture / screen);
         }
 
         /// <summary>Mirrors the HUD's safe area and fills in the toy portraits once, after the stage exists.</summary>
@@ -540,6 +630,7 @@ namespace Pockle.Runtime
             // Small phones: shrink the art rather than letting it collide with the text.
             float scale = Mathf.Clamp(safeRoot.rect.height / 760f, .72f, 1.15f);
             foreach (var entry in obToys) entry.Key.transform.parent.localScale = Vector3.one * scale;
+            FitOnboardingPainting();
         }
 
         private void UpdateOnboarding()
@@ -560,6 +651,12 @@ namespace Pockle.Runtime
                 if (obHeroes.Count == 0) break;
                 var texture = CutoutPortrait(obHeroes[entry.Value % obHeroes.Count]);
                 entry.Key.texture = texture; entry.Key.color = texture != null ? Color.white : new Color(1, 1, 1, 0);
+            }
+            foreach (var entry in obNames)
+            {
+                if (obHeroes.Count == 0) break;
+                string id = obHeroes[entry.Value % obHeroes.Count];
+                entry.Key.text = ToyCatalog.TryGetCollectible(id, out var toy) && ToyCatalog.TryGetCollection(toy.CollectionId, out var group) ? group.DisplayName : "";
             }
             LayoutOnboarding();
         }
