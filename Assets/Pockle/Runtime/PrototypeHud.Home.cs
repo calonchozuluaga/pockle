@@ -608,7 +608,7 @@ namespace Pockle.Runtime
         {
             // Keep collecting: collections you can collect from, closest to complete first; finished ones last.
             var collections = new List<CollectionDefinition>();
-            foreach (var collection in ToyCatalog.Collections)
+            foreach (var collection in ShownCollections())
             {
                 bool available = false;
                 foreach (string member in collection.Members) if (ToyCatalog.TryGetCollectible(member, out var toy) && toy.Available) available = true;

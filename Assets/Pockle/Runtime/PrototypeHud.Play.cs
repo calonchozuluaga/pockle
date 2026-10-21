@@ -205,7 +205,7 @@ namespace Pockle.Runtime
         /// <summary>"Aurora · Super rare" becomes "Aurora"; the rarity moves to its own badge.</summary>
         private static string FinishName(CollectibleDefinition toy)
         {
-            if (FusionCatalog.TryGet(toy.Id, out _)) return toy.FinishDisplayName;
+            if (FusionNames.TryShort(toy.Id, out var fused)) return fused; // "Honey × Copper", never the whole recipe
             string name = toy.FinishDisplayName;
             int dot = name.IndexOf(" · ", StringComparison.Ordinal);
             return dot > 0 ? name.Substring(0, dot) : name;
@@ -386,7 +386,7 @@ namespace Pockle.Runtime
             foreach (var choice in worldChoices) if (choice.Key == shownKey && choice.Art != null) stagePainted = true;
             bool dark = stagePainted || StageLook.IsDark(stageWorld, stageLight);
             heading.color = dark ? PockleTheme.OnPlum : Ink;
-            heading.resizeTextForBestFit = known && FusionCatalog.TryGet(toy.Id, out _);
+            heading.resizeTextForBestFit = known; // long names shrink to fit one line rather than run into the toy
             heading.resizeTextMinSize = 18; heading.resizeTextMaxSize = PockleTheme.TitleSize;
             headingShadow.enabled = dark;
             stageShade.gameObject.SetActive(dark);
@@ -398,7 +398,8 @@ namespace Pockle.Runtime
             int number = 0;
             for (int i = 0; i < collection.Members.Count; i++) if (collection.Members[i] == toy.Id) number = i + 1;
             string series = collection.SeriesNumber > 0 ? " · Series " + collection.SeriesNumber : "";
-            stageEyebrow.text = (collection.DisplayName + series + (number > 0 ? " · No. " + number : "")).ToUpperInvariant();
+            bool fusedToy = FusionCatalog.TryGet(toy.Id, out _);
+            stageEyebrow.text = (collection.DisplayName + (fusedToy ? " · Fusion" : series + (number > 0 ? " · No. " + number : ""))).ToUpperInvariant();
             stageRarityText.text = rarity.Text;
 
             int found = FoundCount(collection);

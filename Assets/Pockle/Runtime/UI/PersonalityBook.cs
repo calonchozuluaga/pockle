@@ -298,6 +298,7 @@ namespace Pockle.Runtime
         /// <summary>What the shelf calls a toy: "Gold Glitter", "Aurora".</summary>
         public static string ShortName(string id)
         {
+            if (FusionNames.TryShort(id, out var fused)) return fused;
             if (toys.ContainsKey(id ?? "")) return Name(id);
             return ToyCatalog.TryGetCollectible(id, out var toy) ? FinishName(toy) : "Pockle";
         }

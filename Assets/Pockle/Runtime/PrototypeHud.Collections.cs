@@ -45,6 +45,7 @@ namespace Pockle.Runtime
         private RawImage heroPortrait, heroBanner, heroBox, heroFade;
         private BoxHype heroHype;
         private CharacterSilhouetteGraphic heroShape, secretShape;
+        private RawImage secretPicture;
         private float heroBoxAspect = 1f;
         // Still portraits for lineup toys that aren't Pips, so a slot never shows blank white while the four live actors are busy.
         private readonly Dictionary<string, Texture> lineupPortraits = new Dictionary<string, Texture>();
@@ -58,9 +59,22 @@ namespace Pockle.Runtime
             return caption;
         }
 
+        /// <summary>
+        /// Collections the player browses: every catalog collection except the Pip Fusion Lab studies, which are fused toys and
+        /// live with the other fusions on the shelf, without a box (owner, October 21).
+        /// </summary>
+        private static List<CollectionDefinition> ShownCollections()
+        {
+            var list = new List<CollectionDefinition>();
+            foreach (var collection in ToyCatalog.Collections) if (!IsFusionCollection(collection)) list.Add(collection);
+            return list;
+        }
+
+        private static bool IsFusionCollection(CollectionDefinition collection) => collection != null && collection.Id == PipFusionStudies.CollectionId;
+
         private void BuildCollections()
         {
-            browsingCollections.AddRange(ToyCatalog.Collections);
+            browsingCollections.AddRange(ShownCollections());
             // Approved dated series first, newest first; numbered prototypes, then unassigned concepts.
             browsingCollections.Sort((a, b) =>
             {
@@ -150,6 +164,10 @@ namespace Pockle.Runtime
             var secretArt = Rect("Secret silhouette", secretCard);
             secretArt.anchorMin = secretArt.anchorMax = secretArt.pivot = new Vector2(0, .5f); secretArt.anchoredPosition = new Vector2(18, 0); secretArt.sizeDelta = new Vector2(64, 64);
             secretShape = secretArt.gameObject.AddComponent<CharacterSilhouetteGraphic>(); secretShape.color = new Color(1, 1, 1, .2f);
+            // Once found, the secret shows itself in full colour instead of its shadow (owner, October 21).
+            var secretFound = Rect("Secret picture", secretCard);
+            secretFound.anchorMin = secretFound.anchorMax = secretFound.pivot = new Vector2(0, .5f); secretFound.anchoredPosition = new Vector2(10, 0); secretFound.sizeDelta = new Vector2(82, 82);
+            secretPicture = secretFound.gameObject.AddComponent<RawImage>(); secretPicture.raycastTarget = false; secretPicture.enabled = false;
             secretTitle = Label("", secretCard, PockleTheme.BodySize + 2, PockleTheme.OnPlum, FontStyle.Bold, TextAnchor.LowerLeft, Vector2.zero, Vector2.zero);
             Stretch(secretTitle.rectTransform); secretTitle.rectTransform.offsetMin = new Vector2(98, 52); secretTitle.rectTransform.offsetMax = new Vector2(-16, -14);
             secretBody = Label("", secretCard, PockleTheme.CaptionSize, PockleTheme.OnPlumMuted, FontStyle.Normal, TextAnchor.UpperLeft, Vector2.zero, Vector2.zero);
@@ -301,21 +319,24 @@ namespace Pockle.Runtime
             {
                 bool foundSecret = session != null && session.GetOwnedCount(selected.SecretId) > 0;
                 secretShape.Configure(selected.CharacterId, !foundSecret);
+                SetPicture(secretPicture, foundSecret && showingOne ? CutoutPortrait(selected.SecretId) : null);
+                secretShape.enabled = !foundSecret || secretPicture.texture == null;
                 string secretName = ToyCatalog.TryGetCollectible(selected.SecretId, out var secretToy) ? FinishName(secretToy) : "the secret";
                 secretTitle.text = foundSecret ? "You found " + secretName : "A secret hides here";
                 secretBody.text = foundSecret ? "It's the rarest one in " + selected.DisplayName + "." : "It turns up rarely. Keep opening " + selected.DisplayName + " boxes.";
             }
             bool offers = false;
             foreach (var offer in BoxCatalog.Offers) if (offer.CollectionId == selected.Id) offers = true;
-            collectionBoxes.interactable = offers;
-            collectionBoxes.GetComponent<Image>().color = offers ? deep : Quiet;
+            // Never a greyed-out "coming soon": a collection without its own box offer still points to today's boxes and the walk.
+            collectionBoxes.interactable = true;
+            collectionBoxes.GetComponent<Image>().color = deep;
             string price = "";
             foreach (var offer in BoxCatalog.Offers) if (offer.CollectionId == selected.Id && price.Length == 0) price = offer.ProposedPrice;
             var ctaLabel = collectionBoxes.GetComponentInChildren<Text>();
-            ctaLabel.text = offers ? "Open a " + selected.DisplayName + " box" + (price.Length > 0 ? ", " + price : "") : selected.DisplayName + " boxes are coming soon";
-            ctaLabel.color = offers ? PockleTheme.OnPlum : MutedInk;
-            collectionWalking.interactable = ToyCatalog.TryGetCollectionForPool(ToyCatalog.DailyPoolId, out var walking)
-                && walking.Id == selected.Id;
+            ctaLabel.text = offers ? "Open a " + selected.DisplayName + " box" + (price.Length > 0 ? ", " + price : "") : "See today's boxes";
+            ctaLabel.color = PockleTheme.OnPlum;
+            collectionWalking.interactable = true;
+            collectionWalking.GetComponentInChildren<Text>().text = "Walk for a free box";
             collectionNote.text = offers ? "More varieties are on the way. Explore today's boxes to see what you can find."
                 : "This character is coming later. Your collection will be waiting here.";
             for (int i = 0; i < lineupTiles.Count; i++)

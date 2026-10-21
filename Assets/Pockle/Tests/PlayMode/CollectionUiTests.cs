@@ -587,8 +587,10 @@ namespace Pockle.Tests
                 ButtonNamed("Collection · wally").onClick.Invoke();
                 Assert.AreEqual(AppPage.Collection, hud.CurrentPage);
                 Assert.IsFalse(root.GetComponentsInChildren<Button>().Any(button => button.name.StartsWith("Collectible · ") && button.interactable));
-                Assert.IsFalse(ButtonNamed("Collection boxes").interactable, "An unapproved collection reward pool offers no boxes.");
-                Assert.IsFalse(ButtonWithText("Walk for one").interactable);
+                // No box offer of its own: the page points to today's boxes and the free walking box, never a greyed "coming soon" (owner, October 21).
+                Assert.AreEqual("See today's boxes", ButtonNamed("Collection boxes").GetComponentInChildren<Text>().text, "An unapproved collection reward pool offers no box of its own.");
+                Assert.IsFalse(VisibleText("Wally boxes are coming soon"));
+                Assert.IsTrue(ButtonWithText("Walk for a free box").interactable);
                 Assert.AreEqual(0, scroll.content.anchoredPosition.y, .1f, "A different series should start at its top.");
                 Assert.IsFalse(hud.ShowToy("moss.velvet-flock"));
                 ButtonWithText("Home").onClick.Invoke();
@@ -651,6 +653,52 @@ namespace Pockle.Tests
             ButtonWithText("Shelf").onClick.Invoke();
             Assert.IsTrue(VisibleText("2 shelf moments found"), "A restart keeps the moments found.");
             CollectionAssert.AreEquivalent(inventory, session.OwnedCounts, "Personalities never change the inventory.");
+        }
+
+        [UnityTest]
+        public IEnumerator TakingBackTheFirstPickStillOnlyOffersTheSameCharacter()
+        {
+            string fox = ToyCatalog.Collectibles.First(c => c.CharacterId == "fox" && c.Available && FusionCatalog.IsSource(c.Id)).Id;
+            Object.Destroy(root); yield return null;
+            var save = new CollectionSave { Version = CollectionProgress.SaveVersion, Day = CollectionSession.Today,
+                Inventory = new System.Collections.Generic.List<OwnedCollectible> {
+                    new OwnedCollectible(ToyCatalog.PeachId, 2), new OwnedCollectible(ToyCatalog.MoonId, 2), new OwnedCollectible(fox, 3),
+                    new OwnedCollectible(PipFusionStudies.DuskId, 1) } };
+            PlayerPrefs.SetString(SaveKey, JsonUtility.ToJson(save));
+            root = new GameObject("Fusion anchor test");
+            session = root.AddComponent<CollectionSession>(); session.Initialize();
+            hud = root.AddComponent<PrototypeHud>(); hud.Initialize(_ => { }, _ => { }, _ => { }); hud.Bind(session);
+            yield return null;
+            ButtonWithText("Shelf").onClick.Invoke();
+            ButtonWithText("Fuse spares").onClick.Invoke();
+            ButtonNamed("Spare · " + ToyCatalog.PeachId).onClick.Invoke();
+            ButtonNamed("Spare · " + ToyCatalog.MoonId).onClick.Invoke();
+            ButtonNamed("Fusion slot · Spare 1").onClick.Invoke(); // take Peach back; Moon is still picked
+            yield return null;
+            Assert.IsFalse(root.GetComponentsInChildren<Button>().Any(b => b.name == "Spare · " + fox), "A fox can't join a Pip that's still picked.");
+            Assert.IsTrue(ButtonNamed("Spare · " + ToyCatalog.PeachId).gameObject.activeInHierarchy);
+            ButtonNamed("Spare · " + ToyCatalog.PeachId).onClick.Invoke();
+            Assert.IsTrue(ButtonNamed("Fuse").interactable, "Two Pips are ready to fuse again.");
+            Assert.IsTrue(ButtonNamed("Fuse").GetComponentInChildren<Text>().resizeTextForBestFit, "The Fuse button's words shrink to fit long names.");
+
+            // Fusion Lab studies live with the fusions, never as a collection with a box.
+            ButtonWithText("Shelf").onClick.Invoke();
+            yield return null;
+            Assert.IsFalse(root.GetComponentsInChildren<Button>(true).Any(b => b.name == "Shelf collection · " + PipFusionStudies.CollectionId));
+            Assert.IsTrue(ButtonNamed("Saved fusion · " + PipFusionStudies.DuskId).gameObject.activeInHierarchy, "Owned studies show under Fusions.");
+            Assert.AreEqual("Dusk", ButtonNamed("Saved fusion · " + PipFusionStudies.DuskId).GetComponentInChildren<Text>().text);
+            ButtonNamed("All collections").onClick.Invoke();
+            Assert.IsFalse(root.GetComponentsInChildren<Button>(true).Any(b => b.name == "Collection · " + PipFusionStudies.CollectionId));
+        }
+
+        [Test]
+        public void FusedToysGetShortNames()
+        {
+            Assert.AreEqual("Peach × Moon", FusionNames.Short(ToyCatalog.PeachId, ToyCatalog.MoonId));
+            Assert.AreEqual("Double Gold", FusionNames.Short(ToyCatalog.GoldId, ToyCatalog.GoldId));
+            foreach (var a in ToyCatalog.Collectibles.Where(c => c.Available && FusionCatalog.IsSource(c.Id)))
+                foreach (var b in ToyCatalog.Collectibles.Where(c => c.Available && c.CharacterId == a.CharacterId && FusionCatalog.IsSource(c.Id)))
+                    Assert.LessOrEqual(FusionNames.Short(a.Id, b.Id).Length, FusionNames.MaxLength, a.Id + " + " + b.Id);
         }
 
         [UnityTest]

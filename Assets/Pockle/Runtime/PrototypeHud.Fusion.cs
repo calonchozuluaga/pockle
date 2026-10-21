@@ -155,6 +155,9 @@ namespace Pockle.Runtime
                 FontStyle.Normal, TextAnchor.UpperCenter, Vector2.zero, new Vector2(300, 60)).rectTransform;
             fusionGoNote = Label("", fusionRoot, PockleTheme.SmallSize, MutedInk, FontStyle.Normal, TextAnchor.MiddleCenter, Vector2.zero, new Vector2(300, 20));
             fusionGo = CreateButton("Pick two spares", fusionRoot, Vector2.zero, new Vector2(300, 56), PockleTheme.Plum, Fuse, out _);
+            var goText = fusionGo.GetComponentInChildren<Text>(); // long finish names shrink instead of spilling past the button
+            goText.resizeTextForBestFit = true; goText.resizeTextMinSize = 13; goText.resizeTextMaxSize = PockleTheme.ButtonSize;
+            goText.horizontalOverflow = HorizontalWrapMode.Wrap; goText.verticalOverflow = VerticalWrapMode.Truncate;
             fusionGo.name = "Fuse";
             BuildFusionReveal();
         }
@@ -195,7 +198,10 @@ namespace Pockle.Runtime
         {
             int spares = SpareCount(id);
             if (spares <= 0 || !FusionCatalog.IsSource(id)) return;
-            if (fuseFirst != null && ToyCatalog.TryGetCollectible(fuseFirst, out var firstToy)
+            // Only the same character can fuse. Check against whichever pick is still in place: after taking the first pick
+            // back, the second one still decides (owner, October 21: a fox could join a penguin and the button broke).
+            string anchor = fuseFirst ?? fuseSecond;
+            if (anchor != null && anchor != id && ToyCatalog.TryGetCollectible(anchor, out var firstToy)
                 && ToyCatalog.TryGetCollectible(id, out var nextToy) && firstToy.CharacterId != nextToy.CharacterId) return;
             int picked = (fuseFirst == id ? 1 : 0) + (fuseSecond == id ? 1 : 0);
             bool full = fuseFirst != null && fuseSecond != null;
@@ -284,7 +290,8 @@ namespace Pockle.Runtime
                 string id = FusionOrder[i];
                 int owned = session != null ? session.GetOwnedCount(id) : 0;
                 bool playable = session != null && session.IsOwnedAndPlayable(id);
-                bool matches = fuseFirst == null || (ToyCatalog.TryGetCollectible(fuseFirst, out var chosen) && ToyCatalog.TryGetCollectible(id, out var candidate) && chosen.CharacterId == candidate.CharacterId);
+                string anchor = fuseFirst ?? fuseSecond;
+                bool matches = anchor == null || (ToyCatalog.TryGetCollectible(anchor, out var chosen) && ToyCatalog.TryGetCollectible(id, out var candidate) && chosen.CharacterId == candidate.CharacterId);
                 bool has = owned > 1 && playable && matches;
                 if (owned == 1 && playable) noSpare.Add(PersonalityBook.ShortName(id));
                 spareTiles[i].gameObject.SetActive(has);

@@ -12,8 +12,13 @@ namespace Pockle.Runtime
         private float LayoutSavedFusions(float width, float y)
         {
             if (savedFusionsRoot == null) savedFusionsRoot = Rect("Saved fusions", shelfRoot);
+            // Every fused toy you own: saved fusions, then the Pip Fusion Lab studies (they live here, not as a collection).
+            var ids = new List<string>();
             var records = session != null ? session.Progress.Save.Fusions : null;
-            string keys = records == null ? "" : string.Join("|", records.FindAll(f => f != null && session.IsOwnedAndPlayable(f.Id)).ConvertAll(f => f.Id));
+            if (records != null) foreach (var record in records)
+                    if (record != null && FusionCatalog.TryGet(record.Id, out _) && session.IsOwnedAndPlayable(record.Id)) ids.Add(record.Id);
+            if (session != null) foreach (string study in PipFusionStudies.Ids) if (session.IsOwnedAndPlayable(study)) ids.Add(study);
+            string keys = string.Join("|", ids);
             savedFusionsRoot.gameObject.SetActive(keys.Length > 0);
             if (keys.Length == 0) return y;
             if (keys != savedFusionKeys)
@@ -22,17 +27,19 @@ namespace Pockle.Runtime
                 savedFusionTiles.Clear(); savedFusionKeys = keys;
                 var title = Heading("Fusions · yours to keep", savedFusionsRoot);
                 LeftLabel(title, Vector2.zero, new Vector2(width, 30));
-                foreach (var record in records)
+                foreach (string fusedId in ids)
                 {
-                    if (record == null || !FusionCatalog.TryGet(record.Id, out _)) continue;
-                    string id = record.Id;
-                    if (!session.IsOwnedAndPlayable(id)) continue;
-                    var tile = CreateButton(record.Name, savedFusionsRoot, Vector2.zero, Vector2.zero, Paper, () => ShowToy(id), out _, PockleTheme.SmallSize);
+                    string id = fusedId;
+                    var tile = CreateButton(PersonalityBook.ShortName(id), savedFusionsRoot, Vector2.zero, Vector2.zero, Paper, () => ShowToy(id), out _, PockleTheme.SmallSize);
                     tile.name = "Saved fusion · " + id;
+                    // The name gets its own strip under the picture: one or two short lines that shrink to fit, never over the toy.
                     var label = tile.GetComponentInChildren<Text>();
-                    label.alignment = TextAnchor.LowerCenter;
+                    label.alignment = TextAnchor.MiddleCenter; label.horizontalOverflow = HorizontalWrapMode.Wrap; label.verticalOverflow = VerticalWrapMode.Truncate;
+                    label.resizeTextForBestFit = true; label.resizeTextMinSize = 11; label.resizeTextMaxSize = PockleTheme.SmallSize + 1;
+                    var lr = label.rectTransform; lr.anchorMin = Vector2.zero; lr.anchorMax = new Vector2(1, 0); lr.pivot = new Vector2(.5f, 0);
+                    lr.offsetMin = new Vector2(4, 4); lr.offsetMax = new Vector2(-4, 40);
                     var image = Rect("Fused portrait", tile.transform);
-                    image.anchorMin = new Vector2(0, .23f); image.anchorMax = Vector2.one; image.offsetMin = image.offsetMax = Vector2.zero;
+                    image.anchorMin = Vector2.zero; image.anchorMax = Vector2.one; image.offsetMin = new Vector2(4, 44); image.offsetMax = new Vector2(-4, -2);
                     var portrait = image.gameObject.AddComponent<RawImage>(); portrait.texture = CutoutPortrait(id); portrait.raycastTarget = false;
                     savedFusionTiles.Add(tile);
                 }

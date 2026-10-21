@@ -135,6 +135,7 @@ namespace Pockle.Runtime
             BuildStage();
             backButton.transform.SetAsLastSibling(); favoriteToggle.transform.SetAsLastSibling(); stageCollectionPill.transform.SetAsLastSibling();
             BuildModal();
+            BuildOnboarding(); // UX-050 first run; sits above the pages, below dialogs
             if (EventSystem.current == null)
             {
                 ownedEventSystem = new GameObject("Pockle event system", typeof(EventSystem), typeof(StandaloneInputModule));
@@ -206,6 +207,7 @@ namespace Pockle.Runtime
         public bool GoBack()
         {
             if (modal.gameObject.activeSelf) { CloseModal(); return true; }
+            if (OnboardingVisible) return OnboardingBack();
             if (FusionMomentPlaying) { moment.Skip(); return true; } // Back skips the fusion moment to the reveal
             if (page == AppPage.FusionReveal) LeaveSavedFusion();
             if (!backButton.interactable) return true;
@@ -354,7 +356,8 @@ namespace Pockle.Runtime
             if (!initialized) return;
             shelfPreviews?.SetBlocked(modal != null && modal.gameObject.activeSelf);
             if (lastScreenSize.x != Screen.width || lastScreenSize.y != Screen.height || lastSafeArea != Screen.safeArea) ApplySafeArea();
-            if (lastLayoutSize != safeRoot.rect.size) AdaptLayout();
+            if (lastLayoutSize != safeRoot.rect.size) { AdaptLayout(); LayoutOnboarding(); }
+            UpdateOnboarding();
         }
         private void ApplySafeArea()
         {
@@ -366,6 +369,7 @@ namespace Pockle.Runtime
             safeRoot.offsetMin = safeRoot.offsetMax = Vector2.zero;
             modalSafeRoot.anchorMin = safeRoot.anchorMin; modalSafeRoot.anchorMax = safeRoot.anchorMax;
             modalSafeRoot.offsetMin = modalSafeRoot.offsetMax = Vector2.zero;
+            LayoutOnboarding();
         }
         private void AdaptLayout()
         {

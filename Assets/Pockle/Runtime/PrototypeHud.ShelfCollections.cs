@@ -36,7 +36,7 @@ namespace Pockle.Runtime
         private static List<CollectionDefinition> ShelfCollections()
         {
             var list = new List<CollectionDefinition>();
-            foreach (var collection in ToyCatalog.Collections)
+            foreach (var collection in ShownCollections())
             {
                 bool available = false;
                 foreach (string id in collection.Members) if (ToyCatalog.TryGetCollectible(id, out var toy) && toy.Available) { available = true; break; }

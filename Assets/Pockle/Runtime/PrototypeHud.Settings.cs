@@ -18,7 +18,7 @@ namespace Pockle.Runtime
         private Text volumeLabel, permissionStatus, walkingHelp, motionHelpText;
         private Action<float> volumeCallback;
         private readonly RectTransform[] feelRows = new RectTransform[4];
-        public const string UiBuild = "v2 screens 29";
+        public const string UiBuild = "v2 screens 31";
 
         private void BuildSettings()
         {
@@ -56,10 +56,10 @@ namespace Pockle.Runtime
 
             aboutHeading = GroupLabel("About", settingsRoot);
             aboutCard = Rect("About and help", settingsRoot); Surface(aboutCard, Quiet, 24);
-            LinkRow("How to play", aboutCard, () => ShowDialog("A few little tips",
-                "Press Pip to squish. Drag up to lift. Use two fingers to stretch. Drag the plate to turn it. A gentle phone shake jiggles Pip in Full motion. Walk 1,000 steps with Pockle open to earn a daily box."));
+            LinkRow("How to play", aboutCard, ShowTutorialAgain); // UX-050: the onboarding tutorial pages
             LinkRow("Your save and account", aboutCard, () => ShowDialog("Saved on this device",
                 "Your shelf, walking progress, and profile are saved here. Accounts and cloud save are coming later. Purchases aren't available yet, and no charges can be made."));
+            if (Debug.isDebugBuild || Application.isEditor) LinkRow("Restart sign-up (test build)", aboutCard, RestartOnboardingForTesting);
             var version = Rect("Version row", aboutCard);
             var versionTitle = Label("Version", version, 17, Ink, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero); Stretch(versionTitle.rectTransform);
             var versionValue = Label(Application.version + " · " + UiBuild, version, PockleTheme.CaptionSize + 1, MutedInk, FontStyle.Normal,
