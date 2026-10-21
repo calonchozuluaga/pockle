@@ -24,7 +24,7 @@ namespace Pockle.Runtime
 
         private void ReadMotion(float deltaTime)
         {
-            if (reducedMotion || revealing || hud.StoreVisible) { ClearMotion(); return; }
+            if (reducedMotion || ToyInputBlocked) { ClearMotion(); return; }
             if (sensorOrientation != Screen.orientation)
             { sensorOrientation = Screen.orientation; ClearMotion(); }
             Point3 drive = new Point3(0f, 0f, 0f);

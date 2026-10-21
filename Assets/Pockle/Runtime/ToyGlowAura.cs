@@ -46,20 +46,31 @@ namespace Pockle.Runtime
             Strength=light==StageLight.Night?(glow?.50f:glitter?.07f:0):glow?.08f:0;
             Color colour=toy!=null&&HolidayCatalog.IsCharacter(toy.CharacterId)?HolidayFinishMaterial.GlowTint(toy.CharacterId):glitter?new Color(1,.70f,.25f):toy!=null&&toy.CharacterId=="fox"?new Color(.65f,.44f,1):new Color(.25f,.88f,1);
             if(appearance==PipFusionStudies.EclipseId)colour=new Color(1,.65f,.23f);
-            colour.a=Strength;haloMaterial.color=colour;colour.a=Strength*.8f;poolMaterial.color=colour;
+            colour.a=Strength*.22f;haloMaterial.color=colour;colour.a=Strength*.8f;poolMaterial.color=colour;
             halo.gameObject.SetActive(Strength>0);pool.gameObject.SetActive(Strength>0);
         }
         private void LateUpdate()
         {
             if(halo!=null&&viewer!=null&&mount!=null)
             {
-                halo.position=(body!=null?body.VisualRoot.position:mount.position)+viewer.transform.forward*.85f;
-                halo.rotation=viewer.transform.rotation;
-                halo.localScale=new Vector3(1.65f,1.65f,1);
+                Bounds bounds = body != null && body.BodyRenderer != null
+                    ? body.SurfaceBounds : new Bounds(mount.position, Vector3.one * 2);
+                Vector3 right = viewer.transform.right, up = viewer.transform.up, forward = viewer.transform.forward;
+                Vector3 extents = bounds.extents;
+                float width = Vector3.Dot(new Vector3(Mathf.Abs(right.x), Mathf.Abs(right.y), Mathf.Abs(right.z)), extents);
+                float height = Vector3.Dot(new Vector3(Mathf.Abs(up.x), Mathf.Abs(up.y), Mathf.Abs(up.z)), extents);
+                float depth = Vector3.Dot(new Vector3(Mathf.Abs(forward.x), Mathf.Abs(forward.y), Mathf.Abs(forward.z)), extents);
+                // The quad stays behind the entire shell at every orbit angle, centred on the visible body.
+                halo.position = bounds.center + forward * (depth + .08f);
+                halo.rotation = viewer.transform.rotation;
+                Vector3 parentScale = mount.lossyScale;
+                halo.localScale = new Vector3(Mathf.Max(.05f, width) * 1.3f / Mathf.Max(.001f, Mathf.Abs(parentScale.x)),
+                    Mathf.Max(.05f, height) * 1.3f / Mathf.Max(.001f, Mathf.Abs(parentScale.y)), 1);
             }
             if(pool!=null&&mount!=null)
             {
-                pool.position=mount.position+new Vector3(0,-.996f,0);
+                Vector3 centre = body != null && body.BodyRenderer != null ? body.SurfaceBounds.center : mount.position;
+                pool.position = new Vector3(centre.x, mount.position.y - .996f, centre.z);
                 pool.rotation=Quaternion.Euler(90,0,0);
                 pool.localScale=new Vector3(1.16f,1.16f,1);
             }

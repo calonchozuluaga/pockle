@@ -24,6 +24,16 @@ namespace Pockle.Runtime
         private Transform toyMount;
         private Transform turntable;
         private ToyViewGesture toyView;
+        private bool inputWasBlocked;
+        public bool ToyInputBlocked => revealing || hud == null || hud.StoreVisible || hud.OnboardingVisible;
+
+        private void SyncInputSuspension()
+        {
+            bool blocked = ToyInputBlocked;
+            toyView.Suspended = blocked;
+            if (blocked && !inputWasBlocked) { ReleasePointer(false); ClearMotion(); }
+            inputWasBlocked = blocked;
+        }
         private readonly MaterialTouch materialTouch = new MaterialTouch();
         private Vector3 brushFrom,brushTo,brushDirection;
         private bool brushHasPoint;
@@ -189,23 +199,23 @@ namespace Pockle.Runtime
         {
             if (toy == null) return;
             if (Input.GetKeyDown(KeyCode.Escape) && !hud.GoBack() && Application.platform == RuntimePlatform.Android) Application.Quit();
+            SyncInputSuspension(); // Cancel captured/pending gestures before any input is polled.
             if (revealing) UpdateReveal(Time.unscaledDeltaTime);
-            else if (!hud.StoreVisible) ReadInput();
+            else if (!ToyInputBlocked) ReadInput();
 
             toyView.Calm=reducedMotion;
-            toyView.Suspended=revealing||hud.StoreVisible;
             float dt = Time.unscaledDeltaTime;
             ReadMotion(dt);
             compression.Step(dt);
             stretch.Step(dt);
             tiltX.Step(dt);
             tiltZ.Step(dt);
-            bool held = toyView.IsHolding && !revealing && !hud.StoreVisible;
-            lift.Step(dt, held, reducedMotion || revealing || hud.StoreVisible);
+            bool held = toyView.IsHolding && !ToyInputBlocked;
+            lift.Step(dt, held, reducedMotion || ToyInputBlocked);
             sag.Target = !reducedMotion && held ? ToyFeel.HangingSag * Mathf.Clamp01(lift.Value / .25f) : 0f;
             sag.Step(dt);
             gripPoint = Vector3.Lerp(gripPoint, gripTarget, 1f - Mathf.Exp(-18f * dt));
-            if (lift.LandingSpeed > .08f && !revealing && !hud.StoreVisible && !reducedMotion)
+            if (lift.LandingSpeed > .08f && !ToyInputBlocked && !reducedMotion)
             {
                 compression.Reset(ToyFeel.LandingCompression(lift.LandingSpeed));
                 compression.Target = 0f;
@@ -249,6 +259,7 @@ namespace Pockle.Runtime
 
         private void ReadInput()
         {
+            if (ToyInputBlocked) return;
             if(!leftAloneSaid&&!revealing&&hud!=null&&hud.CurrentPage==AppPage.Play&&!toyView.IsHolding&&Time.unscaledTime-lastToyActivity>18)
             { SayToyCue(ReactionCue.LeftAlone);leftAloneSaid=true; }
 #if UNITY_EDITOR
@@ -260,7 +271,7 @@ namespace Pockle.Runtime
         private void RecordToyActivity(){lastToyActivity=Time.unscaledTime;leftAloneSaid=false;}
         private void SayToyCue(ReactionCue cue)
         {
-            if(hud==null||hud.CurrentPage!=AppPage.Play||revealing||toy==null)return;
+            if(ToyInputBlocked||hud.CurrentPage!=AppPage.Play||toy==null)return;
             Vector2? head=null;
             if(toy.BodyRenderer!=null&&viewCamera!=null)
             {
@@ -273,7 +284,7 @@ namespace Pockle.Runtime
         private bool AnyReactionPlaying => pipReactions.IsPlaying||foxReactions.IsPlaying||axolotlReactions.IsPlaying||firbReactions.IsPlaying||cocoReactions.IsPlaying||gingerReactions.IsPlaying||snowyReactions.IsPlaying||winterReactions.IsPlaying||wallyReactions.IsPlaying;
         private void PlayTapReaction()
         {
-            if(AnyReactionPlaying)return;
+            if(ToyInputBlocked||AnyReactionPlaying)return;
             if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var wally)&&wally.CharacterId=="wally")wallyReactions.PlayRandom();else if(ToyCatalog.IsFoxCollectible(toy.CollectibleId))foxReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var tapped)&&tapped.CharacterId=="axolotl")axolotlReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var firb)&&firb.CharacterId=="firb")firbReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var coco)&&coco.CharacterId=="coco")cocoReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var ginger)&&ginger.CharacterId=="ginger")gingerReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var snowy)&&snowy.CharacterId=="snowy")snowyReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var winter)&&HolidayCatalog.IsWinterTrio(winter.CharacterId))winterReactions.PlayRandom();else pipReactions.PlayRandom();
             if(AnyReactionPlaying)
                 SayToyCue(ReactionCue.Poke);

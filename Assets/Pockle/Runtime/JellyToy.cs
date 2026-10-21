@@ -57,6 +57,23 @@ namespace Pockle.Runtime
         private float previousSag, previousClearance;
         private Vector3 previousGrip;
         public float DeformedTop { get; private set; }
+        private Bounds surfaceLocalBounds;
+        /// <summary>Tight deformed body bounds for visual effects; mesh culling retains its conservative bounds.</summary>
+        public Bounds SurfaceBounds
+        {
+            get
+            {
+                Initialize();
+                Matrix4x4 matrix = visualRoot.localToWorldMatrix;
+                Vector3 e = surfaceLocalBounds.extents;
+                Vector3 x = matrix.MultiplyVector(new Vector3(e.x,0,0));
+                Vector3 y = matrix.MultiplyVector(new Vector3(0,e.y,0));
+                Vector3 z = matrix.MultiplyVector(new Vector3(0,0,e.z));
+                Vector3 extent = new Vector3(Mathf.Abs(x.x)+Mathf.Abs(y.x)+Mathf.Abs(z.x),
+                    Mathf.Abs(x.y)+Mathf.Abs(y.y)+Mathf.Abs(z.y),Mathf.Abs(x.z)+Mathf.Abs(y.z)+Mathf.Abs(z.z));
+                return new Bounds(matrix.MultiplyPoint3x4(surfaceLocalBounds.center),extent*2);
+            }
+        }
         private FoxActionPose foxReaction;
         public void SetFoxReaction(FoxActionPose pose)
         {
@@ -406,6 +423,7 @@ namespace Pockle.Runtime
 
             var foxPose=new FoxDeformation(temperamentExpression!=null?new FoxActionPose(foxReaction.Lift,foxReaction.Pitch,foxReaction.Yaw,foxReaction.Roll,foxReaction.HeadRoll,foxReaction.Tail,foxReaction.Ears,0,0,0,foxReaction.HeadPitch):foxReaction);
             bool fox=ToyCatalog.IsFoxCollectible(collectibleId);
+            surfaceLocalBounds = new Bounds(Vector3.zero, Vector3.zero);
             DeformedTop = -1f;
             float rotatedBottom = float.PositiveInfinity;
             for (int i = 0; i < vertices.Length; i++)
@@ -416,6 +434,8 @@ namespace Pockle.Runtime
                     var point=foxPose.Apply(new Point3(vertices[i].x,vertices[i].y,vertices[i].z));
                     vertices[i]=new Vector3(point.X,point.Y,point.Z);
                 }
+                if (i == 0) surfaceLocalBounds = new Bounds(vertices[i], Vector3.zero);
+                else surfaceLocalBounds.Encapsulate(vertices[i]);
                 float rotatedY = (visualRoot.localRotation * vertices[i]).y;
                 DeformedTop = Mathf.Max(DeformedTop, rotatedY);
                 rotatedBottom = Mathf.Min(rotatedBottom, rotatedY);

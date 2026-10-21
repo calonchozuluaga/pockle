@@ -71,6 +71,7 @@ Shader "Pockle/Textured Peach Jelly"
         CGINCLUDE
         #include "UnityCG.cginc"
     #include "Assets/Pockle/Shaders/SurfacePlay.cginc"
+    #include "Assets/Pockle/Shaders/StageGlow.cginc"
     #include "Assets/Pockle/Shaders/FusionPattern.cginc"
     half4 _StageTint; half _StageEmission; samplerCUBE _StageEnvironment; half _StageEnvironmentStrength;
         sampler2D _MainTex;
@@ -264,7 +265,7 @@ Shader "Pockle/Textured Peach Jelly"
             half reflectedAlpha = fusionDetail.x*(max(studio.r,max(studio.g,studio.b))*.55+softbox*.65);
             alpha = max(alpha,saturate(reflectedAlpha));
             color=BrushNap(i.local,color,1-pigment);color+=ContentsLight(i.local,view)*(1-pigment);
-            return fixed4(saturate(color * _StageTint.rgb + _StageEmission * half3(.23,.65,.64) * (1-pigment)),alpha);
+            return fixed4(saturate(color * _StageTint.rgb + PockleStageGlow(half3(.23,.65,.64), _StageEmission, 1-pigment, facing)),alpha);
         }
         ENDCG
         // Resolve the nearest shell surface before alpha shading. This prevents

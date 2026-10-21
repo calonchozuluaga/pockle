@@ -169,3 +169,9 @@ October20 Ui28 integration: Home presents four painted feature buttons (Play/Fus
 
 
 October20 Ui29 refinement: approved complete feature illustrations replace the Ui28 environment/live-overlay composition. HomeFeatures now loads one image per button with real accessible word/icon labels and no extra subjects/equations/spare chip or blanket shades. Arrange/Fuse shelf cards use the same generous art height as Home with lower labels/crop focus to keep faces clear. These are decorative feature illustrations; live collection, fusion and inventory data remain on their respective screens. Resource paths/GUIDs and routes unchanged.
+
+## October 21 — glow bounds and onboarding input
+
+`JellyToy.SurfaceBounds` caches a tight local AABB while deforming existing vertex buffers and transforms it into world bounds for effects. The renderer keeps its broad culling bounds for squish safety. `ToyGlowAura` projects the tight bounds onto camera axes, centres a softened billboard behind the shell, and centres the ground spill under the body. GPU-only animation can extend outside the CPU bounds; the effect has padding. Native finish shaders share `StageGlow.cginc` for pigment emission with a soft rim, preserving facial ink masks. No bloom or extra rendering pass is introduced.
+
+`TactilePrototype.ToyInputBlocked` combines reveal, store and onboarding state. Suspension is synchronized before polling input; transition into a blocking overlay cancels captured holds, queued taps and orbit momentum, releases lift and clears motion input. Accelerometer handling, tap reactions and toy cues use the same guard. Claude owns the onboarding screens and account-service contract; no authentication provider is implemented here.

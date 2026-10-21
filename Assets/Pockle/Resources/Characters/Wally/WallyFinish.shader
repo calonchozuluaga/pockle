@@ -78,6 +78,7 @@ Shader "Pockle/Wally Finish"
     CGINCLUDE
     #include "UnityCG.cginc"
     #include "Assets/Pockle/Shaders/SurfacePlay.cginc"
+    #include "Assets/Pockle/Shaders/StageGlow.cginc"
     #include "Assets/Pockle/Shaders/FusionPattern.cginc"
     half4 _StageTint; half _StageEmission; samplerCUBE _StageEnvironment; half _StageEnvironmentStrength;
     sampler2D _MainTex; samplerCUBE _StudioCube;
@@ -206,7 +207,7 @@ Shader "Pockle/Wally Finish"
         base=BrushNap(i.face,base,smoothstep(.05,.20,max(paint.r,max(paint.g,paint.b)))*(1-TemperFeatures(i.face).a));base+=ContentsLight(i.face,view)*body;
         if(back) alpha*=.32;
         else { base=TemperFinish(i.face,base);alpha=max(alpha,TemperFeatures(i.face).a); }
-        return fixed4(saturate(base * _StageTint.rgb + _StageEmission * fusionPigment * body),alpha);
+        return fixed4(saturate(base * _StageTint.rgb + PockleStageGlow(fusionPigment, _StageEmission, body * (1-TemperFeatures(i.face).a), facing)),alpha);
     }
     fixed4 fragBack(v2f i):SV_Target { return finish(i,true); }
     fixed4 fragFront(v2f i):SV_Target { return finish(i,false); }
