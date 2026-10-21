@@ -574,3 +574,8 @@ Portable checks passed; source checks passed **241 C# files / three profiles / f
 ## October 21 — Ui31 phone installation
 
 Glow/onboarding Android update installed in place and launched on Pixel7Pro; all89 inventory entries and15 full fusions, pending state and other provenance preserved. Walking counters advanced1117 naturally on launch. No startup fatal/null-reference/shader errors observed. APK build/signature/walking JNI checks passed. Full native suite initially130/135; corrected three runtime test fixtures, focused rerun4/4 passed. Two stale Claude-owned CollectionUiTests remain unresolved (hidden Fusion Lab count and old Fuse spares label); full suite is not green. Portable/source242/789 and whitespace pass. Physical-device visual and gesture acceptance remains the owner's review. See handoff for exact artifact/hash and evidence paths.
+
+
+## October 21 — Ui31 test follow-up
+
+With owner approval, the two stale CollectionUiTests assertions were corrected. Native CollectionUiTests **27/27 passed**; source242/789 and whitespace passed. This resolves both outstanding UI failures recorded above. Combined with the runtime fixture4/4 rerun, all five original failures have passing focused rechecks; the full135-test suite was not rerun after fixture corrections. Installed phone APK unchanged.

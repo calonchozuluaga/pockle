@@ -554,7 +554,7 @@ namespace Pockle.Tests
             {
                 ButtonNamed("Home collections · all").onClick.Invoke();
                 Assert.AreEqual(AppPage.Collections, hud.CurrentPage);
-                Assert.AreEqual(ToyCatalog.Collections.Count, root.GetComponentsInChildren<Button>().Count(button => button.name.StartsWith("Collection · ")));
+                Assert.AreEqual(ToyCatalog.Collections.Count(c => c.Id != PipFusionStudies.CollectionId), root.GetComponentsInChildren<Button>().Count(button => button.name.StartsWith("Collection · ")));
                 var scroll = root.GetComponentsInChildren<ScrollRect>().Single();
                 scroll.content.anchoredPosition = new Vector2(0, 90);
                 ButtonNamed("Collection · pip").onClick.Invoke();
@@ -670,7 +670,7 @@ namespace Pockle.Tests
             hud = root.AddComponent<PrototypeHud>(); hud.Initialize(_ => { }, _ => { }, _ => { }); hud.Bind(session);
             yield return null;
             ButtonWithText("Shelf").onClick.Invoke();
-            ButtonWithText("Fuse spares").onClick.Invoke();
+            ButtonNamed("Shelf feature · Fuse").onClick.Invoke();
             ButtonNamed("Spare · " + ToyCatalog.PeachId).onClick.Invoke();
             ButtonNamed("Spare · " + ToyCatalog.MoonId).onClick.Invoke();
             ButtonNamed("Fusion slot · Spare 1").onClick.Invoke(); // take Peach back; Moon is still picked
