@@ -85,12 +85,36 @@ namespace Pockle.Tests
         [UnityTest]
         public IEnumerator CountdownComesFromTheServerNotThePhoneClock()
         {
+            float started = Time.realtimeSinceStartup;
             var v = View(); v.SecondsUntilNextBox = 2 * 3600 + 5 * 60 + 9; hud.SetWalkingBoxes(v);
             yield return null; yield return null;
-            Assert.That(Text("Today's box").Contains("Next box in 2:05:0"), Is.True);
+            string shown = Text("Today's box");
+            const string prefix = "Next box in ";
+            int start = shown.IndexOf(prefix, StringComparison.Ordinal);
+            Assert.That(start, Is.GreaterThanOrEqualTo(0), shown);
+            string clock = shown.Substring(start + prefix.Length).Split(' ')[0];
+            Assert.That(TimeSpan.TryParse(clock, out var left), Is.True, shown);
+            double expected = v.SecondsUntilNextBox.Value - (Time.realtimeSinceStartup - started);
+            Assert.That(left.TotalSeconds, Is.InRange(expected - 1.5, expected + 1.5), "server seconds minus local elapsed time");
             var walking = View(); walking.StepCredit = 640; hud.SetWalkingBoxes(walking); yield return null;
             Assert.That(Text("Today's box").Contains("360 more steps"), Is.True);
             Assert.That(Text("Today's box").Contains("640"), Is.True);
+        }
+
+        [UnityTest]
+        public IEnumerator CountdownRepairsTextOverwrittenDuringTheSameSecond()
+        {
+            var node = new GameObject("Countdown regression", typeof(RectTransform), typeof(Text));
+            node.transform.SetParent(root.transform);
+            var text = node.GetComponent<Text>();
+            var countdown = node.AddComponent<CountdownText>();
+            countdown.Target = text; countdown.Source = () => TimeSpan.FromSeconds(7509); countdown.Prefix = "Next box in ";
+            countdown.SendMessage("Update"); Assert.That(text.text, Is.EqualTo("Next box in 2:05:09"));
+            text.text = "Next box in"; countdown.SendMessage("Update");
+            Assert.That(text.text, Is.EqualTo("Next box in 2:05:09"));
+            countdown.Source = () => null; countdown.SendMessage("Update");
+            Assert.That(text.text, Is.EqualTo("Checking…"));
+            yield return null;
         }
 
         [UnityTest]

@@ -35,9 +35,10 @@ namespace Pockle.Runtime
             if (Target == null) return;
             TimeSpan? given = Source != null ? Source() : UntilNextBox(DateTime.UtcNow);
             int second = given.HasValue ? (int)Math.Max(0, given.Value.TotalSeconds) : -2;
-            if (second == lastSecond) return;
+            string text = given.HasValue ? Prefix + Format(given.Value) : Waiting;
+            if (second == lastSecond && Target.text == text) return;
             lastSecond = second;
-            Target.text = given.HasValue ? Prefix + Format(given.Value) : Waiting;
+            Target.text = text;
         }
     }
 }

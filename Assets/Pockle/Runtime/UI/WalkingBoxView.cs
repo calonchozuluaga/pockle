@@ -54,11 +54,11 @@ namespace Pockle.Runtime
         public RarityTier Tier { get; }
         public double Chance { get; }
 
-        /// <summary>"79%", "6%", "about 1 in 72" (anything under 1% reads as "1 in N").</summary>
+        /// <summary>"79%", "6%", "about 1 in 72" (anything under 2% reads as "1 in N").</summary>
         public static string Format(double chance)
         {
             if (chance <= 0) return "none";
-            if (chance >= .01) return Math.Round(chance * 100, chance >= .1 ? 0 : 1).ToString("0.#") + "%";
+            if (chance >= .02) return Math.Round(chance * 100, chance >= .1 ? 0 : 1).ToString("0.#") + "%";
             return "about 1 in " + Math.Round(1 / chance).ToString("N0");
         }
     }
