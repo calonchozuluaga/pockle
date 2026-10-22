@@ -187,3 +187,6 @@ WallyFinishMaterial and the existing Built-in shader add irregular leaf, rose go
 
 
 October22 Wally surface refinement: the molten shader derives bevel/grain normals from local-space Voronoi plate height and fragment derivatives, with a broader cyan luminous recess. Diamond uses coarse triangular normals with distinct reflected/refracted environment rays and glints. These effects are uniform branches for the two pilot materials; no mesh topology, body silhouette, face control, handling, tier or save changes. Thirteen other front renders were pixel-identical in native comparison. Review docs/wally-pilot-review/index.html.
+
+
+October22 Wally golds: a GoldReflect branch, enabled for the three Rare Wally variants only, strengthens tinted environment Fresnel reflection and broad/strip studio highlights while retaining enough room fill for bright gold/rose pigment. Treasure Leaf keeps its irregular foil pattern and a less attenuated reflection layer. Other materials and handling remain separate. Native gold review: docs/wally-pilot-review/index.html?revision=3.

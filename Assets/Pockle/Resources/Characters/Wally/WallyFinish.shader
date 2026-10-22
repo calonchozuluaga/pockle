@@ -62,6 +62,7 @@ Shader "Pockle/Wally Finish"
         _WallyTail ("Tail splash", Float) = 0
         _WallyFlipper ("Flipper wave", Float) = 0
         _WallyIdle ("Gentle swimming", Float) = 0
+        _GoldReflect ("Polished gold reflections", Range(0,1)) = 0
         _GoldLeaf ("Broken gold leaf", Range(0,1)) = 0
         _Diamond ("Prismatic ice facets", Range(0,1)) = 0
         _Molten ("Obsidian neon veins", Range(0,1)) = 0
@@ -87,7 +88,7 @@ Shader "Pockle/Wally Finish"
     half4 _StageTint; half _StageEmission; samplerCUBE _StageEnvironment; half _StageEnvironmentStrength;
     sampler2D _MainTex; samplerCUBE _StudioCube;
     half4 _BodyColor; half _TintStrength;
-    half _GoldLeaf, _Diamond, _Molten, _RarePulse;
+    half _GoldReflect, _GoldLeaf, _Diamond, _Molten, _RarePulse;
     half _WallyTail, _WallyFlipper, _WallyIdle;
     half _WinterPalette, _SurfaceRelief, _LoopPile;
     half _Gloss, _Opacity, _Fuzz, _Grain, _Metallic, _Pearl, _Crystal, _Iridescence, _Glitter;
@@ -209,12 +210,25 @@ Shader "Pockle/Wally Finish"
         base+=body*fusionDetail.w*fleck*half3(.8,.55,.16);
         base+=body*texCUBE(_StageEnvironment,refract(-view,n,.74)).rgb*_StageEnvironmentStrength*(1-fusionSurface.w)*.24;
         half rareMask=body*(1-TemperFeatures(i.face).a);
+        if(_GoldReflect>.001)
+        {
+            // Suppress chalky diffuse light; broad reflected studio panels define the polished metal.
+            half3 metalF0=lerp(fusionPigment,half3(1,.98,.92),.18);
+            half3 fresnel=metalF0+(1-metalF0)*pow(rim,5);
+            half panel=exp2(-rx*rx*24-ry*ry*12)*smoothstep(.25,.75,dot(reflected,key));
+            half strip=pow(saturate(1-abs(reflected.x+.38)*4),3)*smoothstep(-.3,.4,reflected.y);
+            half rimPanel=pow(saturate(1-abs(reflected.x-.72)*6),3)*smoothstep(-.7,.2,reflected.y);
+            half roomFill=.25+.18*saturate(reflected.y*.5+.5);
+            half3 metal=fusionPigment*(.24+.12*wrapped)+fresnel*roomFill+studio*fresnel*1.25;
+            metal+=fresnel*(panel*1.15+strip*.85+rimPanel*.42);
+            base=lerp(base,metal,rareMask*_GoldReflect);
+        }
         if(_GoldLeaf>.001)
         {
             float leaf=foamNoise(i.face*25).x;
             half patch=smoothstep(.40,.53,leaf);
-            base=lerp(base,half3(.70,.40,.08)*(.8+.2*wrapped),rareMask*(1-patch)*.50);
-            base+=rareMask*patch*(studio*.22+softbox*.25)*half3(1,.78,.28);
+            base=lerp(base,half3(.70,.40,.08)*(.8+.2*wrapped),rareMask*(1-patch)*.22);
+            base+=rareMask*patch*(studio*.32+softbox*.38)*half3(1,.78,.28);
         }
         if(_Diamond>.001)
         {

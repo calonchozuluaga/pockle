@@ -32,7 +32,7 @@ namespace Pockle.Editor
                     Save(camera,Path.Combine(output,item.Id+".png"));count++;
                 }
                 camera.orthographicSize=1.65f;
-                foreach(var id in new[]{WallyCatalog.LeafId,WallyCatalog.RoseId,WallyCatalog.DiamondId,WallyCatalog.SpecialId})
+                foreach(var id in new[]{"wally.coated-metallic",WallyCatalog.LeafId,WallyCatalog.RoseId,WallyCatalog.DiamondId,WallyCatalog.SpecialId})
                 {
                     toy.TrySetCollectible(id);toy.transform.rotation=Quaternion.Euler(0,35,0);
                     Save(camera,Path.Combine(output,id+"-angle.png"));
@@ -42,7 +42,7 @@ namespace Pockle.Editor
                 toy.BodyRenderer.sharedMaterial.SetFloat("_RarePulse",.86f);Save(camera,Path.Combine(output,"molten-low.png"));
                 toy.BodyRenderer.sharedMaterial.SetFloat("_RarePulse",1.14f);Save(camera,Path.Combine(output,"molten-high.png"));
                 if(count!=15)throw new Exception("Expected15 Wally members");
-                Debug.Log("WALLY_PILOT_CAPTURE_OK: 15 finishes, four reflective angle views, two pulse endpoints");
+                Debug.Log("WALLY_PILOT_CAPTURE_OK: 15 finishes, five reflective angle views, two pulse endpoints");
             }
             finally{UnityEngine.Object.DestroyImmediate(obj);UnityEngine.Object.DestroyImmediate(view);}
         }

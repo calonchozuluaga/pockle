@@ -35,6 +35,7 @@ namespace Pockle.Runtime
                 case WallyCatalog.DiamondId:gloss=.97f;m.SetFloat("_Diamond",1);m.SetFloat("_Crystal",1);m.SetFloat("_Iridescence",.18f);break;
                 case WallyCatalog.SpecialId:gloss=.24f;m.SetFloat("_Metallic",.05f);m.SetFloat("_Molten",1);m.SetFloat("_RarePulse",1);break;
             }
+            if(toy.Tier==ToyTier.Rare) {m.SetFloat("_GoldReflect",1);gloss=id==WallyCatalog.LeafId?.96f:1;}
             m.SetFloat("_Gloss",gloss);m.SetFloat("_Opacity",opacity);
             m.SetFloat("_TintStrength",toy.FinishId=="gloss-vinyl"?0:1);
             m.SetFloat("_WinterPalette",1); // Same phone-scale pile and foam detail as the approved winter toys.
