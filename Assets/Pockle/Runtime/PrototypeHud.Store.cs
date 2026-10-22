@@ -123,6 +123,7 @@ namespace Pockle.Runtime
         {
             float w = Mathf.Min(width, 480);
             float y = LayoutWalkingCard(width) + 26;
+            y += LayoutWalkRules(width, y); // UX-052
             TopCentered(shopHeading, new Vector2(0, -y), new Vector2(w, 30));
             y += 42;
             const float cardHeight = 150, gap = 12;
@@ -149,7 +150,10 @@ namespace Pockle.Runtime
 
         private void RefreshWalkingCard()
         {
-            if (session == null || walkProgress == null) return;
+            if (walkProgress == null) return;
+            if (ServerBoxes) { RefreshServerWalkingCard(); return; } // UX-052
+            RestoreLocalWalkArt();
+            if (session == null) return;
             var saved = session.Progress.Save;
             int target = CollectionProgress.DailyTarget;
             bool currentDay = saved.Day == CollectionSession.Today;

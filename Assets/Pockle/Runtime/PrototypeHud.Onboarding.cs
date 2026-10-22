@@ -367,6 +367,8 @@ namespace Pockle.Runtime
             profile.SetName(name);
             if (profileName != null) profileName.SetTextWithoutNotify(profile.Name);
             if (obRenaming) { obRenaming = false; onboarding.gameObject.SetActive(false); RefreshAccountSettings(); return; }
+            // A returning player (signed out, new account) who already did the tutorial doesn't repeat it.
+            if (OnboardingState.Completed) { FinishOnboarding(); RefreshAccountSettings(); return; }
             ShowOnboardingStep(OnboardingStep.Tutorial);
         }
 
@@ -533,9 +535,13 @@ namespace Pockle.Runtime
         /// that build the HUD on their own (tests, captures) don't call it, so they never see onboarding.</summary>
         public void StartOnboardingIfNeeded()
         {
-            if (OnboardingState.Completed) return;
-            obTutorialOnly = false;
-            ShowOnboardingStep(OnboardingState.AgeLocked ? OnboardingStep.Blocked : OnboardingStep.Splash);
+            obTutorialOnly = false; obRenaming = false;
+            if (OnboardingState.AgeLocked) { ShowOnboardingStep(OnboardingStep.Blocked); return; }
+            if (!OnboardingState.Completed) { ShowOnboardingStep(OnboardingStep.Splash); return; }
+            // Finished onboarding before (owner/Codex, October 21): with an account runtime, a signed-out player must sign in
+            // again on every cold start. The age result, tutorial and profile stay as they are; a signed-in player goes
+            // straight in. Without an account runtime (tests, captures, test builds) nothing is shown.
+            if (account != null && !account.IsSignedIn) ShowOnboardingStep(OnboardingStep.SignIn);
         }
 
         /// <summary>Settings › How to play: the tutorial pages on their own; nothing about the account changes.</summary>
@@ -588,6 +594,7 @@ namespace Pockle.Runtime
             switch (obStep)
             {
                 case OnboardingStep.Splash: case OnboardingStep.Blocked: return false;
+                case OnboardingStep.SignIn when OnboardingState.Completed: return false; // the sign-in gate: Back leaves the app
                 case OnboardingStep.Birthday: case OnboardingStep.SignIn: if (!obBusy) ShowOnboardingStep(OnboardingStep.Splash); return true;
                 case OnboardingStep.Tutorial:
                     if (obPage > 0) ShowTutorialPage(obPage - 1);

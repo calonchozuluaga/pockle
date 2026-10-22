@@ -4,7 +4,11 @@ using UnityEngine;
 
 namespace Pockle.Runtime
 {
-    public enum RarityTier { Common, Rare, SuperRare, UltraRare, Fusion }
+    /// <summary>
+    /// Values keep their numbers. The October 21 ladder (owner-approved: Common, Rare gold, Epic diamond, Secret molten) uses
+    /// Common/Rare/Epic/Secret; SuperRare/UltraRare remain for the current catalog's labels until the runtime retags toys.
+    /// </summary>
+    public enum RarityTier { Common, Rare, SuperRare, UltraRare, Fusion, Epic, Secret }
 
     /// <summary>
     /// The rarity colour index (owner request, October 17): rarity reads as a solid, coloured badge with an icon, so it never
@@ -32,7 +36,10 @@ namespace Pockle.Runtime
         {
             switch (tier)
             {
-                case RarityTier.Rare: return new RarityLook(tier, secret, words, Hex(0xBFEFDF), Hex(0x1E5A46), Hex(0x7CCFB2), "StickerStar");
+                // October 21 ladder: Rare is gold, Epic is diamond, Secret is molten (cracked obsidian, glowing veins).
+                case RarityTier.Rare: return new RarityLook(tier, secret, words, Hex(0xFFDB7A), Hex(0x5C3A00), Hex(0xFFF1B8), "StickerStar");
+                case RarityTier.Epic: return new RarityLook(tier, secret, words, Hex(0xD6F1FF), Hex(0x15486E), Hex(0x9FDCFF), "RarityGem");
+                case RarityTier.Secret: return new RarityLook(tier, true, words, Hex(0x2A0F0C), Hex(0xFFC08A), Hex(0xFF5A3C), "StickerSparkle");
                 case RarityTier.SuperRare: return new RarityLook(tier, secret, words, Hex(0xFFB8D9), Hex(0x7A1F4E), Hex(0xF27BB2), "StickerSparkle");
                 case RarityTier.UltraRare: return new RarityLook(tier, secret, words, Hex(0xFFD66B), Hex(0x5C3A00), Hex(0xFFF1B8), "RarityGem");
                 case RarityTier.Fusion: return new RarityLook(tier, secret, words, Hex(0x2A1430), Hex(0xF1E6FF), Hex(0xB99CDE), "RarityFusion");
@@ -40,11 +47,31 @@ namespace Pockle.Runtime
             }
         }
 
-        /// <summary>Reads the tier from the toy's label ("Starlight Glow · Ultra rare") or from fusion.</summary>
+        /// <summary>
+        /// The runtime's tier for a collectible ID (Codex: set this once tiers are in the catalog/server). When it returns a
+        /// tier, that wins over the label parsing below. Null, or a null result, keeps today's label-based tiers.
+        /// </summary>
+        public static Func<string, RarityTier?> TierSource;
+
+        /// <summary>Core's ladder tier as a UI tier. Codex's binding can be one line, e.g.
+        /// <c>RarityLook.TierSource = id => id.StartsWith("wally.") ? RarityLook.FromTier(WallyCatalog.Tier(id)) : (RarityTier?)null;</c></summary>
+        public static RarityTier FromTier(ToyTier tier) => tier == ToyTier.Rare ? RarityTier.Rare : tier == ToyTier.Epic ? RarityTier.Epic
+            : tier == ToyTier.Secret ? RarityTier.Secret : RarityTier.Common;
+
+        /// <summary>Words for a ladder tier: "Rare", "Epic", "Secret".</summary>
+        public static string Words(RarityTier tier) => tier == RarityTier.Rare ? "Rare" : tier == RarityTier.Epic ? "Epic"
+            : tier == RarityTier.Secret ? "Secret" : tier == RarityTier.SuperRare ? "Super rare" : tier == RarityTier.UltraRare ? "Ultra rare" : "";
+
+        /// <summary>The colour a box reveal glows for this tier (Common gets a soft white).</summary>
+        public Color RevealGlow => Tier == RarityTier.Common ? new Color(1, 1, 1, .7f) : Ring;
+
+        /// <summary>Reads the tier from the runtime (TierSource), else the toy's label ("Starlight Glow · Ultra rare") or fusion.</summary>
         public static RarityLook Of(CollectibleDefinition toy)
         {
             if (toy == null) return For(RarityTier.Common, false, "");
             if (FusionCatalog.TryGet(toy.Id, out _)) return For(RarityTier.Fusion, false, "Fusion · One of a kind");
+            var given = TierSource?.Invoke(toy.Id);
+            if (given.HasValue) return For(given.Value, given.Value == RarityTier.Secret || toy.IsSecret, Words(given.Value));
             string name = toy.FinishDisplayName ?? "";
             int dot = name.IndexOf(" · ", StringComparison.Ordinal);
             string label = dot > 0 ? name.Substring(dot + 3) : "";

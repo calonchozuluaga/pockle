@@ -333,7 +333,7 @@ namespace Pockle.Runtime
             string price = "";
             foreach (var offer in BoxCatalog.Offers) if (offer.CollectionId == selected.Id && price.Length == 0) price = offer.ProposedPrice;
             var ctaLabel = collectionBoxes.GetComponentInChildren<Text>();
-            ctaLabel.text = offers ? "Open a " + selected.DisplayName + " box" + (price.Length > 0 ? ", " + price : "") : "See today's boxes";
+            ctaLabel.text = offers ? "Open a " + selected.DisplayName + " box" + (price.Length > 0 ? ", " + price : "") : ServerBoxes ? "See your boxes" : "See today's boxes";
             ctaLabel.color = PockleTheme.OnPlum;
             collectionWalking.interactable = true;
             collectionWalking.GetComponentInChildren<Text>().text = "Walk for a free box";

@@ -11,6 +11,12 @@ namespace Pockle.Runtime
     public sealed class CountdownText : MonoBehaviour
     {
         public Text Target;
+        /// <summary>When set (server walking boxes), the time left comes from here instead of the next UTC midnight.
+        /// Returning null shows <see cref="Waiting"/>.</summary>
+        public Func<TimeSpan?> Source;
+        public string Waiting = "Checking…";
+        /// <summary>Words before the time, e.g. "Next box in ".</summary>
+        public string Prefix = "";
         private int lastSecond = -1;
 
         public static TimeSpan UntilNextBox(DateTime utcNow) => utcNow.Date.AddDays(1) - utcNow;
@@ -27,11 +33,11 @@ namespace Pockle.Runtime
         private void Tick()
         {
             if (Target == null) return;
-            var left = UntilNextBox(DateTime.UtcNow);
-            int second = (int)left.TotalSeconds;
+            TimeSpan? given = Source != null ? Source() : UntilNextBox(DateTime.UtcNow);
+            int second = given.HasValue ? (int)Math.Max(0, given.Value.TotalSeconds) : -2;
             if (second == lastSecond) return;
             lastSecond = second;
-            Target.text = Format(left);
+            Target.text = given.HasValue ? Prefix + Format(given.Value) : Waiting;
         }
     }
 }

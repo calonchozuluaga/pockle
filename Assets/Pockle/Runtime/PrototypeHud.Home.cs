@@ -342,7 +342,7 @@ namespace Pockle.Runtime
             float y = 4;
 
             // Today's box.
-            const float boxHeight = 256;
+            float boxHeight = HomeBoxHeight; // taller with server walking boxes (UX-052)
             LeftLabel(homeBox, new Vector2(left, -y), new Vector2(w, boxHeight));
             float textWidth = Mathf.Max(150, w - 190);
             LeftLabel(homeBoxLabel.rectTransform, new Vector2(18, -18), new Vector2(textWidth, 18));
@@ -352,6 +352,7 @@ namespace Pockle.Runtime
             LeftLabel(homeStepCount.rectTransform, Vector2.zero, new Vector2(textWidth, 32));
             PlaceStepSuffix();
             LeftLabel(homeTrack, new Vector2(0, -42), new Vector2(textWidth, 10));
+            LayoutHomeServerBox(textWidth);
             var art = homeBoxArt.rectTransform;
             art.anchorMin = art.anchorMax = art.pivot = new Vector2(1, 1);
             float boxSize = Mathf.Min(156, w * .42f);
@@ -515,32 +516,38 @@ namespace Pockle.Runtime
             bool ready = today && session.Progress.CanClaim;
             bool walking = today && !ready && !saved.Claimed;
 
-            // Today's box: the daily pool (Jelly Garden) is the Pip collection.
-            ToyCatalog.TryGetCollection("pip", out var daily);
-            homeBoxArt.texture = daily != null ? CollectionLook.Box(daily, out _) : null;
-            homeBoxArt.enabled = homeBoxArt.texture != null;
-            bool opened = today && !ready && !walking;
-            homeBoxTitle.text = opened ? "Mystery box" : (daily != null ? daily.DisplayName : "Pip") + " box";
-            homeBoxLabel.text = opened ? "NEXT BOX" : "TODAY'S BOX";
-            homeBoxFace.color = opened ? (Color)new Color32(0x3A, 0x2B, 0x6A, 0xFF) : ready ? PockleTheme.Jelly : Color.Lerp(PockleTheme.Jelly, Color.white, .3f);
-            homeBoxLabel.color = opened ? PockleTheme.OnPlumMuted : PockleTheme.JellyInk;
-            homeBoxTitle.color = opened ? PockleTheme.OnPlum : Ink;
-            homeStatus.color = opened ? PockleTheme.OnPlumMuted : PockleTheme.JellyInk;
-            homeBoxHype.Tint = opened ? new Color(.45f, .38f, .8f, 1f) : Color.white;
-            homeMystery.gameObject.SetActive(opened && homeBoxArt.enabled);
-            homeCountdown.gameObject.SetActive(opened);
-            homeBoxHype.Excited = ready; // the box only glows, shakes and sparkles when it can be opened
-            homeOpen.gameObject.SetActive(ready); homeOpen.interactable = ready;
-            homeWalk.gameObject.SetActive(walking);
-            homeSteps.gameObject.SetActive(walking);
-            int remaining = Mathf.Max(0, target - saved.Steps);
-            homeWalk.GetComponentInChildren<Text>().text = "Keep walking · " + remaining.ToString("N0") + " to go";
-            homeStepCount.text = saved.Steps.ToString("N0");
-            homeStepSuffix.text = "of " + target.ToString("N0") + " steps";
-            if (homeSteps.sizeDelta.x > 0) PlaceStepSuffix();
-            homeFill.fillAmount = Mathf.Clamp01(saved.Steps / (float)target);
-            homeStatus.text = !today ? "Check your device date to keep walking." : ready ? "Your box is ready!"
-                : walking ? "Opens at " + target.ToString("N0") + " steps." : "A new box arrives in";
+            if (ServerBoxes) RefreshHomeServerBox(); // UX-052: server walking boxes
+            else
+            {
+                homeBoxArt.color = Color.white; if (homeStatusClock != null) homeStatusClock.enabled = false;
+                // Today's box: the daily pool (Jelly Garden) is the Pip collection.
+                ToyCatalog.TryGetCollection("pip", out var daily);
+                homeBoxArt.texture = daily != null ? CollectionLook.Box(daily, out _) : null;
+                homeBoxArt.enabled = homeBoxArt.texture != null;
+                bool opened = today && !ready && !walking;
+                homeBoxTitle.text = opened ? "Mystery box" : (daily != null ? daily.DisplayName : "Pip") + " box";
+                homeBoxLabel.text = opened ? "NEXT BOX" : "TODAY'S BOX";
+                homeBoxFace.color = opened ? (Color)new Color32(0x3A, 0x2B, 0x6A, 0xFF) : ready ? PockleTheme.Jelly : Color.Lerp(PockleTheme.Jelly, Color.white, .3f);
+                homeBoxLabel.color = opened ? PockleTheme.OnPlumMuted : PockleTheme.JellyInk;
+                homeBoxTitle.color = opened ? PockleTheme.OnPlum : Ink;
+                homeStatus.color = opened ? PockleTheme.OnPlumMuted : PockleTheme.JellyInk;
+                homeBoxHype.Tint = opened ? new Color(.45f, .38f, .8f, 1f) : Color.white;
+                homeMystery.gameObject.SetActive(opened && homeBoxArt.enabled);
+                homeCountdown.gameObject.SetActive(opened);
+                homeBoxHype.Excited = ready; // the box only glows, shakes and sparkles when it can be opened
+                homeOpen.gameObject.SetActive(ready); homeOpen.interactable = ready;
+                homeWalk.gameObject.SetActive(walking);
+                homeSteps.gameObject.SetActive(walking);
+                int remaining = Mathf.Max(0, target - saved.Steps);
+                homeWalk.GetComponentInChildren<Text>().text = "Keep walking · " + remaining.ToString("N0") + " to go";
+                homeStepCount.text = saved.Steps.ToString("N0");
+                homeStepSuffix.text = "of " + target.ToString("N0") + " steps";
+                if (homeSteps.sizeDelta.x > 0) PlaceStepSuffix();
+                homeFill.fillAmount = Mathf.Clamp01(saved.Steps / (float)target);
+                homeStatus.text = !today ? "Check your device date to keep walking." : ready ? "Your box is ready!"
+                    : walking ? "Opens at " + target.ToString("N0") + " steps." : "A new box arrives in";
+
+            }
 
             // Live shelf peek: the first three spots and the moment the first neighbours share.
             for (int i = 0; i < homePeekToys.Length; i++)
