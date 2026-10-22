@@ -37,6 +37,102 @@ namespace Pockle.Runtime
 
         public static Texture2D FadeRight => fadeRight != null ? fadeRight : fadeRight = Ramp("Pockle fade right", true);
 
+        private static Texture2D ring, swap;
+        private static readonly System.Collections.Generic.Dictionary<int, Texture2D> arcs = new System.Collections.Generic.Dictionary<int, Texture2D>();
+        private const int RingSize = 256;
+        private const float RingOuter = .5f, RingInner = .38f;
+
+        /// <summary>A plain white ring (the track behind a progress arc), tinted by the UI.</summary>
+        public static Texture2D Ring => ring != null ? ring : ring = DrawRing("Pockle ring", 1f, false);
+
+        /// <summary>A progress arc from twelve o'clock, clockwise, with round ends, shading jelly pink to gold. Not tinted.</summary>
+        public static Texture2D ProgressArc(float fraction)
+        {
+            int key = Mathf.RoundToInt(Mathf.Clamp01(fraction) * 100);
+            if (arcs.TryGetValue(key, out var texture) && texture != null) return texture;
+            return arcs[key] = DrawRing("Pockle progress arc " + key, key / 100f, true);
+        }
+
+        /// <summary>Two curved arrows chasing each other: the trade/swap glyph.</summary>
+        public static Texture2D Swap => swap != null ? swap : swap = Draw("Pockle swap", 128, InsideSwap);
+
+        private static Texture2D DrawRing(string name, float fraction, bool gradient)
+        {
+            var texture = new Texture2D(RingSize, RingSize, TextureFormat.RGBA32, false)
+            { name = name, filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Clamp };
+            var pixels = new Color32[RingSize * RingSize];
+            Color pink = new Color(1f, .561f, .69f), gold = new Color(.949f, .702f, .239f);
+            float mid = (RingOuter + RingInner) / 2, half = (RingOuter - RingInner) / 2, sweep = fraction * 360f;
+            Vector2 Cap(float degrees) { float r = degrees * Mathf.Deg2Rad; return new Vector2(Mathf.Sin(r), Mathf.Cos(r)) * mid; }
+            Vector2 start = Cap(0), end = Cap(sweep);
+            const int samples = 3;
+            for (int y = 0; y < RingSize; y++)
+            for (int x = 0; x < RingSize; x++)
+            {
+                int hits = 0;
+                for (int sy = 0; sy < samples; sy++)
+                for (int sx = 0; sx < samples; sx++)
+                {
+                    var p = new Vector2((x + (sx + .5f) / samples) / RingSize - .5f, (y + (sy + .5f) / samples) / RingSize - .5f);
+                    float r = p.magnitude;
+                    bool band = r <= RingOuter && r >= RingInner;
+                    if (fraction < 1f)
+                    {
+                        // Angle clockwise from twelve o'clock (texture rows run bottom-up, so +y is up).
+                        float angle = Mathf.Atan2(p.x, p.y) * Mathf.Rad2Deg; if (angle < 0) angle += 360f;
+                        band = band && angle <= sweep || (p - start).magnitude <= half || (p - end).magnitude <= half;
+                        if (fraction <= 0f) band = false;
+                    }
+                    if (band) hits++;
+                }
+                if (hits == 0) { pixels[y * RingSize + x] = new Color32(255, 255, 255, 0); continue; }
+                Color colour = Color.white;
+                if (gradient)
+                {
+                    var q = new Vector2((x + .5f) / RingSize - .5f, (y + .5f) / RingSize - .5f);
+                    float angle = Mathf.Atan2(q.x, q.y) * Mathf.Rad2Deg; if (angle < 0) angle += 360f;
+                    // Past the sweep: the end cap stays gold, the start cap (just before twelve o'clock) stays pink.
+                    float t = angle <= sweep ? angle / Mathf.Max(1f, sweep) : angle > (sweep + 360f) / 2 ? 0f : 1f;
+                    colour = Color.Lerp(pink, gold, t);
+                }
+                colour.a = hits / (float)(samples * samples);
+                pixels[y * RingSize + x] = colour;
+            }
+            texture.SetPixels32(pixels); texture.Apply(false, true);
+            return texture;
+        }
+
+        private static bool InsideSwap(Vector2 p)
+        {
+            // Two half-turn arrows; the second is the first turned 180 degrees about the centre.
+            return InsideSwapHalf(p) || InsideSwapHalf(new Vector2(24 - p.x, 24 - p.y));
+        }
+
+        private static bool InsideSwapHalf(Vector2 p)
+        {
+            // Path space is 24 units, y down. An arc over the top from 160 to 34 degrees, ending in an arrowhead.
+            var d = new Vector2(p.x - 12, 12 - p.y);
+            float r = d.magnitude, angle = Mathf.Atan2(d.y, d.x) * Mathf.Rad2Deg;
+            if (r >= 5.6f && r <= 8.2f && angle >= 34f && angle <= 160f) return true;
+            if ((d - Polar(160f, 6.9f)).magnitude <= 1.3f) return true; // round tail
+            float end = 34f * Mathf.Deg2Rad;
+            Vector2 e = Polar(34f, 6.9f), radial = new Vector2(Mathf.Cos(end), Mathf.Sin(end)), tangent = new Vector2(Mathf.Sin(end), -Mathf.Cos(end));
+            return InTriangle(d, e + radial * 3.4f, e - radial * 3.4f, e + tangent * 4.2f);
+        }
+
+        private static Vector2 Polar(float degrees, float radius)
+        {
+            float r = degrees * Mathf.Deg2Rad; return new Vector2(Mathf.Cos(r), Mathf.Sin(r)) * radius;
+        }
+
+        private static bool InTriangle(Vector2 p, Vector2 a, Vector2 b, Vector2 c)
+        {
+            float Cross(Vector2 u, Vector2 v, Vector2 w) => (v.x - u.x) * (w.y - u.y) - (v.y - u.y) * (w.x - u.x);
+            float d1 = Cross(a, b, p), d2 = Cross(b, c, p), d3 = Cross(c, a, p);
+            bool negative = d1 < 0 || d2 < 0 || d3 < 0, positive = d1 > 0 || d2 > 0 || d3 > 0;
+            return !(negative && positive);
+        }
+
         private static Texture2D Ramp(string name, bool horizontal)
         {
             const int size = 64;
