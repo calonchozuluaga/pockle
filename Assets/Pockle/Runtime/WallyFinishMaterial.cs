@@ -33,7 +33,7 @@ namespace Pockle.Runtime
                 case WallyCatalog.LeafId:gloss=.90f;m.SetFloat("_GoldLeaf",1);m.SetFloat("_Metallic",1);break;
                 case WallyCatalog.RoseId:gloss=.99f;m.SetFloat("_Metallic",1);m.SetFloat("_Pearl",.35f);break;
                 case WallyCatalog.DiamondId:gloss=.97f;m.SetFloat("_Diamond",1);m.SetFloat("_Crystal",1);m.SetFloat("_Iridescence",.18f);break;
-                case WallyCatalog.SpecialId:gloss=.82f;m.SetFloat("_Metallic",.35f);m.SetFloat("_Molten",1);m.SetFloat("_RarePulse",1);break;
+                case WallyCatalog.SpecialId:gloss=.24f;m.SetFloat("_Metallic",.05f);m.SetFloat("_Molten",1);m.SetFloat("_RarePulse",1);break;
             }
             m.SetFloat("_Gloss",gloss);m.SetFloat("_Opacity",opacity);
             m.SetFloat("_TintStrength",toy.FinishId=="gloss-vinyl"?0:1);

@@ -218,18 +218,35 @@ Shader "Pockle/Wally Finish"
         }
         if(_Diamond>.001)
         {
-            float2 facetUV=i.face.xy*14+i.face.z*float2(2.3,1.7);
-            float3 tile=float3(floor(facetUV),step(1,frac(facetUV.x)+frac(facetUV.y)));
-            half3 facetNormal=normalize(n+half3(hash(tile)-.5,hash(tile+7)-.5,hash(tile+13)-.5)*.65);
-            half glint=pow(saturate(dot(reflect(-view,facetNormal),key)),48);
+            // Broad triangular cuts with independent normals: reflections jump at facet boundaries.
+            float2 facetUV=i.face.xy*4.6+i.face.z*float2(1.3,.9);
+            facetUV.x+=floor(facetUV.y)*.35;
+            float2 facetCell=floor(facetUV),localFacet=frac(facetUV);
+            float diagonal=hash(float3(facetCell,8));
+            float facetHalf=diagonal>.5?step(localFacet.x,localFacet.y):step(1,localFacet.x+localFacet.y);
+            float3 tile=float3(facetCell,facetHalf);
+            half3 cut=half3(hash(tile)-.5,hash(tile+7)-.5,hash(tile+13)-.5);
+            half3 facetNormal=normalize(n+UnityObjectToWorldNormal(cut)*1.7);
+            half3 ray=reflect(-view,facetNormal);
+            half3 env=lerp(texCUBE(_StudioCube,ray).rgb,texCUBE(_StageEnvironment,ray).rgb,_StageEnvironmentStrength);
+            half glint=pow(saturate(dot(ray,key)),70);
+            half cutLight=saturate(dot(facetNormal,key));
             half facetTint=hash(tile+31);
-            half3 prism=.65+.35*cos(half3(0,2.1,4.2)+facetTint*6.28+facing*4);
-            base=lerp(base,base*(.92+.08*facetTint)+prism*(glint*.7+pow(rim,3)*.08),rareMask);
+            half3 prism=.5+.5*cos(half3(0,2.1,4.2)+facetTint*6.28+dot(ray,half3(1,2,3))*3);
+            half fresnel=pow(1-saturate(dot(facetNormal,view)),3);
+            half3 crystal=lerp(half3(.045,.16,.34),half3(.73,.89,1),cutLight*.65+facetTint*.35);
+            half broadGlint=pow(saturate(dot(ray,key)),12);
+            half3 transmitted=refract(-view,facetNormal,.65);
+            half3 inner=lerp(texCUBE(_StudioCube,transmitted).rgb,texCUBE(_StageEnvironment,transmitted).rgb,_StageEnvironmentStrength);
+            crystal+=env*.55+inner*.25+half3(.9,.97,1)*(glint*1.3+broadGlint*.35)+prism*fresnel*.30;
+            // Sharp secondary cuts resemble internal reflective planes, without changing the source mesh.
+            half internalCut=pow(saturate(1-abs(localFacet.x+localFacet.y-1)*3),18);
+            crystal+=internalCut*(.07+.24*glint)*half3(.7,.92,1);
+            base=lerp(base,crystal,rareMask);
         }
         if(_Molten>.001)
         {
-            // Nine-cell Voronoi edge distance: stable local-space cracks, no animated UV crawl.
-            float2 p=i.face.xy*7+i.face.z*float2(2.3,1.7);
+            float2 p=i.face.xy*5.7+i.face.z*float2(2.3,1.7);
             float2 cell=floor(p),f=frac(p);float first=8,second=8;
             [unroll] for(int y=-1;y<=1;y++) [unroll] for(int x=-1;x<=1;x++)
             {
@@ -238,10 +255,29 @@ Shader "Pockle/Wally Finish"
                 float2 v=neighbour+seed-f;float d=dot(v,v);
                 if(d<first){second=first;first=d;}else second=min(second,d);
             }
-            half crack=1-smoothstep(.018,.085,second-first);
-            half3 neon=lerp(half3(.08,.93,1),half3(1,.12,.58),smoothstep(-.5,.8,i.face.x+i.face.z*.5));
-            half3 obsidian=half3(.075,.09,.14)*(.7+.3*wrapped)+studio*.14+softbox*.26;
-            base=lerp(base,obsidian+neon*crack*_RarePulse*(.85+_StageEmission),rareMask);
+            float edge=second-first;
+            float4 rock=foamNoise(i.face*58);
+            float fineRock=hash(floor(i.face*240));
+            float width=.075+rock.x*.07;
+            half valley=1-smoothstep(width*.35,width*2.4,edge);
+            half core=1-smoothstep(width*.20,width*1.3,edge);
+            // A raised plateau, bevelled lip and coarse grain all perturb the actual lighting normal.
+            float height=smoothstep(width*.8,width*3.8,edge)*.038+rock.x*.009+fineRock*.0015;
+            float3 px=ddx(i.world),py=ddy(i.world);
+            float3 r1=cross(py,n),r2=cross(n,px);float determinant=dot(px,r1);
+            float3 gradient=sign(determinant)*(ddx(height)*r1+ddy(height)*r2)/max(abs(determinant),.00001);
+            half3 stoneNormal=normalize(n-clamp(gradient,-2,2));
+            half stoneLight=saturate((dot(stoneNormal,key)+.25)/1.25);
+            half3 stoneRay=reflect(-view,stoneNormal);
+            half roughSpec=pow(saturate(dot(stoneRay,key)),18)*.12;
+            half lip=smoothstep(width,width*2,edge)*(1-smoothstep(width*2,width*4,edge));
+            half3 stone=half3(.055,.065,.078)*(.42+stoneLight*1.1)*(0.65+rock.x*.65);
+            stone+=roughSpec*half3(.55,.64,.75)+fineRock*.012;
+            stone*=1-valley*.80; // Recessed walls stay dark around the cyan core.
+            stone+=half3(.02,.40,.55)*lip*.13;
+            half sparkle=smoothstep(.91,.99,fineRock)*valley;
+            half3 fissure=half3(.015,.75,1)*(core*.95+valley*.13+sparkle*.25)*_RarePulse;
+            base=lerp(base,stone+fissure*(1+_StageEmission),rareMask);
         }
         half alpha=lerp(1,fusionSurface.w+(1-fusionSurface.w)*rim*.42,body);
         base=BrushNap(i.face,base,smoothstep(.05,.20,max(paint.r,max(paint.g,paint.b)))*(1-TemperFeatures(i.face).a));base+=ContentsLight(i.face,view)*body;
