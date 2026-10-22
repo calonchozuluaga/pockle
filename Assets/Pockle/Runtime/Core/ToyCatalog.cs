@@ -48,6 +48,7 @@ namespace Pockle.Core
         public string CollectionId { get; }
         public CatalogColor SwatchColor => FusionCatalog.TryGet(Id, out var fused) ? FusionCatalog.Swatch(fused) : ToyCatalog.FinishSwatch(Id, FinishId);
         /// <summary>Derived from the character collection's explicit secret identity.</summary>
+        public ToyTier Tier => CharacterId == "wally" ? WallyCatalog.Tier(Id) : IsSecret ? ToyTier.Secret : ToyTier.Common;
         public bool IsSecret => ToyCatalog.TryGetCollection(CollectionId, out var collection) && collection.SecretId == Id;
         internal CollectibleDefinition(string id, CharacterDefinition character, FinishDefinition finish,
             string label, bool available, string collection)
@@ -177,6 +178,14 @@ namespace Pockle.Core
                     collectibles.Add(collectible); collectiblesById.Add(id, collectible);
                 }
             }
+            // Additive pilot IDs share proven handling profiles; no global finish expansion or old ID replacement.
+            foreach(var extra in new[] {
+                new CollectibleDefinition(WallyCatalog.KelpId,charactersById["wally"],finishesById["matte-vinyl"],"Kelp Mint",true,"wally"),
+                new CollectibleDefinition(WallyCatalog.LeafId,charactersById["wally"],finishesById["coated-metallic"],"Treasure Leaf",true,"wally"),
+                new CollectibleDefinition(WallyCatalog.RoseId,charactersById["wally"],finishesById["coated-metallic"],"Rose Gold Shell",true,"wally"),
+                new CollectibleDefinition(WallyCatalog.DiamondId,charactersById["wally"],finishesById["gloss-vinyl"],"Diamond Frost",true,"wally"),
+                new CollectibleDefinition(WallyCatalog.SpecialId,charactersById["wally"],finishesById["coated-metallic"],"Molten Abyss",true,"wally") })
+            {collectibles.Add(extra);collectiblesById.Add(extra.Id,extra);}
             foreach(var study in new[] {
                 new CollectibleDefinition(PipFusionStudies.DuskId,charactersById["pip"],finishesById["pearl-jelly"],"Dusk · fusion study",true,PipFusionStudies.CollectionId),
                 new CollectibleDefinition(PipFusionStudies.SorbetId,charactersById["pip"],finishesById["mochi-foam"],"Sorbet · fusion study",true,PipFusionStudies.CollectionId),
@@ -198,6 +207,12 @@ namespace Pockle.Core
             {
                 var members = new List<string>(finishes.Length);
                 foreach (var item in collectibles) if (item.CollectionId == character.Id) members.Add(item.Id);
+                if(character.Id=="wally")
+                {
+                    members.Clear();
+                    for(int tier=0;tier<4;tier++)foreach(var item in collectibles)
+                        if(item.CollectionId=="wally"&&(int)WallyCatalog.Tier(item.Id)==tier)members.Add(item.Id);
+                }
                 uint field = character.Id == "wally" ? 0xdff2f8u : character.Id == "pip" ? 0xf8d9c6u : character.Id == "fox" ? 0xffe0cbu : 0xfaf5eeu;
                 collections.Add(new CollectionDefinition(character.Id, character.DisplayName, character.Id, members,
                     seriesNumber: character.Id == "pip" ? 1 : 0, secretId: character.Id == "wally" ? WallyCatalog.SpecialId : character.Id == "fox" ? FoxAuroraId : character.Id == "pip" ? PipSpecialId : character.Id == "axolotl" ? AxolotlSpecialId : HolidayCatalog.IsCharacter(character.Id) ? character.Id + ".glow-jelly" : "", fieldColor: field, inkColor: character.Id == "fox" ? 0x7a3210u : character.Id == "pip" ? 0x7a2a4eu : character.Id == "axolotl" ? 0x2a2a5au : 0x49344cu));
@@ -214,7 +229,7 @@ namespace Pockle.Core
             if (id == PipFusionStudies.EclipseId) return new CatalogColor(0x444185);
             if (id == PipFusionStudies.DuskId) return new CatalogColor(0xb99cde);
             if (id == PipFusionStudies.SorbetId) return new CatalogColor(0xb3dac1);
-            if (id.StartsWith("wally.", StringComparison.Ordinal)) return WallyCatalog.Swatch(finish);
+            if (id.StartsWith("wally.", StringComparison.Ordinal)) return WallyCatalog.SwatchFor(id,finish);
             if (id == PeachId) return new CatalogColor(0xf5b89c);
             if (id == MoonId) return new CatalogColor(0x73b8f5);
             if (id == GoldId) return new CatalogColor(0xffb02e);

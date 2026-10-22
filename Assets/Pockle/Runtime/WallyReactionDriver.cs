@@ -48,6 +48,8 @@ namespace Pockle.Runtime
             bool calm=PlayerPrefs.GetInt("pockle.prototype.reducedMotion",0)==1;
             idle+=Mathf.Max(0,Time.unscaledDeltaTime);
             toy.BodyRenderer.sharedMaterial.SetFloat("_WallyIdle",calm?0:Mathf.Sin(idle*1.3f));
+            var material=toy.BodyRenderer.sharedMaterial;
+            if(material.HasProperty("_RarePulse"))material.SetFloat("_RarePulse",calm?1:1+Mathf.Sin(idle*1.2f)*.14f);
             if(!IsPlaying)return;
             if(toy.CollectibleId!=playingId){Cancel();return;}
             elapsed+=Mathf.Max(0,Time.unscaledDeltaTime);

@@ -23,3 +23,6 @@ Owner's packaging reference is docs/packaging/pockle-folded-box-concepts-02.png.
 
 
 October19 Wally art set follows this standard: original text-free2160×720 cover, five toy-free ocean paintings with baked128px reflections (including Midnight Trench), and a real printed carton with branded lid/front, mystery whale silhouettes, three hinges and transparent1024px closed/open renders. Sources and exact built-in image_gen prompts are retained in ArtSource/WallyArt and ArtSource/WallyBox. Review: docs/wally-art-review/index.html. Availability does not approve reward odds or grant ownership.
+
+
+October21 owner-approved exception: Wally pilots15members(9Common/3Rare/2Epic/1Secret). This supersedes the ten-member art count only for Wally; the existing five worlds, cover and box are retained. Other collections wait for owner phone acceptance. Tiers do not approve draw odds.

@@ -116,3 +116,7 @@ Current catalog: **12 characters including planned Tula, 11 playable characters,
 
 
 October19 Wally art completion supersedes its art-pending note above: five unique ocean paintings (Coral Cove, Pearl Grotto, Kelp Garden, Sunset Shallows, Midnight Trench) and baked reflections, separate text-free3:1 cover, branded printed surprise carton with real lid/flap opening, transparent closed/open PNGs and native Unity previews. Source paintings/prompts, Blender and GLB retained. Review: [Wally art set](wally-art-review/index.html). Authored personality presentation remains Claude's follow-up; no award or release odds are introduced.
+
+
+## October21 — Wally rarity pilot supersedes ten-member Wally plan
+Wally now has15 available members:9Common,3Rare(gold),2Epic and1Secret(molten). New review names: Kelp Mint, Treasure Leaf, Rose Gold Shell, Diamond Frost, Molten Abyss. Deep Sea Glow keeps wally.glow-jelly and owned quantities but moves to Epic; Sunken Gold keeps wally.coated-metallic and moves to Rare. Molten Abyss is the sole new secret. All other active collections remain ten members. Current static catalog119 entries includes110 original playable varieties, five Wally additions and four Pip studies;11 characters/12 catalog collections, Fusion Lab hidden from browsable collections. No awards or approved draw odds are introduced. Native review: [Wally15](wally-pilot-review/index.html).

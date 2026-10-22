@@ -12,7 +12,7 @@ namespace Pockle.Runtime
             if(shader==null || !shader.isSupported) throw new System.InvalidOperationException("Wally finish shader unavailable.");
             var m=new Material(shader){name=toy.DisplayName,mainTexture=paint};
             m.SetTexture("_StudioCube",studio);
-            var swatch=WallyCatalog.Swatch(toy.FinishId);
+            var swatch=WallyCatalog.SwatchFor(id,toy.FinishId);
             m.SetColor("_BodyColor",new Color(swatch.Red,swatch.Green,swatch.Blue));
             float gloss=.12f,opacity=1;
             switch(toy.FinishId)
@@ -26,6 +26,14 @@ namespace Pockle.Runtime
                 case "gloss-vinyl":gloss=.94f;break;
                 case "coated-metallic":gloss=.97f;m.SetFloat("_Metallic",1);break;
                 case "glow-jelly":gloss=.88f;opacity=.76f;m.SetFloat("_Iridescence",.7f);m.SetFloat("_Glitter",1);break;
+            }
+            switch(id)
+            {
+                case WallyCatalog.KelpId:gloss=.045f;m.SetFloat("_Grain",.25f);break;
+                case WallyCatalog.LeafId:gloss=.90f;m.SetFloat("_GoldLeaf",1);m.SetFloat("_Metallic",1);break;
+                case WallyCatalog.RoseId:gloss=.99f;m.SetFloat("_Metallic",1);m.SetFloat("_Pearl",.35f);break;
+                case WallyCatalog.DiamondId:gloss=.97f;m.SetFloat("_Diamond",1);m.SetFloat("_Crystal",1);m.SetFloat("_Iridescence",.18f);break;
+                case WallyCatalog.SpecialId:gloss=.82f;m.SetFloat("_Metallic",.35f);m.SetFloat("_Molten",1);m.SetFloat("_RarePulse",1);break;
             }
             m.SetFloat("_Gloss",gloss);m.SetFloat("_Opacity",opacity);
             m.SetFloat("_TintStrength",toy.FinishId=="gloss-vinyl"?0:1);

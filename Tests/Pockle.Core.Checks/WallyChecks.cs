@@ -6,11 +6,20 @@ internal static class WallyChecks
     private static void Check(bool value,string message){if(!value)throw new Exception(message);}
     public static void Run()
     {
-        Check(ToyCatalog.TryGetCollection("wally",out var c)&&c.DisplayName=="Wally"&&c.Members.Count==10&&c.SecretId==WallyCatalog.SpecialId,"Wally needs ten own finishes and one secret.");
+        Check(ToyCatalog.TryGetCollection("wally",out var c)&&c.DisplayName=="Wally"&&c.Members.Count==15&&c.SecretId==WallyCatalog.SpecialId,"Wally needs fifteen own finishes and one molten secret.");
         Check(c.Members.All(id=>ToyCatalog.TryGetCollectible(id,out var t)&&t.Available&&t.CharacterId=="wally"&&!ToyCatalog.IsDailyEligible(id)),"Wally art cannot change rewards.");
         Check(ToyCatalog.TryGetCharacter("wally",out var ch)&&ch.LeadFinishId=="gloss-vinyl","Wally should lead with the approved blue whale.");
         Check(c.Worlds.Count==5 && c.HomeWorld=="wally-coral-cove" && c.Worlds[4].Id=="wally-midnight-trench","Wally needs five own worlds including a dark one.");
         Check(c.CoverArt=="Collections/Wally/Cover" && c.BoxArt=="UI/Boxes/Collection-wally" && c.BoxModel=="Boxes/WallyCollectionBox","Wally needs its own cover and real carton resource bindings.");
+        Check(c.Members.Count(id=>ToyCatalog.TryGetCollectible(id,out var t)&&t.Tier==ToyTier.Common)==9,"Nine commons.");
+        Check(c.Members.Count(id=>ToyCatalog.TryGetCollectible(id,out var t)&&t.Tier==ToyTier.Rare)==3,"Three gold rares.");
+        Check(c.Members.Count(id=>ToyCatalog.TryGetCollectible(id,out var t)&&t.Tier==ToyTier.Epic)==2,"Two epics.");
+        Check(c.Members.Count(id=>ToyCatalog.TryGetCollectible(id,out var t)&&t.Tier==ToyTier.Secret)==1,"One molten secret.");
+        Check(ToyCatalog.TryGetCollectible(WallyCatalog.GlowId,out var glow)&&glow.Tier==ToyTier.Epic&&!glow.IsSecret,"Owned glow ID becomes Epic.");
+        Check(c.Members.Take(9).All(id=>WallyCatalog.Tier(id)==ToyTier.Common)&&c.Members[14]==WallyCatalog.SpecialId,"Lineup groups tiers with molten last.");
+        Check(!c.HasApprovedOdds,"Pilot art does not approve draw odds.");
+        var legacy=new CollectionProgress(new CollectionSave{Version=4,Day=42,Inventory=new System.Collections.Generic.List<OwnedCollectible>{new OwnedCollectible(WallyCatalog.GlowId,7),new OwnedCollectible("wally.coated-metallic",5)}},42);
+        Check(legacy.GetOwnedCount(WallyCatalog.GlowId)==7&&legacy.GetOwnedCount("wally.coated-metallic")==5&&legacy.Save.Version==4,"Tier changes preserve legacy ownership without a save migration.");
         Check(CharacterMotion.TryGetProfile("wally",out _),"Wally needs its own shelf idle.");
         foreach(WallyAction action in Enum.GetValues(typeof(WallyAction)))
         {
@@ -44,6 +53,6 @@ internal static class WallyChecks
         Check(!progress.Save.BadgeState!.EarnedCopies.Any(x=>x.Id.StartsWith("wally.")),"Owner test gifts are not earned rewards.");
         progress.Save.Inventory!.Single(x=>x.Id==WallyCatalog.ClassicId).Count=7;
         var restarted=new CollectionProgress(progress.Save,42);Check(!restarted.EnsureWallyTestCopies()&&restarted.GetOwnedCount(WallyCatalog.ClassicId)==7,"Larger existing stacks are preserved across restart.");
-        Console.WriteLine("PASS: Wally collection, ten finishes, five local whale reactions, Calm and no-repeat random choice.");
+        Console.WriteLine("PASS: Wally collection, fifteen finishes, five local whale reactions, Calm and no-repeat random choice.");
     }
 }

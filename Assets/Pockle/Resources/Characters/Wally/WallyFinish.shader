@@ -62,6 +62,10 @@ Shader "Pockle/Wally Finish"
         _WallyTail ("Tail splash", Float) = 0
         _WallyFlipper ("Flipper wave", Float) = 0
         _WallyIdle ("Gentle swimming", Float) = 0
+        _GoldLeaf ("Broken gold leaf", Range(0,1)) = 0
+        _Diamond ("Prismatic ice facets", Range(0,1)) = 0
+        _Molten ("Obsidian neon veins", Range(0,1)) = 0
+        _RarePulse ("Calm-aware vein luminance", Float) = 1
         _Gloss ("Glaze", Range(0,1)) = .3
         _Opacity ("Body opacity", Range(0,1)) = 1
         _WinterPalette ("Winter finish pigment mask", Float) = 0
@@ -83,6 +87,7 @@ Shader "Pockle/Wally Finish"
     half4 _StageTint; half _StageEmission; samplerCUBE _StageEnvironment; half _StageEnvironmentStrength;
     sampler2D _MainTex; samplerCUBE _StudioCube;
     half4 _BodyColor; half _TintStrength;
+    half _GoldLeaf, _Diamond, _Molten, _RarePulse;
     half _WallyTail, _WallyFlipper, _WallyIdle;
     half _WinterPalette, _SurfaceRelief, _LoopPile;
     half _Gloss, _Opacity, _Fuzz, _Grain, _Metallic, _Pearl, _Crystal, _Iridescence, _Glitter;
@@ -203,10 +208,51 @@ Shader "Pockle/Wally Finish"
         half fleck=smoothstep(.996,.999,hash(floor(ContentsCoordinate(i.local)*480)));
         base+=body*fusionDetail.w*fleck*half3(.8,.55,.16);
         base+=body*texCUBE(_StageEnvironment,refract(-view,n,.74)).rgb*_StageEnvironmentStrength*(1-fusionSurface.w)*.24;
+        half rareMask=body*(1-TemperFeatures(i.face).a);
+        if(_GoldLeaf>.001)
+        {
+            float leaf=foamNoise(i.face*25).x;
+            half patch=smoothstep(.40,.53,leaf);
+            base=lerp(base,half3(.70,.40,.08)*(.8+.2*wrapped),rareMask*(1-patch)*.50);
+            base+=rareMask*patch*(studio*.22+softbox*.25)*half3(1,.78,.28);
+        }
+        if(_Diamond>.001)
+        {
+            float2 facetUV=i.face.xy*14+i.face.z*float2(2.3,1.7);
+            float3 tile=float3(floor(facetUV),step(1,frac(facetUV.x)+frac(facetUV.y)));
+            half3 facetNormal=normalize(n+half3(hash(tile)-.5,hash(tile+7)-.5,hash(tile+13)-.5)*.65);
+            half glint=pow(saturate(dot(reflect(-view,facetNormal),key)),48);
+            half facetTint=hash(tile+31);
+            half3 prism=.65+.35*cos(half3(0,2.1,4.2)+facetTint*6.28+facing*4);
+            base=lerp(base,base*(.92+.08*facetTint)+prism*(glint*.7+pow(rim,3)*.08),rareMask);
+        }
+        if(_Molten>.001)
+        {
+            // Nine-cell Voronoi edge distance: stable local-space cracks, no animated UV crawl.
+            float2 p=i.face.xy*7+i.face.z*float2(2.3,1.7);
+            float2 cell=floor(p),f=frac(p);float first=8,second=8;
+            [unroll] for(int y=-1;y<=1;y++) [unroll] for(int x=-1;x<=1;x++)
+            {
+                float2 neighbour=float2(x,y);
+                float2 seed=float2(hash(float3(cell+neighbour,1)),hash(float3(cell+neighbour,17)));
+                float2 v=neighbour+seed-f;float d=dot(v,v);
+                if(d<first){second=first;first=d;}else second=min(second,d);
+            }
+            half crack=1-smoothstep(.018,.085,second-first);
+            half3 neon=lerp(half3(.08,.93,1),half3(1,.12,.58),smoothstep(-.5,.8,i.face.x+i.face.z*.5));
+            half3 obsidian=half3(.075,.09,.14)*(.7+.3*wrapped)+studio*.14+softbox*.26;
+            base=lerp(base,obsidian+neon*crack*_RarePulse*(.85+_StageEmission),rareMask);
+        }
         half alpha=lerp(1,fusionSurface.w+(1-fusionSurface.w)*rim*.42,body);
         base=BrushNap(i.face,base,smoothstep(.05,.20,max(paint.r,max(paint.g,paint.b)))*(1-TemperFeatures(i.face).a));base+=ContentsLight(i.face,view)*body;
         if(back) alpha*=.32;
-        else { base=TemperFinish(i.face,base);alpha=max(alpha,TemperFeatures(i.face).a); }
+        else {
+            base=TemperFinish(i.face,base);half4 faceInk=TemperFeatures(i.face);alpha=max(alpha,faceInk.a);
+            // Pale mouth ink keeps the existing animated smile/frown readable on obsidian.
+            float2 mouthDistance=(i.face.xy-_TemperMouth.xy)/max(_TemperMouth.zw*float2(2.1,2.5),.001);
+            half mouthRegion=1-smoothstep(.7,1,dot(mouthDistance,mouthDistance));
+            base=lerp(base,half3(.60,.94,1),faceInk.a*mouthRegion*_Molten);
+        }
         return fixed4(saturate(base * _StageTint.rgb + PockleStageGlow(fusionPigment, _StageEmission, body * (1-TemperFeatures(i.face).a), facing)),alpha);
     }
     fixed4 fragBack(v2f i):SV_Target { return finish(i,true); }

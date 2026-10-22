@@ -112,9 +112,9 @@ internal static class CatalogChecks
     }
     private static void Definitions()
     {
-        Assert(ToyCatalog.Characters.Count == 11 && ToyCatalog.Finishes.Count == 10 && ToyCatalog.Collectibles.Count == 114, "Roster is not eleven active characters with ten finishes.");
-        Assert(ToyCatalog.Collectibles.Select(c => c.Id).Distinct(StringComparer.Ordinal).Count() == 114, "Collectible IDs collide.");
-        Assert(ToyCatalog.Collectibles.Count(c => c.Available) == 114, "Planned art was marked playable.");
+        Assert(ToyCatalog.Characters.Count == 11 && ToyCatalog.Finishes.Count == 10 && ToyCatalog.Collectibles.Count == 119, "Roster must keep eleven characters, ten shared finishes and five Wally pilot additions.");
+        Assert(ToyCatalog.Collectibles.Select(c => c.Id).Distinct(StringComparer.Ordinal).Count() == 119, "Collectible IDs collide.");
+        Assert(ToyCatalog.Collectibles.Count(c => c.Available) == 119, "Planned art was marked playable.");
         foreach (var definition in ToyCatalog.Collectibles)
         {
             Assert(ToyCatalog.IsValidId(definition.Id), "Catalog has an invalid persistence ID.");
@@ -125,7 +125,7 @@ internal static class CatalogChecks
             Assert(ToyCatalog.TryGetCollection(definition.CollectionId, out var collection) && collection.CharacterId == definition.CharacterId, "Variety was placed outside its character collection.");
         }
         foreach (var character in ToyCatalog.Characters)
-            Assert(ToyCatalog.Collectibles.Count(c => c.CollectionId == character.Id) == 10, "A character is merely a finish entry rather than its own silhouette.");
+            Assert(ToyCatalog.Collectibles.Count(c => c.CollectionId == character.Id) == (character.Id == "wally" ? 15 : 10), "A character is merely a finish entry rather than its own silhouette.");
         Assert(ToyCatalog.TryGetCollection("fox", out var fox) && fox.CharacterId == "fox" && fox.Members.Count == 10, "Fox has no independent ten-slot collection.");
         Assert(ToyCatalog.TryGetCollectible(ToyCatalog.FoxId, out var foxToy) && foxToy.Available && foxToy.CollectionId == "fox" && foxToy.FinishId == "gloss-vinyl", "Uploaded fox is not the available vinyl variety.");
         Assert(ToyCatalog.Collectibles.Count(c => c.CharacterId == "fox" && c.Available) == 10, "Planned fox finishes became available.");
@@ -159,7 +159,7 @@ internal static class CatalogChecks
             Assert(ToyCatalog.TryGetCollectionForPool(box.Id, out var collection) && collection.Id == "pip" && box.Entries.All(e => ToyCatalog.TryGetCollectible(e.CollectibleId, out var item) && item.Available && item.CollectionId == collection.Id), "Legacy Pip sub-pool includes an unapproved/mismatched concept.");
         bool immutable = false;
         try { ((IList<CollectibleDefinition>)ToyCatalog.Collectibles).Clear(); } catch (NotSupportedException) { immutable = true; }
-        Assert(immutable && ToyCatalog.Collectibles.Count == 114, "A HUD consumer mutated the shared catalog.");
+        Assert(immutable && ToyCatalog.Collectibles.Count == 119, "A HUD consumer mutated the shared catalog.");
     }
     private static void Migration()
     {

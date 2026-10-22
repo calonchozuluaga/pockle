@@ -34,7 +34,7 @@ namespace Pockle.Runtime
         }
         public void Configure(string id,StageLight light)
         {
-            bool glow=ToyCatalog.TryGetCollectible(id,out var toy)&&toy.FinishId=="glow-jelly";
+            bool glow=ToyCatalog.TryGetCollectible(id,out var toy)&&(toy.FinishId=="glow-jelly"||WallyCatalog.EmitsLight(id));
             bool glitter=toy!=null&&(toy.FinishId=="confetti-gel"||id=="fox.clear-jelly");
             string appearance = FusionMaterial.AppearanceId(id);
             if (FusionCatalog.TryGet(id, out var fused))

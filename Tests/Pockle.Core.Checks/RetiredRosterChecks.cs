@@ -8,7 +8,7 @@ internal static class RetiredRosterChecks
     public static void Run()
     {
         string[] retired={"loop","mallow","moss","nook","ripple","rolo","sprig","wisp","bop","dew","tula"};
-        Check(ToyCatalog.Characters.Count==11&&ToyCatalog.Collections.Count==12&&ToyCatalog.Collectibles.Count==114,"Eleven regular collections plus four owner fusion studies.");
+        Check(ToyCatalog.Characters.Count==11&&ToyCatalog.Collections.Count==12&&ToyCatalog.Collectibles.Count==119,"Eleven regular collections plus four owner fusion studies.");
         foreach(string id in retired)
         {
             Check(!ToyCatalog.TryGetCharacter(id,out _)&&!ToyCatalog.TryGetCollection(id,out _)&&!CharacterMotion.TryGetProfile(id,out _),"Retired character still active.");

@@ -8,7 +8,7 @@ namespace Pockle.Core
             bool changed=false;
             foreach(var toy in ToyCatalog.Collectibles)
             {
-                if(toy.CharacterId!="wally"||!toy.Available)continue;
+                if(toy.CharacterId!="wally"||!toy.Available||toy.Id==WallyCatalog.KelpId||toy.Id==WallyCatalog.LeafId||toy.Id==WallyCatalog.RoseId||toy.Id==WallyCatalog.DiamondId||toy.Id==WallyCatalog.SpecialId)continue;
                 bool spares=toy.FinishId=="clear-jelly"||toy.FinishId=="confetti-gel"||toy.FinishId=="boucle-plush"
                     ||toy.FinishId=="gloss-vinyl"||toy.FinishId=="coated-metallic"||toy.FinishId=="glow-jelly";
                 int minimum=spares?3:1;

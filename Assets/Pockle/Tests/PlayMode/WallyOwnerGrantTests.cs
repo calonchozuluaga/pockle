@@ -37,7 +37,7 @@ namespace Pockle.Tests
             var session=Start();bool refreshed=false;
             session.Changed+=()=>{
                 var stored=new CollectionProgress(JsonUtility.FromJson<CollectionSave>(PlayerPrefs.GetString(SaveKey)),CollectionSession.Today);
-                Assert.That(stored.GetOwnedCount(WallyCatalog.SpecialId),Is.EqualTo(3));Assert.That(PlayerPrefs.GetInt(CollectionSession.WallyTestGrantKey),Is.EqualTo(1));refreshed=true;
+                Assert.That(stored.GetOwnedCount(WallyCatalog.GlowId),Is.EqualTo(3));Assert.That(PlayerPrefs.GetInt(CollectionSession.WallyTestGrantKey),Is.EqualTo(1));refreshed=true;
             };
             Assert.That(session.TryApplyOwnerWallyTestGrant(),Is.True);Assert.That(refreshed,Is.True);Assert.That(session.TryApplyOwnerWallyTestGrant(),Is.False);
             Assert.That(session.Progress.GetOwnedCount(ToyCatalog.PeachId),Is.EqualTo(5));Assert.That(session.Progress.GetOwnedCount(WallyCatalog.ClassicId),Is.EqualTo(7));
@@ -54,8 +54,8 @@ namespace Pockle.Tests
             var session=Start();int changed=0;session.Changed+=()=>changed++;
             Assert.That(session.TryApplyOwnerWallyTestGrant(_=>throw new System.IO.IOException("injected test write failure")),Is.False);
             Assert.That(changed,Is.Zero);Assert.That(PlayerPrefs.GetInt(CollectionSession.WallyTestGrantKey),Is.Zero);
-            Assert.That(session.Progress.GetOwnedCount(WallyCatalog.SpecialId),Is.Zero);Assert.That(session.Progress.GetOwnedCount(WallyCatalog.ClassicId),Is.EqualTo(7));
-            Assert.That(session.TryApplyOwnerWallyTestGrant(),Is.True);Assert.That(changed,Is.EqualTo(1));Assert.That(session.Progress.GetOwnedCount(WallyCatalog.SpecialId),Is.EqualTo(3));
+            Assert.That(session.Progress.GetOwnedCount(WallyCatalog.GlowId),Is.Zero);Assert.That(session.Progress.GetOwnedCount(WallyCatalog.ClassicId),Is.EqualTo(7));
+            Assert.That(session.TryApplyOwnerWallyTestGrant(),Is.True);Assert.That(changed,Is.EqualTo(1));Assert.That(session.Progress.GetOwnedCount(WallyCatalog.GlowId),Is.EqualTo(3));
             yield return null;
         }
         [UnityTest]public IEnumerator FutureReadOnlySaveCannotReceiveOrMarkTheGrant()
