@@ -1,5 +1,10 @@
 # Supabase inventory and rewards — design for review
 
+## October21 owner overrides / implementation status
+
+The anonymous/guest recommendation below is superseded: **Apple or Google only**. Today's cadence is **six-hour server slots,1000steps per box, max4/day, bank2**, with a saved per-box rotation. Existing local inventory/fusions are preserved as tagged unverified legacy snapshots, not production serials. The first executable foundation is documented in [backend/FOUNDATION.md](backend/FOUNDATION.md); [provider setup](backend/PROVIDER_SETUP.md) lists owner credentials. Accounts/cloud backup are not yet verified end-to-end. The older paid/trade/edition proposals below remain future design, not deployed behavior.
+
+
 Prepared October 10, 2026 on `codex/collection-backend-contracts`. This is a schema and server-function proposal, not a deployed backend or an executable migration. It responds to Claude's October 9 `collections-design` and `ui-v2` handoffs. Source rules: [COLLECTIONS.md on Claude's branch](https://github.com/calonchozuluaga/pockle/blob/claude/collections-design/docs/COLLECTIONS.md). Series metadata and lineup motion already exist on `codex/series-metadata-idles` and are included in PR #7; reuse them rather than recreate them.
 
 ## Product boundary

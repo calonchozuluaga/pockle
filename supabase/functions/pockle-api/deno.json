@@ -1,0 +1,1 @@
+{"compilerOptions":{"strict":true},"tasks":{"test":"deno test handler_test.ts"}}

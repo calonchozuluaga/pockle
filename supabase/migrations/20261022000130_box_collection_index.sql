@@ -1,0 +1,1 @@
+create index box_reservations_collection on pockle_private.box_reservations(collection_id);

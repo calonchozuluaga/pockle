@@ -9,6 +9,12 @@ namespace Pockle.Runtime
     public sealed class CollectionSession : MonoBehaviour
     {
         private const string SaveKey = "pockle.collection.v1";
+        /// <summary>Exact persisted beta JSON for a tagged backup. Never strip unknown IDs or reserialize a loaded future save.</summary>
+        public string ExportLegacySnapshot()
+        {
+            if (!PlayerPrefs.HasKey(SaveKey) && Progress != null && !readOnlySave) Persist();
+            return PlayerPrefs.GetString(SaveKey, "");
+        }
         public const string BadgePreferenceKey = "pockle.badges.earned.v1";
         public CollectionProgress Progress { get; private set; }
         public event Action Changed;

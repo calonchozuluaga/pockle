@@ -27,3 +27,13 @@
 .DS_Store
 *.blend1
 *.blend2
+
+# Local backend credentials and private phone exports
+.env
+.env.*
+!.env.example
+supabase/.temp/
+supabase/.branches/
+*.p8
+*.p12
+*.keystore

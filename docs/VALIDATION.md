@@ -579,3 +579,7 @@ Glow/onboarding Android update installed in place and launched on Pixel7Pro; all
 ## October 21 — Ui31 test follow-up
 
 With owner approval, the two stale CollectionUiTests assertions were corrected. Native CollectionUiTests **27/27 passed**; source242/789 and whitespace passed. This resolves both outstanding UI failures recorded above. Combined with the runtime fixture4/4 rerun, all five original failures have passing focused rechecks; the full135-test suite was not rerun after fixture corrections. Installed phone APK unchanged.
+
+
+## October21 — backend foundation
+Native13/13 backend/onboarding/account/notification/glow tests passed in Unity6000.6.5f1. Android build plus DEX account callback/secure-store and walking JNI checks passed; no phone install. Portable account PKCE vectors/callback boundaries and existing suites passed; source250/813 and whitespace passed. Deployed migrations and Edge function passed live rollback account/save/deletion/purchase-retention and server box clock/replay/rotation tests; Deno3/3 and deployed unauthenticated/invalid-session smoke checks passed. Advisors show informational findings only. Real provider sign-in and actual owner phone snapshot upload remain unverified; current real account/snapshot counts are zero. Full detail/limitations: [backend/FOUNDATION.md](backend/FOUNDATION.md).

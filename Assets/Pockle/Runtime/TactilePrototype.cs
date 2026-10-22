@@ -171,7 +171,9 @@ namespace Pockle.Runtime
             hud.DailyBoxRequested += OpenDailyBox;
             hud.Bind(collection);
             hud.SetFusionService(new LocalFusionService(collection));
-            hud.StartOnboardingIfNeeded(); // UX-050 (Claude): first-run sign-up and tutorial
+            var accountService=gameObject.AddComponent<SupabaseAccountService>();
+            hud.SetAccountService(accountService);
+            accountService.Initialize(collection,()=>hud.StartOnboardingIfNeeded()); // UX-050 (Claude): first-run sign-up and tutorial
             hud.ResumeSavedFusion();
             if (Application.isEditor || Debug.isDebugBuild) Debug.Log("Pockle fusion ready: persistent same-character fusion, save v" + collection.Progress.Save.Version);
 

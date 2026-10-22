@@ -260,3 +260,10 @@ October20 ART-005/UX-003/004/025: approved complete button illustrations integra
 
 
 October20 Ui29 phone delivery complete, superseding pending USB: approved complete feature artwork installed;87 inventory entries and13 fusions preserved. Owner visual test next.
+
+
+## October21 account foundation status
+
+- UX-050 — Apple/Google account runtime and tagged legacy cloud backup: **in progress**. Server schema/Edge, PKCE adapter and exact-export/receipt/native tests pass. Real provider setup, actual phone upload/download comparison and Claude's completed-onboarding/session gate remain pending. No guest/anonymous account path.
+- UX-051 — Account/settings backend: **in progress**. Username, deletion worker with purchase retention, sign-out endpoint and notification preference gate verified with fixtures/native tests. Actual owner sign-in/delete/sign-out roundtrip, local-cache deletion policy, push delivery and screen/device acceptance remain pending.
+- UX-010/011 server-clock follow-up — Six-hour/1000step/max4day/bank2 saved collection reservations verified in SQL. Production mint and local daily-reward HUD cutover remain pending; do not claim the live phone's old daily loop has switched.
