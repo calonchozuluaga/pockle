@@ -54,7 +54,7 @@ Gates 1 and 2 start first. Store setup can proceed while the inventory/delivery 
 ## Decisions to settle before publishing products
 
 - Permanent app identifiers and initial paid collections.
-- Single box: owner-approved US$0.99 baseline, with store-localized equivalents. Pack sizes/discount prices remain tentative.
+- Single box: owner-approved US$0.99 baseline, with store-localized equivalents. Owner delegated launch pack pricing: MysteryMix3 US$2.49; MysteryMix5 US$3.99. See LAUNCH_BOX_PRICING.md.
 - Paid duplicate/completion rule, and whether it differs from free walking boxes.
 - Final per-collection odds, including Wally's unapproved tier split.
 - Refund/late-delivery behavior and production/legacy inventory policy.
@@ -81,3 +81,7 @@ Inspected read-only: Play account is Personal, Biotadex is live, no Pockle listi
 ## November3 — price and pack discussion
 
 Owner approved a99-cent single-box price (US$0.99 baseline; actual localized price comes from each store). Discounted packs were suggested, with randomized contents, but no size/price or guarantee was approved. Clarify whether collection selection stays with the shopper or becomes random too. Until answered, the collection-specific consumable design above remains a recommendation, not a newly confirmed rule. Bulk quantities must receive the same durable delivery/retry protections; a pack purchase cannot reroll its draws on restart.
+
+## November3 — mix packs included and launch pricing selected
+
+Owner confirms collection-choice singles plus mixed-collection packs from day one and delegates pack sizes/prices. The launch targets are1collection box US$0.99,3MysteryMix boxes US$2.49,5MysteryMix boxes US$3.99. [Pricing matrix and delivery rules](LAUNCH_BOX_PRICING.md). This supersedes the tentative pack/collection-selection notes above. Collection-choice multipacks are not added. Mix-pack variety/repeat rules, paid duplicate/completion policy and final odds remain to settle. Store products are not yet created.
