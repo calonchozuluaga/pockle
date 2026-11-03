@@ -50,3 +50,12 @@ Official references checked October21: [Google](https://supabase.com/docs/guides
 Google Cloud project `pockle-512403` (Pockle) has Web client **Pockle Supabase Auth**, with the single callback documented above. Owner accepted Google's policy. Credentials were transferred directly into the Pockle Supabase dashboard; Google now shows **Enabled**, with nonce checks retained. Email, phone and anonymous sign-in remain disabled. Google audience is **External / Testing**, with `carlos@zulapp.com` as the sole saved test user. Support email is `support@playpockle.com`. No secrets are recorded here.
 
 Apple remains unconfigured. Real Android Google sign-in, username claim and the first tagged legacy snapshot are now verified:89 inventory rows/15 fusions, exact full-save SHA256 equals the phone acknowledgement. Cold restart restored the secure session and acknowledged a second matching backup. Cross-device restore and token-expiry refresh are still unverified. Production branding/publishing must still be completed before public release.
+
+
+## Apple configured — November 3
+
+Owner approved registration and credential connection. Primary App ID **com.playpockle.app**, Services ID **com.playpockle.app.signin**, with Sign in with Apple enabled and grouped to Pockle. The registered domain and return URL are exactly those documented above. A dedicated Pockle-only Apple login key was generated; its private `.p8` backup is outside Git under `~/.config/pockle/apple-signin/` with owner-only directory/file permissions. Do not copy it into the project.
+
+Supabase Apple provider is now **Enabled**, using the Services ID and an ES256 client-secret JWT. JWT signature verified locally; expires **May 2, 2027 at 19:41:09 UTC**. Rotate before that date; do not publish the secret or log it. Browser password-manager storage was declined. Google remains enabled; anonymous, email and phone remain disabled.
+
+Verified: saved dashboard state, public Auth settings, and fresh PKCE authorization redirect (HTTP302) to Apple with expected client ID/callback. Not verified: complete iPhone Apple consent/token exchange, account linking, Keychain persistence or cross-device restore. Owner retry requested. Existing installed diagnostic iOS bundle remains `studio.pockle.prototype`; registering the approved primary App ID does not change an already-installed app.

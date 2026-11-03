@@ -65,3 +65,6 @@ After owner accepted Xcode terms, the diagnostic nativearm64 iPhone build succee
 
 
 November 3 owner device acceptance: onboarding runs on the physical iPhone. Apple browser sign-in returns HTTP400 provider-not-enabled; public live Auth settings independently confirm Apple disabled and Google enabled. Complete separate Apple provider credentials/setup before retry. Initial reported location prompt is not yet identified; no location request found in runtime source or privacy keys in the built Info.plist.
+
+
+November 3 Apple provider setup completed: approved primary App ID com.playpockle.app, Services ID com.playpockle.app.signin, dedicated login key and Supabase OAuth secret configured. UI/public settings confirm enabled and PKCE request redirects to Apple. Full owner iPhone Apple login and Keychain restart acceptance still pending. OAuth secret expiry May 2, 2027; rotate beforehand. No app rebuild or automatic collection restore performed.
