@@ -209,6 +209,7 @@ namespace Pockle.Runtime
         {
             if (modal.gameObject.activeSelf) { CloseModal(); return true; }
             if (ConfirmVisible) { CloseConfirm(); return true; }
+            if (BoxRevealVisible) { BoxRevealBack(); return true; } // on top of everything but dialogs; Back never leaves a reveal half-seen
             if (OnboardingVisible) return OnboardingBack();
             if (FusionMomentPlaying) { moment.Skip(); return true; } // Back skips the fusion moment to the reveal
             if (page == AppPage.FusionReveal) LeaveSavedFusion();

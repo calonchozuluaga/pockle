@@ -278,3 +278,6 @@ Owner requires paid boxes in the first Google/Apple release; earlier deferred-pu
 
 ### November3 — scope update: finite series and trading required in v1
 Owner explicitly includes toy-for-toy trading in the first release and confirms series stop awarding new copies once their finite supply is found. Supersedes earlier deferred-trading launch scope. Paid duplicates remain spares for fusion/trading. Backend edition counts/reservations/atomic trades and Claude trade/sold-out screens are now submission gates; actual edition sizes remain unapproved. See PAID_BOX_LAUNCH_PATH.md. No implementation-complete claim.
+
+
+November 3 — UX-012 reveal validation: BoxRevealUiTests11/11 plus focused regression54/54 passed natively in pinned Unity6000.6.5f1 after an owner-approved single-parenthesis syntax fix. Portable core checks passed. Visual captures, phone acceptance and saved-delivery/restart runtime binding remain pending. UX-014 billing remains unfinished; these results do not establish paid delivery.
