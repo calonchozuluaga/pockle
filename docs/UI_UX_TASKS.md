@@ -270,3 +270,7 @@ October20 Ui29 phone delivery complete, superseding pending USB: approved comple
 
 
 October21 UX-029/031/033 — Wally15 rarity pilot runtime/materials implemented on codex/wally-rarity-pilot. Five additive varieties,9/3/2/1 tier metadata, preserved original IDs/savev4, actual Unity material review. Focused native8/8 and full portable checks pass. Review docs/wally-pilot-review; proposed odds are explicitly not live. Owner approved all15 materials October22. Claude rarity UI snapshot integrated; native checks52/52 after owner-authorized UX052 countdown/odds display fixes. Installed on owner Pixel7Pro October22;89 inventory rows and15 fusions preserved, owner phone review pending. Other collections unchanged.
+
+
+### November3 — first release: paid boxes are mandatory (UX-014)
+Owner requires paid boxes in the first Google/Apple release; earlier deferred-purchase scope is superseded. Trading remains deferred. Follow docs/PAID_BOX_LAUNCH_PATH.md: store identity/products, account/shared inventory, RevenueCat, idempotent paid delivery, Claude checkout states, two-device sandbox acceptance, release signing/listings. Prices/paid duplicate rules/actual pool odds still need approval. No paid functionality claimed complete.

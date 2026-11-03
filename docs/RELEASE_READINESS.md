@@ -1,6 +1,6 @@
 # First release readiness — November 3, 2026
 
-Owner-approved scope: toy play, collections, same-character fusion, Apple/Google accounts, and walking rewards on Google Play and Apple App Store. Purchases and trading are deferred. Owner subsequently raised RevenueCat setup; paid launch scope is under discussion, not silently re-enabled. Scope approval is not approval of draw odds or authorization to submit an unverified binary.
+Owner-approved scope: toy play, collections, same-character fusion, Apple/Google accounts, and walking rewards on Google Play and Apple App Store. Paid boxes are mandatory for the first release (owner confirmed November3); trading stays deferred. See [the paid-box launch path](PAID_BOX_LAUNCH_PATH.md). Scope approval is not approval of draw odds or authorization to submit an unverified binary.
 
 ## Current evidence
 
@@ -14,7 +14,8 @@ Owner-approved scope: toy play, collections, same-character fusion, Apple/Google
 | Walking boxes | Server timing/reservation foundation and HUD snapshot contract exist | Server outcome/grant receipts, retry-safe durable client, approved odds, no phone-clock minting, platform step integration |
 | Inventory/fusion | Existing local persistence/consumption/replay checks and phone preservation evidence | Define launch server/local authority and cross-device behavior; legacy save preservation is not trusted production minting |
 | Account deletion | SQL worker and fixture checks exist; UI request exists | End-to-end disposable account test and local-cache policy verified; never delete owner account to test |
-| Purchases/trading | Deferred by owner | Claude hides checkout/prices/trade navigation or clearly defers unfinished routes; no misleading listings |
+| Paid boxes | Mandatory for v1; RevenueCat account exists but Pockle setup is absent | Complete the product/server/RevenueCat/native-checkout/device acceptance path; actual prices and odds approved before live offers |
+| Trading | Deferred by owner | Claude hides unfinished trading promises; paid boxes remain in launch screens |
 | Store packaging | Prior APK is development/debug signed | Store package identifiers, signing ownership, Android AAB, iOS archive, versioning, removal of test grants/debug paths |
 | Store content/privacy | Public website/legal drafts exist | Accurate privacy/data-safety/age declarations, screenshots, app icon, review notes/access and reachable support/deletion pages |
 
@@ -28,13 +29,13 @@ Google's current documentation applies the 12 continuously opted-in testers / 14
 
 1. Codex recovers the phone-verified source, integrates unchanged finished Claude UI, runs native and portable checks, and verifies the iOS toolchain.
 2. Claude owns launch-only screen/navigation/copy changes, official-provider appearance, and store visual assets. Request is in Codex handoff; no external message sent.
-3. Codex finishes accounts/reward authority and privacy-sensitive failure paths; owner supplies provider dashboard access/signing and approves actual pool odds.
+3. Codex finishes accounts, shared inventory/rewards and paid delivery with RevenueCat; Claude implements checkout states. Owner supplies provider/store access/signing and approves actual prices, pool odds and duplicate policy.
 4. Both platforms pass fresh-install and returning-save end-to-end device acceptance. Verify process interruption, offline retry, denied motion permission, fusion consumption and retained ownership.
 5. Produce release-signed candidates and store listings, then review the exact artifacts before submission. No current release date commitment.
 
 ## Boundaries
 
-Preserve current beta saves and all full fusion/personality records. No arbitrary production imports of legacy counts. No purchases, paid draws, live trading, new scarcity promises, or invented server odds. Repository main is older than the last installed build; release branch intentionally retains the phone-tested integration dependencies, with upstream reconciliation required before merge.
+Preserve current beta saves and all full fusion/personality records. No arbitrary production imports of legacy counts. No live paid draws until the paid-box gates pass; no live trading, new scarcity promises, or invented server odds. Repository main is older than the last installed build; release branch intentionally retains the phone-tested integration dependencies, with upstream reconciliation required before merge.
 
 Working branch: codex/release-readiness, isolated /private/tmp/pockle-release-readiness-20261103, recovered from ec4e9c3. The owner's Claude checkout remains dirty and must not be reset/staged wholesale. Old temporary caches were cleaned; old log paths are historical evidence, not current reruns.
 
@@ -42,6 +43,6 @@ Working branch: codex/release-readiness, isolated /private/tmp/pockle-release-re
 
 Read-only browser inspection found an accessible RevenueCat account with only the Biotadex project in its project selector. No Pockle project or store products were created or changed. Pockle has no Google Play app listing yet. Existing Biotadex configuration must remain isolated.
 
-RevenueCat supports Unity and non-subscription purchases; repeated boxes are consumables rather than permanent entitlements. RevenueCat transaction verification is not proof that Pockle delivered a box. An authenticated server receipt/transaction ledger must atomically deliver once, handle retries and pending outcomes, and account for refunds. Existing account does not establish Pockle store credentials, products, integration, approved pricing or paid draw policy. Sandbox setup can be prepared without enabling live checkout; including purchases in the first release needs an explicit scope decision.
+RevenueCat supports Unity and non-subscription purchases; repeated boxes are consumables rather than permanent entitlements. RevenueCat transaction verification is not proof that Pockle delivered a box. An authenticated server receipt/transaction ledger must atomically deliver once, handle retries and pending outcomes, and account for refunds. Existing account does not establish Pockle store credentials, products, integration, approved pricing or paid draw policy. Sandbox setup can be prepared without enabling live checkout; owner subsequently made paid boxes mandatory for v1. [Implementation path](PAID_BOX_LAUNCH_PATH.md).
 
 Sources: [RevenueCat Unity installation](https://www.revenuecat.com/docs/getting-started/installation/unity), [RevenueCat non-subscription products](https://www.revenuecat.com/docs/platform-resources/non-subscriptions).

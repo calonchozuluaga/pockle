@@ -1,5 +1,10 @@
 # Supabase inventory and rewards — design for review
 
+## November 3 — paid boxes required for first release
+
+Owner makes paid boxes mandatory for Apple and Google launch; trading stays deferred. Follow [PAID_BOX_LAUNCH_PATH.md](PAID_BOX_LAUNCH_PATH.md). RevenueCat is the selected integration path to prepare, not an already connected Pockle service. Prices, paid duplicate/completion rules and pool percentages remain explicit approval gates; older no-duplicate/finite-edition proposals below are not silently activated. Shared server delivery and fusion ownership are prerequisites for reliable paid boxes.
+
+
 ## October21 owner overrides / implementation status
 
 The anonymous/guest recommendation below is superseded: **Apple or Google only**. Today's cadence is **six-hour server slots,1000steps per box, max4/day, bank2**, with a saved per-box rotation. Existing local inventory/fusions are preserved as tagged unverified legacy snapshots, not production serials. The first executable foundation is documented in [backend/FOUNDATION.md](backend/FOUNDATION.md); [provider setup](backend/PROVIDER_SETUP.md) lists owner credentials. Accounts/cloud backup are not yet verified end-to-end. The older paid/trade/edition proposals below remain future design, not deployed behavior.
