@@ -274,3 +274,7 @@ October21 UX-029/031/033 — Wally15 rarity pilot runtime/materials implemented 
 
 ### November3 — first release: paid boxes are mandatory (UX-014)
 Owner requires paid boxes in the first Google/Apple release; earlier deferred-purchase scope is superseded. Trading remains deferred. Follow docs/PAID_BOX_LAUNCH_PATH.md: store identity/products, account/shared inventory, RevenueCat, idempotent paid delivery, Claude checkout states, two-device sandbox acceptance, release signing/listings. Prices/paid duplicate rules/actual pool odds still need approval. No paid functionality claimed complete.
+
+
+### November3 — scope update: finite series and trading required in v1
+Owner explicitly includes toy-for-toy trading in the first release and confirms series stop awarding new copies once their finite supply is found. Supersedes earlier deferred-trading launch scope. Paid duplicates remain spares for fusion/trading. Backend edition counts/reservations/atomic trades and Claude trade/sold-out screens are now submission gates; actual edition sizes remain unapproved. See PAID_BOX_LAUNCH_PATH.md. No implementation-complete claim.

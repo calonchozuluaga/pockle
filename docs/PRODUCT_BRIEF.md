@@ -1,5 +1,10 @@
 # Pockle — App Development Brief
 
+## Owner release decisions — November 3, 2026
+
+The first Apple/Google release includes paid boxes, walking rewards, toy play, collections, same-character fusion, accounts and toy-for-toy trading. Official series have finite global supply; exhausted series stop new awards while owned toys remain usable/tradable. Duplicates stay as spares for fusion/trading. Paid offers: collection-choice single US$0.99; MysteryMix3 US$2.49; MysteryMix5 US$3.99 (localized prices from stores). Exact odds, edition quantities, completion/pack-variety rules, legacy production eligibility and fused-result trading policy remain to settle. Earlier deferred-purchases/trading scope is superseded. Implementation and acceptance path: [PAID_BOX_LAUNCH_PATH.md](PAID_BOX_LAUNCH_PATH.md).
+
+
 ## October21 collecting and identity update
 
 Owner supersedes the daily-box/guest-account proposals below: Apple or Google sign-in only behind an on-device13+ gate; preserve existing beta saves as tagged legacy cloud backups. The target free loop is a server-owned six-hour box cadence,1000steps per box, max4/day with2 banked and a saved per-box collection rotation. First backend/account implementation and verification limits are in [backend foundation](backend/FOUNDATION.md); real account/phone cutover and production rewards remain pending. The older daily beta behavior below describes the existing phone loop.

@@ -1,6 +1,6 @@
 # First release readiness — November 3, 2026
 
-Owner-approved scope: toy play, collections, same-character fusion, Apple/Google accounts, and walking rewards on Google Play and Apple App Store. Paid boxes are mandatory for the first release (owner confirmed November3); trading stays deferred. See [the paid-box launch path](PAID_BOX_LAUNCH_PATH.md). Scope approval is not approval of draw odds or authorization to submit an unverified binary.
+Owner-approved scope: toy play, collections, same-character fusion, Apple/Google accounts, and walking rewards on Google Play and Apple App Store. Paid boxes are mandatory for the first release (owner confirmed November3); trading is also mandatory (owner confirmed November3), with finite globally tracked series supply. See [the paid-box launch path](PAID_BOX_LAUNCH_PATH.md). Scope approval is not approval of draw odds or authorization to submit an unverified binary.
 
 ## Current evidence
 
@@ -15,7 +15,7 @@ Owner-approved scope: toy play, collections, same-character fusion, Apple/Google
 | Inventory/fusion | Existing local persistence/consumption/replay checks and phone preservation evidence | Define launch server/local authority and cross-device behavior; legacy save preservation is not trusted production minting |
 | Account deletion | SQL worker and fixture checks exist; UI request exists | End-to-end disposable account test and local-cache policy verified; never delete owner account to test |
 | Paid boxes | Mandatory for v1; RevenueCat account exists but Pockle setup is absent | Complete the product/server/RevenueCat/native-checkout/device acceptance path; actual prices and odds approved before live offers |
-| Trading | Deferred by owner | Claude hides unfinished trading promises; paid boxes remain in launch screens |
+| Trading and finite series | Required for v1, owner confirmed November3 | Globally capped edition inventory, exact-spare reservations, atomic two-sided trades, expiry/cancel/block/report, sold-out states and two-account concurrency tests |
 | Store packaging | Prior APK is development/debug signed | Store package identifiers, signing ownership, Android AAB, iOS archive, versioning, removal of test grants/debug paths |
 | Store content/privacy | Public website/legal drafts exist | Accurate privacy/data-safety/age declarations, screenshots, app icon, review notes/access and reachable support/deletion pages |
 
@@ -35,7 +35,7 @@ Google's current documentation applies the 12 continuously opted-in testers / 14
 
 ## Boundaries
 
-Preserve current beta saves and all full fusion/personality records. No arbitrary production imports of legacy counts. No live paid draws until the paid-box gates pass; no live trading, new scarcity promises, or invented server odds. Repository main is older than the last installed build; release branch intentionally retains the phone-tested integration dependencies, with upstream reconciliation required before merge.
+Preserve current beta saves and all full fusion/personality records. No arbitrary production imports of legacy counts. No live paid draws until the paid-box gates pass; no live trading until its acceptance gates pass, no invented edition sizes or server odds. Repository main is older than the last installed build; release branch intentionally retains the phone-tested integration dependencies, with upstream reconciliation required before merge.
 
 Working branch: codex/release-readiness, isolated /private/tmp/pockle-release-readiness-20261103, recovered from ec4e9c3. The owner's Claude checkout remains dirty and must not be reset/staged wholesale. Old temporary caches were cleaned; old log paths are historical evidence, not current reruns.
 
@@ -52,3 +52,7 @@ Price update: owner approved US$0.99 baseline per single box November3. Discount
 Launch pricing selected under owner delegation: CollectionBox1 US$0.99; MysteryMix3 US$2.49; MysteryMix5 US$3.99. Buyer picks a collection only for the single; mixed packs randomize collection and finish. See [pricing matrix](LAUNCH_BOX_PRICING.md). No store products have been published.
 
 Duplicate policy confirmed: duplicate toys remain owned spares usable for fusion and trading; trading's inclusion in the first release is awaiting clarification. No live trade implementation is claimed.
+
+## November3 — trading and finite series required for launch
+
+Owner confirms trading belongs in the first release and series become unavailable for new awards when their finite supply is exhausted. Earlier deferred-trading statements are superseded. Owned toys remain playable/tradable after sellout. The existing editions/copies/ledger/trade design is now on the critical path, not a later feature. Actual edition sizes, remaining-supply odds behavior, legacy production eligibility and fused-result treatment must be settled before launch. A committed submission date cannot precede this added work and two-account testing.

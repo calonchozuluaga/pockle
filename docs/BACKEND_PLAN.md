@@ -2,7 +2,7 @@
 
 ## November 3 — paid boxes required for first release
 
-Owner makes paid boxes mandatory for Apple and Google launch; trading stays deferred. Follow [PAID_BOX_LAUNCH_PATH.md](PAID_BOX_LAUNCH_PATH.md). RevenueCat is the selected integration path to prepare, not an already connected Pockle service. Launch pricing targets are now recorded in LAUNCH_BOX_PRICING.md. Owner confirms duplicates remain spares for fusion and trading; the old paid no-duplicate proposal below is superseded. Completion rules and pool percentages remain approval gates, and finite-edition proposals are not silently activated. Shared server delivery and fusion ownership are prerequisites for reliable paid boxes.
+Owner makes paid boxes, toy-for-toy trading and finite series supply mandatory for Apple and Google launch. Follow [PAID_BOX_LAUNCH_PATH.md](PAID_BOX_LAUNCH_PATH.md). RevenueCat is the selected integration path to prepare, not an already connected Pockle service. Launch pricing targets are now recorded in LAUNCH_BOX_PRICING.md. Owner confirms duplicates remain spares for fusion and trading; the old paid no-duplicate proposal below is superseded. Completion rules and pool percentages remain approval gates, Finite series are now approved in principle; actual per-finish caps, supply-aware odds and legacy eligibility still need explicit approval before minting. Shared server delivery and fusion ownership are prerequisites for reliable paid boxes.
 
 
 ## October21 owner overrides / implementation status
@@ -126,3 +126,7 @@ Required database scenarios also include policy/odds changes between quote and o
 Reviewed official [anonymous sign-ins and identity linking](https://supabase.com/docs/guides/auth/auth-anonymous), [database functions and execution permissions](https://supabase.com/docs/guides/database/functions), [Edge authentication](https://supabase.com/docs/guides/functions/auth), and RLS guidance through Supabase documentation search on October 10. Anonymous users share the authenticated role; privileged function execution and data ownership need explicit restrictions.
 
 The required changelog index fetch at `https://supabase.com/changelog.md` failed in the available web tool with unsupported markdown content type; the executor's network proxy was also unreachable. No claim of a complete breaking-change review is made. Recheck the changelog and deployed versions before actual migrations or SDK integration. No database, SQL execution, advisors, backend runtime or credentials were configured/tested here.
+
+
+## November3 — finite series and trading confirmed for v1
+Owner requires trading at launch because official series supply becomes exhausted. Existing editions/copies/operations/ledger/trade architecture is now release scope, while actual supply quantities remain unset. Earlier no-duplicate paid proposal remains superseded: duplicates are spares for fusion/trading. Per-finish caps/serials are the recommended implementation, not approved numbers. Atomic reservations, sold-out purchase closure, complete mixed-pack delivery, two-sided trades, replay protection and fusion/trade contention tests are required. See PAID_BOX_LAUNCH_PATH.md for current acceptance gates.
