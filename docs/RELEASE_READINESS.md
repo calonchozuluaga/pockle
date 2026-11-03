@@ -62,3 +62,6 @@ Edition caps approved November3: per-finish worldwide supply Common10,000/Rare6,
 ## Native iPhone build checkpoint — November3
 
 After owner accepted Xcode terms, the diagnostic nativearm64 iPhone build succeeded. Actual app packaging checks confirmOAuthcallback and linked Keychain bridge/Security framework. Subsequent owner-authorized Apple Development signing, device registration and physical iPhone installation succeeded. Deep strict signature verification passed using normal Mac trust access. Remote activation reported a locked phone, then CoreDeviceService initialization timeout on retry; visible startup awaits owner confirmation. Apple sign-in, real Keychain persistence, iOS walking and store readiness remain unverified. This fresh iPhone install did not restore the Android collection.
+
+
+November 3 owner device acceptance: onboarding runs on the physical iPhone. Apple browser sign-in returns HTTP400 provider-not-enabled; public live Auth settings independently confirm Apple disabled and Google enabled. Complete separate Apple provider credentials/setup before retry. Initial reported location prompt is not yet identified; no location request found in runtime source or privacy keys in the built Info.plist.
