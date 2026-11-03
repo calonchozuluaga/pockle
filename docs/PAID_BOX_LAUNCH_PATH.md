@@ -117,3 +117,7 @@ Owner approved the proposed worldwide copy limits per finish: Common10,000; Rare
 ## Collection audio
 
 Per-collection themed sound sets and polished box/tier reveal audio remain production work. Current four shared generated tones are placeholders. See [audio brief](COLLECTION_AUDIO.md) for the pilot, material/voice separation, local-playback and sound/face timing requirements. No generated or licensed collection audio is claimed complete.
+
+## Current handoff and delegated draw policy
+
+Owner delegates sensible draw rules to Codex and will start with Claude. [Current consolidated handoff](CLAUDE_LAUNCH_HANDOFF_2026-11-03.md) contains the selected working stock-proportional tier model, Common-only completion boost and mixed-pack selection. It supersedes the inconsistent fixed88/8/3/1 voice draft; no live policy has been deployed. Audio pilot proceeds in parallel using the existing-credit brief.
