@@ -54,7 +54,7 @@ Gates 1 and 2 start first. Store setup can proceed while the inventory/delivery 
 ## Decisions to settle before publishing products
 
 - Permanent app identifiers and initial paid collections.
-- Launch prices (existing prototype dollar labels are not approval).
+- Single box: owner-approved US$0.99 baseline, with store-localized equivalents. Pack sizes/discount prices remain tentative.
 - Paid duplicate/completion rule, and whether it differs from free walking boxes.
 - Final per-collection odds, including Wally's unapproved tier split.
 - Refund/late-delivery behavior and production/legacy inventory policy.
@@ -77,3 +77,7 @@ Inspected read-only: Play account is Personal, Biotadex is live, no Pockle listi
 - [Apple first IAP submission](https://developer.apple.com/help/app-store-connect/manage-submissions-to-app-review/submit-an-in-app-purchase/)
 - [Google billing and randomized-item odds](https://support.google.com/googleplay/android-developer/answer/9858738)
 - [Google new-personal-account testing requirements](https://support.google.com/googleplay/android-developer/answer/14151465)
+
+## November3 — price and pack discussion
+
+Owner approved a99-cent single-box price (US$0.99 baseline; actual localized price comes from each store). Discounted packs were suggested, with randomized contents, but no size/price or guarantee was approved. Clarify whether collection selection stays with the shopper or becomes random too. Until answered, the collection-specific consumable design above remains a recommendation, not a newly confirmed rule. Bulk quantities must receive the same durable delivery/retry protections; a pack purchase cannot reroll its draws on restart.

@@ -46,3 +46,5 @@ Read-only browser inspection found an accessible RevenueCat account with only th
 RevenueCat supports Unity and non-subscription purchases; repeated boxes are consumables rather than permanent entitlements. RevenueCat transaction verification is not proof that Pockle delivered a box. An authenticated server receipt/transaction ledger must atomically deliver once, handle retries and pending outcomes, and account for refunds. Existing account does not establish Pockle store credentials, products, integration, approved pricing or paid draw policy. Sandbox setup can be prepared without enabling live checkout; owner subsequently made paid boxes mandatory for v1. [Implementation path](PAID_BOX_LAUNCH_PATH.md).
 
 Sources: [RevenueCat Unity installation](https://www.revenuecat.com/docs/getting-started/installation/unity), [RevenueCat non-subscription products](https://www.revenuecat.com/docs/platform-resources/non-subscriptions).
+
+Price update: owner approved US$0.99 baseline per single box November3. Discounted randomized packs are a tentative idea, with collection selection and pack size/price unresolved. No live offer was created.
