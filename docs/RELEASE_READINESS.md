@@ -50,3 +50,5 @@ Sources: [RevenueCat Unity installation](https://www.revenuecat.com/docs/getting
 Price update: owner approved US$0.99 baseline per single box November3. Discounted randomized packs are a tentative idea, with collection selection and pack size/price unresolved. No live offer was created.
 
 Launch pricing selected under owner delegation: CollectionBox1 US$0.99; MysteryMix3 US$2.49; MysteryMix5 US$3.99. Buyer picks a collection only for the single; mixed packs randomize collection and finish. See [pricing matrix](LAUNCH_BOX_PRICING.md). No store products have been published.
+
+Duplicate policy confirmed: duplicate toys remain owned spares usable for fusion and trading; trading's inclusion in the first release is awaiting clarification. No live trade implementation is claimed.

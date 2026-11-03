@@ -14,8 +14,10 @@ The range stays at three offer types. No subscriptions, currency-wallet layer, l
 
 One store transaction must deliver exactly3 or5 persistent child draws as appropriate. All child outcomes/collection assignments are fixed under the saved pack receipt; interruption or retry cannot reroll or grant another pack. The server records per-child reveal state so the player can resume opening. Each store product maps to an immutable count/selection policy; the client cannot choose quantity by editing a request. Sandbox/production transactions stay isolated.
 
-The policy for repeats/collection variety within a pack and paid duplicate/completion behavior is still unresolved. No guarantee of distinct collections, no duplicates, a complete set, or rare toys is advertised by these prices. This is separate from random selection and should be resolved before the exact product descriptions/odds are published.
+Duplicates are allowed and remain owned spares for fusion and trading (owner confirmed November3). Trading launch timing, collection variety within a pack and any completion boost remain unresolved. No guarantee of distinct collections, no duplicates, a complete set, or rare toys is advertised by these prices. This is separate from random selection and should be resolved before the exact product descriptions/odds are published.
 
 Localized prices come from the store, not hand-built currency conversion. Store price-point availability, regional tax treatment and final translated labels must be checked in each console. Show actual localized unit-price savings only when the local product prices support them; never hardcode the USD savings globally.
 
 Sources: [Apple IAP pricing](https://developer.apple.com/help/app-store-connect/manage-in-app-purchases/set-a-price-for-an-in-app-purchase/), [Google one-time products](https://support.google.com/googleplay/android-developer/answer/16430488).
+
+Duplicate policy confirmed: extra copies remain spares for fusion and trading; no automatic conversion. No no-duplicate purchase guarantee. Whether trading joins the first release is awaiting clarification.

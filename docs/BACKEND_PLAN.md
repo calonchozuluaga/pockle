@@ -2,7 +2,7 @@
 
 ## November 3 — paid boxes required for first release
 
-Owner makes paid boxes mandatory for Apple and Google launch; trading stays deferred. Follow [PAID_BOX_LAUNCH_PATH.md](PAID_BOX_LAUNCH_PATH.md). RevenueCat is the selected integration path to prepare, not an already connected Pockle service. Prices, paid duplicate/completion rules and pool percentages remain explicit approval gates; older no-duplicate/finite-edition proposals below are not silently activated. Shared server delivery and fusion ownership are prerequisites for reliable paid boxes.
+Owner makes paid boxes mandatory for Apple and Google launch; trading stays deferred. Follow [PAID_BOX_LAUNCH_PATH.md](PAID_BOX_LAUNCH_PATH.md). RevenueCat is the selected integration path to prepare, not an already connected Pockle service. Launch pricing targets are now recorded in LAUNCH_BOX_PRICING.md. Owner confirms duplicates remain spares for fusion and trading; the old paid no-duplicate proposal below is superseded. Completion rules and pool percentages remain approval gates, and finite-edition proposals are not silently activated. Shared server delivery and fusion ownership are prerequisites for reliable paid boxes.
 
 
 ## October21 owner overrides / implementation status

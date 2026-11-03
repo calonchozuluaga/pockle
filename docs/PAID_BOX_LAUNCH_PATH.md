@@ -85,3 +85,7 @@ Owner approved a99-cent single-box price (US$0.99 baseline; actual localized pri
 ## November3 — mix packs included and launch pricing selected
 
 Owner confirms collection-choice singles plus mixed-collection packs from day one and delegates pack sizes/prices. The launch targets are1collection box US$0.99,3MysteryMix boxes US$2.49,5MysteryMix boxes US$3.99. [Pricing matrix and delivery rules](LAUNCH_BOX_PRICING.md). This supersedes the tentative pack/collection-selection notes above. Collection-choice multipacks are not added. Mix-pack variety/repeat rules, paid duplicate/completion policy and final odds remain to settle. Store products are not yet created.
+
+## November3 — duplicate policy confirmed
+
+Owner confirms duplicates remain extras for fusion and trading. This supersedes the old paid no-duplicate proposal: owned toys remain eligible unless a separately approved policy says otherwise, and duplicates do not auto-convert. Completion boosts and exact odds still require approval. Trading's first-release timing needs clarification before changing the earlier deferred-trading scope. The shared server inventory must prevent a spare being consumed by fusion and traded twice if/when trading is enabled.
