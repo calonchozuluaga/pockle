@@ -113,3 +113,7 @@ Owner prefers availability to reflect rarity rather than one identical cap. Prop
 ## November3 — exact edition caps approved
 
 Owner approved the proposed worldwide copy limits per finish: Common10,000; Rare6,000; Epic3,500; Secret1,600. Wally's9/3/2/1 lineup totals116,600 official copies. This supersedes the unapproved-cap status above. Actual draw probabilities, completion boost and depletion policy are still distinct unresolved decisions; the illustrative stock-proportional Secret~1in73 was not separately approved as the draw algorithm. Caps are a published-policy target for implementation, not evidence of live server inventory or product publication. Existing legacy inventory remains preserved and separately classified.
+
+## Collection audio
+
+Per-collection themed sound sets and polished box/tier reveal audio remain production work. Current four shared generated tones are placeholders. See [audio brief](COLLECTION_AUDIO.md) for the pilot, material/voice separation, local-playback and sound/face timing requirements. No generated or licensed collection audio is claimed complete.
