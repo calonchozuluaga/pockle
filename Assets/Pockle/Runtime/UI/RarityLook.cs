@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Pockle.Runtime
 {
     /// <summary>
-    /// Values keep their numbers. The October 21 ladder (owner-approved: Common, Rare gold, Epic diamond, Secret molten) uses
+    /// Values keep their numbers. The October 21 ladder (owner-approved: Common, Rare gold, Epic diamond, Secret molten/cyan) uses
     /// Common/Rare/Epic/Secret; SuperRare/UltraRare remain for the current catalog's labels until the runtime retags toys.
     /// </summary>
     public enum RarityTier { Common, Rare, SuperRare, UltraRare, Fusion, Epic, Secret }
@@ -39,7 +39,8 @@ namespace Pockle.Runtime
                 // October 21 ladder: Rare is gold, Epic is diamond, Secret is molten (cracked obsidian, glowing veins).
                 case RarityTier.Rare: return new RarityLook(tier, secret, words, Hex(0xFFDB7A), Hex(0x5C3A00), Hex(0xFFF1B8), "StickerStar");
                 case RarityTier.Epic: return new RarityLook(tier, secret, words, Hex(0xD6F1FF), Hex(0x15486E), Hex(0x9FDCFF), "RarityGem");
-                case RarityTier.Secret: return new RarityLook(tier, true, words, Hex(0x2A0F0C), Hex(0xFFC08A), Hex(0xFF5A3C), "StickerSparkle");
+                // Matches the approved Molten Abyss art (October 22): black obsidian with cyan-lit fissures.
+                case RarityTier.Secret: return new RarityLook(tier, true, words, Hex(0x0E1418), Hex(0x7FF3FF), Hex(0x22D3F0), "StickerSparkle");
                 case RarityTier.SuperRare: return new RarityLook(tier, secret, words, Hex(0xFFB8D9), Hex(0x7A1F4E), Hex(0xF27BB2), "StickerSparkle");
                 case RarityTier.UltraRare: return new RarityLook(tier, secret, words, Hex(0xFFD66B), Hex(0x5C3A00), Hex(0xFFF1B8), "RarityGem");
                 case RarityTier.Fusion: return new RarityLook(tier, secret, words, Hex(0x2A1430), Hex(0xF1E6FF), Hex(0xB99CDE), "RarityFusion");

@@ -17,6 +17,10 @@ namespace Pockle.Runtime
 
         private void Awake() { image = GetComponent<Image>(); rect = (RectTransform)transform; }
 
+        /// <summary>Applies the current fillAmount now instead of at the end of the frame (captures taken right after a
+        /// refresh otherwise show the bar at full width).</summary>
+        public void Apply() { if (image == null) Awake(); LateUpdate(); }
+
         private void LateUpdate()
         {
             if (image == null) return;

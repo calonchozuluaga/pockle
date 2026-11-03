@@ -519,7 +519,7 @@ namespace Pockle.Runtime
             if (ServerBoxes) RefreshHomeServerBox(); // UX-052: server walking boxes
             else
             {
-                homeBoxArt.color = Color.white; if (homeStatusClock != null) homeStatusClock.enabled = false;
+                homeBoxArt.color = Color.white; homeMystery.color = PockleTheme.FieldGold; if (homeStatusClock != null) homeStatusClock.enabled = false;
                 // Today's box: the daily pool (Jelly Garden) is the Pip collection.
                 ToyCatalog.TryGetCollection("pip", out var daily);
                 homeBoxArt.texture = daily != null ? CollectionLook.Box(daily, out _) : null;

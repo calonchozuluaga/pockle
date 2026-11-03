@@ -294,7 +294,7 @@ namespace Pockle.Runtime
                 case AppPage.Profile: heading.text = ""; subtitle.text = ""; break;
                 case AppPage.Settings: heading.text = "Settings"; subtitle.text = ""; break;
                 case AppPage.Badges: heading.text = "Badges"; subtitle.text = ""; break; // RefreshBadges fills in "N of 15 earned"
-                case AppPage.Boxes: heading.text = "Boxes"; subtitle.text = "Walk for a free box every day, or pick one to buy."; break;
+                case AppPage.Boxes: heading.text = "Boxes"; subtitle.text = ServerBoxes ? "Walk to earn free boxes, or pick one to buy." : "Walk for a free box every day, or pick one to buy."; break;
                 case AppPage.Collections: heading.text = "Collections"; subtitle.text = "Meet the little characters for your shelf."; break;
                 case AppPage.Collection:
                     heading.text = ""; subtitle.text = ""; break; // the collection's hero carries its title

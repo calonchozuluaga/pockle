@@ -130,6 +130,30 @@ namespace Pockle.Tests
         }
 
         [UnityTest]
+        public IEnumerator ProviderButtonsFollowAppleAndGoogleStyling()
+        {
+            hud.SetAccountService(new FakeAccounts());
+            hud.StartOnboardingIfNeeded(); yield return null;
+            Click("Let's go!"); EnterBirthday(DateTime.Today.Year - 25); Click("Next"); yield return null;
+            var apple = Button("Continue with Apple"); var google = Button("Continue with Google");
+            Assert.That(apple.GetComponent<Image>().color, Is.EqualTo(Color.black));
+            Assert.That(apple.GetComponentInChildren<Text>().color, Is.EqualTo(Color.white));
+            Assert.That(google.targetGraphic.color, Is.EqualTo(Color.white), "white fill inside the border");
+            var border = google.GetComponent<Image>().color;
+            Assert.That(Mathf.Abs(border.r - 0x74 / 255f) < .01f && Mathf.Abs(border.g - 0x77 / 255f) < .01f, Is.True, "Google's #747775 border");
+            foreach (var b in new[] { apple, google })
+            {
+                var label = b.GetComponentInChildren<Text>();
+                Assert.That(label.font, Is.Not.EqualTo(PockleTheme.DisplayFont), "titles use the system font, not Pockle's display font");
+                Assert.That(label.text.StartsWith("Continue with "), Is.True);
+            }
+            // Logos are the brands' own files; without them the buttons stay text-only rather than showing a stand-in.
+            bool appleFile = Resources.Load<Texture2D>("UI/Brand/AppleLogoWhite") != null, googleFile = Resources.Load<Texture2D>("UI/Brand/GoogleG") != null;
+            Assert.That(apple.transform.Find("Apple logo").gameObject.activeSelf, Is.EqualTo(appleFile));
+            Assert.That(google.transform.Find("Google logo").gameObject.activeSelf, Is.EqualTo(googleFile));
+        }
+
+        [UnityTest]
         public IEnumerator HowToPlayReplaysOnlyTheTutorial()
         {
             OnboardingState.Complete();

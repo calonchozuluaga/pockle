@@ -17,6 +17,7 @@ namespace Pockle.Runtime
         private readonly List<Button> collectionCards = new List<Button>();
         private readonly List<Text> collectionCardDetails = new List<Text>();
         private readonly List<Button> lineupTiles = new List<Button>();
+        private readonly List<Image> lineupTierBadges = new List<Image>(); // UX-052: Rare/Epic/Secret on each slot
         private readonly List<Text> lineupNames = new List<Text>();
         private readonly List<Text> lineupStates = new List<Text>();
         private readonly List<CharacterSilhouetteGraphic> lineupMysteries = new List<CharacterSilhouetteGraphic>();
@@ -203,7 +204,7 @@ namespace Pockle.Runtime
             lineupBindings.Clear();
             foreach (var tile in lineupTiles) { tile.gameObject.SetActive(false); Destroy(tile.gameObject); }
             lineupTiles.Clear(); lineupNames.Clear(); lineupStates.Clear(); lineupMysteries.Clear(); lineupPictures.Clear();
-            lineupMysteryHolders.Clear(); lineupBubbles.Clear();
+            lineupMysteryHolders.Clear(); lineupBubbles.Clear(); lineupTierBadges.Clear();
             foreach (string member in SelectedCollection.Members)
             {
                 string id = member;
@@ -233,6 +234,13 @@ namespace Pockle.Runtime
                 lineupPictures.Add(picture);
                 TintMirror.Follow(tile, picture);
                 lineupBindings.Add(shelfPreviews.Register(picture, silhouette, id));
+                // Tier badge: the ladder is part of the chase, so it shows on found and unfound slots alike.
+                var badge = Rect("Tier badge", tile.transform);
+                badge.anchorMin = badge.anchorMax = badge.pivot = new Vector2(.5f, 1); badge.anchoredPosition = new Vector2(0, -6); badge.sizeDelta = new Vector2(62, 18);
+                var badgeFace = Surface(badge, Color.clear, 9);
+                var badgeWords = Label("", badge, PockleTheme.MinimumTextSize, Ink, FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
+                Stretch(badgeWords.rectTransform);
+                lineupTierBadges.Add(badgeFace);
             }
         }
 
@@ -353,6 +361,15 @@ namespace Pockle.Runtime
                 // The slot is the portrait's own colour field, so the toy sits on one continuous background (no square inside the tile).
                 lineupTiles[i].GetComponent<Image>().color = playable ? PockleTheme.FieldFor(id) : PockleTheme.Mystery;
                 if (playable && lineupPictures[i].texture == null) ShowLineupPortrait(i, id);
+                var tier = known ? RarityLook.Of(collectible) : RarityLook.For(RarityTier.Common, false, "");
+                bool ladder = tier.Tier == RarityTier.Rare || tier.Tier == RarityTier.Epic || tier.Tier == RarityTier.Secret;
+                var badge = lineupTierBadges[i];
+                badge.gameObject.SetActive(ladder);
+                if (ladder)
+                {
+                    badge.color = tier.Fill;
+                    var words = badge.GetComponentInChildren<Text>(); words.text = RarityLook.Words(tier.Tier); words.color = tier.Ink;
+                }
                 lineupNames[i].color = playable ? deep : Ink;
             }
         }

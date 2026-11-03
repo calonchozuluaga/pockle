@@ -69,15 +69,16 @@ namespace Pockle.Runtime
         private static Texture BoxPicture(string collectionId) => string.IsNullOrEmpty(collectionId) ? null : CollectionLook.Box(collectionId, out _);
 
         /// <summary>The one status line both cards share, highest priority first.</summary>
-        private string ServerBoxStatus(out bool counting)
+        private string ServerBoxStatus(out bool counting, bool compact = false)
         {
             var v = boxView; counting = false;
-            if (v.Connection == WalkingBoxConnection.Offline) return v.Banked > 0 ? "Offline. Your boxes are saved and open when you're back online." : "Offline. Steps keep counting on your phone.";
+            if (v.Connection == WalkingBoxConnection.Offline)
+                return compact ? "Offline · boxes open when you're back online" : v.Banked > 0 ? "Offline. Your boxes are saved and open when you're back online." : "Offline. Steps keep counting on your phone.";
             if (v.Connection == WalkingBoxConnection.Reconnecting) return "Reconnecting…";
             if (!string.IsNullOrEmpty(v.Message)) return v.Message;
             if (v.Busy) return "Opening your box…";
-            if (v.BankFull) return "Your bank is full. Open a box to keep earning.";
-            if (v.DayDone) return "That's all " + v.MaxPerDay + " boxes for today. More tomorrow!";
+            if (v.BankFull) return compact ? "Bank full · open a box to keep earning" : "Your bank is full. Open a box to keep earning.";
+            if (v.DayDone) return compact ? "All " + v.MaxPerDay + " earned today · more tomorrow" : "That's all " + v.MaxPerDay + " boxes for today. More tomorrow!";
             if (v.SecondsUntilNextBox.HasValue) { counting = true; return "Next box in"; }
             int left = Mathf.Max(0, v.StepsPerBox - v.StepCredit);
             return left > 0 ? left.ToString("N0") + " more steps to earn a box." : "Box earned! Saving it…";
@@ -115,10 +116,12 @@ namespace Pockle.Runtime
             for (int i = 0; i < homeDayDots.Length; i++)
             {
                 var dot = Rect("Today " + (i + 1), homeBankRow); dot.anchorMin = dot.anchorMax = dot.pivot = new Vector2(0, .5f);
-                dot.anchoredPosition = new Vector2(82 + i * 14, 0); dot.sizeDelta = new Vector2(9, 9); homeDayDots[i] = Surface(dot, Ink, 4.5f);
+                dot.anchoredPosition = new Vector2(124 + i * 14, 0); dot.sizeDelta = new Vector2(9, 9); homeDayDots[i] = Surface(dot, Ink, 4.5f);
             }
-            homeBankCaption = Label("", homeBankRow, PockleTheme.SmallSize, PockleTheme.JellyInk, FontStyle.Normal, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
-            Place(homeBankCaption.rectTransform, 0, 0, 1, 1, 142, 0, 0, 0);
+            // The header already says how many boxes are ready, so the row only names the dots.
+            homeBankCaption = Label("Today", homeBankRow, PockleTheme.SmallSize, PockleTheme.JellyInk, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
+            homeBankCaption.rectTransform.anchorMin = homeBankCaption.rectTransform.anchorMax = homeBankCaption.rectTransform.pivot = new Vector2(0, .5f);
+            homeBankCaption.rectTransform.anchoredPosition = new Vector2(78, 0); homeBankCaption.rectTransform.sizeDelta = new Vector2(44, 20);
             homeStatusClock = homeStatus.gameObject.AddComponent<CountdownText>(); homeStatusClock.Target = homeStatus; homeStatusClock.Source = ServerTimeLeft;
             homeStatusClock.Prefix = "Next box in "; homeStatusClock.enabled = false;
 
@@ -150,6 +153,7 @@ namespace Pockle.Runtime
             homeBoxArt.texture = BoxPicture(shown); homeBoxArt.enabled = homeBoxArt.texture != null;
             homeBoxArt.color = first != null ? Color.white : new Color(1, 1, 1, .45f); // a box still to earn reads as a promise
             homeMystery.gameObject.SetActive(first == null && v.NextCollectionId == null);
+            homeMystery.color = new Color(PockleTheme.JellyInk.r, PockleTheme.JellyInk.g, PockleTheme.JellyInk.b, .5f); // readable on pink
             homeCountdown.gameObject.SetActive(false);
             homeBoxLabel.text = v.Banked == 0 ? "WALKING BOX" : v.Banked == 1 ? "1 BOX READY" : v.Banked + " BOXES READY";
             homeBoxTitle.text = first != null ? BoxName(first) : v.NextCollectionId != null ? "Next: " + BoxName(v.NextCollectionId) : "Your next box";
@@ -168,7 +172,6 @@ namespace Pockle.Runtime
                 homeDayDots[i].gameObject.SetActive(i < v.MaxPerDay);
                 homeDayDots[i].color = i < v.EarnedToday ? Ink : new Color(Ink.r, Ink.g, Ink.b, .2f);
             }
-            homeBankCaption.text = v.Banked + " of " + v.MaxBanked + " banked · " + v.EarnedToday + " of " + v.MaxPerDay + " today";
 
             homeStatus.text = ServerBoxStatus(out bool counting);
             homeStatusClock.enabled = counting && online;
@@ -178,6 +181,7 @@ namespace Pockle.Runtime
             homeStepSuffix.text = "of " + v.StepsPerBox.ToString("N0") + " steps";
             if (homeSteps.sizeDelta.x > 0) PlaceStepSuffix();
             homeFill.fillAmount = Mathf.Clamp01(v.StepCredit / (float)Mathf.Max(1, v.StepsPerBox));
+            homeFill.GetComponent<ProgressWidth>()?.Apply();
 
             homeOpen.gameObject.SetActive(v.Banked > 0); homeOpen.interactable = v.OpenEnabled;
             homeOpen.GetComponentInChildren<Text>().text = v.Busy ? "Opening…" : !online ? "Opens when you're online" : "Open " + BoxName(first);
@@ -198,7 +202,8 @@ namespace Pockle.Runtime
             walkTitle.text = v.Banked == 0 ? "Walking boxes" : v.Banked == 1 ? BoxName(first) + " is ready" : v.Banked + " boxes ready · " + BoxName(first) + " first";
             walkProgress.text = Mathf.Clamp(v.StepCredit, 0, v.StepsPerBox).ToString("N0") + " of " + v.StepsPerBox.ToString("N0") + " steps · " + v.EarnedToday + " of " + v.MaxPerDay + " today";
             walkFill.fillAmount = v.BankFull || v.DayDone ? 1 : Mathf.Clamp01(v.StepCredit / (float)Mathf.Max(1, v.StepsPerBox));
-            walkStatus.text = ServerBoxStatus(out bool counting);
+            walkFill.GetComponent<ProgressWidth>()?.Apply();
+            walkStatus.text = ServerBoxStatus(out bool counting, true);
             walkStatusClock.enabled = counting && v.Online;
             bool walking = WalkingOn;
             if (enableWalking.gameObject.activeSelf == walking) { enableWalking.gameObject.SetActive(!walking); AdaptLayout(); }

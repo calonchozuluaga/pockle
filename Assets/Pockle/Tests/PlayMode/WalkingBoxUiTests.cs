@@ -50,7 +50,11 @@ namespace Pockle.Tests
             hud.SetWalkingBoxes(View("wally", "fox")); yield return null;
             Assert.That(Text("Today's box").Contains("2 BOXES READY"), Is.True);
             Assert.That(Text("Today's box").Contains("Wally box"), Is.True, "the first banked box's own collection, as saved");
-            Assert.That(Text("Banked boxes").Contains("2 of 2 banked · 2 of 4 today"), Is.True);
+            Assert.That(Text("Banked boxes").Contains("Today"), Is.True);
+            var dots = root.GetComponentsInChildren<Image>(true).Where(i => i.name.StartsWith("Today ") && i.gameObject.activeInHierarchy).ToList();
+            Assert.That(dots.Count, Is.EqualTo(4), "one dot per box a day");
+            Assert.That(dots.Count(d => d.color.a > .9f), Is.EqualTo(2), "two earned today");
+            Assert.That(root.GetComponentsInChildren<RawImage>(true).Count(r => r.transform.parent.name.StartsWith("Bank slot") && r.enabled), Is.EqualTo(2), "each banked box shows its own box art");
             Button("Open your box").onClick.Invoke();
             Assert.That(opened, Is.EqualTo(1));
             Assert.That(root.GetComponentsInChildren<Button>(true).Any(b => b.name.IndexOf("reroll", StringComparison.OrdinalIgnoreCase) >= 0
@@ -158,6 +162,26 @@ namespace Pockle.Tests
             Assert.That(TierOdds.Format(.15), Is.EqualTo("15%"));
             Assert.That(TierOdds.Format(1 / 72.0), Is.EqualTo("about 1 in 72"));
             Assert.That(new WalkingBoxView().Odds, Is.Null, "the UI shows odds only when the server sends them");
+        }
+
+        [UnityTest]
+        public IEnumerator WallyLineupShowsItsLadderTiersOnFoundAndUnfoundSlots()
+        {
+            RarityLook.TierSource = id => id.StartsWith("wally.") ? RarityLook.FromTier(Pockle.Core.WallyCatalog.Tier(id)) : (RarityTier?)null;
+            root.GetComponentsInChildren<Button>().First(b => b.GetComponentsInChildren<Text>().Any(t => t.text == "Shelf")).onClick.Invoke(); yield return null;
+            root.GetComponentsInChildren<Button>().First(b => b.GetComponentsInChildren<Text>().Any(t => t.text == "All collections")).onClick.Invoke(); yield return null;
+            root.GetComponentsInChildren<Button>().First(b => b.name == "Collection · wally").onClick.Invoke(); yield return null;
+            string Badge(string id)
+            {
+                var tile = root.GetComponentsInChildren<Button>(true).First(b => b.name == "Collectible · " + id);
+                var badge = tile.transform.Find("Tier badge");
+                return badge.gameObject.activeSelf ? badge.GetComponentInChildren<Text>().text : "";
+            }
+            Assert.That(Badge(Pockle.Core.WallyCatalog.SpecialId), Is.EqualTo("Secret"));
+            Assert.That(Badge(Pockle.Core.WallyCatalog.DiamondId), Is.EqualTo("Epic"));
+            Assert.That(Badge(Pockle.Core.WallyCatalog.GlowId), Is.EqualTo("Epic"), "Deep Sea Glow moved to Epic");
+            Assert.That(Badge(Pockle.Core.WallyCatalog.LeafId), Is.EqualTo("Rare"));
+            Assert.That(Badge(Pockle.Core.WallyCatalog.ClassicId), Is.EqualTo(""), "commons carry no badge");
         }
 
         private sealed class SignedOut : IAccountService

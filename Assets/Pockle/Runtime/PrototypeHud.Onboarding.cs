@@ -267,8 +267,8 @@ namespace Pockle.Runtime
             obSignInError = ObError(root, .37f, .43f);
             bool apple = Application.platform == RuntimePlatform.IPhonePlayer;
             // Codex: swap these for the platform's official sign-in buttons when wiring the providers.
-            obApple = ObProviderButton("Continue with Apple", root, Color.black, Color.white, apple ? 2 : 1, () => StartSignIn(AccountProvider.Apple));
-            obGoogle = ObProviderButton("Continue with Google", root, Color.white, Ink, apple ? 1 : 2, () => StartSignIn(AccountProvider.Google));
+            obApple = ObProviderButton(AccountProvider.Apple, root, apple ? 2 : 1, () => StartSignIn(AccountProvider.Apple));
+            obGoogle = ObProviderButton(AccountProvider.Google, root, apple ? 1 : 2, () => StartSignIn(AccountProvider.Google));
             obTestContinue = CreateButton("Continue (test build)", root, Vector2.zero, new Vector2(240, 40), new Color(1, 1, 1, .35f), FinishTestSignIn, out _, PockleTheme.CaptionSize + 1);
             var test = obTestContinue.GetComponent<RectTransform>(); test.anchorMin = test.anchorMax = test.pivot = new Vector2(1, 1); test.anchoredPosition = new Vector2(-16, -16);
             obTestContinue.gameObject.SetActive(TestBuildSignIn);
@@ -276,17 +276,81 @@ namespace Pockle.Runtime
             terms.alignment = TextAnchor.MiddleCenter;
         }
 
-        /// <summary>Provider buttons stack above the terms; <paramref name="slot"/> 2 is the upper one.</summary>
-        private Button ObProviderButton(string title, Transform parent, Color fill, Color ink, int slot, Action click)
+        /// <summary>
+        /// Official provider buttons (UX-050, October 22), styled to Apple's Sign in with Apple and Google's sign-in branding
+        /// guidelines: Apple = black fill, white "Continue with Apple" and the white Apple logo; Google = white fill, 1px
+        /// #747775 border, #1F1F1F "Continue with Google" and the full-colour G. Titles use the phone's system font (Roboto on
+        /// Android, San Francisco/Helvetica on iOS), never the Pockle display font. Logos are the brands' own files, loaded
+        /// from Resources/UI/Brand (AppleLogoWhite.png, GoogleG.png); until they are added the buttons show text only. On
+        /// iOS, Codex may replace the Apple pill with the native ASAuthorizationAppleIDButton.
+        /// Provider buttons stack above the terms; <paramref name="slot"/> 2 is the upper one.
+        /// </summary>
+        private Button ObProviderButton(AccountProvider provider, Transform parent, int slot, Action click)
         {
-            var button = CreateButton(title, parent, Vector2.zero, new Vector2(300, 56), fill, click, out var face, PockleTheme.ButtonSize + 1);
-            button.GetComponentInChildren<Text>().color = ink;
-            if (fill == Color.white) { var outline = face.gameObject.AddComponent<Outline>(); outline.effectColor = PockleTheme.FillDeep; outline.effectDistance = new Vector2(1.5f, -1.5f); }
+            bool google = provider == AccountProvider.Google;
+            string title = google ? "Continue with Google" : "Continue with Apple";
+            var button = CreateButton(title, parent, Vector2.zero, new Vector2(300, 56), google ? ProviderGoogleStroke : Color.black, click, out var face, PockleTheme.ButtonSize);
+            if (google)
+            {
+                // A true 1px border: the face is the stroke colour and a white fill sits 1px inside it.
+                var fill = Rect("Fill", button.transform); Stretch(fill); fill.offsetMin = new Vector2(1, 1); fill.offsetMax = new Vector2(-1, -1);
+                var inner = Surface(fill, Color.white, 27); fill.SetAsFirstSibling(); button.targetGraphic = inner;
+            }
+            var label = button.GetComponentInChildren<Text>();
+            label.color = google ? ProviderGoogleInk : Color.white;
+            label.font = ProviderFont; label.fontStyle = FontStyle.Bold; label.resizeTextForBestFit = false; label.fontSize = 17;
+            label.alignment = TextAnchor.MiddleLeft; label.horizontalOverflow = HorizontalWrapMode.Overflow;
+            var logoArt = Resources.Load<Texture2D>(google ? "UI/Brand/GoogleG" : "UI/Brand/AppleLogoWhite");
+            var logo = Rect(google ? "Google logo" : "Apple logo", button.transform);
+            var logoImage = logo.gameObject.AddComponent<RawImage>(); logoImage.texture = logoArt; logoImage.raycastTarget = false;
+            logo.gameObject.SetActive(logoArt != null);
+            if (logoArt == null && (Debug.isDebugBuild || Application.isEditor))
+                Debug.Log("Pockle sign-in: add the official " + (google ? "Google G (Resources/UI/Brand/GoogleG.png)" : "Apple logo (Resources/UI/Brand/AppleLogoWhite.png)") + " to complete the button.");
             var rect = button.GetComponent<RectTransform>();
             rect.anchorMin = new Vector2(0, .09f); rect.anchorMax = new Vector2(1, .09f); rect.pivot = new Vector2(.5f, 0);
             float y = 16 + (slot - 1) * 68;
             rect.offsetMin = new Vector2(24, y); rect.offsetMax = new Vector2(-24, y + 56);
             return button;
+        }
+
+        private static readonly Color ProviderGoogleStroke = new Color(0x74 / 255f, 0x77 / 255f, 0x75 / 255f);
+        private static readonly Color ProviderGoogleInk = new Color(0x1F / 255f, 0x1F / 255f, 0x1F / 255f);
+        private static Font providerFont;
+
+        /// <summary>The phone's own UI font, as both brands ask; falls back to the built-in font.</summary>
+        private static Font ProviderFont
+        {
+            get
+            {
+                if (providerFont != null) return providerFont;
+                try { providerFont = Font.CreateDynamicFontFromOSFont(new[] { "Roboto", "Roboto Medium", ".SF UI Text", "SF Pro Text", "Helvetica Neue", "Helvetica", "Arial" }, 17); }
+                catch (Exception) { providerFont = null; }
+                if (providerFont == null) providerFont = PockleTheme.BodyFont;
+                return providerFont;
+            }
+        }
+
+        /// <summary>Centres logo + title as one group inside each provider button (logo 20pt, 10pt gap).</summary>
+        private void LayoutProviderButtons()
+        {
+            foreach (var button in new[] { obApple, obGoogle })
+            {
+                if (button == null) continue;
+                var label = button.GetComponentInChildren<Text>();
+                var logo = button.transform.Find(button == obGoogle ? "Google logo" : "Apple logo") as RectTransform;
+                bool hasLogo = logo != null && logo.gameObject.activeSelf;
+                float textWidth = label.preferredWidth, logoSize = button == obGoogle ? 20 : 22, gap = hasLogo ? 10 : 0;
+                float group = textWidth + (hasLogo ? logoSize + gap : 0), start = -group / 2;
+                var t = label.rectTransform; t.anchorMin = t.anchorMax = t.pivot = new Vector2(.5f, .5f);
+                t.sizeDelta = new Vector2(textWidth + 4, 30); t.anchoredPosition = new Vector2(start + (hasLogo ? logoSize + gap : 0) + textWidth / 2, 0);
+                if (hasLogo)
+                {
+                    var art = logo.GetComponent<RawImage>().texture;
+                    float aspect = art != null ? art.width / (float)Mathf.Max(1, art.height) : 1;
+                    logo.anchorMin = logo.anchorMax = logo.pivot = new Vector2(.5f, .5f);
+                    logo.sizeDelta = new Vector2(logoSize * aspect, logoSize); logo.anchoredPosition = new Vector2(start + logoSize * aspect / 2, button == obApple ? 1 : 0);
+                }
+            }
         }
 
         private void StartSignIn(AccountProvider provider)
@@ -637,6 +701,7 @@ namespace Pockle.Runtime
             // Small phones: shrink the art rather than letting it collide with the text.
             float scale = Mathf.Clamp(safeRoot.rect.height / 760f, .72f, 1.15f);
             foreach (var entry in obToys) entry.Key.transform.parent.localScale = Vector3.one * scale;
+            LayoutProviderButtons();
             FitOnboardingPainting();
         }
 

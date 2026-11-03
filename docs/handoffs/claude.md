@@ -508,3 +508,239 @@ Owner-approved canvas boards: "Play: speech bubble + personality", "Fuse spares,
 
 ### Pick your live shelf fixes (Oct 17, UiBuild "v2 screens 24")
 - `PrototypeHud.ShelfPick.cs`: the six spots now keep a toy-friendly height (about square, 52–96 px) and draw the toy as a centred square, so wide screens no longer stretch it. The toy grid is inset 4 px on each side so the selected ring (3 px outside each tile) is no longer clipped at the page edges. Compiles against stubs; not run in Unity or on a phone.
+
+### Badge cabinet (Oct 17, UiBuild "v2 screens 25")
+Owner approved building the badges ("yes go ahead"). Claimed UX-021 (rules) and UX-024 (cabinet). Rules and open questions: `docs/BADGES.md`.
+- **New:** `UI/BadgeBook.cs` (15 definitions, rules from owned toys and found shelf moments, `BadgeCabinet` with earned dates in PlayerPrefs `pockle.badges.earned.v1`), `PrototypeHud.Badges.cs` (the page), `Resources/UI/Icons/Lock.png` (+meta, GUID from the usual md5 rule), `Tests/PlayMode/BadgeTests.cs`.
+- **Changed:** `PrototypeHud.cs` (page root, build, refresh, layout, You tab), `PrototypeHud.Profile.cs` (Badges row opens the cabinet and counts), `PrototypeHud.Home.cs` (Rewards "Badges and milestones" row opens it too), `PrototypeHud.Settings.cs` (UiBuild 25), `CollectionUiTests.cs` (new `BadgeCabinetOpensFromYouAndShowsEarnedAndLockedBadges`; `BadgeCabinet.Key` added to the restored prefs).
+- **Codex lane, one additive line:** `Core/MenuNavigation.cs` gains `AppPage.Badges` at the end of the enum. Please keep it when you copy files from `codex/persistent-character-fusion`; nothing else in Core changed.
+- **Requests for Codex:**
+  - Persistent fusion: expose a count of fused toys made (e.g. `session.FusionsMade`). `BadgeFactsNow()` in `PrototypeHud.Badges.cs` passes `Fusions = -1` today; swapping in the count turns on First fusion and 5 fusions.
+  - Step history: a lifetime step total, a best single-day total and walking-day dates (validated, not capped at the daily target) would turn on First 10k day, 1M steps and 30-day streak.
+  - Provenance: a way to tell earned toys from starter/test grants, so badges can ignore gifts (UX-021 acceptance).
+  - When saves get their next version, carry `pockle.badges.earned.v1` into the save so badges survive a reinstall with the rest.
+- **Verified:** compiles against the stub project; the rules and cabinet were run in a console harness (all 15 badges, 10 foxes, 10 Pip, 10 secrets, award once, never taken back, newest-first order, tolerant reload). **Not verified:** Unity PlayMode tests, the page's look in Unity, phone.
+
+### Play-screen title chips + rarity colour index (Oct 17, UiBuild "v2 screens 26")
+Owner feedback (Starlight Glow screenshot): the rarity pill overlapped the personality chips, long chips broke, and rarity should look different from personality.
+- **Rarity colour index** (`UI/RarityLook.cs`): a solid badge with a thin bright rim and an icon, one per tier. Rare = mint + star, Super rare = rose + sparkle, Ultra rare = gold + gem, Fusion (saved fusions and fusion studies) = plum + two joined rings. Common toys show none. Words lead with the tier: "Ultra rare · Secret". New icons `Resources/UI/Icons/RarityGem.png` and `RarityFusion.png` (+metas). No toy uses plain "Rare" yet; the colour is reserved.
+- **Placement** (`PrototypeHud.Play.cs`, `LayoutStage`): beside the name when it fits, else at the end of the eyebrow line, else on its own line under the name, and the chips start below it. The old fallback put it 4 px into the chip row.
+- **Chips** (`PrototypeHud.StageTalk.cs`, `LayoutStageTalk`): temperament and traits flow and wrap onto a second line instead of disappearing; a chip wider than the screen is capped and its words shrink to 11 pt. A warning too long for one line wraps to two inside a taller chip.
+- **Tests:** `RarityLookTests.cs` (new) and `CollectionUiTests.StageTitleChipsNeverOverlapOnANarrowScreen`. Compiles against stubs; the tier mapping was checked in a console run (10 secrets: 9 Ultra rare, Aurora Super rare; 4 fusion studies). Unity tests and phone not run.
+
+### Fuse spares list repack + clear reveal (Oct 19, UiBuild "v2 screens 27")
+Owner phone test (Wally fusion build): the spare list still kept gaps after picking, and the reveal still showed a background behind the fused toy.
+- **List repack** (`PrototypeHud.Fusion.cs`): `RefreshFusion` compares which spare tiles, the empty message and the no-spare row are showing before and after; if that changes on the Fusion page it re-runs the layout, so the remaining spares pack from the top left. Same idea as the never-merged PR #21, now in the owner folder (that PR can be closed).
+- **Reveal background:** the white box was the reveal's "Frame", a white rounded square used as a mask under the picture. It's now a plain container with no image or mask, so the cut-out sits straight on the glow disc. Saved fusions still use Codex's `CutoutPortrait(saved.Id)`.
+- **Test:** `CollectionUiTests.PickingASpareRepacksTheListAndTheRevealHasNoBoxBehindTheToy`. Compiles against stubs; Unity tests and phone not run.
+
+### Kid-friendly pass: proposal boards (Oct 19, not built yet)
+Owner note after watching his kids play: a 6-year-old can't read the menus and couldn't find Fuse; the daily box should rotate between collections, only award from collections that aren't complete, and count down to the next one with some anticipation. Four boards on the canvas row "Made for little hands": KidHome, KidShelf, KidFuse, KidBox. Waiting for owner approval before any code.
+- **UI (Claude, after approval):** a fifth tab, Fuse (two-rings icon), and bigger tab icons; picture tiles on Home (Play, Fuse, Boxes, Badges); one big action per card with an icon ("Walk!", "Open!", "Wait for it…"); counts as dots or rings instead of numbers ("2 spares" becomes ●●); a crown on finished collections; a pointing hand on first visits; optional "hear it" buttons on titles.
+- **Daily box rotation, proposed rules for Codex (runtime and save are your lane), pending owner sign-off:**
+  1. Each UTC day's box comes from one collection, taking turns in catalog order and skipping any collection the player has finished (every available member owned). If all are finished, fall back to the full rotation.
+  2. Inside that collection, the normal odds apply, so duplicates (spares for fusion) can still happen. *Open question for the owner: only award toys you don't have yet, or keep duplicates?*
+  3. The day's collection is chosen once and saved, so it can't be re-rolled by reinstalling or changing the clock; the countdown runs to the next UTC midnight.
+  4. The HUD needs: `TodayBoxCollectionId`, `NextBoxCollectionId` (or null to keep it a mystery), seconds until the next box, and per-collection found/total counts.
+
+**Oct 19 update (owner review of the kid boards):** too simplified. Keep collections showing their toys (found in colour, missing as grey "?" silhouettes) with their cover art, not dots; keep covers on the shelf. Keep the big feature sections. Boards KidHome, KidShelf and KidBox redone that way; the feature sections use existing collection covers as stand-ins.
+- **Request for Codex: painted backgrounds for the feature sections**, in the same painted style as the collection covers and worlds. One each for **Play**, **Fuse**, **Boxes**, **Badges** (Home, a 2×2 grid) and **Arrange** (Shelf). Each tile shows at about 171×150 pt on a 390 pt phone (Shelf tiles 171×120), so paint around 1024×900 px landscape with the subject centred. Keep the bottom-left quarter calm: a white label pill (icon + word) sits there, and the HUD draws toys or boxes on top in the middle. Ideas: Play = a sunny playroom shelf; Fuse = a night sky with a soft glowing swirl (white HUD text must stay readable); Boxes = a gift-wrapping table with ribbons; Badges = a trophy shelf with bunting; Arrange = a cosy empty shelf. Suggested home: `Assets/Pockle/Resources/UI/Features/Feature<Name>.png` with metas. Please add them to the canvas or a review page so the owner can pick before Claude wires them in.
+
+### Kid-friendly Home, Fuse tab, cover gradients (Oct 19, UiBuild "v2 screens 28")
+Owner approved the canvas board "Home for little hands" (KidHome) and answered: duplicates (spares) stay possible but finishing should get easier as you get closer; Fuse becomes a fifth tab; no read-aloud for now (toy sounds next, ElevenLabs later); collection covers always get a dark gradient with white text.
+- **Fuse tab** (`PrototypeHud.cs`): five tabs (Home, Shelf, Fuse, Boxes, You) with 28 pt icons in a taller 76 pt bar; new icon `Resources/UI/Icons/Fuse.png` (+meta). Fuse is a tab root, so it keeps the tab bar and has no back button; the reveal stays full screen.
+- **Codex lane, one additive line:** `Core/MenuNavigation.SelectTab` now accepts `AppPage.Fusion`. Please keep it (and `AppPage.Badges`) when copying Core files.
+- **Home feature sections** (`PrototypeHud.HomeFeatures.cs`, new): Play, Fuse, Boxes, Badges as a 2×2 grid of painted tiles under Today's box, each with its toys/boxes/badge on top and a white icon + word pill. Paintings load from `Resources/UI/Features/Feature{Play,Fuse,Boxes,Badges}.png` when they exist (requested above) and fall back to the pip/snowy/fox/firb covers.
+- **Opened box countdown** (`PrototypeHud.Home.cs`, `UI/CountdownText.cs`, `UI/BoxHype.cs` gains `Tint`): once today's box is opened, the card turns night purple and shows "NEXT BOX · Mystery box", a dusky silhouette of the box with a gold "?", and a live h:mm:ss countdown to the next UTC midnight. It says "A new box arrives in" and nothing about which collection, until rotation exists.
+- **Covers** (`PrototypeHud.ShelfCollections.cs`): shelf collection banners switch from a milk fade with plum words to a plum fade with white words, a white progress bar and count. Home, Collections and Collection already used dark fades.
+- **Tests:** `FuseIsATabAndHomeHasBigPictureSections`, `OpenedBoxCountsDownToTomorrowsMysteryBox`. Compiles against stubs; Unity tests and phone not run.
+- **Daily box rotation, owner-approved rules for Codex:**
+  1. One collection per UTC day, taking turns in catalog order and skipping collections the player has finished (every available member owned). If every collection is finished, use the full rotation.
+  2. Duplicates stay possible (they are the spares for fusion), but finishing gets easier as you get closer: inside the day's collection, each toy you don't have yet gets its weight multiplied by `1 + 2 × found / total` (a fresh collection keeps the normal odds; at 9 of 10 the last one is 3× as likely). The secret is left out of the boost so it stays rare. Please publish the effective odds the same way the box odds are shown today.
+  3. Choose the day's collection once and save it, so reinstalling or changing the clock can't re-roll it.
+  4. For the HUD: `TodayBoxCollectionId` and seconds until the next box (the HUD already computes the next UTC midnight). The next collection can stay hidden: the Home card shows it as a mystery box.
+
+### Owner fixes after Ui29 (Oct 21, UiBuild "v2 screens 30")
+- **Fusion names** (`UI/FusionNames.cs`, new): a fused toy is called by the first word of each parent's finish, "Honey × Copper", or "Double Honey"; never longer than 20 characters. Used by `PersonalityBook.ShortName` (shelf, pickers) and the play-screen title (`FinishName` in `PrototypeHud.Play.cs`), whose eyebrow now reads "AXOLOTL · FUSION". Play titles always shrink to fit. The full recipe name stays in the save (`FusedToy.Name`) and the details.
+- **Fusions section** (`PrototypeHud.SavedFusions.cs`): owned Pip Fusion Lab studies now appear here with the saved fusions; names sit in their own strip under the picture and shrink to fit, so they no longer run into the toy.
+- **Fusion Lab is not a collection** (`ShownCollections()` in `PrototypeHud.Collections.cs`): hidden from Collections, the Shelf's collection cards and Home's Keep collecting. Codex: the catalog/rewards side is unchanged.
+- **Collection page bottom** (`PrototypeHud.Collections.cs`): a found secret shows its real cut-out instead of the dark silhouette. No more greyed "X boxes are coming soon": collections without their own box offer show "See today's boxes" and "Walk for a free box". Per-collection $0.99 boxes need Codex's pools (see the shop proposal below).
+- **Fuse picker** (`PrototypeHud.Fusion.cs`): after taking back the first pick, the remaining pick still decides which character can join, so a fox can no longer join a penguin. The Fuse button's words shrink to fit.
+- **Tests:** `TakingBackTheFirstPickStillOnlyOffersTheSameCharacter`, `FusedToysGetShortNames`; the Wally collection-page assertions now expect "See today's boxes". Compiles against stubs; Unity tests and phone not run.
+
+### Owner decisions + requests for Codex (Oct 21, voice planning session)
+Carlos planned these with Claude today and confirmed the three that changed earlier repo decisions. Codex: everything under "Codex" below is your lane. Please claim what you take in your handoff. Claude is building the onboarding screens (UX-050, below) in the owner folder now.
+
+**Superseded decisions (owner-confirmed today)**
+1. **Boxes every 6 hours, not once a day.** Up to 4 boxes a day. An unclaimed box banks, up to **2**, so checking in late isn't punished. A box still needs walking: owner reasoning is "most people walk 5–10k steps, so 4 a day is plenty". **Owner-confirmed: 1,000 steps per box** (counted since the last box was earned), one box per 6-hour window. Open: the 1k/5k/10k glowing/golden walk tiers were built for one daily box; propose whether they go away or become per-box. Owner call. Keep the Oct 19 rotation rule per box (the collection rotates per box instead of per UTC day, still skipping finished collections, still saved so it can't be re-rolled).
+2. **Rarity ladder: 15 toys per collection, piloted on Wally first.** Ladder: **9 Common, 3 Rare (gold), 2 Epic (diamond), 1 Secret (molten)**. Secret stays about **1 in 72**. Roll out to the other 10 characters only after the owner phone-tests Wally.
+3. **Glow becomes Epic.** The existing glow-jelly secrets (e.g. Wally "Deep Sea Glow") move to Epic. Molten becomes the new secret. Owned glow toys stay owned, keep their IDs and just change tier. Saved ownership must survive (savev4 discipline, no lossy migration).
+
+**Wally pilot: proposed 15 (Claude's concept; names are placeholders for the owner)**
+- Common (9): the 8 existing commons (Lagoon Jelly, Moon Pearl, Coral Glitter, Seafoam Mochi, Lavender Flock, Cloud Plush, Reef Matte, Classic Blue) + **1 new** (e.g. "Kelp Mint" matte vinyl).
+- Rare, gold (3): **Sunken Gold moves up from common**, + 2 new gold finishes (e.g. "Treasure Leaf" gold leaf over vinyl, "Rose Gold Shell").
+- Epic, diamond (2): **Deep Sea Glow** (moved from secret) + 1 new (e.g. "Diamond Frost": faceted, prismatic sparkle).
+- Secret, molten (1): **new**, e.g. "Molten Abyss": cracked black obsidian with glowing neon veins (cyan to magenta, like a deep-sea vent), veins slowly pulsing.
+- So 5 new Wally toys. Odds proposal to tune: Secret ~1/72, the Epic tier ~6% combined, Rare ~15% combined, Common the rest. Odds shown before purchase/opening as today.
+- Each tier needs its own reveal moment (glow + sound). Claude will do the reveal UI once tier data exists. HUD needs `Tier` (Common/Rare/Epic/Secret) per collectible; `RarityLook.cs` already has a colour index to extend.
+
+**Material system (Codex: runtime/material)**
+Make materials data-driven so a new collection is mostly data: a **material profile** per toy (jelly / vinyl / plush / hard plastic) that decides interactions, haptic pattern and default sounds, plus a **rarity finish layer** on top (gold / diamond / molten: shine, glow, reveal), plus optional per-toy gimmicks. Reuse what exists (finish IDs, `SurfacePlay`, `material-gestures` work); don't duplicate it. Note: the project is the **Built-in Render Pipeline** (not URP), so hand-written/cginc shaders like the existing ones are the path. Keep them light and test on an older phone.
+Owner wants solid/vinyl toys to feel as rewarding as jelly squish (today you can only zoom). Pick 2 for the first build, owner to react on the phone:
+- **Flick to spin** with real momentum and a light haptic tick per rotation as it slows.
+- **Tap for a "tok"**: crisp hollow vinyl knock with a sharp haptic tap.
+- **Tilt to shine**: gyro-driven glint sweeping over gold/diamond.
+- **Molten pulse**: veins throb like a heartbeat with a matching haptic pulse.
+- Later: per-toy gimmicks (bobble/wobble, wind-up waddle, hidden button).
+
+**Bug: Wally glow is an orb by the tail (owner report)**
+Claude's diagnosis from source: the glow is not in the toy's material at all. `JellyCandy.shader` has no emission term; all the glow comes from `ToyGlowAura`'s camera-facing additive halo quad, which is placed at `body.VisualRoot.position` (the model pivot) + `viewer.forward * .85`. Wally's pivot sits near the tail, so the halo hangs there and you see a disc when you spin it. Suggested fix:
+1. Add an emissive term to the toy shader for glow finishes (emission colour × strength, plus a fresnel rim glow), so the surface itself glows from every angle.
+2. Centre the halo on the toy's **renderer bounds centre**, not the pivot, and scale it to the bounds; soften it, since emission now does most of the work. Keep the ground light pool.
+3. Bloom is optional on Built-in (Post Processing v2) and has a phone cost; try 1 and 2 first. Check the other characters' glow secrets (fox aurora, holiday glow-jelly), which use the same aura.
+Existing `WallyArtTests`/`ToyStageRuntimeTests` assert aura `Strength`; keep those meaningful.
+
+**Accounts, age gate, permissions, notifications (Codex: runtime/backend)**
+- Owner decision: **13+, no guest mode.** Flow: splash → birthday (age gate) → Sign in with Apple / Google → username → tutorial. Accounts must carry a collection to a new device. Provider is still unchosen (see BACKEND_PLAN.md).
+- **Existing local players must not lose anything**: the first sign-in on a phone with a local save links that save to the new account (the owner's phone has 87 inventory rows and 13 fusions).
+- Age gate: under 13 is blocked. Store only the pass/fail result and a lockout flag, not the full birthday, so the date can't simply be re-entered.
+- **Motion/step permission is requested only when the player taps "Enable walking"** to get their first box, not at sign-up. Ask for notification permission at that same moment ("Want us to tell you when your box is ready?").
+- Notifications: box unlocked by steps (bundle several unlocks into one during a long walk), trade offer, friend request, new collection drop. Default to at most 1–2 a day, each type switchable in Settings.
+- UI contract Claude is wiring now (`Runtime/UI/OnboardingContracts.cs`): `IAccountService` with `SignIn(AccountProvider, Action<AccountResult>)`, `IsSignedIn`, `IsUsernameAvailable`/`ClaimUsername`, and `hud.SetAccountService(...)`. Until it's set, development builds show a "Continue (test build)" button so the owner can test; release builds never get a guest path.
+
+**Social and trading (recorded for later; not this sprint)**
+- Feed: preset reactions and canned phrases only ("Lucky pull!"), no free-text comments.
+- Trading reuses the owner's Biotadex model: public ledger (in circulation / remaining / open offers and wants), missing-items check when offering to a friend. Negotiation room with buttons only: Accept, Decline, Counter, Sweeten the deal. 24-hour expiry, capped rounds, toys locked while a trade is pending, toy-for-toy only (no money), a confirm preview on both sides, no messaging strangers.
+- Sound: a standard per-collection sound list (tap, squish, pickup, shelf place, box reveal, tier reveals), each collection gets its own themed set (ElevenLabs).
+
+### UX-050 onboarding screens (Oct 21, UiBuild "v2 screens 31") — in the owner folder, not committed
+Owner-approved flow from today's planning session: **splash → birthday (13+) → Sign in with Apple / Google → collector name → 4-page tutorial**, full screen above every page, picture-first, using the real toys as floating cut-outs (`CutoutPortrait`) and the real collection box.
+- **New:** `PrototypeHud.Onboarding.cs` (screens, plus small `OnboardingFloat`/`OnboardingSwipe` behaviours), `UI/OnboardingContracts.cs` (`IAccountService`, `AccountResult`, `UsernameCheck`, pure `OnboardingRules`, `OnboardingState` prefs `pockle.onboarding.v1.*`), `Tests/PlayMode/OnboardingUiTests.cs`.
+- **Age gate:** month chips + day/year number fields, no default age hint. Under 13 shows "Pockle isn't for you yet" and sets a lockout flag; the birthday itself is never stored. Back can't leave the blocked screen.
+- **Sign-in:** Apple first on iOS, Google first elsewhere. Without an account service, **development builds** show "Continue (test build)"; release builds show "Sign-in isn't ready in this build yet." and can't continue (no guest path).
+- **Name:** prefilled friendly suggestion ("CometMochi482"), shuffle button, 3–16 letters/numbers/_, "Don't use your real name." Saved to the profile name.
+- **Tutorial:** Open a box / Fill your shelf / Walk for free boxes / Trade with friends; swipe or Next, Skip. Settings › **How to play** now replays these pages (the old tips dialog quoted the 1,000-step daily box). Test builds also get Settings › **Restart sign-up (test build)**.
+- Motion: Calm holds all onboarding art still.
+- **Codex lane, one additive line:** `TactilePrototype` calls `hud.StartOnboardingIfNeeded()` after `SetFusionService`. Tests and capture scenes that build the HUD directly never see onboarding, so existing suites are unaffected.
+- **Requests for Codex:** implement `IAccountService` and call `hud.SetAccountService(...)`; swap my two provider pills for the platforms' official sign-in buttons; link an existing local save on first sign-in; please check that 3D touch input ignores touches while `hud.OnboardingVisible` (the overlay blocks UI raycasts, but I didn't verify the stage's own touch handling).
+- **Checks actually run:** Pockle.Runtime compiled with Roslyn against the project's Android managed DLLs: no new errors (the only new one is `DateTime.Today`, which the linker stripped from that mscorlib, same as the existing `Mathf.PI` ones). PlayMode tests written but **not run**; no Unity render, capture or phone build yet.
+
+### Request for Codex: onboarding backgrounds (Oct 21, owner)
+The owner checked the UX-050 onboarding in Unity: layout is fine, but the flat colour fields read as plain. Please paint **9 full-screen backgrounds** in the same painted style as the collection worlds and the approved complete-button art (ART-005), and put them on a review page for the owner before they ship.
+- **Already wired, no code needed:** the HUD loads `Assets/Pockle/Resources/UI/Onboarding/Onboarding{Name}.png` per screen and cover-fits it (fills the screen, trims edges evenly, never stretches). Until a file exists, that screen keeps its colour field. Names: `Splash`, `Birthday`, `SignIn`, `Username`, `Blocked`, `Tutorial1`, `Tutorial2`, `Tutorial3`, `Tutorial4`.
+- **Size:** portrait, about **1080×2340** (9:19.5). Keep anything important inside the middle 1080×1900, since shorter phones crop the top and bottom. Import with no mipmaps, max size 2048.
+- **No toys, boxes or words in the paintings.** The HUD floats the real toy cut-outs, box art, titles and buttons on top. Paint environments only.
+- **Calm zones:** the lower ~45% holds plum titles, body text and buttons, so keep it light, soft and low-detail. The upper area is where the toys float; give them a soft glow or open space behind them rather than busy detail. Each screen should stay close to its current colour so the UI tints still match.
+
+| File | Current colour | Idea | Where UI sits (height from bottom) |
+|---|---|---|---|
+| Splash | jelly pink | dreamy toy-shop sky, soft pink clouds and sparkles | wordmark ~70%, toy arc ~30–36%, button at the bottom |
+| Birthday | peach | gentle party: bunting and confetti at the edges | toy ~85%, month grid + day/year 29–62% (keep very calm) |
+| SignIn | moon lilac | cosy dusk bedroom wall with a window | toys on a UI-drawn plank ~64–75%, two sign-in buttons near the bottom |
+| Username | mint | sticker / name-tag wall, soft | toy ~80%, name field ~44–53% |
+| Blocked | soft grey | sleepy night, moon, blankets | sleeping toy ~66%, text 32–51% |
+| Tutorial1 | gold | gift-wrapping table, ribbons ("Open a box") | box + toy ~45–80% |
+| Tutorial2 | jelly pink | cosy playroom wall ("Fill your shelf") | UI plank ~50%, three toys above it |
+| Tutorial3 | mint | sunny park path with little footprints ("Walk for free boxes") | toy ~65% |
+| Tutorial4 | moon lilac | two windows or friends' houses with bunting between ("Trade with friends") | two toys ~65% |
+
+Claude will check the native framing once they're in and tune text colours or shading if a painting needs it.
+
+### Onboarding backgrounds moved in (Oct 21, owner-approved)
+Owner approved Codex's nine paintings (`ArtSource/OnboardingBackgrounds01`, review `docs/onboarding-art-review-01`). Copied byte-identical into `Assets/Pockle/Resources/UI/Onboarding/Onboarding{Splash,Birthday,SignIn,Username,Blocked,Tutorial1-4}.png`, with new GUIDs; import settings copied from the feature art (no mipmaps, max 2048). The HUD already loads them by name, so there's no code change. Not yet checked in Unity or on the phone: watch the bottom-corner foliage behind the Username and Tutorial4 buttons, and softness at 853 px wide on the 1440-wide Pixel.
+
+**Correction (Oct 21, owner):** boxes are **1,000 steps each, one per 6-hour window** (up to 4 a day, banking up to 2). This supersedes the 2,000-step proposal above.
+
+### Tutorial walk/trade redesign (Oct 21, UiBuild "v2 screens 32") — owner-approved mockup
+Owner found the walking and trading icons cheap; approved a mockup, now built in `PrototypeHud.Onboarding.cs`.
+- **Walk (page 3):** the real Wally box (falls back to the first collection) inside a progress ring on a milk disc. The ring shades jelly pink to gold, 70% full, with a "700 / 1,000 steps" pill and a dotted trail up from the toy. Copy: "Every walk fills the ring. When it's full, a box is yours." (1,000 steps per box, owner-confirmed.)
+- **Trade (page 4):** two toys, each above a tilted milk trade card showing the spare they're offering (collection name + spare dots), with a plum swap badge between them.
+- **New runtime-drawn glyphs** in `UI/UiShapes.cs`: `Ring`, `ProgressArc(fraction)`, `Swap`. These could later drive a real walking ring on Home.
+- Checks: compiled with Roslyn against the Android managed DLLs (no new errors apart from linker-stripped `Mathf.Deg2Rad`/`DateTime.Today`). Glyph geometry was checked with an offline render. Unity and phone not run.
+
+### playpockle.com website v1 (Oct 21) — PR #22, branch `claude/website`
+Owner bought playpockle.com (Squarespace DNS). Legal owner: **Zulapp LLC**. Contacts: support@, privacy@, legal@playpockle.com (Workspace group emails). Static site in `website/` (generator `website/build.py`); Vercel project `playpockle` serves `website/public` and is currently deployed to production from the branch. Pages: home, Privacy, Terms, Support/FAQ, Delete account (required by Google Play), 404. The legal pages are drafts for legal review.
+**Promised by the site, so needed before launch (Codex runtime, Claude screens):** in-app Settings › Your account › Delete account (deletion finishes within 30 days; purchase records kept); Report and Block from a collector name; changing your collector name. Website v2 = public trading ledger reading a Supabase public view (no emails, sign-in IDs or step counts).
+
+### Request for Codex: backend foundation (Oct 21, owner-approved) — Supabase project **Pockle**
+The owner created the Supabase project **Pockle** (ref `azdzafotawbrplukeqcl`, org Zulapp (Pro), us-east-1, Postgres 17, ACTIVE_HEALTHY, empty). URL `https://azdzafotawbrplukeqcl.supabase.co`. Build from `docs/BACKEND_PLAN.md`, with today's owner decisions overriding it:
+1. **No guest/anonymous sign-in** (BACKEND_PLAN suggested anonymous guests; superseded). Accounts are **Sign in with Apple** and **Google** only, behind the 13+ birthday gate (age pass/fail and lockout stay on-device; never store the birthday).
+2. **Migrations in the repo** (`supabase/migrations/`), private schema + RLS + Edge Functions as the plan describes. No secrets in git. The client may embed only the publishable/anon key. **Provider secrets** (Apple Services ID/key, Google OAuth client) are entered by the owner in the Supabase dashboard; list exactly what you need from him.
+3. **First slice, in order:** sign-in → `players` + username claim (3–16 letters/numbers/_; reserved/offensive-name filter; `UsernameCheck` Available/Taken/NotAllowed) → cloud save of the current local inventory/fusions as a **tagged legacy snapshot** (the owner's phone: 87 rows, 13 fusions, must survive) → **account deletion** (in-app request; personal data deleted or de-identified within 30 days; purchase records kept; anonymous ledger counts kept; this is what playpockle.com/delete-account promises) → sign out.
+4. **Unity:** implement `IAccountService` (`Runtime/UI/OnboardingContracts.cs`) and call `hud.SetAccountService(...)`. Claude will extend the contract for the account screens (sign out, delete account, rename, report/block); please review those additions in this handoff before implementing.
+5. **Then:** the server-side **6-hour box timer** (1,000 steps per box, up to 4 a day, bank up to 2; per-box collection rotation, saved so it can't be re-rolled), so changing the phone clock can't mint boxes.
+6. Later slices stay as planned: verified purchases + per-player odds, friends/trading/ledger public view (for website v2), report/block.
+Please record what you claim and verify in your handoff, as usual; no production data or real charges.
+
+### UX-051 account + notification settings (Oct 21, UiBuild "v2 screens 33") — owner folder, not committed
+What playpockle.com promises, on Claude's side. New `PrototypeHud.Account.cs`; hooks in Settings and HUD.
+- **Settings › Your account** (top of Settings): "@name" with sign-in state; **Change collector name** (reuses the onboarding name step, then returns to Settings); **Sign out** and **Delete account**, both behind a new two-choice confirm dialog (Back cancels). After sign-out or deletion the sign-in step returns; a returning player with a username who finished onboarding goes straight back in.
+- **Settings › Notifications:** Box ready / Trade offers / Friend requests / New collections switches, default on. Stored in `NotificationPrefs` (`pockle.notifications.v1.*`, with a `Changed` event).
+- **About:** "Your save and account" (it said accounts were coming later) is replaced with **Privacy and terms** and **Help and support** links to playpockle.com.
+- **Contract change for Codex (`IAccountService`, not implemented yet, so nothing breaks):** added `string Username { get; }`, `void SignOut(Action done)`, `void RequestDeletion(Action<bool> done)`. Rename uses `ClaimUsername`. Runtime: please check `NotificationPrefs.IsOn(kind)` before scheduling or showing a notification.
+- **Not done yet:** Report and Block need the friends/trading screens (the Friends page is still empty states); they'll come with the trading UI.
+- Tests: `OnboardingUiTests.SettingsCanRenameSignOutAndDeleteWithConfirmation`, `NotificationChoicesDefaultOnAndPersist`. Checks: Roslyn compile against the Android managed DLLs, no new errors (only linker-stripped API noise). Unity tests, render and phone not run.
+
+## October 22 — UX-052 server box UI + UX-050 account gate + rarity looks: UI READY for integration (owner folder, not committed)
+Read Codex's "Request for Claude now: server box UI + account gate" and "rarity review" notes. Codex said its WalkingBoxes contract isn't implemented yet and not to compile against it, so the HUD takes a **push-only, HUD-owned snapshot**. No runtime file is edited and no new dependency on CollectionSession is added.
+
+**Contract (Codex binds; nothing else needed):** `Runtime/UI/WalkingBoxView.cs`
+- `hud.SetWalkingBoxes(WalkingBoxView view)` on every server state change. `hud.ClearWalkingBoxes()` returns to the unchanged local beta card (signed out, test builds). `hud.ServerBoxes` reports the mode.
+- `WalkingBoxView`: `BankedCollectionIds` (open order, each the server-saved collection), `MaxBanked`=2, `EarnedToday`/`MaxPerDay`=4, `StepCredit`/`StepsPerBox`=1000, `SecondsUntilNextBox` (server seconds or null; null while earning is open, the bank is full or the day is done), `NextCollectionId` (optional, if the server has already assigned it), `Connection` Online/Reconnecting/Offline, `Busy`, `CanOpen` (server-confirmed), `Message`, `Odds` (`TierOdds` list or null; the UI never invents odds). Derived: `OpenEnabled = Online && !Busy && CanOpen && Banked>0`.
+- Opening still raises the existing `DailyBoxRequested`; in server mode only when `OpenEnabled`. Codex opens the first banked box and persists the outcome before the reveal, as planned.
+- The countdown ticks the server-sent seconds down locally between snapshots, then shows "Checking…" at zero until the next snapshot. The phone's date is never used for earning in server mode, and there's no local CanClaim fallback.
+
+**Screens:**
+- Home card (taller in server mode): "N BOXES READY", the first banked box's art and name ("Wally box"); a bank row with 2 slots showing each box's art and 4 day dots, plus "1 of 2 banked · 2 of 4 today"; steps n/1,000 + bar; status by priority: Offline ("Your boxes are saved and open when you're back online") > Reconnecting > Message > Busy > bank full ("Open a box to keep earning"; earning paused, no countdown) > day done ("That's all 4 boxes for today") > "Next box in h:mm:ss" (server) > "N more steps to earn a box". Open button "Open Wally box", disabled offline or reconnecting. A not-yet-earned box shows faded or as a mystery; there's no selector or reroll anywhere.
+- Boxes card: same state in one line each, a rules line ("1,000 steps earns a box · one every 6 hours · up to 4 a day · 2 can wait") and a **Rules & odds** dialog listing the server's tier odds, or saying they appear before opening. Rewards note and "See your boxes" copy replace the midnight/daily text in server mode. Enable walking is still the activity-permission trigger.
+
+**Account gate (UX-050, done as requested):** `StartOnboardingIfNeeded` → age-locked shows Blocked; not completed shows the full flow; **completed + account service + signed out shows SignIn**; completed + signed in goes straight in. Age result, tutorial and profile are untouched. Back from this gate leaves the app. A returning player signing in with no username claims one and then skips the tutorial. Codex's restore-before-onboarding ordering is assumed.
+
+**Rarity (prepared, odds configurable):** `RarityTier` gains `Epic`, `Secret` (existing values keep their numbers). Looks: Rare = gold + star, Epic = diamond (ice blue) + gem, Secret = molten (obsidian, ember ring) + sparkle; `RevealGlow` colour per tier for the reveal aura. **`RarityLook.TierSource`** (Func<id, RarityTier?>) lets the runtime supply tiers. `RarityLook.FromTier(ToyTier)` maps Core's tier, e.g. `RarityLook.TierSource = id => id.StartsWith("wally.") ? RarityLook.FromTier(WallyCatalog.Tier(id)) : (RarityTier?)null;` (Codex's call when the pilot is accepted). No current catalog toy uses a plain "Rare" label, so recolouring Rare to gold changes nothing shipped today. `TierOdds.Format`: "15%", "about 1 in 72".
+
+**Files (Claude):** new `PrototypeHud.WalkingBoxes.cs`, `UI/WalkingBoxView.cs`, `Tests/PlayMode/WalkingBoxUiTests.cs` (+ metas); edited `PrototypeHud.Home.cs` (server branch + height), `PrototypeHud.Store.cs` (server branch, rules row), `PrototypeHud.Collections.cs` (one label), `PrototypeHud.Onboarding.cs` (gate), `UI/RarityLook.cs`, `UI/CountdownText.cs` (optional `Source`/`Prefix`; the default midnight behaviour is unchanged).
+
+**What I actually tested (Oct 22):**
+- Compiled the owner folder's current Pockle.Core + Pockle.Runtime (including Codex's Backend/ and in-progress Wally pilot files) and **all 58 PlayMode test files** with Roslyn against this Mac's Unity 6000.6.5f1 editor engine DLLs (UnityEngine modules, netstandard 2.1, UnityEngine.UI/TestRunner from Library, the NUnit package, Unity's netfx shims), with UNITY_EDITOR defined: **0 errors**.
+- New tests (written, compiled, **not run**): `WalkingBoxUiTests` — banked boxes show the saved collection and open through the server event, with no reroll control; offline/reconnecting never open; full bank or finished day pauses earning without a countdown; countdown from server seconds; clearing restores the local card; signed-out returning player gets SignIn, Back exits, signed in goes straight in; ladder tiers/odds format. Plus the earlier `OnboardingUiTests`.
+- **Not verified:** Unity PlayMode run, any visual render/capture, Android build, phone. Please run `WalkingBoxUiTests` + `OnboardingUiTests` + `CollectionUiTests` natively in the integration build and capture Home/Boxes in each state before the phone build.
+
+**Requests for Codex:** (1) bind `SetWalkingBoxes`/`ClearWalkingBoxes` from `ServerWalkingBoxService`; (2) set `RarityLook.TierSource` when the Wally pilot is accepted, and send `Odds` from published pool data; (3) use `RarityLook.For(tier…).RevealGlow` for the reveal aura if useful; (4) official Apple/Google button assets: put the brand-approved images in `Resources/UI/Brand/` and tell me, then I'll swap the pills (still pending).
+
+## October 22 (afternoon) — review of the integrated Wally rarity/box UI, collection tier badges, official provider buttons (owner folder, not committed)
+Read Codex's Oct 22 notes: Wally 15 approved and installed (52/52 native, 89 rows / 15 fusions preserved). **Codex's owner-approved fixes are preserved unchanged**: `CountdownText` same-second repair (`second == lastSecond && Target.text == text`) and `TierOdds.Format` reciprocal odds below 2%. Odds stay **unset**: the UI shows odds only from `WalkingBoxView.Odds`, which nothing sets.
+
+**Review of Codex's 12 native captures** (`/private/tmp/pockle-fox-phone-20261014/test-results/wally-ui`, read-only) **and `docs/wally-pilot-review/lineup.jpg`**. Fixed in Claude files:
+1. Step bars rendered **full width** in every capture (400/1,000 looked complete). `ProgressWidth` only resized in LateUpdate, after the capture. Added `ProgressWidth.Apply()`, called right after server refreshes, so the bar is correct the same frame. On a phone it would self-correct a frame later; captures were misleading.
+2. Home bank caption was cramped and truncated ("1 of 2 / banked · 0"). Now: two box slots + "Today" + four dots. The header already says "1 BOX READY". The test asserts 4 dots, 2 filled, and 2 slot pictures.
+3. Boxes card offline line was cut off. Compact status variants for the card: "Offline · boxes open when you're back online", "Bank full · open a box to keep earning", "All 4 earned today · more tomorrow".
+4. The Boxes subtitle still said "every day". In server mode it now reads "Walk to earn free boxes, or pick one to buy."
+5. The mystery "?" (gold on pink) was barely visible. In server mode it uses jelly ink at 50%; the local card keeps gold.
+6. **Secret look now matches the approved Molten Abyss art**: obsidian `#0E1418` with cyan `#22D3F0`/`#7FF3FF` (it was ember orange). Rare gold and Epic diamond already matched the lineup.
+7. **Collection page tier badges (new):** each Wally lineup slot shows a small Rare / Epic / Secret badge in its tier colours, on found and unfound slots alike, since the ladder is part of the chase. Commons and other collections' legacy labels get none, because only `RarityLook.TierSource` tiers (Codex's Wally binding) qualify. Test: `WallyLineupShowsItsLadderTiersOnFoundAndUnfoundSlots`.
+
+**Official Apple / Google buttons (done, pending the brands' logo files):** `ObProviderButton(AccountProvider…)` in `PrototypeHud.Onboarding.cs`.
+- Google (Google Identity branding, light theme): white fill, true 1px `#747775` border, `#1F1F1F` "Continue with Google", G logo 20pt left of the title, the group centred.
+- Apple (Sign in with Apple HIG): black fill, white "Continue with Apple", white Apple logo, group centred, 56pt tall (≥44 minimum).
+- Both titles use the **phone's system font** (`Font.CreateDynamicFontFromOSFont`: Roboto on Android, SF/Helvetica on iOS), not Bricolage. Button object names are unchanged, so existing tests and Codex's flow are unaffected.
+- **Logos are not drawn by us**: the HUD loads `Resources/UI/Brand/GoogleG.png` and `Resources/UI/Brand/AppleLogoWhite.png`. Until they exist the buttons are text-only and development builds log a reminder. The owner will download the official files (Google Identity branding assets; Apple Design Resources › Sign in with Apple) and Claude will add metas and verify.
+- Test: `OnboardingUiTests.ProviderButtonsFollowAppleAndGoogleStyling`.
+
+**What I actually tested:** Roslyn compile of the owner folder's current Core + Runtime + **all 58 PlayMode test files** against this Mac's Unity 6000.6.5f1 editor DLLs, UNITY_EDITOR defined: **0 errors**. New/changed tests were **compiled, not run**. Fixes 1–5 were reasoned from the captures; no new render was taken.
+
+**Runtime requests for Codex:**
+1. Rerun natively: `WalkingBoxUiTests` (two changed/new cases), `OnboardingUiTests`, `CollectionUiTests`, Wally suites. Re-capture Home/Boxes (all 6 states) and the **Wally collection page** (found + unfound tier badges) and the **sign-in step**, and add them to the review page.
+2. Still pending on your side: bind `ServerWalkingBoxService` → `hud.SetWalkingBoxes/ClearWalkingBoxes`; keep `Odds` null until the owner approves pool odds.
+3. iOS (later): you may swap the Apple pill for the native `ASAuthorizationAppleIDButton`; keep the object name "Continue with Apple" or tell me.
+4. Google OAuth is still in Testing. When it goes to production verification, these branded buttons and the playpockle.com privacy page are what Google will review.
+
+## October 23: official sign-in logos installed
+
+The owner asked Claude to fetch the brands' own files while he was away. Both now live in `Assets/Pockle/Resources/UI/Brand/` with new metas (Brand folder `ab500ac5…`, GoogleG `b25e5d9e…`, AppleLogoWhite `7dc48bba…`; texture defaults, alpha is transparency on, no mipmaps).
+- **`GoogleG.png` (82×84):** from Google's official `signin-assets.zip` (developers.google.com/identity/branding-guidelines). Source: `Android + Web/PNG @4x/Light/…Show text=No, Shape=Square…@4x.png`. Cropped to the G with 2px padding. Only the white tile background was made transparent; the logo pixels are unchanged. This is the current gradient G.
+- **`AppleLogoWhite.png` (50×61):** from Apple's official `Logo-Sign-in-with-Apple.dmg` (Apple Design Resources). Source: `Logo - SIWA - Logo-only - Black@3x.png`, a white logo on a black tile. The black tile became alpha (white glyph, alpha = brightness) and was cropped with 2px padding. No redrawing.
+- The HUD scales each logo by its own aspect ratio (Google 20pt tall, Apple 22pt), so no code change was needed. `ProviderButtonsFollowAppleAndGoogleStyling` now expects both logo objects to be active.
+- Font: Google's current spec is Roboto Medium 14/20. Our system-font list starts with Roboto (present on Android); iOS falls back to SF. **No Google Sans bundled.**
+
+**Verified:** pixel-for-pixel comparison of the files on the Mac against the extracted sources (they match; the Mac re-encoded the PNG bytes only). Visual check of both glyphs on their button colours.
+**Not verified:** a Unity render or phone view of the sign-in screen. Codex, please include the sign-in step in the next native capture (request 1 above) and rerun `OnboardingUiTests`.
