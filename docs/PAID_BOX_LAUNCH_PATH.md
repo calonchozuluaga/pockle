@@ -109,3 +109,7 @@ The existing carton animation does not satisfy the final reveal experience. Clau
 ## November3 — tiered availability proposal (not approved)
 
 Owner prefers availability to reflect rarity rather than one identical cap. Proposed worldwide copies per finish: Common10,000; Rare6,000; Epic3,500; Secret1,600. For Wally's9/3/2/1 lineup, total116,600 copies. Under a simple initial stock-proportional draw, tier percentages are77.1870/15.4374/6.0034/1.3722, with Secret about1in73. Counts are a recommendation, not a published edition. Exact cap approval and actual draw/completion/depletion rules remain separate; fixed caps do not automatically define the implemented odds. The exploratory5,000–10,000 range does not establish10,000 for every finish.
+
+## November3 — exact edition caps approved
+
+Owner approved the proposed worldwide copy limits per finish: Common10,000; Rare6,000; Epic3,500; Secret1,600. Wally's9/3/2/1 lineup totals116,600 official copies. This supersedes the unapproved-cap status above. Actual draw probabilities, completion boost and depletion policy are still distinct unresolved decisions; the illustrative stock-proportional Secret~1in73 was not separately approved as the draw algorithm. Caps are a published-policy target for implementation, not evidence of live server inventory or product publication. Existing legacy inventory remains preserved and separately classified.

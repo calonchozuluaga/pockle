@@ -2,7 +2,7 @@
 
 ## November 3 — paid boxes required for first release
 
-Owner makes paid boxes, toy-for-toy trading and finite series supply mandatory for Apple and Google launch. Follow [PAID_BOX_LAUNCH_PATH.md](PAID_BOX_LAUNCH_PATH.md). RevenueCat is the selected integration path to prepare, not an already connected Pockle service. Launch pricing targets are now recorded in LAUNCH_BOX_PRICING.md. Owner confirms duplicates remain spares for fusion and trading; the old paid no-duplicate proposal below is superseded. Completion rules and pool percentages remain approval gates, Finite series are now approved in principle; actual per-finish caps, supply-aware odds and legacy eligibility still need explicit approval before minting. Shared server delivery and fusion ownership are prerequisites for reliable paid boxes.
+Owner makes paid boxes, toy-for-toy trading and finite series supply mandatory for Apple and Google launch. Follow [PAID_BOX_LAUNCH_PATH.md](PAID_BOX_LAUNCH_PATH.md). RevenueCat is the selected integration path to prepare, not an already connected Pockle service. Launch pricing targets are now recorded in LAUNCH_BOX_PRICING.md. Owner confirms duplicates remain spares for fusion and trading; the old paid no-duplicate proposal below is superseded. Completion rules and pool percentages remain approval gates, Finite series are now approved in principle; per-finish caps are now approved at Common10,000/Rare6,000/Epic3,500/Secret1,600; supply-aware odds and legacy eligibility still need approval before minting. Shared server delivery and fusion ownership are prerequisites for reliable paid boxes.
 
 
 ## October21 owner overrides / implementation status

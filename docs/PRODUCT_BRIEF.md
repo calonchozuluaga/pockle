@@ -2,7 +2,7 @@
 
 ## Owner release decisions — November 3, 2026
 
-The first Apple/Google release includes paid boxes, walking rewards, toy play, collections, same-character fusion, accounts and toy-for-toy trading. Official series have finite global supply; exhausted series stop new awards while owned toys remain usable/tradable. Duplicates stay as spares for fusion/trading. Paid offers: collection-choice single US$0.99; MysteryMix3 US$2.49; MysteryMix5 US$3.99 (localized prices from stores). Exact odds, edition quantities, completion/pack-variety rules, legacy production eligibility and fused-result trading policy remain to settle. Earlier deferred-purchases/trading scope is superseded. Implementation and acceptance path: [PAID_BOX_LAUNCH_PATH.md](PAID_BOX_LAUNCH_PATH.md).
+The first Apple/Google release includes paid boxes, walking rewards, toy play, collections, same-character fusion, accounts and toy-for-toy trading. Official series have finite global supply; exhausted series stop new awards while owned toys remain usable/tradable. Duplicates stay as spares for fusion/trading. Paid offers: collection-choice single US$0.99; MysteryMix3 US$2.49; MysteryMix5 US$3.99 (localized prices from stores). Owner-approved worldwide caps per finish are Common10,000; Rare6,000; Epic3,500; Secret1,600. Exact odds, completion/pack-variety/depletion rules, legacy production eligibility and fused-result trading policy remain to settle. Earlier deferred-purchases/trading scope is superseded. Implementation and acceptance path: [PAID_BOX_LAUNCH_PATH.md](PAID_BOX_LAUNCH_PATH.md).
 
 
 ## October21 collecting and identity update

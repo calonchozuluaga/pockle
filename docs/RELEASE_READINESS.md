@@ -56,3 +56,5 @@ Duplicate policy confirmed: duplicate toys remain owned spares usable for fusion
 ## November3 — trading and finite series required for launch
 
 Owner confirms trading belongs in the first release and series become unavailable for new awards when their finite supply is exhausted. Earlier deferred-trading statements are superseded. Owned toys remain playable/tradable after sellout. The existing editions/copies/ledger/trade design is now on the critical path, not a later feature. Actual edition sizes, remaining-supply odds behavior, legacy production eligibility and fused-result treatment must be settled before launch. A committed submission date cannot precede this added work and two-account testing.
+
+Edition caps approved November3: per-finish worldwide supply Common10,000/Rare6,000/Epic3,500/Secret1,600. Wally total116,600. Draw/boost/depletion rules remain to settle; no live mint/configuration claim.
