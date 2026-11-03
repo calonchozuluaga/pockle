@@ -59,3 +59,6 @@ Owner approved registration and credential connection. Primary App ID **com.play
 Supabase Apple provider is now **Enabled**, using the Services ID and an ES256 client-secret JWT. JWT signature verified locally; expires **May 2, 2027 at 19:41:09 UTC**. Rotate before that date; do not publish the secret or log it. Browser password-manager storage was declined. Google remains enabled; anonymous, email and phone remain disabled.
 
 Verified: saved dashboard state, public Auth settings, and fresh PKCE authorization redirect (HTTP302) to Apple with expected client ID/callback. Not verified: complete iPhone Apple consent/token exchange, account linking, Keychain persistence or cross-device restore. Owner retry requested. Existing installed diagnostic iOS bundle remains `studio.pockle.prototype`; registering the approved primary App ID does not change an already-installed app.
+
+
+November 3 owner acceptance: real Apple sign-in on the installed iPhone succeeded (“worked!”). Session persistence after cold restart and token refresh remain unverified; no cross-device collection restore is implied.

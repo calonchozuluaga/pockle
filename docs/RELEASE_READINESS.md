@@ -68,3 +68,6 @@ November 3 owner device acceptance: onboarding runs on the physical iPhone. Appl
 
 
 November 3 Apple provider setup completed: approved primary App ID com.playpockle.app, Services ID com.playpockle.app.signin, dedicated login key and Supabase OAuth secret configured. UI/public settings confirm enabled and PKCE request redirects to Apple. Full owner iPhone Apple login and Keychain restart acceptance still pending. OAuth secret expiry May 2, 2027; rotate beforehand. No app rebuild or automatic collection restore performed.
+
+
+November 3 owner acceptance: real Apple sign-in on the installed iPhone succeeded (“worked!”). Session persistence after cold restart and token refresh remain unverified; no cross-device collection restore is implied.
