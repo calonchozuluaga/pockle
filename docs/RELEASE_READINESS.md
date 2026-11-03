@@ -58,3 +58,7 @@ Duplicate policy confirmed: duplicate toys remain owned spares usable for fusion
 Owner confirms trading belongs in the first release and series become unavailable for new awards when their finite supply is exhausted. Earlier deferred-trading statements are superseded. Owned toys remain playable/tradable after sellout. The existing editions/copies/ledger/trade design is now on the critical path, not a later feature. Actual edition sizes, remaining-supply odds behavior, legacy production eligibility and fused-result treatment must be settled before launch. A committed submission date cannot precede this added work and two-account testing.
 
 Edition caps approved November3: per-finish worldwide supply Common10,000/Rare6,000/Epic3,500/Secret1,600. Wally total116,600. Draw/boost/depletion rules remain to settle; no live mint/configuration claim.
+
+## Native iPhone build checkpoint — November3
+
+After owner accepted Xcode terms, the diagnostic nativearm64 iPhone build succeeded. Actual app packaging checks confirmOAuthcallback and linked Keychain bridge/Security framework. The artifact is unsigned; signing and phone install are pending because the currentMac shows0valid signing identities and0paired devices. Owner reconnect/Xcodeaccount setup requested. No physical-device/iOSOAuth/motion/store-ready claim.
