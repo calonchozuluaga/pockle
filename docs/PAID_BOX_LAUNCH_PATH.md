@@ -101,3 +101,11 @@ Trading baseline follows prior owner-approved direction: toy-for-toy, authentica
 Additional acceptance cases: simultaneous attempts at the last edition; full mixed pack with insufficient stock; free and paid grants racing; trade versus fusion of the same spare; competing trades; one party cancelling/expiring/disabling/blocking while confirmation is in flight; network interruption after acceptance; duplicate accept requests; signed-out/foreign-account access; sold-out browsing/play/trade; legacy copies cannot silently enter trusted finite production supply. Unapproved legacy-to-production migration must not lose existing toys.
 
 Codex owns edition/inventory/grant/fusion/trade services and concurrency verification. Claude owns trading screens/confirmation/reservation/sold-out copy and UI tests. Owner supplies edition sizes and approves the inventory/fused-result policies. This expands the release critical path; it does not establish a submission date.
+
+## November3 — polished box reveal is a launch gate
+
+The existing carton animation does not satisfy the final reveal experience. Claude's dedicated reveal screen and Codex's result/animation/recovery binding are part of gate5. See BOX_REVEAL.md. Next end-to-end milestone: a real sandbox purchase on Android and iPhone, persistent ownership, polished reveal and verified restart recovery, before expanding all product/pack/trade cases. Diagnostic iOS export is underway to expose platform failures independently of product-policy decisions.
+
+## November3 — tiered availability proposal (not approved)
+
+Owner prefers availability to reflect rarity rather than one identical cap. Proposed worldwide copies per finish: Common10,000; Rare6,000; Epic3,500; Secret1,600. For Wally's9/3/2/1 lineup, total116,600 copies. Under a simple initial stock-proportional draw, tier percentages are77.1870/15.4374/6.0034/1.3722, with Secret about1in73. Counts are a recommendation, not a published edition. Exact cap approval and actual draw/completion/depletion rules remain separate; fixed caps do not automatically define the implemented odds. The exploratory5,000–10,000 range does not establish10,000 for every finish.

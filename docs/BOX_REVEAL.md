@@ -1,3 +1,19 @@
+# Box reveal — first-release work
+
+## Current state (November 3, 2026)
+
+The runtime has a branded hinged-carton opening, toy emergence and Calm alternative. The dedicated polished box reveal is still launch work; the more developed full-screen UI reveal currently belongs to fusion. Existing carton code is a foundation, not evidence that the new flow has shipped.
+
+The owner identified this gap while defining required paid boxes and packs. The launch flow needs the actual3Dtoy, collection-specific box/world, appropriate rarity treatment, name/finish/personality, real server edition/serial, new-or-extra state, Play/Keep actions and sequential3/5pack reveals with skip-animation and summary. Owned duplicate copies stay as spares for fusion/trading. No invented edition number, rare result or purchase-success animation before durable delivery.
+
+Claude owns screen/visual design and UI tests; Codex owns runtime animation, server-confirmed results, input blocking and restart/reveal recovery. A confirmed delivery is persisted before revealing; skipping or restarting never draws again or grants another copy. Completion returns to the same saved receipt/child progress. Calm uses a brief quiet transition. Sound/haptics respect settings. Tier-specific sounds remain subject to actual asset readiness.
+
+Acceptance: one sandbox purchase on each phone becomes exactly one saved owned result, shows the final reveal, remains after restart and resumes any interrupted pack without changing outcomes. Dedicated native/phone reveal verification remains pending. See [paid-box launch path](PAID_BOX_LAUNCH_PATH.md).
+
+## Historical carton implementation notes
+
+The original prototype notes below describe earlier controls/plate/startup behavior and historical checks. They are retained as history, not current release instructions or current verification.
+
 > Collection UI update: select a toy on **Shelf** to play. Comfort controls are in **Settings**. Open an earned daily box from **Boxes**; `Space` previews the opening in the editor. Former variant, Reset, and Reveal again buttons are gone. See [current UI tests](COLLECTION_UI.md).
 
 # Jelly Garden box opening
