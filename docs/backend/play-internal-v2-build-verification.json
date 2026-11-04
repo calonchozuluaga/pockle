@@ -9,6 +9,16 @@
   "zip_integrity": "passed",
   "unsigned_sha256": "e4833a6fb9d80cf692ba67425c7ef8cb01b95c2130d4fa7fca58592bad504886",
   "unsigned_bytes": 442297255,
-  "private_upload_signing": "waiting_owner_existing_key",
-  "play_upload": "not_uploaded"
+  "private_upload_signing": "owner_signed_independently_jarsigner_verified",
+  "play_upload": "accepted",
+  "signed_payload_matches_unsigned": true,
+  "signed_sha256": "94e025de9e1ff38183e60073209dcf2e3e00df95947dc06516ffe1c1fb006d0f",
+  "play_review_errors": 0,
+  "play_review_warnings": [
+    "missing_deobfuscation_mapping",
+    "missing_native_debug_symbols"
+  ],
+  "internal_release": "active_available_to_internal_testers",
+  "internal_version_code": 2,
+  "production_rollout": false
 }

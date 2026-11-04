@@ -20,13 +20,13 @@
     },
     "google_app": {
       "package_id": "com.playpockle.app",
-      "state": "created_catalog_access_verified_first_build_missing",
+      "state": "valid_credentials_verified_after_internal_rollout",
       "app_id": "app57d44fc169",
-      "credentials_validated": false,
+      "credentials_validated": true,
       "service_account_play_access": "active_pockle_only",
       "in_app_catalog_check": "passed",
       "subscription_catalog_check": "passed",
-      "purchase_validation": "package_not_found_after_first_upload_saved_draft"
+      "purchase_validation": "passed_dashboard_valid_credentials"
     },
     "offering_id": "ofrng372375125a",
     "offering_packages_verified": 13,
@@ -163,14 +163,16 @@
       "app_id": "4975391761406742908",
       "production_access": "requires_closed_test_12_testers_14_continuous_days",
       "current_closed_test_opt_ins": 0,
-      "first_build": "owner_signed_bundle_accepted_saved_internal_draft",
-      "internal_test_rollout": "blocked_billing_library_AIDL_v1",
+      "first_build": "corrected_v2_active_internal_release",
+      "internal_test_rollout": "active_available_to_internal_testers",
       "owner_added_as_internal_tester": true,
       "internal_test_list": "Pockle owner internal",
-      "internal_test_list_users": 1
+      "internal_test_list_users": 1,
+      "active_version_code": 2,
+      "test_join_url": "https://play.google.com/apps/internaltest/4701639489141138394"
     }
   },
   "credentials_handled": false,
   "production_payments_enabled": false,
-  "owner_request": "Corrected version2 bundle building; owner will sign using existing upload key, no new key needed."
+  "owner_request": "Open internal-test join link on Android using carlos@zulapp.com, opt in and install from Play; device test still pending. Purchases remain unavailable."
 }
