@@ -1,0 +1,87 @@
+{
+  "unity": "6000.6.5f1",
+  "result": "Passed",
+  "passed": "77",
+  "failed": "0",
+  "skipped": "0",
+  "fixture_counts": [
+    {
+      "name": "BoxRevealUiTests",
+      "passed": "11",
+      "failed": "0"
+    },
+    {
+      "name": "CheckoutUiTests",
+      "passed": "12",
+      "failed": "0"
+    },
+    {
+      "name": "CollectionUiTests",
+      "passed": "27",
+      "failed": "0"
+    },
+    {
+      "name": "OnboardingUiTests",
+      "passed": "9",
+      "failed": "0"
+    },
+    {
+      "name": "WalkingBoxUiTests",
+      "passed": "9",
+      "failed": "0"
+    },
+    {
+      "name": "WallyArtTests",
+      "passed": "2",
+      "failed": "0"
+    },
+    {
+      "name": "WallyOwnerGrantTests",
+      "passed": "3",
+      "failed": "0"
+    },
+    {
+      "name": "WallyPilotTests",
+      "passed": "2",
+      "failed": "0"
+    },
+    {
+      "name": "WallyTests",
+      "passed": "2",
+      "failed": "0"
+    }
+  ],
+  "source_hashes": {
+    "Assets/Pockle/Runtime/UI/CheckoutView.cs": "3d3152f3cf5dc1ed8f2b97b62be0ef3d67db324c4dc375f92084d2b14159118f",
+    "Assets/Pockle/Runtime/PrototypeHud.Checkout.cs": "21d027a05ceef354ba15ada6e66645937854c2f0e81cf6322f704794588b8c9f",
+    "Assets/Pockle/Runtime/PrototypeHud.Store.cs": "e6e59d7660d6361e6c342cc39d9a1c362f33a5fc0b7abddc460a2fa5db7d1993",
+    "Assets/Pockle/Tests/PlayMode/CheckoutUiTests.cs": "1a74184bf098030a5e9688df36488b3ef0cd306d7ed37d37afc59c5a647f4dbc",
+    "Assets/Pockle/Tests/PlayMode/CollectionUiTests.cs": "6b3ed3a295e73b74f2c1bfcb03bad2f5363f4a39f3a94ba1ce1d9b6c89206e15"
+  },
+  "capture_size": [
+    1080,
+    2340
+  ],
+  "capture_marker": "POCKLE_CHECKOUT_CAPTURE_OK:3",
+  "preview_offers": 13,
+  "all_preview_offers_disabled": true,
+  "catalog_bound": false,
+  "runtime_edits": false,
+  "box_catalog_changed": false,
+  "lineup_motion_tests_changed": false,
+  "products_created": false,
+  "pending": "Product identifiers and production identities require owner approval.",
+  "android_build": {
+    "status": "built_not_installed",
+    "package": "com.PocklePrototype.Pockle",
+    "apk": "Builds/Pockle-ComingSoon-Checkout.apk",
+    "sha256": "f432bac8e69d1b4ee8247090048323e355f83ed2bef0b962d38962ea9e238494",
+    "bytes": 461682827,
+    "log": "/private/tmp/pockle-coming-soon-android-build.log",
+    "package_checks": [
+      "aapt verified existing beta package and arm64-v8a",
+      "account JNI and OAuth callback manifest passed",
+      "walking DEX public JNI API passed"
+    ]
+  }
+}

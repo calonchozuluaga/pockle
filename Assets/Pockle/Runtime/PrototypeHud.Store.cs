@@ -5,8 +5,9 @@ using UnityEngine.UI;
 namespace Pockle.Runtime
 {
     /// <summary>
-    /// v2 Boxes (UX-032): today's free walking box as a jelly-pink card, then one colour-field card per box with
-    /// its contents and a price button. Checkout stays unavailable; buying never grants a toy.
+    /// v2 Boxes (UX-032): today's free walking box as a jelly-pink card, then the launch lineup (Checkout partial):
+    /// one Collection Box per collection and Mystery Mix 3/5, "Coming soon" until Codex binds real products. The old
+    /// three test cards are still built but never shown. Buying never grants a toy from the HUD.
     /// </summary>
     public sealed partial class PrototypeHud
     {
@@ -126,7 +127,7 @@ namespace Pockle.Runtime
             y += LayoutWalkRules(width, y); // UX-052
             float launch = LayoutLaunchShop(width, y); // live checkout and the paid-box banner (Checkout partial)
             if (launch > 0) y += launch + 12;
-            if (LaunchShopActive) { TopCentered(boxesRoot, Vector2.zero, new Vector2(width, y)); return y; }
+            if (launchShop != null) { TopCentered(boxesRoot, Vector2.zero, new Vector2(width, y)); return y; } // the launch lineup replaces the old test cards
             TopCentered(shopHeading, new Vector2(0, -y), new Vector2(w, 30));
             y += 42;
             const float cardHeight = 150, gap = 12;

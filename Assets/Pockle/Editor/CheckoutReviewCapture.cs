@@ -16,7 +16,9 @@ namespace Pockle.Editor
     public static class CheckoutReviewCapture
     {
         private const string ActiveKey = "Pockle.CheckoutReview.Active";
-        private static readonly string[] Shots = { "shop-collections", "shop-mixes", "loading-wally", "ready-wally", "waiting-for-store", "payment-pending", "delivery-pending", "sold-out", "ready-mix" };
+        private static readonly string[] FixtureShots = { "shop-collections", "shop-mixes", "loading-wally", "ready-wally", "waiting-for-store", "payment-pending", "delivery-pending", "sold-out", "ready-mix" };
+        private static bool ComingSoon => SessionState.GetBool(ActiveKey + ".ComingSoon", false);
+        private static string[] Shots => ComingSoon ? new[] { "coming-soon-collections", "coming-soon-more-collections", "coming-soon-mixes" } : FixtureShots;
         private static PrototypeHud hud;
         private static GameObject root, cameraObject;
         private static Camera camera;
@@ -33,13 +35,42 @@ namespace Pockle.Editor
 
         public static void Capture()
         {
+            SessionState.SetBool(ActiveKey + ".ComingSoon", false);
+            BeginCapture();
+        }
+
+        public static void CaptureComingSoon()
+        {
+            SessionState.SetBool(ActiveKey + ".ComingSoon", true);
+            BeginCapture();
+        }
+
+        private static void BeginCapture()
+        {
             Directory.CreateDirectory(Output);
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             SessionState.SetBool(ActiveKey, true);
             EditorApplication.isPlaying = true;
         }
 
-        private static string Output => Path.Combine(Directory.GetCurrentDirectory(), "test-results", "checkout-ui");
+        private static string Output => Path.Combine(Directory.GetCurrentDirectory(), "test-results", ComingSoon ? "checkout-coming-soon" : "checkout-ui");
+
+        public static void BuildComingSoonAndroid()
+        {
+            // Match the owner's existing Android beta. Production identity remains an unapproved proposal.
+            var platform = UnityEditor.Build.NamedBuildTarget.Android;
+            string original = PlayerSettings.GetApplicationIdentifier(platform);
+            try
+            {
+                PlayerSettings.SetApplicationIdentifier(platform, "com.PocklePrototype.Pockle");
+                WallyPilotPhoneBuild.Build();
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "Builds", "Pockle-ComingSoon-Checkout.apk");
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
+                File.Copy("/private/tmp/Pockle-Wally-Pilot.apk", path, true);
+                Debug.Log("POCKLE_COMING_SOON_ANDROID_OK:" + path);
+            }
+            finally { PlayerSettings.SetApplicationIdentifier(platform, original); }
+        }
         private static T Field<T>(string name) => (T)typeof(PrototypeHud).GetField(name, Private).GetValue(hud);
         private static void Invoke(string name) => typeof(PrototypeHud).GetMethod(name, Private).Invoke(hud, null);
         private static Button Button(string name)
@@ -76,7 +107,7 @@ namespace Pockle.Editor
                     }
                     Canvas.ForceUpdateCanvases(); ResetSafeArea(); Invoke("AdaptLayout");
                     Button("Boxes").onClick.Invoke();
-                    hud.SetCheckoutCatalog(Catalog()); hud.SetPendingDeliveries(2);
+                    if (!ComingSoon) { hud.SetCheckoutCatalog(Catalog()); hud.SetPendingDeliveries(2); }
                     initialized = true; wait = 8; return;
                 }
                 if (wait-- > 0 || EditorApplication.timeSinceStartup < readyAt) return;
@@ -120,6 +151,17 @@ namespace Pockle.Editor
 
         private static void Prepare(int shot)
         {
+            if (ComingSoon)
+            {
+                if (hud.LaunchShopActive || hud.CheckoutVisible) throw new Exception("Coming-soon fixture unexpectedly bound a catalog or opened checkout");
+                var offers = root.GetComponentsInChildren<Button>().Where(b => b.name.StartsWith("Buy · ")).ToArray();
+                if (offers.Length != 13 || offers.Any(b => b.interactable || b.GetComponentInChildren<Text>().text != "Coming soon"))
+                    throw new Exception("Expected13disabled Coming soon offers");
+                var content = Field<RectTransform>("content"); var launch = Field<RectTransform>("launchShop"); var viewport = Field<RectTransform>("browsing");
+                float y = shot == 0 ? -launch.anchoredPosition.y : shot == 1 ? -launch.anchoredPosition.y + 636 : content.rect.height - viewport.rect.height;
+                content.anchoredPosition = new Vector2(0, Mathf.Clamp(y, 0, Mathf.Max(0, content.rect.height - viewport.rect.height)));
+                return;
+            }
             if (shot < 2)
             {
                 var content = Field<RectTransform>("content"); var launch = Field<RectTransform>("launchShop");

@@ -45,8 +45,22 @@ namespace Pockle.Runtime
         public bool CheckoutVisible => checkoutRoot != null && checkoutRoot.gameObject.activeSelf;
         public CheckoutState CheckoutCurrentState => checkoutState;
         public string CheckoutQuoteId => checkoutQuote?.QuoteId;
-        /// <summary>True once Codex has handed over a live catalog (the old test cards are hidden).</summary>
+        /// <summary>True once Codex has handed over a live catalog. Before that the Boxes page shows the launch lineup as
+        /// "Coming soon" (owner, November 4: the old Jelly Garden / Midnight Glow / Gold Confetti test boxes are retired).</summary>
         public bool LaunchShopActive => checkoutCatalog != null;
+
+        /// <summary>The launch lineup with nothing for sale: one Collection Box per shown collection, then Mystery Mix 3 and 5.</summary>
+        private static CheckoutCatalog PreviewCatalog()
+        {
+            var offers = new List<CheckoutOffer>();
+            foreach (var collection in ShownCollections())
+                offers.Add(new CheckoutOffer { OfferId = "preview.box." + collection.Id, Kind = CheckoutOfferKind.CollectionBox, CollectionId = collection.Id,
+                    Available = false, ComingSoon = true, UnavailableReason = "Coming soon" });
+            foreach (int count in new[] { 3, 5 })
+                offers.Add(new CheckoutOffer { OfferId = "preview.mix." + count, Kind = CheckoutOfferKind.MysteryMix, BoxCount = count,
+                    Available = false, ComingSoon = true, UnavailableReason = "Coming soon" });
+            return new CheckoutCatalog { Status = CheckoutCatalogStatus.Ready, Offers = offers };
+        }
 
         // ---------- The Boxes page ----------
 
@@ -85,11 +99,12 @@ namespace Pockle.Runtime
             if (boxesRoot == null) return;
             if (launchShop != null) { launchShop.gameObject.SetActive(false); Destroy(launchShop.gameObject); }
             launchShop = null; pendingBanner = null; pendingTitle = null;
-            bool live = checkoutCatalog != null;
-            foreach (var card in storeCards) if (card != null) card.gameObject.SetActive(!live);
-            if (shopHeading != null) shopHeading.gameObject.SetActive(!live);
-            if (catalogNote != null) catalogNote.gameObject.SetActive(!live);
-            if (!live && pendingDeliveries == 0) { launchShopHeight = 0; return; }
+            bool preview = checkoutCatalog == null;
+            var catalog = checkoutCatalog ?? PreviewCatalog();
+            // The old test cards never show any more: the launch lineup replaces them, "Coming soon" until products exist.
+            foreach (var card in storeCards) if (card != null) card.gameObject.SetActive(false);
+            if (shopHeading != null) shopHeading.gameObject.SetActive(false);
+            if (catalogNote != null) catalogNote.gameObject.SetActive(false);
 
             launchShop = Rect("Launch shop", boxesRoot);
             float w = Mathf.Min(storeWidth, 480), y = 0; launchShopBuiltWidth = w;
@@ -108,19 +123,18 @@ namespace Pockle.Runtime
             pendingTitle.text = pendingDeliveries == 1 ? "1 paid box is on its way" : pendingDeliveries + " paid boxes are on their way";
             pendingBanner.gameObject.SetActive(pendingDeliveries > 0);
             if (pendingDeliveries > 0) y += 96 + 20;
-            if (!live) { launchShopHeight = y; return; }
 
-            if (checkoutCatalog.Status != CheckoutCatalogStatus.Ready)
+            if (catalog.Status != CheckoutCatalogStatus.Ready)
             {
-                string text = checkoutCatalog.Status == CheckoutCatalogStatus.Loading ? "Loading prices…"
-                    : string.IsNullOrEmpty(checkoutCatalog.Message) ? "Boxes aren't for sale on this device right now." : checkoutCatalog.Message;
+                string text = catalog.Status == CheckoutCatalogStatus.Loading ? "Loading prices…"
+                    : string.IsNullOrEmpty(catalog.Message) ? "Boxes aren't for sale on this device right now." : catalog.Message;
                 var note = Label(text, launchShop, PockleTheme.BodySize, MutedInk, FontStyle.Normal, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
                 note.name = "Shop status"; LeftLabel(note.rectTransform, new Vector2(0, -y), new Vector2(w, 60));
                 launchShopHeight = y + 60; return;
             }
 
             var singles = new List<CheckoutOffer>(); var mixes = new List<CheckoutOffer>();
-            foreach (var offer in checkoutCatalog.Offers)
+            foreach (var offer in catalog.Offers)
             {
                 if (offer == null || string.IsNullOrEmpty(offer.OfferId)) continue;
                 if (offer.Kind == CheckoutOfferKind.MysteryMix) mixes.Add(offer);
@@ -141,7 +155,9 @@ namespace Pockle.Runtime
                 foreach (var mix in mixes) { BuildMixCard(mix, new Vector2(0, -y), new Vector2(w, CheckoutMixHeight)); y += CheckoutMixHeight + 12; }
                 y += 2;
             }
-            var footnote = Label("You'll see the odds before you pay. Extras become spares for fusing and trading.", launchShop, PockleTheme.SmallSize, MutedInk,
+            string foot = preview ? "Boxes go on sale when Pockle launches. Until then, walk to earn free ones."
+                : "You'll see the odds before you pay. Extras become spares for fusing and trading.";
+            var footnote = Label(foot, launchShop, PockleTheme.SmallSize, MutedInk,
                 FontStyle.Normal, TextAnchor.UpperLeft, Vector2.zero, Vector2.zero);
             LeftLabel(footnote.rectTransform, new Vector2(4, -y), new Vector2(w - 8, 36));
             launchShopHeight = y + 40;
@@ -168,13 +184,13 @@ namespace Pockle.Runtime
             if (texture != null && offer.Available) BoxHype.Add(raw, Color.white, position.x * .01f);
             var name = Label(collection.DisplayName, tile, PockleTheme.BodySize + 1, ink, FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
             LeftLabel(name.rectTransform, new Vector2(8, -110), new Vector2(size.x - 16, 24));
-            string label = offer.Buyable ? offer.LocalizedPrice : !offer.Available ? (string.IsNullOrEmpty(offer.UnavailableReason) ? "Sold out" : offer.UnavailableReason) : "Price unavailable";
+            string label = offer.ComingSoon ? "Coming soon" : offer.Buyable ? offer.LocalizedPrice : !offer.Available ? (string.IsNullOrEmpty(offer.UnavailableReason) ? "Sold out" : offer.UnavailableReason) : "Price unavailable";
             Color button = ink == PockleTheme.OnPlum ? PockleTheme.Jelly : PockleTheme.Plum;
             var buy = CreateButton(label, tile, new Vector2(14, size.y - 14 - 44), new Vector2(size.x - 28, 44), offer.Buyable ? button : new Color(1, 1, 1, .45f),
                 () => OpenCheckout(offer), out _, PockleTheme.BodySize);
-            buy.name = "Buy · " + collection.DisplayName; buy.interactable = offer.Buyable;
-            if (!offer.Buyable) buy.GetComponentInChildren<Text>().color = ink;
-            if (!offer.Available)
+            buy.name = "Buy · " + collection.DisplayName; buy.interactable = offer.Buyable && !offer.ComingSoon;
+            if (!buy.interactable) buy.GetComponentInChildren<Text>().color = ink;
+            if (!offer.Available && !offer.ComingSoon)
             {
                 var traded = Label("Still tradable", tile, PockleTheme.SmallSize, ink, FontStyle.Normal, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
                 LeftLabel(traded.rectTransform, new Vector2(8, -134), new Vector2(size.x - 16, 18));
@@ -203,11 +219,11 @@ namespace Pockle.Runtime
             string sub = string.IsNullOrEmpty(offer.SavingsNote) ? count + " random toys" : count + " random toys · " + offer.SavingsNote;
             var line = Label(sub, card, PockleTheme.SmallSize, PockleTheme.PlumSoft, FontStyle.Normal, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
             LeftLabel(line.rectTransform, new Vector2(16, -40), new Vector2(size.x - 170, 20));
-            string label = offer.Buyable ? offer.LocalizedPrice : !offer.Available ? (string.IsNullOrEmpty(offer.UnavailableReason) ? "Unavailable" : offer.UnavailableReason) : "Price unavailable";
+            string label = offer.ComingSoon ? "Coming soon" : offer.Buyable ? offer.LocalizedPrice : !offer.Available ? (string.IsNullOrEmpty(offer.UnavailableReason) ? "Unavailable" : offer.UnavailableReason) : "Price unavailable";
             var buy = CreateButton(label, card, new Vector2(16, size.y - 14 - 44), new Vector2(124, 44), offer.Buyable ? PockleTheme.Plum : new Color(1, 1, 1, .6f),
                 () => OpenCheckout(offer), out _, PockleTheme.BodySize);
-            buy.name = "Buy · Mystery Mix " + count; buy.interactable = offer.Buyable;
-            if (!offer.Buyable) buy.GetComponentInChildren<Text>().color = Ink;
+            buy.name = "Buy · Mystery Mix " + count; buy.interactable = offer.Buyable && !offer.ComingSoon;
+            if (!buy.interactable) buy.GetComponentInChildren<Text>().color = Ink;
         }
 
         /// <summary>Called from LayoutStore: places the launch section at y and returns its height (0 when not live).</summary>
@@ -215,7 +231,7 @@ namespace Pockle.Runtime
         {
             storeWidth = width;
             float w = Mathf.Min(width, 480);
-            if ((checkoutCatalog != null || pendingDeliveries > 0) && (launchShop == null || Mathf.Abs(w - launchShopBuiltWidth) > .5f)) BuildLaunchShop(); // first layout or a new width
+            if (launchShop == null || Mathf.Abs(w - launchShopBuiltWidth) > .5f) BuildLaunchShop(); // first layout or a new width
             if (launchShop == null) return 0;
             TopCentered(launchShop, new Vector2(0, -y), new Vector2(w, launchShopHeight));
             return launchShopHeight;
@@ -225,7 +241,7 @@ namespace Pockle.Runtime
 
         private void OpenCheckout(CheckoutOffer offer)
         {
-            if (offer == null || !offer.Buyable || canvas == null) return;
+            if (offer == null || !offer.Buyable || offer.ComingSoon || canvas == null) return;
             if (checkoutRoot == null) BuildCheckoutSheet();
             checkoutOffer = offer; checkoutQuote = null;
             checkoutRoot.gameObject.SetActive(true); checkoutRoot.SetAsLastSibling();

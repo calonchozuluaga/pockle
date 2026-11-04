@@ -84,12 +84,22 @@ namespace Pockle.Tests
         };
 
         [UnityTest]
-        public IEnumerator WithoutALiveCatalogTheOldTestCardsStayAndNothingIsSold()
+        public IEnumerator WithoutALiveCatalogTheLaunchLineupSaysComingSoonAndNothingIsSold()
         {
             Assert.That(hud.LaunchShopActive, Is.False);
-            Assert.That(HasButton("Buy · Jelly Garden"), Is.True, "the unconnected test shop is unchanged until Codex binds products");
-            Assert.That(Texts.Any(t => t.Contains("Pick a collection")), Is.False);
-            yield return null;
+            Assert.That(HasButton("Buy · Jelly Garden"), Is.False, "the old test boxes are retired (owner, November 4)");
+            Assert.That(Texts, Has.Member("Pick a collection")); Assert.That(Texts, Has.Member("Mystery Mix"));
+            var wallyBox = Named("Buy · " + Wally);
+            Assert.That(wallyBox.interactable, Is.False);
+            Assert.That(wallyBox.GetComponentInChildren<Text>().text, Is.EqualTo("Coming soon"));
+            Assert.That(Named("Buy · Mystery Mix 3").GetComponentInChildren<Text>().text, Is.EqualTo("Coming soon"));
+            Assert.That(Named("Buy · Mystery Mix 5").GetComponentInChildren<Text>().text, Is.EqualTo("Coming soon"));
+            Assert.That(Texts.Any(t => t.StartsWith("Boxes go on sale when Pockle launches")), Is.True);
+            Assert.That(Texts, Has.No.Member("Still tradable"), "coming soon is not sold out");
+            Assert.That(Texts.Any(t => t.Contains("$")), Is.False, "no prices before the store sends them");
+            wallyBox.onClick.Invoke(); yield return null;
+            Assert.That(hud.CheckoutVisible, Is.False, "nothing opens for a box that isn't for sale");
+            Assert.That(quotes, Is.Empty);
         }
 
         [UnityTest]
@@ -237,7 +247,7 @@ namespace Pockle.Tests
             Assert.That(Texts, Has.Member("2 paid boxes are on their way"));
             Named("Check again").onClick.Invoke();
             Assert.That(recoveries, Is.EqualTo(1));
-            Assert.That(HasButton("Buy · Jelly Garden"), Is.True, "the banner works before the live catalog too");
+            Assert.That(Texts, Has.Member("Pick a collection"), "the banner works before the live catalog too");
             hud.SetCheckoutCatalog(Catalog()); hud.SetPendingDeliveries(1); yield return null;
             Assert.That(Texts, Has.Member("1 paid box is on its way"));
             hud.SetPendingDeliveries(0); yield return null;

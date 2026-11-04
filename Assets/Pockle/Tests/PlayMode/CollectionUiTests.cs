@@ -315,13 +315,18 @@ namespace Pockle.Tests
             Assert.IsFalse(hud.StoreVisible, "Selected toy must be available for direct manipulation.");
             hud.GoBack();
             ButtonWithText("Boxes").onClick.Invoke();
+            yield return null;
             var before = (int[])session.Progress.Save.Counts.Clone();
-            ButtonNamed("Buy · Jelly Garden").onClick.Invoke();
+            // November 4: no products are connected, so the launch lineup says "Coming soon" and nothing opens.
+            Assert.IsTrue(ToyCatalog.TryGetCollection("pip", out var pipCollection));
+            var comingSoon = ButtonNamed("Buy · " + pipCollection.DisplayName);
+            Assert.IsFalse(comingSoon.interactable, "A box that isn't for sale can't be tapped.");
+            Assert.AreEqual("Coming soon", comingSoon.GetComponentInChildren<Text>().text);
+            comingSoon.onClick.Invoke();
             yield return null;
             CollectionAssert.AreEqual(before, session.Progress.Save.Counts, "Unavailable checkout must never grant a toy.");
-            Assert.IsTrue(root.GetComponentsInChildren<Text>().Any(text => text.text.Contains("Nothing will be charged")));
-            hud.GoBack();
-            Assert.IsTrue(hud.StoreVisible, "Closing purchase dialog must retain box browsing.");
+            Assert.IsFalse(hud.CheckoutVisible, "Nothing opens for a box that isn't for sale.");
+            Assert.IsTrue(hud.StoreVisible, "Box browsing stays on screen.");
         }
 
         [UnityTest]

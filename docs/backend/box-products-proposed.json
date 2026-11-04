@@ -1,0 +1,127 @@
+{
+  "status": "proposal_requires_owner_approval_no_products_created",
+  "revenuecat_project": "Pockle",
+  "offering": "launch_boxes_v1",
+  "ios_bundle_id": "com.playpockle.app",
+  "android_package_id_proposed": "com.playpockle.app",
+  "existing_android_beta_id_unchanged": "com.PocklePrototype.Pockle",
+  "collections": [
+    "pip",
+    "fox",
+    "axolotl",
+    "firb",
+    "coco",
+    "snowy",
+    "ginger",
+    "reiny",
+    "guin",
+    "bundy",
+    "wally"
+  ],
+  "products": [
+    {
+      "id": "pockle.box.pip.v1",
+      "type": "consumable",
+      "collection_id": "pip",
+      "quantity": 1,
+      "target_usd": "0.99",
+      "revenuecat_package": "collection_pip"
+    },
+    {
+      "id": "pockle.box.fox.v1",
+      "type": "consumable",
+      "collection_id": "fox",
+      "quantity": 1,
+      "target_usd": "0.99",
+      "revenuecat_package": "collection_fox"
+    },
+    {
+      "id": "pockle.box.axolotl.v1",
+      "type": "consumable",
+      "collection_id": "axolotl",
+      "quantity": 1,
+      "target_usd": "0.99",
+      "revenuecat_package": "collection_axolotl"
+    },
+    {
+      "id": "pockle.box.firb.v1",
+      "type": "consumable",
+      "collection_id": "firb",
+      "quantity": 1,
+      "target_usd": "0.99",
+      "revenuecat_package": "collection_firb"
+    },
+    {
+      "id": "pockle.box.coco.v1",
+      "type": "consumable",
+      "collection_id": "coco",
+      "quantity": 1,
+      "target_usd": "0.99",
+      "revenuecat_package": "collection_coco"
+    },
+    {
+      "id": "pockle.box.snowy.v1",
+      "type": "consumable",
+      "collection_id": "snowy",
+      "quantity": 1,
+      "target_usd": "0.99",
+      "revenuecat_package": "collection_snowy"
+    },
+    {
+      "id": "pockle.box.ginger.v1",
+      "type": "consumable",
+      "collection_id": "ginger",
+      "quantity": 1,
+      "target_usd": "0.99",
+      "revenuecat_package": "collection_ginger"
+    },
+    {
+      "id": "pockle.box.reiny.v1",
+      "type": "consumable",
+      "collection_id": "reiny",
+      "quantity": 1,
+      "target_usd": "0.99",
+      "revenuecat_package": "collection_reiny"
+    },
+    {
+      "id": "pockle.box.guin.v1",
+      "type": "consumable",
+      "collection_id": "guin",
+      "quantity": 1,
+      "target_usd": "0.99",
+      "revenuecat_package": "collection_guin"
+    },
+    {
+      "id": "pockle.box.bundy.v1",
+      "type": "consumable",
+      "collection_id": "bundy",
+      "quantity": 1,
+      "target_usd": "0.99",
+      "revenuecat_package": "collection_bundy"
+    },
+    {
+      "id": "pockle.box.wally.v1",
+      "type": "consumable",
+      "collection_id": "wally",
+      "quantity": 1,
+      "target_usd": "0.99",
+      "revenuecat_package": "collection_wally"
+    },
+    {
+      "id": "pockle.mix.3.v1",
+      "type": "consumable",
+      "collection_id": null,
+      "quantity": 3,
+      "target_usd": "2.49",
+      "revenuecat_package": "mix_3"
+    },
+    {
+      "id": "pockle.mix.5.v1",
+      "type": "consumable",
+      "collection_id": null,
+      "quantity": 5,
+      "target_usd": "3.99",
+      "revenuecat_package": "mix_5"
+    }
+  ]
+}

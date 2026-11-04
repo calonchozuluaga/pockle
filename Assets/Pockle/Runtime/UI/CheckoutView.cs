@@ -62,6 +62,8 @@ namespace Pockle.Runtime
         public string UnavailableReason;
         /// <summary>Optional, from the store's real local prices only (e.g. "Saves 48¢ vs. 3 singles"). Never computed in the HUD.</summary>
         public string SavingsNote;
+        /// <summary>Shown but not for sale yet (the pre-launch lineup the HUD shows before Codex binds a catalog).</summary>
+        public bool ComingSoon;
 
         public bool Buyable => Available && !string.IsNullOrEmpty(LocalizedPrice);
     }
