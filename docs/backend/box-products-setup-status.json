@@ -20,9 +20,13 @@
     },
     "google_app": {
       "package_id": "com.playpockle.app",
-      "state": "created_credentials_missing",
+      "state": "created_catalog_access_verified_first_build_missing",
       "app_id": "app57d44fc169",
-      "credentials_validated": false
+      "credentials_validated": false,
+      "service_account_play_access": "active_pockle_only",
+      "in_app_catalog_check": "passed",
+      "subscription_catalog_check": "passed",
+      "purchase_validation": "package_not_found_first_build_not_uploaded"
     },
     "offering_id": "ofrng372375125a",
     "offering_packages_verified": 13,
@@ -163,5 +167,5 @@
   },
   "credentials_handled": false,
   "production_payments_enabled": false,
-  "owner_request": "Complete dedicated Pockle Google service account setup and upload JSON directly to RevenueCat Google app app57d44fc169; no private credentials in chat/Git."
+  "owner_request": "No further permission or key action required for the saved grant; next is production-ID signed first-build upload and remaining store setup."
 }
