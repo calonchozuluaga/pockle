@@ -144,9 +144,19 @@
         "pricing_configured": false,
         "localization_configured": false
       }
+    },
+    "google_app_record": {
+      "state": "prepared_owner_declarations_required",
+      "developer_account": "Zulapp",
+      "package_id": "com.playpockle.app",
+      "package_availability_verified": true,
+      "display_name": "Pockle: Little Toys Big Squish",
+      "category": "Game",
+      "pricing": "Free",
+      "app_created": false
     }
   },
   "credentials_handled": false,
   "production_payments_enabled": false,
-  "owner_request": "Apple purchase key still needs validation; no production payments enabled."
+  "owner_request": "Complete Google Play Developer Program Policies and US export-law declarations, then Create app in prepared Chrome tab."
 }
