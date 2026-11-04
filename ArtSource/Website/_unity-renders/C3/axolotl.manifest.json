@@ -1,0 +1,14 @@
+{
+    "id": "C3",
+    "file": "C3/axolotl.png",
+    "alt": "Axolotl Pockle beside its collection box.",
+    "world": "axolotl-blossom-pond",
+    "composition": "Aligned tabletop pair in the character's home world.",
+    "status": "composition-review",
+    "toys": [
+        "axolotl.boucle-plush"
+    ],
+    "width": 1600,
+    "height": 1200,
+    "transparent": false
+}

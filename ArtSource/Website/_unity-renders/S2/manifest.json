@@ -1,0 +1,54 @@
+{
+  "id": "S2",
+  "status": "composition-review",
+  "images": [
+    {
+      "id": "S2",
+      "file": "S2/open-common.png",
+      "alt": "A Pockle box bursting open as a toy pops out.",
+      "world": "Studio lighting; collection reflection environment pip-jelly-garden",
+      "composition": "Actual hinged carton sampled open with staged rising toy; editorial still, not a captured paid transaction.",
+      "status": "composition-review",
+      "toys": [
+        "pip.peach-jelly"
+      ],
+      "width": 1600,
+      "height": 1600,
+      "transparent": false,
+      "preview": "previews/S2-open-common.jpg",
+      "lighting_note": "Collection probe exposure reduced to 0.20 for editorial detail; runtime shader/finish assets unchanged."
+    },
+    {
+      "id": "S2",
+      "file": "S2/open-rare.png",
+      "alt": "A Pockle box bursting open as a toy pops out.",
+      "world": "Studio lighting; collection reflection environment wally-coral-cove",
+      "composition": "Actual hinged carton sampled open with staged rising toy; editorial still, not a captured paid transaction.",
+      "status": "composition-review",
+      "toys": [
+        "wally.treasure-leaf"
+      ],
+      "width": 1600,
+      "height": 1600,
+      "transparent": false,
+      "preview": "previews/S2-open-rare.jpg",
+      "lighting_note": "Collection probe exposure reduced to 0.20 for editorial detail; runtime shader/finish assets unchanged."
+    },
+    {
+      "id": "S2",
+      "file": "S2/open-epic.png",
+      "alt": "A Pockle box bursting open as a toy pops out.",
+      "world": "Studio lighting; collection reflection environment wally-coral-cove",
+      "composition": "Actual hinged carton sampled open with staged rising toy; editorial still, not a captured paid transaction.",
+      "status": "composition-review",
+      "toys": [
+        "wally.diamond-frost"
+      ],
+      "width": 1600,
+      "height": 1600,
+      "transparent": false,
+      "preview": "previews/S2-open-epic.jpg",
+      "lighting_note": "Collection probe exposure reduced to 0.20 for editorial detail; runtime shader/finish assets unchanged."
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+    "id": "C7",
+    "file": "C7/ginger.png",
+    "alt": "Ginger Pockle beside its collection box.",
+    "world": "ginger-icing-village",
+    "composition": "Aligned tabletop pair in the character's home world.",
+    "status": "composition-review",
+    "toys": [
+        "ginger.matte-vinyl"
+    ],
+    "width": 1600,
+    "height": 1200,
+    "transparent": false
+}

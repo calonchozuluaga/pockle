@@ -1,28 +1,46 @@
 {
-    "id": "SE1",
-    "file": "SE1/desktop.png",
-    "alt": "All fifteen Wally Pockles arranged on a display, from common to secret.",
-    "world": "wally-pearl-grotto",
-    "composition": "Actual15 finishes on five ascending display rows; Pearl Grotto world.",
-    "status": "composition-review",
-    "toys": [
-        "wally.clear-jelly",
-        "wally.pearl-jelly",
-        "wally.confetti-gel",
-        "wally.mochi-foam",
-        "wally.velvet-flock",
-        "wally.boucle-plush",
-        "wally.matte-vinyl",
-        "wally.gloss-vinyl",
-        "wally.kelp-mint",
-        "wally.coated-metallic",
-        "wally.treasure-leaf",
-        "wally.rose-gold-shell",
-        "wally.glow-jelly",
-        "wally.diamond-frost",
-        "wally.molten-abyss"
-    ],
-    "width": 2560,
-    "height": 1100,
-    "transparent": false
+  "id": "SE1",
+  "name": "desktop",
+  "prompt": "Use case: precise-object-edit. Reference1 is the final artwork to preserve. Make a SAME-IDENTITY version in EXACTLY 21:9 landscape, width to height 2.33 to1, target2560x1100. NOT a3:1 panorama. Preserve every single one of the15 whales and every face/finish, the entire display 5bottom+4+3+2+1top, in exactly the same order and proportions; no new toys. Add sufficient calm cyan grotto space ABOVE the display so top20% contains no toy or hard details. Entire exhibit fits lower80%, backdrop unchanged elsewhere, premium soft painterly quality. Preserve all toy anatomy and material designs, no feet/legs/new fins, no typography. Use added vertical environment height to achieve21:9 ratio, never stretch whale bodies or crop toys.",
+  "ratio": "21:9",
+  "width": 2560,
+  "height": 1100,
+  "characters": [
+    "wally.clear-jelly",
+    "wally.pearl-jelly",
+    "wally.confetti-gel",
+    "wally.mochi-foam",
+    "wally.velvet-flock",
+    "wally.boucle-plush",
+    "wally.matte-vinyl",
+    "wally.gloss-vinyl",
+    "wally.kelp-mint",
+    "wally.coated-metallic",
+    "wally.treasure-leaf",
+    "wally.rose-gold-shell",
+    "wally.glow-jelly",
+    "wally.diamond-frost",
+    "wally.molten-abyss"
+  ],
+  "transparent": false,
+  "revision": "Only quiet-zone framing revised from first fifteen-toy composition",
+  "status": "ready-for-owner-review",
+  "category": "Series and rarity",
+  "alt": "All fifteen Wally finishes on pearl-grotto display risers, from Common to Secret.",
+  "original": "SE1/desktop-original.png",
+  "file": "SE1/desktop.png",
+  "preview": "docs/website-art-review/03/previews/SE1-desktop.png",
+  "native_size": [
+    1914,
+    822
+  ],
+  "export_size": [
+    2560,
+    1100
+  ],
+  "export_method": "sips dimension resample; generated original retained",
+  "alpha_bounds_128": null,
+  "references": [
+    "References/b4fb90020b6c-exec-fdf1a6c2-3b82-4765-9301-11eeb155d466.png"
+  ]
 }

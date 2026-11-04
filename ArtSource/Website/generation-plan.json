@@ -1,0 +1,907 @@
+[
+  {
+    "id": "H1",
+    "name": "mobile",
+    "source": "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/mobile-original.png",
+    "prompt": "Use case: illustration-story. Pockle website hero illustration, generated in the premium collection-cover style, NOT a screenshot or a pasted collage of the references. References1-6 are approved toy identities, preserve their precise body silhouettes, proportions and face spacing. Ref1 peach Pip: smooth plump pear/rounded triangular jelly blob, exactly two asymmetrical soft rounded crown bumps, no limbs, no ears, dark oval eyes and tiny curved smile, peach-to-coral jelly with visible bubbles. Open BOTH eyes (the reference wink is only an expression). Ref2 Fox: seated oversized head with TWO pointed triangular ears, white inner ears, cream-white muzzle/chest/tail-tip, dark navy-purple plush coat, black paws and tiny black nose, one large bushy curled tail; keep exactly its toy proportions, not a realistic animal. Ref3 Classic Blue Wally: extremely round blue whale, broad cream belly, black oval eyes, tiny curved smile, exactly TWO little side flippers and ONE horizontal split tail behind body, absolutely no feet, ears, horns or dorsal fin. Ref4 honey Axolotl: rounded honey-gold seated body and head, three feathery gill branches on each side of head, two rounded arms and two small rounded feet, tiny oval eyes and W-shaped smile. Two additional toys use the exact same Pip shape, one honey-gold translucent glitter and one pale mint-aqua softly glowing jelly. Ref5 is STYLE ONLY: use its soft tactile painted 3D collectible quality, richly luminous jelly, rounded whimsical lighting, painterly depth and tiny gentle highlights; do not copy its scene. Use a simple real-looking coral-peach folded-cardboard surprise carton, lid open, soft interior glow. Keep its panels blank, no printed text. Scene has EXACTLY SIX small tabletop toys: peach Pip foreground slightly squished, navy plush Fox, Classic Blue vinyl Wally, honey Axolotl, one gold-glitter Pip and one mint glow Pip, gathered together around the open real carton. Keep the four character identities distinct. Cream milk tabletop, warm dreamy apricot reflected light, soft contact shadows, warm rim light, beautiful gentle reflections, premium tactile painted forms rather than sterile plastic or literal game-render artifacts. Rich joyful colour, no blown highlights. All six faces happy/curious, eyes open. No humans, fingers, extra animals, new body parts, text overlays, labels, UI, prices, numerals, borders, watermarks. All characters fully in frame. Artwork fades smoothly into #FBF8F5 at its outer edges. MOBILE composition: exactly4:5 portrait, target1080x1350, generate highest available native resolution in this ratio. This is a separately composed portrait illustration, not a crop. Top35% is EMPTY calm creamy gradient for website headline. Arrange the six toys as a balanced, compact two-row group in lower65% around a central open carton. Do not stack toys physically on one another or hide faces. Keep a generous visual scale and all ears, gills and tails in frame.",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/pip-temperaments/pip.peach-jelly-front.png",
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/fox-v2/fox.boucle-plush.png",
+      "/Users/calonchozulu/Desktop/pockle/docs/wally-pilot-review/images/wally.gloss-vinyl.png",
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/axolotl-finishes/axolotl.clear-jelly.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/Collections/Pip/Cover.png"
+    ],
+    "width": 1080,
+    "height": 1350,
+    "ratio": "4:5",
+    "characters": [
+      "pip.peach-jelly",
+      "fox.boucle-plush",
+      "wally.gloss-vinyl",
+      "axolotl.clear-jelly",
+      "pip.gold-confetti",
+      "pip.glow-jelly"
+    ],
+    "transparent": false,
+    "status": "owner-approved"
+  },
+  {
+    "id": "H1",
+    "name": "desktop",
+    "source": "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png",
+    "prompt": "Use case: illustration-story. Pockle website hero illustration, generated in the premium collection-cover style, NOT a screenshot or a pasted collage of the references. References1-6 are approved toy identities, preserve their precise body silhouettes, proportions and face spacing. Ref1 peach Pip: smooth plump pear/rounded triangular jelly blob, exactly two asymmetrical soft rounded crown bumps, no limbs, no ears, dark oval eyes and tiny curved smile, peach-to-coral jelly with visible bubbles. Open BOTH eyes (the reference wink is only an expression). Ref2 Fox: seated oversized head with TWO pointed triangular ears, white inner ears, cream-white muzzle/chest/tail-tip, dark navy-purple plush coat, black paws and tiny black nose, one large bushy curled tail; keep exactly its toy proportions, not a realistic animal. Ref3 Classic Blue Wally: extremely round blue whale, broad cream belly, black oval eyes, tiny curved smile, exactly TWO little side flippers and ONE horizontal split tail behind body, absolutely no feet, ears, horns or dorsal fin. Ref4 honey Axolotl: rounded honey-gold seated body and head, three feathery gill branches on each side of head, two rounded arms and two small rounded feet, tiny oval eyes and W-shaped smile. Two additional toys use the exact same Pip shape, one honey-gold translucent glitter and one pale mint-aqua softly glowing jelly. Ref5 is STYLE ONLY: use its soft tactile painted 3D collectible quality, richly luminous jelly, rounded whimsical lighting, painterly depth and tiny gentle highlights; do not copy its scene. Use a simple real-looking coral-peach folded-cardboard surprise carton, lid open, soft interior glow. Keep its panels blank, no printed text. Scene has EXACTLY SIX small tabletop toys: peach Pip foreground slightly squished, navy plush Fox, Classic Blue vinyl Wally, honey Axolotl, one gold-glitter Pip and one mint glow Pip, gathered together around the open real carton. Keep the four character identities distinct. Cream milk tabletop, warm dreamy apricot reflected light, soft contact shadows, warm rim light, beautiful gentle reflections, premium tactile painted forms rather than sterile plastic or literal game-render artifacts. Rich joyful colour, no blown highlights. All six faces happy/curious, eyes open. No humans, fingers, extra animals, new body parts, text overlays, labels, UI, prices, numerals, borders, watermarks. All characters fully in frame. Artwork fades smoothly into #FBF8F5 at its outer edges. DESKTOP composition: exactly16:9 landscape, target2560x1440, generate highest available native resolution in this ratio. Left40% is EMPTY calm cream for website headline, no toys or objects there. Group the entire composition in the right60%, an intimate generously sized tabletop group, with peach Pip in front and Wally/Fox faces easily seen. Quiet space is intentional, do not fill it with flowers.",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/pip-temperaments/pip.peach-jelly-front.png",
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/fox-v2/fox.boucle-plush.png",
+      "/Users/calonchozulu/Desktop/pockle/docs/wally-pilot-review/images/wally.gloss-vinyl.png",
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/axolotl-finishes/axolotl.clear-jelly.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/Collections/Pip/Cover.png"
+    ],
+    "width": 2560,
+    "height": 1440,
+    "ratio": "16:9",
+    "characters": [
+      "pip.peach-jelly",
+      "fox.boucle-plush",
+      "wally.gloss-vinyl",
+      "axolotl.clear-jelly",
+      "pip.gold-confetti",
+      "pip.glow-jelly"
+    ],
+    "transparent": false,
+    "status": "owner-approved"
+  },
+  {
+    "id": "H2",
+    "name": "desktop",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/wally-pilot-review/images/wally.molten-abyss.png",
+      "/Users/calonchozulu/Desktop/pockle/docs/wally-pilot-review/images/wally.gloss-vinyl.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Wally is a spherical little whale, broad cream belly, two black oval eyes, tiny smile, exactly two side flippers and one horizontal split tail behind the body, no feet/legs/dorsal fin. Preserve actual toy proportions and rear tail shown in identity reference, not an animal redesign. Secret Molten Abyss Wally dominant on right, black rough obsidian crust split by luminous electric CYAN fissures, cream belly untouched, realistic relief and cyan light spilling onto deep plum #2A1430 tabletop. Two much smaller common blue Wallys out of focus behind. No lava orange. Dramatic yet friendly, dark edges blend to plum. Desktop layout: keep left 40% empty calm low-detail section colour for copy, all action on right60%. Composition: 16:9, generate at highest available native quality and resolution. Deliverable 2560x1440.  All requested toys fully in frame.",
+    "ratio": "16:9",
+    "width": 2560,
+    "height": 1440,
+    "characters": [
+      "wally.molten-abyss",
+      "wally.gloss-vinyl"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-e7619c08-5526-434f-b269-786340527419.png",
+    "index": 0
+  },
+  {
+    "id": "H2",
+    "name": "mobile",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/wally-pilot-review/images/wally.molten-abyss.png",
+      "/Users/calonchozulu/Desktop/pockle/docs/wally-pilot-review/images/wally.gloss-vinyl.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Wally is a spherical little whale, broad cream belly, two black oval eyes, tiny smile, exactly two side flippers and one horizontal split tail behind the body, no feet/legs/dorsal fin. Preserve actual toy proportions and rear tail shown in identity reference, not an animal redesign. Secret Molten Abyss Wally dominant on right, black rough obsidian crust split by luminous electric CYAN fissures, cream belly untouched, realistic relief and cyan light spilling onto deep plum #2A1430 tabletop. Two much smaller common blue Wallys out of focus behind. No lava orange. Dramatic yet friendly, dark edges blend to plum. Separate portrait composition, NOT a crop. Keep top35% empty calm section colour; scene clustered in lower65%. Composition: 4:5, generate at highest available native quality and resolution. Deliverable 1080x1350.  All requested toys fully in frame.",
+    "ratio": "4:5",
+    "width": 1080,
+    "height": 1350,
+    "characters": [
+      "wally.molten-abyss",
+      "wally.gloss-vinyl"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-4346c60d-cd63-440c-9f54-417524c63fc1.png",
+    "index": 1
+  },
+  {
+    "id": "S1",
+    "name": "walk",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/pip-temperaments/pip.peach-jelly-front.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/UI/Boxes/Collection-pip.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Pip is a plump pear-shaped rounded triangle with exactly TWO asymmetrical rounded crown nubs, dark oval eyes and tiny smile, NO arms/legs/ears. Preserve the reference silhouette. Eyes both open and cheerful. One peach translucent jelly Pip mid-hop along a tiny winding flower garden path, a single CLOSED real branded Pip carton floating just ahead above the path, golden dust suggests tiny footsteps. Warm sun, garden-cover quality, a coherent square miniature scene, playful movement. Composition: 1:1, generate at highest available native quality and resolution. Deliverable 1600x1600.  All requested toys fully in frame.",
+    "ratio": "1:1",
+    "width": 1600,
+    "height": 1600,
+    "characters": [
+      "pip.peach-jelly"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-5c08229f-33b6-4dac-b924-127277e6206b.png",
+    "index": 2
+  },
+  {
+    "id": "S2",
+    "name": "open-common",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/wally-pilot-review/images/wally.kelp-mint.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/UI/Boxes/Collection-wally-open.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Wally is a spherical little whale, broad cream belly, two black oval eyes, tiny smile, exactly two side flippers and one horizontal split tail behind the body, no feet/legs/dorsal fin. Preserve actual toy proportions and rear tail shown in identity reference, not an animal redesign. One Wally kelp-mint rising out of the real Wally carton at the instant the lid pops open. Copy the cyan/magenta printed surprise box design from reference2, not a plain carton. soft pearly WHITE light burst from within, restrained sparkling particles, joyful open eyes. Toy clearly separate from opening flaps. Beautiful material detail, cream background with soft pearly WHITE ambient glow. Composition: 1:1, generate at highest available native quality and resolution. Deliverable 1600x1600.  All requested toys fully in frame.",
+    "ratio": "1:1",
+    "width": 1600,
+    "height": 1600,
+    "characters": [
+      "wally.kelp-mint"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-a46d029f-3fac-400a-b05b-4080a3aebe8b.png",
+    "index": 3
+  },
+  {
+    "id": "S2",
+    "name": "open-rare",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/wally-pilot-review/images/wally.treasure-leaf.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/UI/Boxes/Collection-wally-open.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Wally is a spherical little whale, broad cream belly, two black oval eyes, tiny smile, exactly two side flippers and one horizontal split tail behind the body, no feet/legs/dorsal fin. Preserve actual toy proportions and rear tail shown in identity reference, not an animal redesign. One Wally treasure-leaf rising out of the real Wally carton at the instant the lid pops open. Copy the cyan/magenta printed surprise box design from reference2, not a plain carton. warm GOLD light burst from within, restrained sparkling particles, joyful open eyes. Toy clearly separate from opening flaps. Beautiful material detail, cream background with warm GOLD ambient glow. Composition: 1:1, generate at highest available native quality and resolution. Deliverable 1600x1600.  All requested toys fully in frame.",
+    "ratio": "1:1",
+    "width": 1600,
+    "height": 1600,
+    "characters": [
+      "wally.treasure-leaf"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-e40ca27b-383a-4a0f-9e48-bc6bfafa59eb.png",
+    "index": 4
+  },
+  {
+    "id": "S2",
+    "name": "open-epic",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/wally-pilot-review/images/wally.diamond-frost.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/UI/Boxes/Collection-wally-open.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Wally is a spherical little whale, broad cream belly, two black oval eyes, tiny smile, exactly two side flippers and one horizontal split tail behind the body, no feet/legs/dorsal fin. Preserve actual toy proportions and rear tail shown in identity reference, not an animal redesign. One Wally diamond-frost rising out of the real Wally carton at the instant the lid pops open. Copy the cyan/magenta printed surprise box design from reference2, not a plain carton. icy iridescent DIAMOND blue light burst from within, restrained sparkling particles, joyful open eyes. Toy clearly separate from opening flaps. Beautiful material detail, cream background with icy iridescent DIAMOND blue ambient glow. Composition: 1:1, generate at highest available native quality and resolution. Deliverable 1600x1600.  All requested toys fully in frame.",
+    "ratio": "1:1",
+    "width": 1600,
+    "height": 1600,
+    "characters": [
+      "wally.diamond-frost"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-7555a330-6c73-4224-b176-2f449a3de4c0.png",
+    "index": 5
+  },
+  {
+    "id": "S3",
+    "name": "play",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/pip-temperaments/pip.peach-jelly-front.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Pip is a plump pear-shaped rounded triangle with exactly TWO asymmetrical rounded crown nubs, dark oval eyes and tiny smile, NO arms/legs/ears. Preserve the reference silhouette. Eyes both open and cheerful. Close-up one peach translucent jelly Pip under gentle offscreen fingertip pressure at top, body visibly compressed wider with small indentation and stretched specular highlights, bubbles suspended inside, elastic bulging sides. Implied finger stays OUT OF FRAME. No extra fingers or toy limbs. Fill square with satisfying luminous squish, cream surface. Composition: 1:1, generate at highest available native quality and resolution. Deliverable 1600x1600.  All requested toys fully in frame.",
+    "ratio": "1:1",
+    "width": 1600,
+    "height": 1600,
+    "characters": [
+      "pip.peach-jelly"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-966b3971-822f-4dff-8f30-ec6fb67123f3.png",
+    "index": 6
+  },
+  {
+    "id": "M1",
+    "name": "jelly-macro",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/pip-temperaments/pip.peach-jelly-front.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Pip is a plump pear-shaped rounded triangle with exactly TWO asymmetrical rounded crown nubs, dark oval eyes and tiny smile, NO arms/legs/ears. Preserve the reference silhouette. Eyes both open and cheerful. Luminous peach translucent jelly, suspended bubbles and warm inner refraction. Macro material portrait, tight crop includes part of face plus tactile surface; three-quarter camera, warm upper-left broad softbox and tiny rim light, cream background. Same camera and light treatment as other material studies. Composition: 3:4, generate at highest available native quality and resolution. Deliverable 1200x1600.  All requested toys fully in frame. OVERRIDING CAMERA INSTRUCTION: EXTREME MACRO DETAIL, not a full-body portrait. Only one eye, a little cheek and a cropped area of body texture visible. Face and tactile surface continue beyond all four frame edges. Do NOT show entire toy, toy base, tabletop, legs, tail or full silhouette. Toy surface fills 95% of 3:4 frame. Identical warm broad softbox upper left and subtle rim across all four macro images.",
+    "ratio": "3:4",
+    "width": 1200,
+    "height": 1600,
+    "characters": [
+      "pip.peach-jelly"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-381dc0f4-8f6b-4e8a-bab1-8c49a8b1d4a0.png",
+    "index": 7
+  },
+  {
+    "id": "M2",
+    "name": "plush-macro",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/fox-v2/fox.boucle-plush.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Navy-purple plush Fox with cream muzzle, exact eye spacing; fine soft velvety fibres catch light, not long realistic fur. Macro material portrait, tight crop includes part of face plus tactile surface; three-quarter camera, warm upper-left broad softbox and tiny rim light, cream background. Same camera and light treatment as other material studies. Composition: 3:4, generate at highest available native quality and resolution. Deliverable 1200x1600.  All requested toys fully in frame. OVERRIDING CAMERA INSTRUCTION: EXTREME MACRO DETAIL, not a full-body portrait. Only one eye, a little cheek and a cropped area of body texture visible. Face and tactile surface continue beyond all four frame edges. Do NOT show entire toy, toy base, tabletop, legs, tail or full silhouette. Toy surface fills 95% of 3:4 frame. Identical warm broad softbox upper left and subtle rim across all four macro images.",
+    "ratio": "3:4",
+    "width": 1200,
+    "height": 1600,
+    "characters": [
+      "fox.boucle-plush"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-316274d1-e703-4874-804b-52dca032be76.png",
+    "index": 8
+  },
+  {
+    "id": "M3",
+    "name": "vinyl-macro",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/wally-pilot-review/images/wally.matte-vinyl.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Wally is a spherical little whale, broad cream belly, two black oval eyes, tiny smile, exactly two side flippers and one horizontal split tail behind the body, no feet/legs/dorsal fin. Preserve actual toy proportions and rear tail shown in identity reference, not an animal redesign. Smooth matte teal vinyl with broad soft highlights and cream belly. Macro material portrait, tight crop includes part of face plus tactile surface; three-quarter camera, warm upper-left broad softbox and tiny rim light, cream background. Same camera and light treatment as other material studies. Composition: 3:4, generate at highest available native quality and resolution. Deliverable 1200x1600.  All requested toys fully in frame. OVERRIDING CAMERA INSTRUCTION: EXTREME MACRO DETAIL, not a full-body portrait. Only one eye, a little cheek and a cropped area of body texture visible. Face and tactile surface continue beyond all four frame edges. Do NOT show entire toy, toy base, tabletop, legs, tail or full silhouette. Toy surface fills 95% of 3:4 frame. Identical warm broad softbox upper left and subtle rim across all four macro images.",
+    "ratio": "3:4",
+    "width": 1200,
+    "height": 1600,
+    "characters": [
+      "wally.matte-vinyl"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-e3c0d49c-92bf-4129-a35a-7a59908893de.png",
+    "index": 9
+  },
+  {
+    "id": "M4",
+    "name": "glitter-macro",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/pip-temperaments/pip.gold-confetti-front.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Pip is a plump pear-shaped rounded triangle with exactly TWO asymmetrical rounded crown nubs, dark oval eyes and tiny smile, NO arms/legs/ears. Preserve the reference silhouette. Eyes both open and cheerful. Honey golden translucent glitter gel, sparkling fine flecks at different depths, not opaque metallic. Macro material portrait, tight crop includes part of face plus tactile surface; three-quarter camera, warm upper-left broad softbox and tiny rim light, cream background. Same camera and light treatment as other material studies. Composition: 3:4, generate at highest available native quality and resolution. Deliverable 1200x1600.  All requested toys fully in frame. OVERRIDING CAMERA INSTRUCTION: EXTREME MACRO DETAIL, not a full-body portrait. Only one eye, a little cheek and a cropped area of body texture visible. Face and tactile surface continue beyond all four frame edges. Do NOT show entire toy, toy base, tabletop, legs, tail or full silhouette. Toy surface fills 95% of 3:4 frame. Identical warm broad softbox upper left and subtle rim across all four macro images.",
+    "ratio": "3:4",
+    "width": 1200,
+    "height": 1600,
+    "characters": [
+      "pip.gold-confetti"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-0d2c95bf-b4e5-402c-a68c-0a86b5b3e931.png",
+    "index": 10
+  },
+  {
+    "id": "SE2",
+    "name": "common",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/wally-pilot-review/images/wally.kelp-mint.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Wally is a spherical little whale, broad cream belly, two black oval eyes, tiny smile, exactly two side flippers and one horizontal split tail behind the body, no feet/legs/dorsal fin. Preserve actual toy proportions and rear tail shown in identity reference, not an animal redesign. Exactly ONE full Wally in kelp-mint, match approved reference colour/material. Front three-quarter tabletop collectible camera, same centered scale and pose across rarity series. Kelp mint green smooth vinyl and cream belly. Full silhouette centered with generous margins; no pedestal or props. Composition: 1:1, generate at highest available native quality and resolution. Deliverable 1600x1600. Transparent background with genuine alpha, NO background rectangle or floor, only one full toy, clean edges. All requested toys fully in frame.",
+    "ratio": "1:1",
+    "width": 1600,
+    "height": 1600,
+    "characters": [
+      "wally.kelp-mint"
+    ],
+    "transparent": true,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-db80d902-2377-45bb-be2d-376145a246e6.png",
+    "index": 11
+  },
+  {
+    "id": "SE2",
+    "name": "rare",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/wally-pilot-review/images/wally.treasure-leaf.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Wally is a spherical little whale, broad cream belly, two black oval eyes, tiny smile, exactly two side flippers and one horizontal split tail behind the body, no feet/legs/dorsal fin. Preserve actual toy proportions and rear tail shown in identity reference, not an animal redesign. Exactly ONE full Wally in treasure-leaf, match approved reference colour/material. Front three-quarter tabletop collectible camera, same centered scale and pose across rarity series. Extremely reflective polished gold with gold-leaf texture, distinct highlights. Full silhouette centered with generous margins; no pedestal or props. Composition: 1:1, generate at highest available native quality and resolution. Deliverable 1600x1600. Transparent background with genuine alpha, NO background rectangle or floor, only one full toy, clean edges. All requested toys fully in frame.",
+    "ratio": "1:1",
+    "width": 1600,
+    "height": 1600,
+    "characters": [
+      "wally.treasure-leaf"
+    ],
+    "transparent": true,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-46b61b9c-6241-4cd5-aa56-b05ad90eaf65.png",
+    "index": 12
+  },
+  {
+    "id": "SE2",
+    "name": "epic",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/wally-pilot-review/images/wally.diamond-frost.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Wally is a spherical little whale, broad cream belly, two black oval eyes, tiny smile, exactly two side flippers and one horizontal split tail behind the body, no feet/legs/dorsal fin. Preserve actual toy proportions and rear tail shown in identity reference, not an animal redesign. Exactly ONE full Wally in diamond-frost, match approved reference colour/material. Front three-quarter tabletop collectible camera, same centered scale and pose across rarity series. Very pronounced crisp faceted crystalline diamond, icy prism reflections. Full silhouette centered with generous margins; no pedestal or props. Composition: 1:1, generate at highest available native quality and resolution. Deliverable 1600x1600. Transparent background with genuine alpha, NO background rectangle or floor, only one full toy, clean edges. All requested toys fully in frame.",
+    "ratio": "1:1",
+    "width": 1600,
+    "height": 1600,
+    "characters": [
+      "wally.diamond-frost"
+    ],
+    "transparent": true,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-85274c8b-805d-4738-aa3c-a5e035b7c91b.png",
+    "index": 13
+  },
+  {
+    "id": "SE2",
+    "name": "secret",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/wally-pilot-review/images/wally.molten-abyss.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Wally is a spherical little whale, broad cream belly, two black oval eyes, tiny smile, exactly two side flippers and one horizontal split tail behind the body, no feet/legs/dorsal fin. Preserve actual toy proportions and rear tail shown in identity reference, not an animal redesign. Exactly ONE full Wally in molten-abyss, match approved reference colour/material. Front three-quarter tabletop collectible camera, same centered scale and pose across rarity series. Rough black obsidian crust with deep luminous electric cyan fissures, cream belly. Full silhouette centered with generous margins; no pedestal or props. Composition: 1:1, generate at highest available native quality and resolution. Deliverable 1600x1600. Transparent background with genuine alpha, NO background rectangle or floor, only one full toy, clean edges. All requested toys fully in frame.",
+    "ratio": "1:1",
+    "width": 1600,
+    "height": 1600,
+    "characters": [
+      "wally.molten-abyss"
+    ],
+    "transparent": true,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-c18e041f-b900-45e4-b5ff-1082407808fd.png",
+    "index": 14
+  },
+  {
+    "id": "SE3",
+    "name": "finite-edition",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/wally-pilot-review/images/wally.treasure-leaf.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Wally is a spherical little whale, broad cream belly, two black oval eyes, tiny smile, exactly two side flippers and one horizontal split tail behind the body, no feet/legs/dorsal fin. Preserve actual toy proportions and rear tail shown in identity reference, not an animal redesign. One very reflective gold Treasure Leaf Wally on an elegant small cream plinth, soft museum spotlight, warm milk backdrop, tiny blank brass plaque centered on plinth front. Plaque completely blank for HTML overlay. No engraved letters/numbers. Composition: 4:3, generate at highest available native quality and resolution. Deliverable 2000x1500.  All requested toys fully in frame.",
+    "ratio": "4:3",
+    "width": 2000,
+    "height": 1500,
+    "characters": [
+      "wally.treasure-leaf"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-ec13d2d7-d6a5-4577-a823-acd1ad0eb6a4.png",
+    "index": 15
+  },
+  {
+    "id": "C1",
+    "name": "pip",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/pip-temperaments/pip.peach-jelly-front.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/UI/Boxes/Collection-pip.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/Collections/Pip/Cover.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Pip is a plump pear-shaped rounded triangle with exactly TWO asymmetrical rounded crown nubs, dark oval eyes and tiny smile, NO arms/legs/ears. Preserve the reference silhouette. Eyes both open and cheerful. Peach translucent jelly with visible bubbles. Exactly ONE toy beside its real CLOSED branded collection box. Reference1 identity, reference2 exact real carton, reference3 own world environment only, reference4 approved art style only. Box on LEFT at three-quarter view, toy on RIGHT same apparent height; both fully visible and separated. Background sunlit peach flower garden beside a soft stream, softly blurred. Consistent eye-level camera, warm tactile collectible finish and 20% framing margin. No extra background characters. Composition: 4:3, generate at highest available native quality and resolution. Deliverable 1600x1200.  All requested toys fully in frame.",
+    "ratio": "4:3",
+    "width": 1600,
+    "height": 1200,
+    "characters": [
+      "pip.peach-jelly"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-a1147d4f-cac1-45d4-bcaa-a3d8ceee6938.png",
+    "index": 16
+  },
+  {
+    "id": "C2",
+    "name": "fox",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/fox-v2/fox.boucle-plush.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/UI/Boxes/Collection-fox.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/Collections/Fox/Cover.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Navy-purple seated plush Fox, cream-white muzzle/chest/tailtip, TWO pointed ears, black paws, ONE curled large tail. Exactly ONE toy beside its real CLOSED branded collection box. Reference1 identity, reference2 exact real carton, reference3 own world environment only, reference4 approved art style only. Box on LEFT at three-quarter view, toy on RIGHT same apparent height; both fully visible and separated. Background warm woodland glade, softly blurred. Consistent eye-level camera, warm tactile collectible finish and 20% framing margin. No extra background characters. Composition: 4:3, generate at highest available native quality and resolution. Deliverable 1600x1200.  All requested toys fully in frame.",
+    "ratio": "4:3",
+    "width": 1600,
+    "height": 1200,
+    "characters": [
+      "fox.boucle-plush"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-b6f75d2d-e085-4b8e-b39e-3f2ffdfe4065.png",
+    "index": 17
+  },
+  {
+    "id": "C3",
+    "name": "axolotl",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/axolotl-finishes/axolotl.clear-jelly.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/UI/Boxes/Collection-axolotl.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/Collections/Axolotl/Cover.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Honey gold seated axolotl with THREE feathery gills per side, TWO arms and TWO little feet, tiny W smile. Exactly ONE toy beside its real CLOSED branded collection box. Reference1 identity, reference2 exact real carton, reference3 own world environment only, reference4 approved art style only. Box on LEFT at three-quarter view, toy on RIGHT same apparent height; both fully visible and separated. Background dreamy water garden with lily pads, softly blurred. Consistent eye-level camera, warm tactile collectible finish and 20% framing margin. No extra background characters. Composition: 4:3, generate at highest available native quality and resolution. Deliverable 1600x1200.  All requested toys fully in frame.",
+    "ratio": "4:3",
+    "width": 1600,
+    "height": 1200,
+    "characters": [
+      "axolotl.clear-jelly"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-89e099db-206c-4931-b62d-9281bcee46ed.png",
+    "index": 18
+  },
+  {
+    "id": "C4",
+    "name": "firb",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/holiday-collection/firb.matte-vinyl.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/UI/Boxes/Collection-firb.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/Collections/Firb/Cover.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Firb is the exact green layered Christmas tree toy with yellow star top, cream oval face, red/gold ornaments, TWO brown stub feet. Exactly ONE toy beside its real CLOSED branded collection box. Reference1 identity, reference2 exact real carton, reference3 own world environment only, reference4 approved art style only. Box on LEFT at three-quarter view, toy on RIGHT same apparent height; both fully visible and separated. Background snowy evergreen clearing at golden hour, softly blurred. Consistent eye-level camera, warm tactile collectible finish and 20% framing margin. No extra background characters. Composition: 4:3, generate at highest available native quality and resolution. Deliverable 1600x1200.  All requested toys fully in frame.",
+    "ratio": "4:3",
+    "width": 1600,
+    "height": 1200,
+    "characters": [
+      "firb.matte-vinyl"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-5db64795-c785-43d7-83cc-961745f85743.png",
+    "index": 19
+  },
+  {
+    "id": "C5",
+    "name": "coco",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/holiday-collection/coco.matte-vinyl.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/UI/Boxes/Collection-coco.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/Collections/Coco/Cover.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Coco is the exact cocoa-brown mug toy, ONE large handle on right, cream whipped topping and THREE marshmallows, candy-cane heart on front, TWO cream stub feet. Exactly ONE toy beside its real CLOSED branded collection box. Reference1 identity, reference2 exact real carton, reference3 own world environment only, reference4 approved art style only. Box on LEFT at three-quarter view, toy on RIGHT same apparent height; both fully visible and separated. Background cozy cocoa cabin wooden table with warm window bokeh, softly blurred. Consistent eye-level camera, warm tactile collectible finish and 20% framing margin. No extra background characters. Composition: 4:3, generate at highest available native quality and resolution. Deliverable 1600x1200.  All requested toys fully in frame.",
+    "ratio": "4:3",
+    "width": 1600,
+    "height": 1200,
+    "characters": [
+      "coco.matte-vinyl"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-14d13d81-6ab1-4580-9759-31e0b05e9258.png",
+    "index": 20
+  },
+  {
+    "id": "C6",
+    "name": "snowy",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/holiday-collection/snowy.matte-vinyl.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/UI/Boxes/Collection-snowy.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/Collections/Snowy/Cover.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Snowy is the exact white round snowman, green beanie with pompom, red scarf, orange carrot nose, TWO navy buttons, TWO mittens, TWO feet. Exactly ONE toy beside its real CLOSED branded collection box. Reference1 identity, reference2 exact real carton, reference3 own world environment only, reference4 approved art style only. Box on LEFT at three-quarter view, toy on RIGHT same apparent height; both fully visible and separated. Background frosty blue snow garden with golden winter light, softly blurred. Consistent eye-level camera, warm tactile collectible finish and 20% framing margin. No extra background characters. Composition: 4:3, generate at highest available native quality and resolution. Deliverable 1600x1200.  All requested toys fully in frame.",
+    "ratio": "4:3",
+    "width": 1600,
+    "height": 1200,
+    "characters": [
+      "snowy.matte-vinyl"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-bca4ba89-b734-49c8-84db-de627d607e60.png",
+    "index": 21
+  },
+  {
+    "id": "C7",
+    "name": "ginger",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/holiday-collection/ginger.matte-vinyl.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/UI/Boxes/Collection-ginger.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/Collections/Ginger/Cover.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Ginger is the exact gingerbread BEAR toy with TWO round bear ears outlined in cream icing, green bowtie, TWO red buttons, cream icing cuffs, TWO arms and TWO short legs. Exactly ONE toy beside its real CLOSED branded collection box. Reference1 identity, reference2 exact real carton, reference3 own world environment only, reference4 approved art style only. Box on LEFT at three-quarter view, toy on RIGHT same apparent height; both fully visible and separated. Background gingerbread village bakery at sunset, softly blurred. Consistent eye-level camera, warm tactile collectible finish and 20% framing margin. No extra background characters. Composition: 4:3, generate at highest available native quality and resolution. Deliverable 1600x1200.  All requested toys fully in frame.",
+    "ratio": "4:3",
+    "width": 1600,
+    "height": 1200,
+    "characters": [
+      "ginger.matte-vinyl"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-94cedfbd-20e3-48a8-807a-165ad0f47b1b.png",
+    "index": 22
+  },
+  {
+    "id": "C8",
+    "name": "reiny",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/winter-trio-finish-review/renders/reiny.matte-vinyl-front.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/UI/Boxes/Collection-reiny.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/Collections/Reiny/Cover.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Reiny is the exact round brown reindeer toy, cream muzzle/belly, TWO branching pale antlers, TWO ears, red collar with green round bell, dark hooves. Exactly ONE toy beside its real CLOSED branded collection box. Reference1 identity, reference2 exact real carton, reference3 own world environment only, reference4 approved art style only. Box on LEFT at three-quarter view, toy on RIGHT same apparent height; both fully visible and separated. Background snowy woodland with red berries and sunrise, softly blurred. Consistent eye-level camera, warm tactile collectible finish and 20% framing margin. No extra background characters. Composition: 4:3, generate at highest available native quality and resolution. Deliverable 1600x1200.  All requested toys fully in frame.",
+    "ratio": "4:3",
+    "width": 1600,
+    "height": 1200,
+    "characters": [
+      "reiny.matte-vinyl"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-5c2fc8c1-e1d4-4b81-a062-a2d6d299ecdb.png",
+    "index": 23
+  },
+  {
+    "id": "C9",
+    "name": "guin",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/winter-trio-finish-review/renders/guin.matte-vinyl-front.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/UI/Boxes/Collection-guin.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/Collections/Guin/Cover.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Guin is the exact navy round penguin toy with cream face/belly, mint earmuffs over head, orange beak/feet, TWO flippers. Exactly ONE toy beside its real CLOSED branded collection box. Reference1 identity, reference2 exact real carton, reference3 own world environment only, reference4 approved art style only. Box on LEFT at three-quarter view, toy on RIGHT same apparent height; both fully visible and separated. Background pastel icy cove with frosted crystals and peach sunrise, softly blurred. Consistent eye-level camera, warm tactile collectible finish and 20% framing margin. No extra background characters. Composition: 4:3, generate at highest available native quality and resolution. Deliverable 1600x1200.  All requested toys fully in frame.",
+    "ratio": "4:3",
+    "width": 1600,
+    "height": 1200,
+    "characters": [
+      "guin.matte-vinyl"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-885031c1-e136-4ed5-b3c7-712d89fc9bf9.png",
+    "index": 24
+  },
+  {
+    "id": "C10",
+    "name": "bundy",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/winter-trio-finish-review/renders/bundy.matte-vinyl-front.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/UI/Boxes/Collection-bundy.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/Collections/Bundy/Cover.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Bundy is the exact round brown pudding toy topped with dripping ivory icing, TWO green holly leaves and THREE red berries, TWO stubby arms and TWO stubby feet. Exactly ONE toy beside its real CLOSED branded collection box. Reference1 identity, reference2 exact real carton, reference3 own world environment only, reference4 approved art style only. Box on LEFT at three-quarter view, toy on RIGHT same apparent height; both fully visible and separated. Background cozy festive bakery wooden tabletop with warm lights, softly blurred. Consistent eye-level camera, warm tactile collectible finish and 20% framing margin. No extra background characters. Composition: 4:3, generate at highest available native quality and resolution. Deliverable 1600x1200.  All requested toys fully in frame.",
+    "ratio": "4:3",
+    "width": 1600,
+    "height": 1200,
+    "characters": [
+      "bundy.matte-vinyl"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-84bbdd4d-1c0c-4542-9c0f-1fe2a63a8c88.png",
+    "index": 25
+  },
+  {
+    "id": "C11",
+    "name": "wally",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/wally-pilot-review/images/wally.gloss-vinyl.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/UI/Boxes/Collection-wally.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/Collections/Wally/Cover.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Wally is a spherical little whale, broad cream belly, two black oval eyes, tiny smile, exactly two side flippers and one horizontal split tail behind the body, no feet/legs/dorsal fin. Preserve actual toy proportions and rear tail shown in identity reference, not an animal redesign. Classic blue glossy vinyl and cream belly. Exactly ONE toy beside its real CLOSED branded collection box. Reference1 identity, reference2 exact real carton, reference3 own world environment only, reference4 approved art style only. Box on LEFT at three-quarter view, toy on RIGHT same apparent height; both fully visible and separated. Background pearl grotto with opalescent shells and softly glowing blue water, softly blurred. Consistent eye-level camera, warm tactile collectible finish and 20% framing margin. No extra background characters. Composition: 4:3, generate at highest available native quality and resolution. Deliverable 1600x1200.  All requested toys fully in frame.",
+    "ratio": "4:3",
+    "width": 1600,
+    "height": 1200,
+    "characters": [
+      "wally.gloss-vinyl"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-a95e617f-76b6-42f5-b7ab-d0c44ad04d44.png",
+    "index": 26
+  },
+  {
+    "id": "F1",
+    "name": "desktop",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/pip-temperaments/pip.peach-jelly-front.png",
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/pip-temperaments/pip.glow-jelly-front.png",
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/pip-fusion-materials/pip.fusion-dusk-0.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Pip is a plump pear-shaped rounded triangle with exactly TWO asymmetrical rounded crown nubs, dark oval eyes and tiny smile, NO arms/legs/ears. Preserve the reference silhouette. Eyes both open and cheerful. Fusion scene: TWO smaller source Pips, peach and lavender moon, arc around a flowing swirl of both colours that resolves into ONE larger Dusk Pip (ref3, lavender-to-peach gradient with tiny stars). Exactly three toys total, not a palette of new designs. Source reference2 provides only Pip form, moon source should be pale lavender, not mint. Blended ribbons and soft magical sparkles on milk backdrop, premium tactile jelly. Flow stays within scene area. Desktop layout: keep left 40% empty calm low-detail section colour for copy, all action on right60%. Composition: 16:9, generate at highest available native quality and resolution. Deliverable 2560x1440.  All requested toys fully in frame.",
+    "ratio": "16:9",
+    "width": 2560,
+    "height": 1440,
+    "characters": [
+      "pip.peach-jelly",
+      "pip.moon-jelly",
+      "pip.fusion-dusk"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-fd38ee49-318b-4b42-8481-2072dafceaf6.png",
+    "index": 27
+  },
+  {
+    "id": "F1",
+    "name": "mobile",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/pip-temperaments/pip.peach-jelly-front.png",
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/pip-temperaments/pip.glow-jelly-front.png",
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/pip-fusion-materials/pip.fusion-dusk-0.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Pip is a plump pear-shaped rounded triangle with exactly TWO asymmetrical rounded crown nubs, dark oval eyes and tiny smile, NO arms/legs/ears. Preserve the reference silhouette. Eyes both open and cheerful. Fusion scene: TWO smaller source Pips, peach and lavender moon, arc around a flowing swirl of both colours that resolves into ONE larger Dusk Pip (ref3, lavender-to-peach gradient with tiny stars). Exactly three toys total, not a palette of new designs. Source reference2 provides only Pip form, moon source should be pale lavender, not mint. Blended ribbons and soft magical sparkles on milk backdrop, premium tactile jelly. Flow stays within scene area. Separate portrait composition, NOT a crop. Keep top35% empty calm section colour; scene clustered in lower65%. Composition: 4:5, generate at highest available native quality and resolution. Deliverable 1080x1350.  All requested toys fully in frame.",
+    "ratio": "4:5",
+    "width": 1080,
+    "height": 1350,
+    "characters": [
+      "pip.peach-jelly",
+      "pip.moon-jelly",
+      "pip.fusion-dusk"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-b5fa0b30-b2eb-42fd-8fa5-71e765f05825.png",
+    "index": 28
+  },
+  {
+    "id": "T1",
+    "name": "desktop",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/fox-v2/fox.boucle-plush.png",
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/axolotl-finishes/axolotl.clear-jelly.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Two small cream display shelves facing each other, no humans. ONE navy plush Fox levitates from left shelf toward right, ONE honey jelly Axolotl from right toward left, gentle opposing arcs of warm light imply an exchange. Exact reference toy shapes, no marketplace/money/icons. Friendly cream-lilac setting. Keep central top band free for headline. Desktop layout: keep left 40% empty calm low-detail section colour for copy, all action on right60%. Composition: 16:9, generate at highest available native quality and resolution. Deliverable 2560x1440.  All requested toys fully in frame.",
+    "ratio": "16:9",
+    "width": 2560,
+    "height": 1440,
+    "characters": [
+      "fox.boucle-plush",
+      "axolotl.clear-jelly"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-55f74f98-9525-4842-996c-2045b59a09dc.png",
+    "index": 29
+  },
+  {
+    "id": "T1",
+    "name": "mobile",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/fox-v2/fox.boucle-plush.png",
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/axolotl-finishes/axolotl.clear-jelly.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Two small cream display shelves facing each other, no humans. ONE navy plush Fox levitates from left shelf toward right, ONE honey jelly Axolotl from right toward left, gentle opposing arcs of warm light imply an exchange. Exact reference toy shapes, no marketplace/money/icons. Friendly cream-lilac setting. Keep central top band free for headline. Separate portrait composition, NOT a crop. Keep top35% empty calm section colour; scene clustered in lower65%. Composition: 4:5, generate at highest available native quality and resolution. Deliverable 1080x1350.  All requested toys fully in frame.",
+    "ratio": "4:5",
+    "width": 1080,
+    "height": 1350,
+    "characters": [
+      "fox.boucle-plush",
+      "axolotl.clear-jelly"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-bdfaf34b-d727-4198-88f1-cd178cbaae53.png",
+    "index": 30
+  },
+  {
+    "id": "W1",
+    "name": "desktop",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/fox-v2/fox.boucle-plush.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/UI/Boxes/Collection-fox.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/Collections/Fox/Cover.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Isometric miniature woodland park, curving walking path, exactly FOUR small real closed Fox collection cartons at intervals, ONE navy plush Fox happily walking the path on its normal four tiny paws. Fox form exactly reference1, box design ref2, woodland environment ref3, quality ref4. Sunlit cream-peach sky, soft moss and flowers. Golden dust marks progress, no maps/numerals/people. Desktop layout: keep left 40% empty calm low-detail section colour for copy, all action on right60%. Composition: 16:9, generate at highest available native quality and resolution. Deliverable 2560x1440.  All requested toys fully in frame.",
+    "ratio": "16:9",
+    "width": 2560,
+    "height": 1440,
+    "characters": [
+      "fox.boucle-plush"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-eadd7ee5-4a2a-4686-b1d1-610b733292e5.png",
+    "index": 31
+  },
+  {
+    "id": "W1",
+    "name": "mobile",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/fox-v2/fox.boucle-plush.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/UI/Boxes/Collection-fox.png",
+      "/Users/calonchozulu/Desktop/pockle/Assets/Pockle/Resources/Collections/Fox/Cover.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Isometric miniature woodland park, curving walking path, exactly FOUR small real closed Fox collection cartons at intervals, ONE navy plush Fox happily walking the path on its normal four tiny paws. Fox form exactly reference1, box design ref2, woodland environment ref3, quality ref4. Sunlit cream-peach sky, soft moss and flowers. Golden dust marks progress, no maps/numerals/people. Separate portrait composition, NOT a crop. Keep top35% empty calm section colour; scene clustered in lower65%. Composition: 4:5, generate at highest available native quality and resolution. Deliverable 1080x1350.  All requested toys fully in frame.",
+    "ratio": "4:5",
+    "width": 1080,
+    "height": 1350,
+    "characters": [
+      "fox.boucle-plush"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-2959423d-f64c-47a0-9484-9bae6a9144e2.png",
+    "index": 32
+  },
+  {
+    "id": "D1",
+    "name": "desktop",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/AppIcon/pockle-icon-source.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Exact chosen app-icon coral jelly blob, TWO asymmetrical crown bumps, oval dark eyes and tiny W smile, glossy luminous orange-coral jelly, NO arms/legs/ears. Peeking up from bottom edge on deep plum #2A1430, conveys a friendly wave through sideways tilt and lifted soft body edge rather than invented hands. Keep upper60% entirely empty deep plum, a subtle warm halo low around toy only. Desktop layout: keep left 40% empty calm low-detail section colour for copy, all action on right60%. Composition: 21:9, generate at highest available native quality and resolution. Deliverable 2560x1100.  All requested toys fully in frame.",
+    "ratio": "21:9",
+    "width": 2560,
+    "height": 1100,
+    "characters": [
+      "pip.icon"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-19b9d2c0-e290-43a1-902d-1c279af42393.png",
+    "index": 33
+  },
+  {
+    "id": "D1",
+    "name": "mobile",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/AppIcon/pockle-icon-source.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Exact chosen app-icon coral jelly blob, TWO asymmetrical crown bumps, oval dark eyes and tiny W smile, glossy luminous orange-coral jelly, NO arms/legs/ears. Peeking up from bottom edge on deep plum #2A1430, conveys a friendly wave through sideways tilt and lifted soft body edge rather than invented hands. Keep upper60% entirely empty deep plum, a subtle warm halo low around toy only. Separate portrait composition, NOT a crop. Keep top35% empty calm section colour; scene clustered in lower65%. Composition: 4:5, generate at highest available native quality and resolution. Deliverable 1080x1350.  All requested toys fully in frame.",
+    "ratio": "4:5",
+    "width": 1080,
+    "height": 1350,
+    "characters": [
+      "pip.icon"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-647d15c1-ba52-4c9d-8eac-ddb78baf7058.png",
+    "index": 34
+  },
+  {
+    "id": "OG",
+    "name": "social",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Reframe the owner-approved H1 illustration reference1 (same six toys and warm cream/coral palette) as a wide social share image. Cluster on right, room left. Only text: exact word Pockle in large rounded deep plum wordmark at top-left, spelled P-o-c-k-l-e. No slogan or other text. Keep characters consistent with approved hero. Composition: 40:21, generate at highest available native quality and resolution. Deliverable 1200x630.  All requested toys fully in frame.",
+    "ratio": "40:21",
+    "width": 1200,
+    "height": 630,
+    "characters": [
+      "pip.peach-jelly",
+      "fox.boucle-plush",
+      "wally.gloss-vinyl",
+      "axolotl.clear-jelly"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-71bfc621-2457-4392-90f2-85d285205b62.png",
+    "index": 35
+  },
+  {
+    "id": "ONBOARDING",
+    "name": "pip",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/pip-temperaments/pip.peach-jelly-front.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Pip is a plump pear-shaped rounded triangle with exactly TWO asymmetrical rounded crown nubs, dark oval eyes and tiny smile, NO arms/legs/ears. Preserve the reference silhouette. Eyes both open and cheerful. Peach translucent jelly with bubbles. Exactly ONE centered full toy, happy curious face, open eyes, no props. Same camera front three-quarter very slight high angle, consistent visual height ~72% of frame, base at85% of canvas height, all top details and tails fit. Soft warm broad light, premium cover-style art, clean silhouette. Transparent genuinely empty alpha backdrop, no floor/shadow disk/border. Composition: 1:1, generate at highest available native quality and resolution. Deliverable 1024x1024. Transparent background with genuine alpha, NO background rectangle or floor, only one full toy, clean edges. All requested toys fully in frame.",
+    "ratio": "1:1",
+    "width": 1024,
+    "height": 1024,
+    "characters": [
+      "pip.peach-jelly"
+    ],
+    "transparent": true,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-2945b565-e267-4654-8850-bfdf64c5ab31.png",
+    "index": 36
+  },
+  {
+    "id": "ONBOARDING",
+    "name": "fox",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/fox-v2/fox.boucle-plush.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Exact navy-purple plush Fox with two pointed ears, white muzzle/chest/tailtip, black paws, one curled tail. Exactly ONE centered full toy, happy curious face, open eyes, no props. Same camera front three-quarter very slight high angle, consistent visual height ~72% of frame, base at85% of canvas height, all top details and tails fit. Soft warm broad light, premium cover-style art, clean silhouette. Transparent genuinely empty alpha backdrop, no floor/shadow disk/border. Composition: 1:1, generate at highest available native quality and resolution. Deliverable 1024x1024. Transparent background with genuine alpha, NO background rectangle or floor, only one full toy, clean edges. All requested toys fully in frame.",
+    "ratio": "1:1",
+    "width": 1024,
+    "height": 1024,
+    "characters": [
+      "fox.boucle-plush"
+    ],
+    "transparent": true,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-aa62ac6d-86ec-414d-8959-4b4cdba345ab.png",
+    "index": 37
+  },
+  {
+    "id": "ONBOARDING",
+    "name": "wally",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/wally-pilot-review/images/wally.kelp-mint.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Wally is a spherical little whale, broad cream belly, two black oval eyes, tiny smile, exactly two side flippers and one horizontal split tail behind the body, no feet/legs/dorsal fin. Preserve actual toy proportions and rear tail shown in identity reference, not an animal redesign. Kelp mint vinyl cream belly. Exactly ONE centered full toy, happy curious face, open eyes, no props. Same camera front three-quarter very slight high angle, consistent visual height ~72% of frame, base at85% of canvas height, all top details and tails fit. Soft warm broad light, premium cover-style art, clean silhouette. Transparent genuinely empty alpha backdrop, no floor/shadow disk/border. Composition: 1:1, generate at highest available native quality and resolution. Deliverable 1024x1024. Transparent background with genuine alpha, NO background rectangle or floor, only one full toy, clean edges. All requested toys fully in frame.",
+    "ratio": "1:1",
+    "width": 1024,
+    "height": 1024,
+    "characters": [
+      "wally.kelp-mint"
+    ],
+    "transparent": true,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-2aedb13e-fa87-404a-882f-9e618e687bbe.png",
+    "index": 38
+  },
+  {
+    "id": "ONBOARDING",
+    "name": "axolotl",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/axolotl-finishes/axolotl.clear-jelly.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Exact honey-gold seated axolotl, THREE feathery gills each side, TWO arms and TWO feet, W smile. Exactly ONE centered full toy, happy curious face, open eyes, no props. Same camera front three-quarter very slight high angle, consistent visual height ~72% of frame, base at85% of canvas height, all top details and tails fit. Soft warm broad light, premium cover-style art, clean silhouette. Transparent genuinely empty alpha backdrop, no floor/shadow disk/border. Composition: 1:1, generate at highest available native quality and resolution. Deliverable 1024x1024. Transparent background with genuine alpha, NO background rectangle or floor, only one full toy, clean edges. All requested toys fully in frame.",
+    "ratio": "1:1",
+    "width": 1024,
+    "height": 1024,
+    "characters": [
+      "axolotl.clear-jelly"
+    ],
+    "transparent": true,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-6ecc5092-cc46-4c5f-851f-d89fc85a3139.png",
+    "index": 39
+  },
+  {
+    "id": "ONBOARDING",
+    "name": "firb",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/docs/captures/holiday-collection/firb.pearl-jelly.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Exact Firb evergreen tree toy with yellow star, cream oval face and ornaments, TWO brown stub feet; pearlescent light mint jelly finish as reference. Exactly ONE centered full toy, happy curious face, open eyes, no props. Same camera front three-quarter very slight high angle, consistent visual height ~72% of frame, base at85% of canvas height, all top details and tails fit. Soft warm broad light, premium cover-style art, clean silhouette. Transparent genuinely empty alpha backdrop, no floor/shadow disk/border. Composition: 1:1, generate at highest available native quality and resolution. Deliverable 1024x1024. Transparent background with genuine alpha, NO background rectangle or floor, only one full toy, clean edges. All requested toys fully in frame.",
+    "ratio": "1:1",
+    "width": 1024,
+    "height": 1024,
+    "characters": [
+      "firb.pearl-jelly"
+    ],
+    "transparent": true,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-382566b8-2a7a-4397-b1b2-b489b49178ca.png",
+    "index": 40
+  },
+  {
+    "id": "SE1",
+    "name": "desktop",
+    "refs": [
+      "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-fdf1a6c2-3b82-4765-9301-11eeb155d466.png"
+    ],
+    "prompt": "Use case: precise-object-edit. Reference1 is the final artwork to preserve. Make a SAME-IDENTITY version in EXACTLY 21:9 landscape, width to height 2.33 to1, target2560x1100. NOT a3:1 panorama. Preserve every single one of the15 whales and every face/finish, the entire display 5bottom+4+3+2+1top, in exactly the same order and proportions; no new toys. Add sufficient calm cyan grotto space ABOVE the display so top20% contains no toy or hard details. Entire exhibit fits lower80%, backdrop unchanged elsewhere, premium soft painterly quality. Preserve all toy anatomy and material designs, no feet/legs/new fins, no typography. Use added vertical environment height to achieve21:9 ratio, never stretch whale bodies or crop toys.",
+    "ratio": "21:9",
+    "width": 2560,
+    "height": 1100,
+    "characters": [
+      "wally.clear-jelly",
+      "wally.pearl-jelly",
+      "wally.confetti-gel",
+      "wally.mochi-foam",
+      "wally.velvet-flock",
+      "wally.boucle-plush",
+      "wally.matte-vinyl",
+      "wally.gloss-vinyl",
+      "wally.kelp-mint",
+      "wally.coated-metallic",
+      "wally.treasure-leaf",
+      "wally.rose-gold-shell",
+      "wally.glow-jelly",
+      "wally.diamond-frost",
+      "wally.molten-abyss"
+    ],
+    "transparent": false,
+    "revision": "Only quiet-zone framing revised from first fifteen-toy composition",
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-b0c06a18-1252-4e72-bcb3-72045374498f.png",
+    "index": 41
+  },
+  {
+    "id": "SE1",
+    "name": "mobile",
+    "refs": [
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/_unity-renders/SE1/desktop.png",
+      "/Users/calonchozulu/Desktop/pockle/docs/wally-pilot-review/images/wally.treasure-leaf.png",
+      "/Users/calonchozulu/Desktop/pockle/docs/wally-pilot-review/images/wally.diamond-frost.png",
+      "/Users/calonchozulu/Desktop/pockle/docs/wally-pilot-review/images/wally.molten-abyss.png",
+      "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+    ],
+    "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Exactly FIFTEEN Wally whale toys arranged on clear acrylic risers inside a pearl grotto, every face visible with no overlaps. Reference1 is the existing actual fifteen-finish lineup, for finish inventory/anatomy ONLY; do NOT copy literal render or black artifacts. Reference2 gold Treasure Leaf, ref3 faceted Diamond Frost, ref4 cracked cyan Molten Abyss, ref5 approved painterly style only. Bottom row FIVE commons: aqua jelly, lavender pearl, pink glitter, mint mochi, purple flock. Next row FOUR commons: sand plush, matte teal, gloss blue, kelp green. Next row THREE reflective Rares: polished gold, gold leaf, rose gold. Next row TWO Epics: deep blue iridescent Deep Sea Glow and faceted icy Diamond Frost. Top ONE Secret rough obsidian with luminous cyan fissures. Exactly 5+4+3+2+1=15 toys. All have broad cream bellies, exactly2 side flippers and horizontal split rear tail, no feet. Very clear color/material differences; keep lower-tier toys equally readable. No labels. Independently composed4:5 portrait display, risers vertically stacked with top20% empty for title. Composition: 4:5, generate at highest available native quality and resolution. Deliverable 1080x1350.  All requested toys fully in frame.",
+    "ratio": "4:5",
+    "width": 1080,
+    "height": 1350,
+    "characters": [
+      "wally.clear-jelly",
+      "wally.pearl-jelly",
+      "wally.confetti-gel",
+      "wally.mochi-foam",
+      "wally.velvet-flock",
+      "wally.boucle-plush",
+      "wally.matte-vinyl",
+      "wally.gloss-vinyl",
+      "wally.kelp-mint",
+      "wally.coated-metallic",
+      "wally.treasure-leaf",
+      "wally.rose-gold-shell",
+      "wally.glow-jelly",
+      "wally.diamond-frost",
+      "wally.molten-abyss"
+    ],
+    "transparent": false,
+    "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-542b99b8-ca38-4b26-b369-10ffbd42026d.png",
+    "index": 42
+  }
+]

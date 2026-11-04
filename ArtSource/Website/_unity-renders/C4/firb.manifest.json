@@ -1,0 +1,14 @@
+{
+    "id": "C4",
+    "file": "C4/firb.png",
+    "alt": "Firb Pockle beside its collection box.",
+    "world": "firb-evergreen-clearing",
+    "composition": "Aligned tabletop pair in the character's home world.",
+    "status": "composition-review",
+    "toys": [
+        "firb.matte-vinyl"
+    ],
+    "width": 1600,
+    "height": 1200,
+    "transparent": false
+}

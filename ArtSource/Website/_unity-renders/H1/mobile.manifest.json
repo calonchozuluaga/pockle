@@ -1,0 +1,19 @@
+{
+    "id": "H1",
+    "file": "H1/mobile.png",
+    "alt": "A group of Pockle toys in jelly, plush and vinyl finishes around an open surprise box.",
+    "world": "Studio lighting; collection reflection environment pip-jelly-garden",
+    "composition": "Recomposed two-column group; upper35% reserved for copy.",
+    "status": "composition-review",
+    "toys": [
+        "pip.peach-jelly",
+        "fox.boucle-plush",
+        "wally.gloss-vinyl",
+        "axolotl.clear-jelly",
+        "pip.gold-confetti",
+        "pip.glow-jelly"
+    ],
+    "width": 1080,
+    "height": 1350,
+    "transparent": false
+}

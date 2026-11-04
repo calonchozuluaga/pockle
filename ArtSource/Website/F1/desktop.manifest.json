@@ -1,0 +1,37 @@
+{
+  "id": "F1",
+  "name": "desktop",
+  "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Pip is a plump pear-shaped rounded triangle with exactly TWO asymmetrical rounded crown nubs, dark oval eyes and tiny smile, NO arms/legs/ears. Preserve the reference silhouette. Eyes both open and cheerful. Fusion scene: TWO smaller source Pips, peach and lavender moon, arc around a flowing swirl of both colours that resolves into ONE larger Dusk Pip (ref3, lavender-to-peach gradient with tiny stars). Exactly three toys total, not a palette of new designs. Source reference2 provides only Pip form, moon source should be pale lavender, not mint. Blended ribbons and soft magical sparkles on milk backdrop, premium tactile jelly. Flow stays within scene area. Desktop layout: keep left 40% empty calm low-detail section colour for copy, all action on right60%. Composition: 16:9, generate at highest available native quality and resolution. Deliverable 2560x1440.  All requested toys fully in frame.",
+  "ratio": "16:9",
+  "width": 2560,
+  "height": 1440,
+  "characters": [
+    "pip.peach-jelly",
+    "pip.moon-jelly",
+    "pip.fusion-dusk"
+  ],
+  "transparent": false,
+  "status": "ready-for-owner-review",
+  "category": "Website scenes",
+  "alt": "Peach and lavender Pip toys combining into a blended Dusk Pip.",
+  "original": "F1/desktop-original.png",
+  "file": "F1/desktop.png",
+  "preview": "docs/website-art-review/03/previews/F1-desktop.png",
+  "native_size": [
+    1672,
+    941
+  ],
+  "export_size": [
+    2560,
+    1440
+  ],
+  "export_method": "sips dimension resample; generated original retained",
+  "alpha_bounds_128": null,
+  "references": [
+    "References/893d83c068f7-pip.peach-jelly-front.png",
+    "References/954358f67a4c-pip.glow-jelly-front.png",
+    "References/8e2cc0585b58-pip.fusion-dusk-0.png",
+    "References/632d5781f2c1-desktop-original.png"
+  ],
+  "substitution_note": "Lavender Moon source colour directed in prompt; mint glow capture used for Pip shape only, Dusk capture for fused result."
+}

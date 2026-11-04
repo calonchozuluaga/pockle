@@ -1,0 +1,14 @@
+{
+    "id": "C8",
+    "file": "C8/reiny.png",
+    "alt": "Reiny Pockle beside its collection box.",
+    "world": "reiny-birch-clearing",
+    "composition": "Aligned tabletop pair in the character's home world.",
+    "status": "composition-review",
+    "toys": [
+        "reiny.matte-vinyl"
+    ],
+    "width": 1600,
+    "height": 1200,
+    "transparent": false
+}

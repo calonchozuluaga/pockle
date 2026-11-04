@@ -1,0 +1,37 @@
+{
+  "id": "SE3",
+  "assets": [
+    {
+      "id": "SE3",
+      "name": "finite-edition",
+      "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Wally is a spherical little whale, broad cream belly, two black oval eyes, tiny smile, exactly two side flippers and one horizontal split tail behind the body, no feet/legs/dorsal fin. Preserve actual toy proportions and rear tail shown in identity reference, not an animal redesign. One very reflective gold Treasure Leaf Wally on an elegant small cream plinth, soft museum spotlight, warm milk backdrop, tiny blank brass plaque centered on plinth front. Plaque completely blank for HTML overlay. No engraved letters/numbers. Composition: 4:3, generate at highest available native quality and resolution. Deliverable 2000x1500.  All requested toys fully in frame.",
+      "ratio": "4:3",
+      "width": 2000,
+      "height": 1500,
+      "characters": [
+        "wally.treasure-leaf"
+      ],
+      "transparent": false,
+      "status": "ready-for-owner-review",
+      "category": "Series and rarity",
+      "alt": "Gold Wally on a plinth with a blank brass plaque.",
+      "original": "SE3/finite-edition-original.png",
+      "file": "SE3/finite-edition.png",
+      "preview": "docs/website-art-review/03/previews/SE3-finite-edition.png",
+      "native_size": [
+        1448,
+        1086
+      ],
+      "export_size": [
+        2000,
+        1500
+      ],
+      "export_method": "sips dimension resample; generated original retained",
+      "alpha_bounds_128": null,
+      "references": [
+        "References/5a85b76ca543-wally.treasure-leaf.png",
+        "References/632d5781f2c1-desktop-original.png"
+      ]
+    }
+  ]
+}

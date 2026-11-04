@@ -24,7 +24,7 @@ namespace Pockle.Editor
         [Serializable] private sealed class Manifest { public string renderer = "Unity 6000.6.5f1, Built-in"; public Shot[] images; }
         private static readonly List<Shot> shots = new List<Shot>();
         private static readonly Color Milk = new Color(251/255f,248/255f,245/255f);
-        private static string Output => Path.Combine(Directory.GetCurrentDirectory(), "ArtSource", "Website");
+        private static string Output => Path.Combine(Directory.GetCurrentDirectory(), "ArtSource", "Website", "_unity-renders");
 
         public static void Capture()
         {

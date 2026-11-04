@@ -1,0 +1,18 @@
+{
+  "id": "M1",
+  "name": "jelly",
+  "refs": [
+    "/Users/calonchozulu/Desktop/pockle/docs/captures/pip-temperaments/pip.peach-jelly-front.png",
+    "/Users/calonchozulu/Desktop/pockle/ArtSource/Website/H1/desktop-original.png"
+  ],
+  "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Pip is a plump pear-shaped rounded triangle with exactly TWO asymmetrical rounded crown nubs, dark oval eyes and tiny smile, NO arms/legs/ears. Preserve the reference silhouette. Eyes both open and cheerful. Luminous peach translucent jelly, suspended bubbles and warm inner refraction. Macro material portrait, tight crop includes part of face plus tactile surface; three-quarter camera, warm upper-left broad softbox and tiny rim light, cream background. Same camera and light treatment as other material studies. Composition: 3:4, generate at highest available native quality and resolution. Deliverable 1200x1600.  All requested toys fully in frame.",
+  "ratio": "3:4",
+  "width": 1200,
+  "height": 1600,
+  "characters": [
+    "pip.peach-jelly"
+  ],
+  "transparent": false,
+  "source": "/Users/calonchozulu/.codex/generated_images/01a1364e-1b35-7e92-9c23-35edec4d28c4/exec-8efc12a6-3f64-414d-aec5-e9425bf272d3.png",
+  "index": 7
+}

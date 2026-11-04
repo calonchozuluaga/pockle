@@ -1,0 +1,37 @@
+{
+  "id": "M1",
+  "assets": [
+    {
+      "id": "M1",
+      "name": "jelly-macro",
+      "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Pip is a plump pear-shaped rounded triangle with exactly TWO asymmetrical rounded crown nubs, dark oval eyes and tiny smile, NO arms/legs/ears. Preserve the reference silhouette. Eyes both open and cheerful. Luminous peach translucent jelly, suspended bubbles and warm inner refraction. Macro material portrait, tight crop includes part of face plus tactile surface; three-quarter camera, warm upper-left broad softbox and tiny rim light, cream background. Same camera and light treatment as other material studies. Composition: 3:4, generate at highest available native quality and resolution. Deliverable 1200x1600.  All requested toys fully in frame. OVERRIDING CAMERA INSTRUCTION: EXTREME MACRO DETAIL, not a full-body portrait. Only one eye, a little cheek and a cropped area of body texture visible. Face and tactile surface continue beyond all four frame edges. Do NOT show entire toy, toy base, tabletop, legs, tail or full silhouette. Toy surface fills 95% of 3:4 frame. Identical warm broad softbox upper left and subtle rim across all four macro images.",
+      "ratio": "3:4",
+      "width": 1200,
+      "height": 1600,
+      "characters": [
+        "pip.peach-jelly"
+      ],
+      "transparent": false,
+      "status": "ready-for-owner-review",
+      "category": "Materials",
+      "alt": "Close-up of the jelly Pockle material.",
+      "original": "M1/jelly-macro-original.png",
+      "file": "M1/jelly-macro.png",
+      "preview": "docs/website-art-review/03/previews/M1-jelly-macro.png",
+      "native_size": [
+        1086,
+        1448
+      ],
+      "export_size": [
+        1200,
+        1600
+      ],
+      "export_method": "sips dimension resample; generated original retained",
+      "alpha_bounds_128": null,
+      "references": [
+        "References/893d83c068f7-pip.peach-jelly-front.png",
+        "References/632d5781f2c1-desktop-original.png"
+      ]
+    }
+  ]
+}

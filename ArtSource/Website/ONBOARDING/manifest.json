@@ -1,0 +1,200 @@
+{
+  "id": "ONBOARDING",
+  "assets": [
+    {
+      "id": "ONBOARDING",
+      "name": "pip",
+      "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Pip is a plump pear-shaped rounded triangle with exactly TWO asymmetrical rounded crown nubs, dark oval eyes and tiny smile, NO arms/legs/ears. Preserve the reference silhouette. Eyes both open and cheerful. Peach translucent jelly with bubbles. Exactly ONE centered full toy, happy curious face, open eyes, no props. Same camera front three-quarter very slight high angle, consistent visual height ~72% of frame, base at85% of canvas height, all top details and tails fit. Soft warm broad light, premium cover-style art, clean silhouette. Transparent genuinely empty alpha backdrop, no floor/shadow disk/border. Composition: 1:1, generate at highest available native quality and resolution. Deliverable 1024x1024. Transparent background with genuine alpha, NO background rectangle or floor, only one full toy, clean edges. All requested toys fully in frame.",
+      "ratio": "1:1",
+      "width": 1024,
+      "height": 1024,
+      "characters": [
+        "pip.peach-jelly"
+      ],
+      "transparent": true,
+      "status": "ready-for-owner-review",
+      "category": "Onboarding",
+      "alt": "Pip smiling in its approved finish on a transparent background.",
+      "original": "ONBOARDING/pip-original.png",
+      "file": "ONBOARDING/pip.png",
+      "preview": "docs/website-art-review/03/previews/ONBOARDING-pip.png",
+      "native_size": [
+        1254,
+        1254
+      ],
+      "export_size": [
+        1024,
+        1024
+      ],
+      "export_method": "sips dimension resample; generated original retained",
+      "alpha_bounds_128": [
+        120,
+        122,
+        893,
+        898
+      ],
+      "references": [
+        "References/893d83c068f7-pip.peach-jelly-front.png",
+        "References/632d5781f2c1-desktop-original.png"
+      ],
+      "website_cutout": "ONBOARDING/pip-website-1600.png",
+      "proposed_resource_name": "pip_peach-jelly.png"
+    },
+    {
+      "id": "ONBOARDING",
+      "name": "fox",
+      "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Exact navy-purple plush Fox with two pointed ears, white muzzle/chest/tailtip, black paws, one curled tail. Exactly ONE centered full toy, happy curious face, open eyes, no props. Same camera front three-quarter very slight high angle, consistent visual height ~72% of frame, base at85% of canvas height, all top details and tails fit. Soft warm broad light, premium cover-style art, clean silhouette. Transparent genuinely empty alpha backdrop, no floor/shadow disk/border. Composition: 1:1, generate at highest available native quality and resolution. Deliverable 1024x1024. Transparent background with genuine alpha, NO background rectangle or floor, only one full toy, clean edges. All requested toys fully in frame.",
+      "ratio": "1:1",
+      "width": 1024,
+      "height": 1024,
+      "characters": [
+        "fox.boucle-plush"
+      ],
+      "transparent": true,
+      "status": "ready-for-owner-review",
+      "category": "Onboarding",
+      "alt": "Fox smiling in its approved finish on a transparent background.",
+      "original": "ONBOARDING/fox-original.png",
+      "file": "ONBOARDING/fox.png",
+      "preview": "docs/website-art-review/03/previews/ONBOARDING-fox.png",
+      "native_size": [
+        1254,
+        1254
+      ],
+      "export_size": [
+        1024,
+        1024
+      ],
+      "export_method": "sips dimension resample; generated original retained",
+      "alpha_bounds_128": [
+        156,
+        90,
+        852,
+        954
+      ],
+      "references": [
+        "References/1e258898fbe8-fox.boucle-plush.png",
+        "References/632d5781f2c1-desktop-original.png"
+      ],
+      "website_cutout": "ONBOARDING/fox-website-1600.png",
+      "proposed_resource_name": "fox_boucle-plush.png"
+    },
+    {
+      "id": "ONBOARDING",
+      "name": "wally",
+      "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Wally is a spherical little whale, broad cream belly, two black oval eyes, tiny smile, exactly two side flippers and one horizontal split tail behind the body, no feet/legs/dorsal fin. Preserve actual toy proportions and rear tail shown in identity reference, not an animal redesign. Kelp mint vinyl cream belly. Exactly ONE centered full toy, happy curious face, open eyes, no props. Same camera front three-quarter very slight high angle, consistent visual height ~72% of frame, base at85% of canvas height, all top details and tails fit. Soft warm broad light, premium cover-style art, clean silhouette. Transparent genuinely empty alpha backdrop, no floor/shadow disk/border. Composition: 1:1, generate at highest available native quality and resolution. Deliverable 1024x1024. Transparent background with genuine alpha, NO background rectangle or floor, only one full toy, clean edges. All requested toys fully in frame.",
+      "ratio": "1:1",
+      "width": 1024,
+      "height": 1024,
+      "characters": [
+        "wally.kelp-mint"
+      ],
+      "transparent": true,
+      "status": "ready-for-owner-review",
+      "category": "Onboarding",
+      "alt": "Wally smiling in its approved finish on a transparent background.",
+      "original": "ONBOARDING/wally-original.png",
+      "file": "ONBOARDING/wally.png",
+      "preview": "docs/website-art-review/03/previews/ONBOARDING-wally.png",
+      "native_size": [
+        1254,
+        1254
+      ],
+      "export_size": [
+        1024,
+        1024
+      ],
+      "export_method": "sips dimension resample; generated original retained",
+      "alpha_bounds_128": [
+        63,
+        247,
+        934,
+        864
+      ],
+      "references": [
+        "References/477a2bc7832e-wally.kelp-mint.png",
+        "References/632d5781f2c1-desktop-original.png"
+      ],
+      "website_cutout": "ONBOARDING/wally-website-1600.png",
+      "proposed_resource_name": "wally_kelp-mint.png"
+    },
+    {
+      "id": "ONBOARDING",
+      "name": "axolotl",
+      "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Exact honey-gold seated axolotl, THREE feathery gills each side, TWO arms and TWO feet, W smile. Exactly ONE centered full toy, happy curious face, open eyes, no props. Same camera front three-quarter very slight high angle, consistent visual height ~72% of frame, base at85% of canvas height, all top details and tails fit. Soft warm broad light, premium cover-style art, clean silhouette. Transparent genuinely empty alpha backdrop, no floor/shadow disk/border. Composition: 1:1, generate at highest available native quality and resolution. Deliverable 1024x1024. Transparent background with genuine alpha, NO background rectangle or floor, only one full toy, clean edges. All requested toys fully in frame.",
+      "ratio": "1:1",
+      "width": 1024,
+      "height": 1024,
+      "characters": [
+        "axolotl.clear-jelly"
+      ],
+      "transparent": true,
+      "status": "ready-for-owner-review",
+      "category": "Onboarding",
+      "alt": "Axolotl smiling in its approved finish on a transparent background.",
+      "original": "ONBOARDING/axolotl-original.png",
+      "file": "ONBOARDING/axolotl.png",
+      "preview": "docs/website-art-review/03/previews/ONBOARDING-axolotl.png",
+      "native_size": [
+        1254,
+        1254
+      ],
+      "export_size": [
+        1024,
+        1024
+      ],
+      "export_method": "sips dimension resample; generated original retained",
+      "alpha_bounds_128": [
+        76,
+        90,
+        939,
+        952
+      ],
+      "references": [
+        "References/5a4efa8aa5d4-axolotl.clear-jelly.png",
+        "References/632d5781f2c1-desktop-original.png"
+      ],
+      "website_cutout": "ONBOARDING/axolotl-website-1600.png",
+      "proposed_resource_name": "axolotl_clear-jelly.png"
+    },
+    {
+      "id": "ONBOARDING",
+      "name": "firb",
+      "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Exact Firb evergreen tree toy with yellow star, cream oval face and ornaments, TWO brown stub feet; pearlescent light mint jelly finish as reference. Exactly ONE centered full toy, happy curious face, open eyes, no props. Same camera front three-quarter very slight high angle, consistent visual height ~72% of frame, base at85% of canvas height, all top details and tails fit. Soft warm broad light, premium cover-style art, clean silhouette. Transparent genuinely empty alpha backdrop, no floor/shadow disk/border. Composition: 1:1, generate at highest available native quality and resolution. Deliverable 1024x1024. Transparent background with genuine alpha, NO background rectangle or floor, only one full toy, clean edges. All requested toys fully in frame.",
+      "ratio": "1:1",
+      "width": 1024,
+      "height": 1024,
+      "characters": [
+        "firb.pearl-jelly"
+      ],
+      "transparent": true,
+      "status": "ready-for-owner-review",
+      "category": "Onboarding",
+      "alt": "Firb smiling in its approved finish on a transparent background.",
+      "original": "ONBOARDING/firb-original.png",
+      "file": "ONBOARDING/firb.png",
+      "preview": "docs/website-art-review/03/previews/ONBOARDING-firb.png",
+      "native_size": [
+        1254,
+        1254
+      ],
+      "export_size": [
+        1024,
+        1024
+      ],
+      "export_method": "sips dimension resample; generated original retained",
+      "alpha_bounds_128": [
+        154,
+        72,
+        868,
+        964
+      ],
+      "references": [
+        "References/6fc34c68dc06-firb.pearl-jelly.png",
+        "References/632d5781f2c1-desktop-original.png"
+      ],
+      "website_cutout": "ONBOARDING/firb-website-1600.png",
+      "proposed_resource_name": "firb_pearl-jelly.png"
+    }
+  ]
+}

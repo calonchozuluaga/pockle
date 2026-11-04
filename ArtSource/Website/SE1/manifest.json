@@ -1,15 +1,14 @@
 {
   "id": "SE1",
-  "status": "composition-review",
-  "images": [
+  "assets": [
     {
       "id": "SE1",
-      "file": "SE1/desktop.png",
-      "alt": "All fifteen Wally Pockles arranged on a display, from common to secret.",
-      "world": "wally-pearl-grotto",
-      "composition": "Actual15 finishes on five ascending display rows; Pearl Grotto world.",
-      "status": "composition-review",
-      "toys": [
+      "name": "desktop",
+      "prompt": "Use case: precise-object-edit. Reference1 is the final artwork to preserve. Make a SAME-IDENTITY version in EXACTLY 21:9 landscape, width to height 2.33 to1, target2560x1100. NOT a3:1 panorama. Preserve every single one of the15 whales and every face/finish, the entire display 5bottom+4+3+2+1top, in exactly the same order and proportions; no new toys. Add sufficient calm cyan grotto space ABOVE the display so top20% contains no toy or hard details. Entire exhibit fits lower80%, backdrop unchanged elsewhere, premium soft painterly quality. Preserve all toy anatomy and material designs, no feet/legs/new fins, no typography. Use added vertical environment height to achieve21:9 ratio, never stretch whale bodies or crop toys.",
+      "ratio": "21:9",
+      "width": 2560,
+      "height": 1100,
+      "characters": [
         "wally.clear-jelly",
         "wally.pearl-jelly",
         "wally.confetti-gel",
@@ -26,20 +25,36 @@
         "wally.diamond-frost",
         "wally.molten-abyss"
       ],
-      "width": 2560,
-      "height": 1100,
       "transparent": false,
-      "preview": "previews/SE1-desktop.jpg",
-      "lighting_note": "Collection probe exposure reduced to 0.20 for editorial detail; runtime shader/finish assets unchanged."
+      "revision": "Only quiet-zone framing revised from first fifteen-toy composition",
+      "status": "ready-for-owner-review",
+      "category": "Series and rarity",
+      "alt": "All fifteen Wally finishes on pearl-grotto display risers, from Common to Secret.",
+      "original": "SE1/desktop-original.png",
+      "file": "SE1/desktop.png",
+      "preview": "docs/website-art-review/03/previews/SE1-desktop.png",
+      "native_size": [
+        1914,
+        822
+      ],
+      "export_size": [
+        2560,
+        1100
+      ],
+      "export_method": "sips dimension resample; generated original retained",
+      "alpha_bounds_128": null,
+      "references": [
+        "References/b4fb90020b6c-exec-fdf1a6c2-3b82-4765-9301-11eeb155d466.png"
+      ]
     },
     {
       "id": "SE1",
-      "file": "SE1/mobile.png",
-      "alt": "All fifteen Wally Pockles arranged on a display, from common to secret.",
-      "world": "wally-pearl-grotto",
-      "composition": "Actual15 finishes on five ascending display rows; Pearl Grotto world.",
-      "status": "composition-review",
-      "toys": [
+      "name": "mobile",
+      "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Exactly FIFTEEN Wally whale toys arranged on clear acrylic risers inside a pearl grotto, every face visible with no overlaps. Reference1 is the existing actual fifteen-finish lineup, for finish inventory/anatomy ONLY; do NOT copy literal render or black artifacts. Reference2 gold Treasure Leaf, ref3 faceted Diamond Frost, ref4 cracked cyan Molten Abyss, ref5 approved painterly style only. Bottom row FIVE commons: aqua jelly, lavender pearl, pink glitter, mint mochi, purple flock. Next row FOUR commons: sand plush, matte teal, gloss blue, kelp green. Next row THREE reflective Rares: polished gold, gold leaf, rose gold. Next row TWO Epics: deep blue iridescent Deep Sea Glow and faceted icy Diamond Frost. Top ONE Secret rough obsidian with luminous cyan fissures. Exactly 5+4+3+2+1=15 toys. All have broad cream bellies, exactly2 side flippers and horizontal split rear tail, no feet. Very clear color/material differences; keep lower-tier toys equally readable. No labels. Independently composed4:5 portrait display, risers vertically stacked with top20% empty for title. Composition: 4:5, generate at highest available native quality and resolution. Deliverable 1080x1350.  All requested toys fully in frame.",
+      "ratio": "4:5",
+      "width": 1080,
+      "height": 1350,
+      "characters": [
         "wally.clear-jelly",
         "wally.pearl-jelly",
         "wally.confetti-gel",
@@ -56,11 +71,30 @@
         "wally.diamond-frost",
         "wally.molten-abyss"
       ],
-      "width": 1080,
-      "height": 1350,
       "transparent": false,
-      "preview": "previews/SE1-mobile.jpg",
-      "lighting_note": "Collection probe exposure reduced to 0.20 for editorial detail; runtime shader/finish assets unchanged."
+      "status": "ready-for-owner-review",
+      "category": "Series and rarity",
+      "alt": "All fifteen Wally finishes on pearl-grotto display risers, from Common to Secret.",
+      "original": "SE1/mobile-original.png",
+      "file": "SE1/mobile.png",
+      "preview": "docs/website-art-review/03/previews/SE1-mobile.png",
+      "native_size": [
+        1122,
+        1402
+      ],
+      "export_size": [
+        1080,
+        1350
+      ],
+      "export_method": "sips dimension resample; generated original retained",
+      "alpha_bounds_128": null,
+      "references": [
+        "References/f63119b000f3-desktop.png",
+        "References/5a85b76ca543-wally.treasure-leaf.png",
+        "References/e9059fb19d93-wally.diamond-frost.png",
+        "References/3ccaf397d96b-wally.molten-abyss.png",
+        "References/632d5781f2c1-desktop-original.png"
+      ]
     }
   ]
 }

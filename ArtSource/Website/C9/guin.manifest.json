@@ -1,14 +1,34 @@
 {
-    "id": "C9",
-    "file": "C9/guin.png",
-    "alt": "Guin Pockle beside its collection box.",
-    "world": "guin-mint-ice-cove",
-    "composition": "Aligned tabletop pair in the character's home world.",
-    "status": "composition-review",
-    "toys": [
-        "guin.matte-vinyl"
-    ],
-    "width": 1600,
-    "height": 1200,
-    "transparent": false
+  "id": "C9",
+  "name": "guin",
+  "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Guin is the exact navy round penguin toy with cream face/belly, mint earmuffs over head, orange beak/feet, TWO flippers. Exactly ONE toy beside its real CLOSED branded collection box. Reference1 identity, reference2 exact real carton, reference3 own world environment only, reference4 approved art style only. Box on LEFT at three-quarter view, toy on RIGHT same apparent height; both fully visible and separated. Background pastel icy cove with frosted crystals and peach sunrise, softly blurred. Consistent eye-level camera, warm tactile collectible finish and 20% framing margin. No extra background characters. Composition: 4:3, generate at highest available native quality and resolution. Deliverable 1600x1200.  All requested toys fully in frame.",
+  "ratio": "4:3",
+  "width": 1600,
+  "height": 1200,
+  "characters": [
+    "guin.matte-vinyl"
+  ],
+  "transparent": false,
+  "status": "ready-for-owner-review",
+  "category": "Collections",
+  "alt": "Guin Pockle beside its own collection box in its world.",
+  "original": "C9/guin-original.png",
+  "file": "C9/guin.png",
+  "preview": "docs/website-art-review/03/previews/C9-guin.png",
+  "native_size": [
+    1448,
+    1086
+  ],
+  "export_size": [
+    1600,
+    1200
+  ],
+  "export_method": "sips dimension resample; generated original retained",
+  "alpha_bounds_128": null,
+  "references": [
+    "References/b468f632bc8a-guin.matte-vinyl-front.png",
+    "References/c20e2ee1fe99-Collection-guin.png",
+    "References/a73efbcbd5b0-Cover.png",
+    "References/632d5781f2c1-desktop-original.png"
+  ]
 }

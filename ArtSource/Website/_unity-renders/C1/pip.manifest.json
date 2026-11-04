@@ -1,0 +1,14 @@
+{
+    "id": "C1",
+    "file": "C1/pip.png",
+    "alt": "Pip Pockle beside its collection box.",
+    "world": "pip-jelly-garden",
+    "composition": "Aligned tabletop pair in the character's home world.",
+    "status": "composition-review",
+    "toys": [
+        "pip.peach-jelly"
+    ],
+    "width": 1600,
+    "height": 1200,
+    "transparent": false
+}

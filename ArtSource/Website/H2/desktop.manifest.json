@@ -1,0 +1,34 @@
+{
+  "id": "H2",
+  "name": "desktop",
+  "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Wally is a spherical little whale, broad cream belly, two black oval eyes, tiny smile, exactly two side flippers and one horizontal split tail behind the body, no feet/legs/dorsal fin. Preserve actual toy proportions and rear tail shown in identity reference, not an animal redesign. Secret Molten Abyss Wally dominant on right, black rough obsidian crust split by luminous electric CYAN fissures, cream belly untouched, realistic relief and cyan light spilling onto deep plum #2A1430 tabletop. Two much smaller common blue Wallys out of focus behind. No lava orange. Dramatic yet friendly, dark edges blend to plum. Desktop layout: keep left 40% empty calm low-detail section colour for copy, all action on right60%. Composition: 16:9, generate at highest available native quality and resolution. Deliverable 2560x1440.  All requested toys fully in frame.",
+  "ratio": "16:9",
+  "width": 2560,
+  "height": 1440,
+  "characters": [
+    "wally.molten-abyss",
+    "wally.gloss-vinyl"
+  ],
+  "transparent": false,
+  "status": "ready-for-owner-review",
+  "category": "Website scenes",
+  "alt": "A cyan-glowing Molten Wally on a dark plum background.",
+  "original": "H2/desktop-original.png",
+  "file": "H2/desktop.png",
+  "preview": "docs/website-art-review/03/previews/H2-desktop.png",
+  "native_size": [
+    1672,
+    941
+  ],
+  "export_size": [
+    2560,
+    1440
+  ],
+  "export_method": "sips dimension resample; generated original retained",
+  "alpha_bounds_128": null,
+  "references": [
+    "References/3ccaf397d96b-wally.molten-abyss.png",
+    "References/8ca571c03b16-wally.gloss-vinyl.png",
+    "References/632d5781f2c1-desktop-original.png"
+  ]
+}

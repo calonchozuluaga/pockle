@@ -1,0 +1,14 @@
+{
+    "id": "SE2",
+    "file": "SE2/epic.png",
+    "alt": "Wally in epic finish.",
+    "world": "Studio lighting; collection reflection environment wally-coral-cove",
+    "composition": "Same pose and camera; transparent background.",
+    "status": "composition-review",
+    "toys": [
+        "wally.diamond-frost"
+    ],
+    "width": 1600,
+    "height": 1600,
+    "transparent": true
+}

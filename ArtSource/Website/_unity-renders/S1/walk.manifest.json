@@ -1,0 +1,14 @@
+{
+    "id": "S1",
+    "file": "S1/walk.png",
+    "alt": "Pip hopping along a path toward a surprise box.",
+    "world": "pip-jelly-garden",
+    "composition": "Static authored mid-hop editorial pose in Pip's garden world.",
+    "status": "composition-review",
+    "toys": [
+        "pip.peach-jelly"
+    ],
+    "width": 1600,
+    "height": 1600,
+    "transparent": false
+}

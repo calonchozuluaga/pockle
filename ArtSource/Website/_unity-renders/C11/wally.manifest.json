@@ -1,0 +1,14 @@
+{
+    "id": "C11",
+    "file": "C11/wally.png",
+    "alt": "Wally Pockle beside its collection box.",
+    "world": "wally-coral-cove",
+    "composition": "Aligned tabletop pair in the character's home world.",
+    "status": "composition-review",
+    "toys": [
+        "wally.gloss-vinyl"
+    ],
+    "width": 1600,
+    "height": 1200,
+    "transparent": false
+}

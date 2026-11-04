@@ -1,6 +1,6 @@
 # playpockle.com — content and image brief
 
-November 3, 2026. Owner request: explain how the game and series work, and replace the flat PNG cut-outs with custom graphics that look like the toys do in the game. Claude wrote the copy and the image specs; **Codex renders the images from the Unity project** (real models, shaders, worlds and lighting) so the site matches what players will see.
+November 3, 2026. Owner request: explain how the game and series work, and replace the flat PNG cut-outs with custom graphics that look like the toys do in the game. Claude wrote the copy and the image specs; **Codex generates the images with built-in image generation, the same way as the collection covers and world paintings** (see `FOX_ART_PROMPTS.md`, `ArtSource/WallyArt/generated-manifest.json`). Owner clarified November 3: "render" meant a fully generated illustration, not a Unity scene render.
 
 Facts below follow the November 3 launch decisions (PRODUCT_BRIEF, CLAUDE_LAUNCH_HANDOFF_2026-11-03, LAUNCH_BOX_PRICING). Anything marked **[confirm]** is decided but not live yet, or not yet approved for public wording. Remove or reword those before the site goes public. Never publish a price, odds number, serial or supply count the store/server isn't actually using.
 
@@ -8,17 +8,18 @@ Facts below follow the November 3 launch decisions (PRODUCT_BRIEF, CLAUDE_LAUNCH
 
 ## Part 1 — Rules for every image
 
-1. **Render from the game, don't generate.** Use the actual Unity models, finish materials (jelly translucency, plush flock, vinyl gloss, glitter, rose gold, diamond facets, molten cracks) and the collection worlds. AI image generation is only acceptable for a background plate if no in-game world fits, and must then be re-lit to match.
-2. **No text, logos, UI, prices, serial numbers or odds inside images.** The site adds all words as live text. Box art may show its printed Pockle wordmark because that is the real product.
-3. **Only active characters:** Pip, Fox, Axolotl, Firb, Coco, Snowy, Ginger, Reiny, Guin, Bundy, Wally. Never retired ones (Loop, Mallow, Moss, Nook, Ripple, Rolo, Sprig, Wisp, Bop, Dew, Tula) and never Fusion Lab studies presented as buyable.
-4. **Toys at hero scale look like tabletop designer toys:** soft key light from upper left, warm rim light, a contact shadow on a surface, shallow depth of field. Expressions happy or curious, eyes open; no sleepy/grumpy faces in heroes.
-5. **Leave text room.** Every wide image has a stated "quiet zone" (no toys, low detail) where the headline sits. Desktop images keep it on the left 40%; mobile crops keep it in the top 35%.
-6. **Deliver each image at:** desktop 2560 px wide (stated ratio), mobile 1080 × 1350 (4:5) re-composed, not just cropped. PNG master in `ArtSource/Website/<id>/`, plus WebP at quality 82 for the site. Cut-outs: transparent PNG/WebP, 1600 px on the long side, 2 px padding-free bounding box.
-7. **Two palettes are allowed:** light "milk" sections (#FBF8F5 base, cream/peach worlds) and dark "plum" sections (#2A1430 to #3E0A35, used for glow, Epic and Secret finishes). Match the background tone so images blend into the page colour without a visible edge.
-8. **Loops (optional but recommended):** where marked 🎞, also export a 4–6 s seamless loop, 1080 × 1080, MP4 (H.264, no audio, ≤ 2 MB) plus a poster frame. Real in-game motion: squish and rebound, hop, tail wag, box lid opening.
-9. **Alt text** for each image is in the table; keep it with the file in `ArtSource/Website/manifest.json`.
+1. **Generated, like the covers.** Use Codex's built-in image generation. Pass each character's **approved identity captures** as reference images (as for the Wally and Fox covers) and say in the prompt exactly what must be preserved: body silhouette, eye/mouth spacing, ears/tails/flippers, finish colours. Pass an existing approved cover as a style reference for quality and softness only.
+2. **Style:** premium designer-toy illustration, the look of the collection covers: soft tactile painted 3D forms, glossy jelly with real translucency and inner glow, fuzzy plush, smooth vinyl, gentle reflections, warm whimsical light, rich cheerful colour. Toys read as small tabletop collectibles, not cartoon animals.
+3. **Characters must match the game exactly.** Reject and regenerate any image where a toy's shape drifts (extra ears, fins, feet, wrong face, wrong colours). Only active characters: Pip, Fox, Axolotl, Firb, Coco, Snowy, Ginger, Reiny, Guin, Bundy, Wally. Never retired ones (Loop, Mallow, Moss, Nook, Ripple, Rolo, Sprig, Wisp, Bop, Dew, Tula), and never Fusion Lab studies shown as buyable.
+4. **No text, logos, UI, prices, serial numbers or odds inside images.** The site adds all words. Exception: a box may show the Pockle wordmark if the box reference already carries it, and the OG image (below).
+5. **Leave text room.** Every wide image has a stated "quiet zone" (no toys, low detail) where the headline sits: left 40% on desktop compositions, top 35% on mobile ones. Mobile images are their own generations (4:5), not crops.
+6. **Sizes:** generate at the largest size the tool allows for the ratio, then deliver desktop 2560 px wide and mobile 1080 × 1350. Cut-outs (SE2, onboarding): generate on a flat plain background, remove it cleanly, deliver transparent PNG 1600 px (website) / 1024 px (app). Check edges against both cream (#FBF8F5) and plum (#2A1430).
+7. **Two palettes:** light "milk" sections (cream/peach) and dark "plum" sections (#2A1430–#3E0A35) for glow, Epic and Secret finishes. Backgrounds should fade toward the section colour at the edges so images sit in the page without a hard border.
+8. **Motion is optional and later.** Skip the 🎞 loops for now; the stills are the priority. If wanted later, animate a generated still (image-to-video) rather than building scenes.
+9. **Record everything** like the art sets: `ArtSource/Website/<ID>/` with the prompt, reference images used and outputs, plus `ArtSource/Website/manifest.json` (id, files, ratio, alt text, characters/finishes shown, prompt).
 
----
+**Prompt skeleton** (adapt per image):
+> Use case: illustration-story. Asset type: Pockle website [section] illustration, exactly [ratio], [WxH]. Reference image 1–N are the approved character identities for [characters]: preserve [exact features] and do not add [features they lack]. Reference image N+1 is the [collection] cover, for art quality and softness only, do not include its characters. Scene: [composition from Part 2]. Keep the [left 40% / top 35%] calm and low-detail for a headline. Soft tactile painted 3D designer-toy style, translucent glossy jelly, warm light, rich cheerful colour, premium collectible art. No text, logos, labels, UI, frames or watermarks.
 
 ## Part 2 — Image list
 
@@ -27,17 +28,17 @@ Facts below follow the November 3 launch decisions (PRODUCT_BRIEF, CLAUDE_LAUNCH
 | **H1** 🎞 | Home hero | Five or six Pockles from different characters and materials gathered on a soft cream tabletop in front of an open Pockle box: a peach-jelly Pip in front squishing slightly, a plush Fox, a vinyl Wally, an Axolotl, one glitter-gel and one glowing finish. Box lid open, faint glow from inside. Warm, inviting, premium. | 16:9 (2560×1440) + 4:5 mobile | Left 40%, plain cream backdrop | "A group of Pockle toys in jelly, plush and vinyl finishes around an open surprise box." |
 | **H2** | Home hero (dark alt, for dark mode or a second slide) | Same idea on plum: a single Secret-tier molten Wally lit by its own glow, small Common Wallys softly out of focus behind. | 16:9 + 4:5 | Left 40% | "A glowing molten Wally Pockle on a dark background." |
 | **S1** 🎞 | How it works · Walk | A Pip mid-hop on a garden path world, a closed collection box floating slightly above it, golden dust trailing like footsteps. Suggest motion, not a phone or map. | 1:1 (1600) | None (sits in a card) | "Pip hopping along a path toward a surprise box." |
-| **S2** 🎞 | How it works · Open | The real opening animation captured at its peak: lid popping, light burst in the tier colour, the toy rising out. Render three variants: Common (soft white), Rare (gold), Epic (icy diamond). Site uses Common by default. | 1:1 (1600) ×3 | None | "A Pockle box bursting open as a toy pops out." |
+| **S2** 🎞 | How it works · Open | A collection box at the moment it opens: lid popping, light burst in the tier colour, the toy rising out. Use the real box art (Collection-*-open.png) as the box reference. Render three variants: Common (soft white), Rare (gold), Epic (icy diamond). Site uses Common by default. | 1:1 (1600) ×3 | None | "A Pockle box bursting open as a toy pops out." |
 | **S3** 🎞 | How it works · Play | Close-up of one jelly Pip being squished by an implied off-screen finger: body compressed, highlights stretched, tiny bubbles inside. The money shot for the material. | 1:1 (1600) | None | "A translucent jelly Pockle being squished." |
 | **M1–M4** | Materials strip | Four tight close-ups, same camera and light, of one finish each: jelly (Pip peach), plush (Fox), vinyl (Wally matte), glitter/pearl (any glitter gel). Fill frame with texture plus part of the face. | 3:4 (1200×1600) each | None | "Close-up of a [jelly/plush/vinyl/glitter] Pockle finish." |
 | **SE1** | Series explainer | One full series laid out like a collector's display: all 15 Wally finishes in rows on tiered acrylic risers in Wally's Pearl Grotto world, Commons on lower rows, three gold Rares, two diamond Epics, one molten Secret on a small raised plinth at the top centre. | 21:9 (2560×1100) + 4:5 mobile (stacked) | Top 20% thin band | "All fifteen Wally Pockles arranged on a display, from common to secret." |
 | **SE2** | Rarity tiers | Four cut-outs, transparent, same pose and scale: Common Wally (Kelp Mint), Rare (Treasure Leaf / gold), Epic (Diamond Frost), Secret (Molten Abyss). | 4 × transparent 1600 | — | "Wally in [Common/Rare/Epic/Secret] finish." |
 | **SE3** | Finite editions | A single Rare toy on a plinth with a soft spotlight and a small, blank brass plaque at its base (the site overlays "#412 of 6,000" style text in HTML **only as an illustrative example**, labelled as such). | 4:3 (2000×1500) | Plaque area | "A gold Pockle on a display stand with a blank plaque." |
 | **C1–C11** | Collections gallery | One card per active character: its real closed box at three-quarter view on the left, its hero toy (approved lead finish) sitting beside it, inside one of its own worlds, softly blurred. Same camera height and scale for all eleven so the grid lines up. | 4:3 (1600×1200) each | None | "[Name] Pockle beside its collection box." |
-| **F1** 🎞 | Fusion | Two Pip spares (e.g. Peach + Moon) on the left and right flowing into a swirl of both colours in the middle that resolves into a new blended Pip (use an existing approved fusion result, e.g. Dusk or Sorbet, rendered in its real material). | 16:9 + 4:5 | Left 35% | "Two Pip toys combining into a new one-of-a-kind Pip." |
+| **F1** 🎞 | Fusion | Two Pip spares (e.g. Peach + Moon) on the left and right flowing into a swirl of both colours in the middle that resolves into a new blended Pip (use an approved fusion result, e.g. Dusk or Sorbet, as the reference for the new Pip). | 16:9 + 4:5 | Left 35% | "Two Pip toys combining into a new one-of-a-kind Pip." |
 | **T1** | Trading | Two hands' worth of shelves facing each other (no people): left shelf offers a plush Fox, right shelf offers a jelly Axolotl, a soft arc of light swapping them mid-air. Friendly, not a marketplace or money image. | 16:9 + 4:5 | Centre-top band | "Two Pockle shelves swapping a Fox and an Axolotl." |
 | **W1** | Walking rewards | Isometric miniature world (a curving path through a small park) with four boxes placed along it at intervals, a Fox walking the path. Reads as "a box every so often as you walk". | 16:9 + 4:5 | Left 40% sky | "A Fox Pockle walking a path with surprise boxes along the way." |
-| **D1** | Download / closing CTA | The app icon's coral jelly blob character, rendered in 3D from the Pip jelly material on deep plum, peeking over the bottom edge of the frame, waving. | 21:9 + 4:5 | Upper 60% | "A jelly Pockle peeking up and waving." |
+| **D1** | Download / closing CTA | The app icon's coral jelly blob character (reference: the chosen app icon) on deep plum, peeking over the bottom edge of the frame, waving. | 21:9 + 4:5 | Upper 60% | "A jelly Pockle peeking up and waving." |
 | **OG** | Social share image | H1 composition re-framed. **Text allowed here only:** Pockle wordmark top-left. | 1200×630 | — | "Pockle collectible toys." |
 
 Priority if time is short: **H1, S1–S3, SE1, SE2, C1–C11**, then the rest.
@@ -157,25 +158,25 @@ Privacy · Terms · Odds & editions · Delete account · Support (email on playp
 
 ---
 
-## Part 4 — Onboarding toy art (same renders, used in the app)
+## Part 4 — Onboarding toy art (same images, used in the app)
 
 Owner, November 3: onboarding's toys look pixelated and sometimes glitched. Cause: they use the runtime `PortraitCutout`, a **256 px** render with no MSAA, matted by rendering on black and on white. Shown at up to 200 pt (≈600 px on a 3× phone) it is upscaled 2–3×, and the black/white matte miscomputes alpha for translucent jelly, refraction and emissive glow, so edges fringe or go grey.
 
-The HUD now loads a pre-rendered image first and only falls back to that cut-out when none exists (`PrototypeHud.Onboarding.cs`, `OnboardingToyArt`). Codex provides:
+The HUD now loads a prepared image first and only falls back to that cut-out when none exists (`PrototypeHud.Onboarding.cs`, `OnboardingToyArt`). Codex provides:
 
 - **Five hero toys**, one per slot (splash arc, birthday, sign-in, username and tutorial steps use slots 0–4). One toy per character, different materials, all happy/curious faces, no Secrets. Suggested: Pip (peach jelly), Fox (plush), Wally (Kelp Mint vinyl), Axolotl, plus one glitter or pearl finish.
 - **File:** `Assets/Pockle/Runtime/Resources/UI/Onboarding/Toys/<collectible id with "." replaced by "_">.png`, e.g. `wally_kelp-mint.png`. 1024 × 1024, transparent, toy centred, feet at about 15% from the bottom, same camera/scale for all five. Import: Sprite/Default texture, no mipmaps needed, max size 1024, compression High Quality, alpha is transparency on.
 - **Order:** `Resources/UI/Onboarding/Toys/heroes.txt`, one collectible ID per line in slot order. Without it, the old automatic pick is used.
-- **Render properly:** 4× supersampled (render 4096, downsample), MSAA on, HDR on, transparent background from the camera's alpha (not a black/white difference), same studio lighting as Part 1 rule 4. Jelly keeps its translucency and a soft internal glow against transparency; check the edges on both the cream and the plum onboarding backgrounds.
-- These are the same renders as the website cut-outs (SE2 style), so make them once and use them in both places.
+- **Make them like Part 1:** generated from the approved identity captures, on a plain background that's removed cleanly; check the edges against both the cream and the plum onboarding backgrounds. Jelly keeps its translucency and soft inner glow.
+- These can be the same images as the website cut-outs (SE2 style), so make them once and use them in both places.
 
-**Optional, better still for the tutorial step:** a live 3D toy (the real `JellyToy` in a small camera rendered to the UI, idle animation and touch reactions on) instead of a still. That is a runtime change in Codex's lane; the HUD slot can take any `Texture`, including a live `RenderTexture`. Keep stills for the splash arc (five live cameras there would cost too much on older phones).
+**Optional, for the tutorial step only:** a live 3D toy (the real `JellyToy` in a small camera rendered to the UI, idle animation and touch reactions on) instead of a still. That is a runtime change in Codex's lane; the HUD slot can take any `Texture`, including a live `RenderTexture`. Keep stills for the splash arc (five live cameras there would cost too much on older phones).
 
-The same 256 px cut-out also feeds the live shelf and the box reveal. If the onboarding renders look right, a follow-up is raising `ToyPortrait` to 512 px with MSAA for those screens too (Codex's file; check memory and frame time).
+The same 256 px cut-out also feeds the live shelf and the box reveal. If the onboarding images look right, a follow-up is raising `ToyPortrait` to 512 px with MSAA for those screens too (Codex's file; check memory and frame time).
 
 ## Notes for Codex
 
-- Save renders under `ArtSource/Website/<ID>/` with `manifest.json` (id, files, ratio, alt text, toys/finishes used, world used). Commit masters there; the site gets the WebP/MP4 exports.
-- If a finish named here isn't approved or playable on your branch, substitute the nearest approved finish of the same tier and note it in the manifest.
-- Send Claude a contact sheet of first renders (a review HTML like the other `docs/*-review/` pages) before final export; Claude will review composition and quiet zones against this copy.
+- The Unity scene renders already made from the first version of this brief are not what the owner wanted. Keep them in `ArtSource/Website/_unity-renders/` as pose/composition references only; don't ship them.
+- If a finish named here has no approved identity capture, substitute the nearest approved finish of the same tier and note it in the manifest.
+- Send Claude a contact sheet of first generations (a review HTML like the other `docs/*-review/` pages) before final export; Claude will review composition and quiet zones against this copy.
 - The site itself (Squarespace or code) is not in this repo; this brief does not decide the platform.

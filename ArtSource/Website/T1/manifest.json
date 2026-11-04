@@ -1,0 +1,73 @@
+{
+  "id": "T1",
+  "assets": [
+    {
+      "id": "T1",
+      "name": "desktop",
+      "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Two small cream display shelves facing each other, no humans. ONE navy plush Fox levitates from left shelf toward right, ONE honey jelly Axolotl from right toward left, gentle opposing arcs of warm light imply an exchange. Exact reference toy shapes, no marketplace/money/icons. Friendly cream-lilac setting. Keep central top band free for headline. Desktop layout: keep left 40% empty calm low-detail section colour for copy, all action on right60%. Composition: 16:9, generate at highest available native quality and resolution. Deliverable 2560x1440.  All requested toys fully in frame.",
+      "ratio": "16:9",
+      "width": 2560,
+      "height": 1440,
+      "characters": [
+        "fox.boucle-plush",
+        "axolotl.clear-jelly"
+      ],
+      "transparent": false,
+      "status": "ready-for-owner-review",
+      "category": "Website scenes",
+      "alt": "Plush Fox and honey Axolotl swapping between two display shelves.",
+      "original": "T1/desktop-original.png",
+      "file": "T1/desktop.png",
+      "preview": "docs/website-art-review/03/previews/T1-desktop.png",
+      "native_size": [
+        1672,
+        941
+      ],
+      "export_size": [
+        2560,
+        1440
+      ],
+      "export_method": "sips dimension resample; generated original retained",
+      "alpha_bounds_128": null,
+      "references": [
+        "References/1e258898fbe8-fox.boucle-plush.png",
+        "References/5a4efa8aa5d4-axolotl.clear-jelly.png",
+        "References/632d5781f2c1-desktop-original.png"
+      ]
+    },
+    {
+      "id": "T1",
+      "name": "mobile",
+      "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Two small cream display shelves facing each other, no humans. ONE navy plush Fox levitates from left shelf toward right, ONE honey jelly Axolotl from right toward left, gentle opposing arcs of warm light imply an exchange. Exact reference toy shapes, no marketplace/money/icons. Friendly cream-lilac setting. Keep central top band free for headline. Separate portrait composition, NOT a crop. Keep top35% empty calm section colour; scene clustered in lower65%. Composition: 4:5, generate at highest available native quality and resolution. Deliverable 1080x1350.  All requested toys fully in frame.",
+      "ratio": "4:5",
+      "width": 1080,
+      "height": 1350,
+      "characters": [
+        "fox.boucle-plush",
+        "axolotl.clear-jelly"
+      ],
+      "transparent": false,
+      "status": "ready-for-owner-review",
+      "category": "Website scenes",
+      "alt": "Plush Fox and honey Axolotl swapping between two display shelves.",
+      "original": "T1/mobile-original.png",
+      "file": "T1/mobile.png",
+      "preview": "docs/website-art-review/03/previews/T1-mobile.png",
+      "native_size": [
+        1122,
+        1402
+      ],
+      "export_size": [
+        1080,
+        1350
+      ],
+      "export_method": "sips dimension resample; generated original retained",
+      "alpha_bounds_128": null,
+      "references": [
+        "References/1e258898fbe8-fox.boucle-plush.png",
+        "References/5a4efa8aa5d4-axolotl.clear-jelly.png",
+        "References/632d5781f2c1-desktop-original.png"
+      ]
+    }
+  ]
+}

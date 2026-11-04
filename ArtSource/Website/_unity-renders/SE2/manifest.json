@@ -1,0 +1,70 @@
+{
+  "id": "SE2",
+  "status": "composition-review",
+  "images": [
+    {
+      "id": "SE2",
+      "file": "SE2/common.png",
+      "alt": "Wally in common finish.",
+      "world": "Studio lighting; collection reflection environment wally-coral-cove",
+      "composition": "Same pose and camera; transparent background.",
+      "status": "composition-review",
+      "toys": [
+        "wally.kelp-mint"
+      ],
+      "width": 1600,
+      "height": 1600,
+      "transparent": true,
+      "preview": "previews/SE2-common.png",
+      "lighting_note": "Collection probe exposure reduced to 0.20 for editorial detail; runtime shader/finish assets unchanged."
+    },
+    {
+      "id": "SE2",
+      "file": "SE2/rare.png",
+      "alt": "Wally in rare finish.",
+      "world": "Studio lighting; collection reflection environment wally-coral-cove",
+      "composition": "Same pose and camera; transparent background.",
+      "status": "composition-review",
+      "toys": [
+        "wally.treasure-leaf"
+      ],
+      "width": 1600,
+      "height": 1600,
+      "transparent": true,
+      "preview": "previews/SE2-rare.png",
+      "lighting_note": "Collection probe exposure reduced to 0.20 for editorial detail; runtime shader/finish assets unchanged."
+    },
+    {
+      "id": "SE2",
+      "file": "SE2/epic.png",
+      "alt": "Wally in epic finish.",
+      "world": "Studio lighting; collection reflection environment wally-coral-cove",
+      "composition": "Same pose and camera; transparent background.",
+      "status": "composition-review",
+      "toys": [
+        "wally.diamond-frost"
+      ],
+      "width": 1600,
+      "height": 1600,
+      "transparent": true,
+      "preview": "previews/SE2-epic.png",
+      "lighting_note": "Collection probe exposure reduced to 0.20 for editorial detail; runtime shader/finish assets unchanged."
+    },
+    {
+      "id": "SE2",
+      "file": "SE2/secret.png",
+      "alt": "Wally in secret finish.",
+      "world": "Studio lighting; collection reflection environment wally-coral-cove",
+      "composition": "Same pose and camera; transparent background.",
+      "status": "composition-review",
+      "toys": [
+        "wally.molten-abyss"
+      ],
+      "width": 1600,
+      "height": 1600,
+      "transparent": true,
+      "preview": "previews/SE2-secret.png",
+      "lighting_note": "Collection probe exposure reduced to 0.20 for editorial detail; runtime shader/finish assets unchanged."
+    }
+  ]
+}

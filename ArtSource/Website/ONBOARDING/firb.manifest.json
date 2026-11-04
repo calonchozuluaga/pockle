@@ -1,0 +1,39 @@
+{
+  "id": "ONBOARDING",
+  "name": "firb",
+  "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Exact Firb evergreen tree toy with yellow star, cream oval face and ornaments, TWO brown stub feet; pearlescent light mint jelly finish as reference. Exactly ONE centered full toy, happy curious face, open eyes, no props. Same camera front three-quarter very slight high angle, consistent visual height ~72% of frame, base at85% of canvas height, all top details and tails fit. Soft warm broad light, premium cover-style art, clean silhouette. Transparent genuinely empty alpha backdrop, no floor/shadow disk/border. Composition: 1:1, generate at highest available native quality and resolution. Deliverable 1024x1024. Transparent background with genuine alpha, NO background rectangle or floor, only one full toy, clean edges. All requested toys fully in frame.",
+  "ratio": "1:1",
+  "width": 1024,
+  "height": 1024,
+  "characters": [
+    "firb.pearl-jelly"
+  ],
+  "transparent": true,
+  "status": "ready-for-owner-review",
+  "category": "Onboarding",
+  "alt": "Firb smiling in its approved finish on a transparent background.",
+  "original": "ONBOARDING/firb-original.png",
+  "file": "ONBOARDING/firb.png",
+  "preview": "docs/website-art-review/03/previews/ONBOARDING-firb.png",
+  "native_size": [
+    1254,
+    1254
+  ],
+  "export_size": [
+    1024,
+    1024
+  ],
+  "export_method": "sips dimension resample; generated original retained",
+  "alpha_bounds_128": [
+    154,
+    72,
+    868,
+    964
+  ],
+  "references": [
+    "References/6fc34c68dc06-firb.pearl-jelly.png",
+    "References/632d5781f2c1-desktop-original.png"
+  ],
+  "website_cutout": "ONBOARDING/firb-website-1600.png",
+  "proposed_resource_name": "firb_pearl-jelly.png"
+}

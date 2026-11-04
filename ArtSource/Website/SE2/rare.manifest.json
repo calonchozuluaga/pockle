@@ -1,14 +1,37 @@
 {
-    "id": "SE2",
-    "file": "SE2/rare.png",
-    "alt": "Wally in rare finish.",
-    "world": "Studio lighting; collection reflection environment wally-coral-cove",
-    "composition": "Same pose and camera; transparent background.",
-    "status": "composition-review",
-    "toys": [
-        "wally.treasure-leaf"
-    ],
-    "width": 1600,
-    "height": 1600,
-    "transparent": true
+  "id": "SE2",
+  "name": "rare",
+  "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Wally is a spherical little whale, broad cream belly, two black oval eyes, tiny smile, exactly two side flippers and one horizontal split tail behind the body, no feet/legs/dorsal fin. Preserve actual toy proportions and rear tail shown in identity reference, not an animal redesign. Exactly ONE full Wally in treasure-leaf, match approved reference colour/material. Front three-quarter tabletop collectible camera, same centered scale and pose across rarity series. Extremely reflective polished gold with gold-leaf texture, distinct highlights. Full silhouette centered with generous margins; no pedestal or props. Composition: 1:1, generate at highest available native quality and resolution. Deliverable 1600x1600. Transparent background with genuine alpha, NO background rectangle or floor, only one full toy, clean edges. All requested toys fully in frame.",
+  "ratio": "1:1",
+  "width": 1600,
+  "height": 1600,
+  "characters": [
+    "wally.treasure-leaf"
+  ],
+  "transparent": true,
+  "status": "ready-for-owner-review",
+  "category": "Series and rarity",
+  "alt": "A transparent Wally cutout showing its rarity finish.",
+  "original": "SE2/rare-original.png",
+  "file": "SE2/rare.png",
+  "preview": "docs/website-art-review/03/previews/SE2-rare.png",
+  "native_size": [
+    1254,
+    1254
+  ],
+  "export_size": [
+    1600,
+    1600
+  ],
+  "export_method": "sips dimension resample; generated original retained",
+  "alpha_bounds_128": [
+    84,
+    397,
+    1517,
+    1348
+  ],
+  "references": [
+    "References/5a85b76ca543-wally.treasure-leaf.png",
+    "References/632d5781f2c1-desktop-original.png"
+  ]
 }

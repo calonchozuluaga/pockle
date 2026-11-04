@@ -1,0 +1,22 @@
+{
+  "id": "C9",
+  "status": "composition-review",
+  "images": [
+    {
+      "id": "C9",
+      "file": "C9/guin.png",
+      "alt": "Guin Pockle beside its collection box.",
+      "world": "guin-mint-ice-cove",
+      "composition": "Aligned tabletop pair in the character's home world.",
+      "status": "composition-review",
+      "toys": [
+        "guin.matte-vinyl"
+      ],
+      "width": 1600,
+      "height": 1200,
+      "transparent": false,
+      "preview": "previews/C9-guin.jpg",
+      "lighting_note": "Collection probe exposure reduced to 0.20 for editorial detail; runtime shader/finish assets unchanged."
+    }
+  ]
+}

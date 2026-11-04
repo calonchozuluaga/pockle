@@ -1,0 +1,71 @@
+{
+  "id": "D1",
+  "assets": [
+    {
+      "id": "D1",
+      "name": "desktop",
+      "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Exact chosen app-icon coral jelly blob, TWO asymmetrical crown bumps, oval dark eyes and tiny W smile, glossy luminous orange-coral jelly, NO arms/legs/ears. Peeking up from bottom edge on deep plum #2A1430, conveys a friendly wave through sideways tilt and lifted soft body edge rather than invented hands. Keep upper60% entirely empty deep plum, a subtle warm halo low around toy only. Desktop layout: keep left 40% empty calm low-detail section colour for copy, all action on right60%. Composition: 21:9, generate at highest available native quality and resolution. Deliverable 2560x1100.  All requested toys fully in frame.",
+      "ratio": "21:9",
+      "width": 2560,
+      "height": 1100,
+      "characters": [
+        "pip.icon"
+      ],
+      "transparent": false,
+      "status": "ready-for-owner-review",
+      "category": "Website scenes",
+      "alt": "The chosen coral jelly app-icon character greeting the viewer on deep plum.",
+      "original": "D1/desktop-original.png",
+      "file": "D1/desktop.png",
+      "preview": "docs/website-art-review/03/previews/D1-desktop.png",
+      "native_size": [
+        1914,
+        822
+      ],
+      "export_size": [
+        2560,
+        1100
+      ],
+      "export_method": "sips dimension resample; generated original retained",
+      "alpha_bounds_128": null,
+      "references": [
+        "References/463be109ac32-pockle-icon-source.png",
+        "References/632d5781f2c1-desktop-original.png"
+      ],
+      "interpretation": "Wave conveyed by tilt and lifted soft body edge, preserving the limb-free approved icon character."
+    },
+    {
+      "id": "D1",
+      "name": "mobile",
+      "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Exact chosen app-icon coral jelly blob, TWO asymmetrical crown bumps, oval dark eyes and tiny W smile, glossy luminous orange-coral jelly, NO arms/legs/ears. Peeking up from bottom edge on deep plum #2A1430, conveys a friendly wave through sideways tilt and lifted soft body edge rather than invented hands. Keep upper60% entirely empty deep plum, a subtle warm halo low around toy only. Separate portrait composition, NOT a crop. Keep top35% empty calm section colour; scene clustered in lower65%. Composition: 4:5, generate at highest available native quality and resolution. Deliverable 1080x1350.  All requested toys fully in frame.",
+      "ratio": "4:5",
+      "width": 1080,
+      "height": 1350,
+      "characters": [
+        "pip.icon"
+      ],
+      "transparent": false,
+      "status": "ready-for-owner-review",
+      "category": "Website scenes",
+      "alt": "The chosen coral jelly app-icon character greeting the viewer on deep plum.",
+      "original": "D1/mobile-original.png",
+      "file": "D1/mobile.png",
+      "preview": "docs/website-art-review/03/previews/D1-mobile.png",
+      "native_size": [
+        1122,
+        1402
+      ],
+      "export_size": [
+        1080,
+        1350
+      ],
+      "export_method": "sips dimension resample; generated original retained",
+      "alpha_bounds_128": null,
+      "references": [
+        "References/463be109ac32-pockle-icon-source.png",
+        "References/632d5781f2c1-desktop-original.png"
+      ],
+      "interpretation": "Wave conveyed by tilt and lifted soft body edge, preserving the limb-free approved icon character."
+    }
+  ]
+}
