@@ -1,0 +1,37 @@
+{
+  "id": "H2",
+  "name": "desktop",
+  "prompt": "Use case: precise-object-edit. Change only the material of the Molten Wally toy. Reference1 is the edit target and defines exact pose, anatomy, face, silhouette, camera and framing; reference2 is approved game finish identity. Make the dark body POLISHED GLOSSY BLACK OBSIDIAN, hard glassy smooth surfaces with broad crisp reflected softbox highlights and sharp cyan specular reflections along the crack rims. Electric cyan fissures glow from within the dark stone. The cream belly is smooth satin vinyl, not cloth. Remove ALL fur, fuzz, velvet, felt, flocking, plush fibres, granular fabric, fabric nap, hair and rough sponge appearance. Both eyes stay open. Do not change the toy's shape, tail/flippers or colour pattern. Keep the existing art style, expressions and lighting palette. No words or watermark. Keep the exact dark plum desktop scene, left40% quiet space, cyan tabletop reflected pool, two small blue whales blurred behind and main Wally on right. Output16:9 landscape,2560x1440 delivery.",
+  "ratio": "16:9",
+  "width": 2560,
+  "height": 1440,
+  "characters": [
+    "wally.molten-abyss",
+    "wally.gloss-vinyl"
+  ],
+  "transparent": false,
+  "status": "revision-ready-for-review",
+  "category": "Website scenes",
+  "alt": "A cyan-glowing Molten Wally on a dark plum background.",
+  "original": "H2/desktop-v2-original.png",
+  "file": "H2/desktop-v2.png",
+  "preview": "docs/website-art-review/04/previews/H2-desktop-v2.png",
+  "native_size": [
+    1672,
+    941
+  ],
+  "export_size": [
+    2560,
+    1440
+  ],
+  "export_method": "sips dimension resample; generated original retained",
+  "alpha_bounds_128": null,
+  "references": [
+    "References/3264b6ba0b45-desktop-original.png",
+    "References/3ccaf397d96b-wally.molten-abyss.png"
+  ],
+  "revision": 2,
+  "revision_reason": "Polished glossy obsidian with cyan cracks; no plush or velvet surface.",
+  "previous_file": "H2/desktop.png",
+  "previous_original": "H2/desktop-original.png"
+}

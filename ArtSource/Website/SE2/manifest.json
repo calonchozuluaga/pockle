@@ -12,7 +12,7 @@
         "wally.kelp-mint"
       ],
       "transparent": true,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Series and rarity",
       "alt": "A transparent Wally cutout showing its rarity finish.",
       "original": "SE2/common-original.png",
@@ -49,7 +49,7 @@
         "wally.treasure-leaf"
       ],
       "transparent": true,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Series and rarity",
       "alt": "A transparent Wally cutout showing its rarity finish.",
       "original": "SE2/rare-original.png",
@@ -86,7 +86,7 @@
         "wally.diamond-frost"
       ],
       "transparent": true,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Series and rarity",
       "alt": "A transparent Wally cutout showing its rarity finish.",
       "original": "SE2/epic-original.png",
@@ -115,7 +115,7 @@
     {
       "id": "SE2",
       "name": "secret",
-      "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Wally is a spherical little whale, broad cream belly, two black oval eyes, tiny smile, exactly two side flippers and one horizontal split tail behind the body, no feet/legs/dorsal fin. Preserve actual toy proportions and rear tail shown in identity reference, not an animal redesign. Exactly ONE full Wally in molten-abyss, match approved reference colour/material. Front three-quarter tabletop collectible camera, same centered scale and pose across rarity series. Rough black obsidian crust with deep luminous electric cyan fissures, cream belly. Full silhouette centered with generous margins; no pedestal or props. Composition: 1:1, generate at highest available native quality and resolution. Deliverable 1600x1600. Transparent background with genuine alpha, NO background rectangle or floor, only one full toy, clean edges. All requested toys fully in frame.",
+      "prompt": "Use case: precise-object-edit. Change only the material of the Molten Wally toy. Reference1 is the edit target and defines exact pose, anatomy, face, silhouette, camera and framing; reference2 is approved game finish identity. Make the dark body POLISHED GLOSSY BLACK OBSIDIAN, hard glassy smooth surfaces with broad crisp reflected softbox highlights and sharp cyan specular reflections along the crack rims. Electric cyan fissures glow from within the dark stone. The cream belly is smooth satin vinyl, not cloth. Remove ALL fur, fuzz, velvet, felt, flocking, plush fibres, granular fabric, fabric nap, hair and rough sponge appearance. Both eyes stay open. Do not change the toy's shape, tail/flippers or colour pattern. Keep the existing art style, expressions and lighting palette. No words or watermark. Preserve exact centered full toy pose and same scale. Genuine transparent alpha background. No floor, props, background, shadow disk or rectangle. Output square1600x1600 delivery, generous margins.",
       "ratio": "1:1",
       "width": 1600,
       "height": 1600,
@@ -123,12 +123,12 @@
         "wally.molten-abyss"
       ],
       "transparent": true,
-      "status": "ready-for-owner-review",
+      "status": "revision-ready-for-review",
       "category": "Series and rarity",
       "alt": "A transparent Wally cutout showing its rarity finish.",
-      "original": "SE2/secret-original.png",
-      "file": "SE2/secret.png",
-      "preview": "docs/website-art-review/03/previews/SE2-secret.png",
+      "original": "SE2/secret-v2-original.png",
+      "file": "SE2/secret-v2.png",
+      "preview": "docs/website-art-review/04/previews/SE2-secret-v2.png",
       "native_size": [
         1254,
         1254
@@ -139,15 +139,19 @@
       ],
       "export_method": "sips dimension resample; generated original retained",
       "alpha_bounds_128": [
-        90,
-        334,
-        1516,
-        1323
+        89,
+        364,
+        1514,
+        1349
       ],
       "references": [
-        "References/3ccaf397d96b-wally.molten-abyss.png",
-        "References/632d5781f2c1-desktop-original.png"
-      ]
+        "References/d120561a6eef-secret-original.png",
+        "References/3ccaf397d96b-wally.molten-abyss.png"
+      ],
+      "revision": 2,
+      "revision_reason": "Polished glossy obsidian with cyan cracks; no plush or velvet surface.",
+      "previous_file": "SE2/secret.png",
+      "previous_original": "SE2/secret-original.png"
     }
   ]
 }

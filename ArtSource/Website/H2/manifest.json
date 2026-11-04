@@ -4,7 +4,7 @@
     {
       "id": "H2",
       "name": "desktop",
-      "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Wally is a spherical little whale, broad cream belly, two black oval eyes, tiny smile, exactly two side flippers and one horizontal split tail behind the body, no feet/legs/dorsal fin. Preserve actual toy proportions and rear tail shown in identity reference, not an animal redesign. Secret Molten Abyss Wally dominant on right, black rough obsidian crust split by luminous electric CYAN fissures, cream belly untouched, realistic relief and cyan light spilling onto deep plum #2A1430 tabletop. Two much smaller common blue Wallys out of focus behind. No lava orange. Dramatic yet friendly, dark edges blend to plum. Desktop layout: keep left 40% empty calm low-detail section colour for copy, all action on right60%. Composition: 16:9, generate at highest available native quality and resolution. Deliverable 2560x1440.  All requested toys fully in frame.",
+      "prompt": "Use case: precise-object-edit. Change only the material of the Molten Wally toy. Reference1 is the edit target and defines exact pose, anatomy, face, silhouette, camera and framing; reference2 is approved game finish identity. Make the dark body POLISHED GLOSSY BLACK OBSIDIAN, hard glassy smooth surfaces with broad crisp reflected softbox highlights and sharp cyan specular reflections along the crack rims. Electric cyan fissures glow from within the dark stone. The cream belly is smooth satin vinyl, not cloth. Remove ALL fur, fuzz, velvet, felt, flocking, plush fibres, granular fabric, fabric nap, hair and rough sponge appearance. Both eyes stay open. Do not change the toy's shape, tail/flippers or colour pattern. Keep the existing art style, expressions and lighting palette. No words or watermark. Keep the exact dark plum desktop scene, left40% quiet space, cyan tabletop reflected pool, two small blue whales blurred behind and main Wally on right. Output16:9 landscape,2560x1440 delivery.",
       "ratio": "16:9",
       "width": 2560,
       "height": 1440,
@@ -13,12 +13,12 @@
         "wally.gloss-vinyl"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "revision-ready-for-review",
       "category": "Website scenes",
       "alt": "A cyan-glowing Molten Wally on a dark plum background.",
-      "original": "H2/desktop-original.png",
-      "file": "H2/desktop.png",
-      "preview": "docs/website-art-review/03/previews/H2-desktop.png",
+      "original": "H2/desktop-v2-original.png",
+      "file": "H2/desktop-v2.png",
+      "preview": "docs/website-art-review/04/previews/H2-desktop-v2.png",
       "native_size": [
         1672,
         941
@@ -30,15 +30,18 @@
       "export_method": "sips dimension resample; generated original retained",
       "alpha_bounds_128": null,
       "references": [
-        "References/3ccaf397d96b-wally.molten-abyss.png",
-        "References/8ca571c03b16-wally.gloss-vinyl.png",
-        "References/632d5781f2c1-desktop-original.png"
-      ]
+        "References/3264b6ba0b45-desktop-original.png",
+        "References/3ccaf397d96b-wally.molten-abyss.png"
+      ],
+      "revision": 2,
+      "revision_reason": "Polished glossy obsidian with cyan cracks; no plush or velvet surface.",
+      "previous_file": "H2/desktop.png",
+      "previous_original": "H2/desktop-original.png"
     },
     {
       "id": "H2",
       "name": "mobile",
-      "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Wally is a spherical little whale, broad cream belly, two black oval eyes, tiny smile, exactly two side flippers and one horizontal split tail behind the body, no feet/legs/dorsal fin. Preserve actual toy proportions and rear tail shown in identity reference, not an animal redesign. Secret Molten Abyss Wally dominant on right, black rough obsidian crust split by luminous electric CYAN fissures, cream belly untouched, realistic relief and cyan light spilling onto deep plum #2A1430 tabletop. Two much smaller common blue Wallys out of focus behind. No lava orange. Dramatic yet friendly, dark edges blend to plum. Separate portrait composition, NOT a crop. Keep top35% empty calm section colour; scene clustered in lower65%. Composition: 4:5, generate at highest available native quality and resolution. Deliverable 1080x1350.  All requested toys fully in frame.",
+      "prompt": "Use case: precise-object-edit. Change only the material of the Molten Wally toy. Reference1 is the edit target and defines exact pose, anatomy, face, silhouette, camera and framing; reference2 is approved game finish identity. Make the dark body POLISHED GLOSSY BLACK OBSIDIAN, hard glassy smooth surfaces with broad crisp reflected softbox highlights and sharp cyan specular reflections along the crack rims. Electric cyan fissures glow from within the dark stone. The cream belly is smooth satin vinyl, not cloth. Remove ALL fur, fuzz, velvet, felt, flocking, plush fibres, granular fabric, fabric nap, hair and rough sponge appearance. Both eyes stay open. Do not change the toy's shape, tail/flippers or colour pattern. Keep the existing art style, expressions and lighting palette. No words or watermark. Keep the exact dark plum portrait scene, top35% empty quiet space, cyan tabletop reflected pool, two small blue whales blurred behind and main Wally below. Output4:5 portrait,1080x1350 delivery.",
       "ratio": "4:5",
       "width": 1080,
       "height": 1350,
@@ -47,12 +50,12 @@
         "wally.gloss-vinyl"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "revision-ready-for-review",
       "category": "Website scenes",
       "alt": "A cyan-glowing Molten Wally on a dark plum background.",
-      "original": "H2/mobile-original.png",
-      "file": "H2/mobile.png",
-      "preview": "docs/website-art-review/03/previews/H2-mobile.png",
+      "original": "H2/mobile-v2-original.png",
+      "file": "H2/mobile-v2.png",
+      "preview": "docs/website-art-review/04/previews/H2-mobile-v2.png",
       "native_size": [
         1122,
         1402
@@ -64,10 +67,13 @@
       "export_method": "sips dimension resample; generated original retained",
       "alpha_bounds_128": null,
       "references": [
-        "References/3ccaf397d96b-wally.molten-abyss.png",
-        "References/8ca571c03b16-wally.gloss-vinyl.png",
-        "References/632d5781f2c1-desktop-original.png"
-      ]
+        "References/8873a7bd3e05-mobile-original.png",
+        "References/3ccaf397d96b-wally.molten-abyss.png"
+      ],
+      "revision": 2,
+      "revision_reason": "Polished glossy obsidian with cyan cracks; no plush or velvet surface.",
+      "previous_file": "H2/mobile.png",
+      "previous_original": "H2/mobile-original.png"
     }
   ]
 }

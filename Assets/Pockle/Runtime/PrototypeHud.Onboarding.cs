@@ -541,6 +541,36 @@ namespace Pockle.Runtime
             }
         }
 
+        /// <summary>
+        /// Onboarding toys prefer Codex's high-resolution offline renders (Resources/UI/Onboarding/Toys/{id with '.' as '_'},
+        /// 1024px transparent PNG, see docs/WEBSITE_BRIEF.md "Onboarding") because the runtime cut-out is a 256px,
+        /// un-antialiased black/white matte that looks soft at hero size and can fringe on jelly and glowing finishes.
+        /// Falls back to that cut-out until a render exists.
+        /// </summary>
+        private Texture OnboardingToyArt(string id)
+        {
+            if (string.IsNullOrEmpty(id)) return null;
+            var art = Resources.Load<Texture2D>(OnboardingToyPath(id));
+            return art != null ? art : CutoutPortrait(id);
+        }
+
+        internal static string OnboardingToyPath(string id) => "UI/Onboarding/Toys/" + id.Replace('.', '_');
+
+        /// <summary>Codex's chosen onboarding heroes, in slot order (Resources/UI/Onboarding/Toys/heroes.txt, one toy ID per line).
+        /// Empty when the file is missing: the first available toy of each shown collection is used, as before.</summary>
+        private static List<string> OnboardingHeroList()
+        {
+            var list = new List<string>();
+            var file = Resources.Load<TextAsset>("UI/Onboarding/Toys/heroes");
+            if (file == null) return list;
+            foreach (var raw in file.text.Split('\n'))
+            {
+                string id = raw.Trim();
+                if (id.Length > 0 && ToyCatalog.TryGetCollectible(id, out var toy) && toy.Available && !toy.IsSecret) list.Add(id);
+            }
+            return list;
+        }
+
         private RawImage ObRawImage(RectTransform parent, Texture texture, Color tint)
         {
             var rect = Rect(texture != null ? texture.name : "Image", parent); Stretch(rect);
@@ -712,6 +742,8 @@ namespace Pockle.Runtime
             if (obToysReady) return;
             obToysReady = true;
             obHeroes.Clear();
+            obHeroes.AddRange(OnboardingHeroList());
+            if (obHeroes.Count == 0)
             foreach (var collection in ShownCollections())
             {
                 if (obHeroes.Count >= 5) break;
@@ -721,7 +753,7 @@ namespace Pockle.Runtime
             foreach (var entry in obToys)
             {
                 if (obHeroes.Count == 0) break;
-                var texture = CutoutPortrait(obHeroes[entry.Value % obHeroes.Count]);
+                var texture = OnboardingToyArt(obHeroes[entry.Value % obHeroes.Count]);
                 entry.Key.texture = texture; entry.Key.color = texture != null ? Color.white : new Color(1, 1, 1, 0);
             }
             foreach (var entry in obNames)

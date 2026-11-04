@@ -1,18 +1,18 @@
 {
   "method": "built-in image generation",
-  "status": "complete still-art set for review",
+  "status": "Approved set with five requested revisions ready for review",
   "total": 45,
   "approved_heroes": 2,
   "new_stills": 43,
-  "resources_imported": false,
+  "resources_imported": true,
   "published": false,
   "motion": "Deferred by brief",
   "brief": "docs/WEBSITE_BRIEF.md",
   "notes": [
-    "All native originals and exact final prompts preserved.",
-    "Native resolutions vary by generation; requested delivery sizes are resampled exports, not claimed native resolution.",
-    "Artwork is illustrative and does not establish deployment of trading, purchasing, rewards or edition supply.",
-    "Owner approved H1; remaining images await visual approval."
+    "Owner/Claude approved unchanged artwork; five specific revisions shown in review04.",
+    "Native generated originals preserved; PNG delivery dimensions use sips resampling.",
+    "OG uses the real source wordmark composited exactly as requested.",
+    "Five onboarding assets imported; no new phone build, site deployment or motion loops."
   ],
   "assets": [
     {
@@ -31,7 +31,7 @@
         "pip.glow-jelly"
       ],
       "transparent": false,
-      "status": "owner-approved",
+      "status": "owner-and-claude-approved",
       "category": "Website scenes",
       "alt": "Pockle toys in jelly, plush and vinyl finishes around an open surprise box.",
       "original": "H1/mobile-original.png",
@@ -72,7 +72,7 @@
         "pip.glow-jelly"
       ],
       "transparent": false,
-      "status": "owner-approved",
+      "status": "owner-and-claude-approved",
       "category": "Website scenes",
       "alt": "Pockle toys in jelly, plush and vinyl finishes around an open surprise box.",
       "original": "H1/desktop-original.png",
@@ -100,7 +100,7 @@
     {
       "id": "H2",
       "name": "desktop",
-      "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Wally is a spherical little whale, broad cream belly, two black oval eyes, tiny smile, exactly two side flippers and one horizontal split tail behind the body, no feet/legs/dorsal fin. Preserve actual toy proportions and rear tail shown in identity reference, not an animal redesign. Secret Molten Abyss Wally dominant on right, black rough obsidian crust split by luminous electric CYAN fissures, cream belly untouched, realistic relief and cyan light spilling onto deep plum #2A1430 tabletop. Two much smaller common blue Wallys out of focus behind. No lava orange. Dramatic yet friendly, dark edges blend to plum. Desktop layout: keep left 40% empty calm low-detail section colour for copy, all action on right60%. Composition: 16:9, generate at highest available native quality and resolution. Deliverable 2560x1440.  All requested toys fully in frame.",
+      "prompt": "Use case: precise-object-edit. Change only the material of the Molten Wally toy. Reference1 is the edit target and defines exact pose, anatomy, face, silhouette, camera and framing; reference2 is approved game finish identity. Make the dark body POLISHED GLOSSY BLACK OBSIDIAN, hard glassy smooth surfaces with broad crisp reflected softbox highlights and sharp cyan specular reflections along the crack rims. Electric cyan fissures glow from within the dark stone. The cream belly is smooth satin vinyl, not cloth. Remove ALL fur, fuzz, velvet, felt, flocking, plush fibres, granular fabric, fabric nap, hair and rough sponge appearance. Both eyes stay open. Do not change the toy's shape, tail/flippers or colour pattern. Keep the existing art style, expressions and lighting palette. No words or watermark. Keep the exact dark plum desktop scene, left40% quiet space, cyan tabletop reflected pool, two small blue whales blurred behind and main Wally on right. Output16:9 landscape,2560x1440 delivery.",
       "ratio": "16:9",
       "width": 2560,
       "height": 1440,
@@ -109,12 +109,12 @@
         "wally.gloss-vinyl"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "revision-ready-for-review",
       "category": "Website scenes",
       "alt": "A cyan-glowing Molten Wally on a dark plum background.",
-      "original": "H2/desktop-original.png",
-      "file": "H2/desktop.png",
-      "preview": "docs/website-art-review/03/previews/H2-desktop.png",
+      "original": "H2/desktop-v2-original.png",
+      "file": "H2/desktop-v2.png",
+      "preview": "docs/website-art-review/04/previews/H2-desktop-v2.png",
       "native_size": [
         1672,
         941
@@ -126,15 +126,18 @@
       "export_method": "sips dimension resample; generated original retained",
       "alpha_bounds_128": null,
       "references": [
-        "References/3ccaf397d96b-wally.molten-abyss.png",
-        "References/8ca571c03b16-wally.gloss-vinyl.png",
-        "References/632d5781f2c1-desktop-original.png"
-      ]
+        "References/3264b6ba0b45-desktop-original.png",
+        "References/3ccaf397d96b-wally.molten-abyss.png"
+      ],
+      "revision": 2,
+      "revision_reason": "Polished glossy obsidian with cyan cracks; no plush or velvet surface.",
+      "previous_file": "H2/desktop.png",
+      "previous_original": "H2/desktop-original.png"
     },
     {
       "id": "H2",
       "name": "mobile",
-      "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Wally is a spherical little whale, broad cream belly, two black oval eyes, tiny smile, exactly two side flippers and one horizontal split tail behind the body, no feet/legs/dorsal fin. Preserve actual toy proportions and rear tail shown in identity reference, not an animal redesign. Secret Molten Abyss Wally dominant on right, black rough obsidian crust split by luminous electric CYAN fissures, cream belly untouched, realistic relief and cyan light spilling onto deep plum #2A1430 tabletop. Two much smaller common blue Wallys out of focus behind. No lava orange. Dramatic yet friendly, dark edges blend to plum. Separate portrait composition, NOT a crop. Keep top35% empty calm section colour; scene clustered in lower65%. Composition: 4:5, generate at highest available native quality and resolution. Deliverable 1080x1350.  All requested toys fully in frame.",
+      "prompt": "Use case: precise-object-edit. Change only the material of the Molten Wally toy. Reference1 is the edit target and defines exact pose, anatomy, face, silhouette, camera and framing; reference2 is approved game finish identity. Make the dark body POLISHED GLOSSY BLACK OBSIDIAN, hard glassy smooth surfaces with broad crisp reflected softbox highlights and sharp cyan specular reflections along the crack rims. Electric cyan fissures glow from within the dark stone. The cream belly is smooth satin vinyl, not cloth. Remove ALL fur, fuzz, velvet, felt, flocking, plush fibres, granular fabric, fabric nap, hair and rough sponge appearance. Both eyes stay open. Do not change the toy's shape, tail/flippers or colour pattern. Keep the existing art style, expressions and lighting palette. No words or watermark. Keep the exact dark plum portrait scene, top35% empty quiet space, cyan tabletop reflected pool, two small blue whales blurred behind and main Wally below. Output4:5 portrait,1080x1350 delivery.",
       "ratio": "4:5",
       "width": 1080,
       "height": 1350,
@@ -143,12 +146,12 @@
         "wally.gloss-vinyl"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "revision-ready-for-review",
       "category": "Website scenes",
       "alt": "A cyan-glowing Molten Wally on a dark plum background.",
-      "original": "H2/mobile-original.png",
-      "file": "H2/mobile.png",
-      "preview": "docs/website-art-review/03/previews/H2-mobile.png",
+      "original": "H2/mobile-v2-original.png",
+      "file": "H2/mobile-v2.png",
+      "preview": "docs/website-art-review/04/previews/H2-mobile-v2.png",
       "native_size": [
         1122,
         1402
@@ -160,10 +163,13 @@
       "export_method": "sips dimension resample; generated original retained",
       "alpha_bounds_128": null,
       "references": [
-        "References/3ccaf397d96b-wally.molten-abyss.png",
-        "References/8ca571c03b16-wally.gloss-vinyl.png",
-        "References/632d5781f2c1-desktop-original.png"
-      ]
+        "References/8873a7bd3e05-mobile-original.png",
+        "References/3ccaf397d96b-wally.molten-abyss.png"
+      ],
+      "revision": 2,
+      "revision_reason": "Polished glossy obsidian with cyan cracks; no plush or velvet surface.",
+      "previous_file": "H2/mobile.png",
+      "previous_original": "H2/mobile-original.png"
     },
     {
       "id": "S1",
@@ -176,7 +182,7 @@
         "pip.peach-jelly"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Website scenes",
       "alt": "Peach jelly Pip hopping along a garden path toward a surprise box.",
       "original": "S1/walk-original.png",
@@ -209,7 +215,7 @@
         "wally.kelp-mint"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Website scenes",
       "alt": "A Wally collection box opening as a toy rises into the light.",
       "original": "S2/open-common-original.png",
@@ -242,7 +248,7 @@
         "wally.treasure-leaf"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Website scenes",
       "alt": "A Wally collection box opening as a toy rises into the light.",
       "original": "S2/open-rare-original.png",
@@ -275,7 +281,7 @@
         "wally.diamond-frost"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Website scenes",
       "alt": "A Wally collection box opening as a toy rises into the light.",
       "original": "S2/open-epic-original.png",
@@ -308,7 +314,7 @@
         "pip.peach-jelly"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Website scenes",
       "alt": "A translucent peach jelly Pip compressed into a soft squish.",
       "original": "S3/play-original.png",
@@ -340,7 +346,7 @@
         "pip.peach-jelly"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Materials",
       "alt": "Close-up of the jelly Pockle material.",
       "original": "M1/jelly-macro-original.png",
@@ -372,7 +378,7 @@
         "fox.boucle-plush"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Materials",
       "alt": "Close-up of the plush Pockle material.",
       "original": "M2/plush-macro-original.png",
@@ -396,7 +402,7 @@
     {
       "id": "M3",
       "name": "vinyl-macro",
-      "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Wally is a spherical little whale, broad cream belly, two black oval eyes, tiny smile, exactly two side flippers and one horizontal split tail behind the body, no feet/legs/dorsal fin. Preserve actual toy proportions and rear tail shown in identity reference, not an animal redesign. Smooth matte teal vinyl with broad soft highlights and cream belly. Macro material portrait, tight crop includes part of face plus tactile surface; three-quarter camera, warm upper-left broad softbox and tiny rim light, cream background. Same camera and light treatment as other material studies. Composition: 3:4, generate at highest available native quality and resolution. Deliverable 1200x1600.  All requested toys fully in frame. OVERRIDING CAMERA INSTRUCTION: EXTREME MACRO DETAIL, not a full-body portrait. Only one eye, a little cheek and a cropped area of body texture visible. Face and tactile surface continue beyond all four frame edges. Do NOT show entire toy, toy base, tabletop, legs, tail or full silhouette. Toy surface fills 95% of 3:4 frame. Identical warm broad softbox upper left and subtle rim across all four macro images.",
+      "prompt": "Use case: precise-object-edit. Edit reference1, the teal matte-vinyl Wally macro. Reference2 is the real approved Wally identity. Keep same teal matte vinyl colour, smooth tactile material, cream belly, cheek, tiny curved SMILE and warm softbox/rim light. Reframe the face closer to frontal so BOTH BLACK OVAL EYES are clearly visible and fully OPEN, each with a round highlight. NO closed curved eyelid, no wink, no one-eye-only crop. Preserve exact eye spacing and small smile from approved game reference. Tight material portrait showing face and upper belly with body sides/head edges cropped, not a full toy. Output3:4 portrait1200x1600. Cream background. No new body parts, typography, watermark.",
       "ratio": "3:4",
       "width": 1200,
       "height": 1600,
@@ -404,12 +410,12 @@
         "wally.matte-vinyl"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "revision-ready-for-review",
       "category": "Materials",
       "alt": "Close-up of the vinyl Pockle material.",
-      "original": "M3/vinyl-macro-original.png",
-      "file": "M3/vinyl-macro.png",
-      "preview": "docs/website-art-review/03/previews/M3-vinyl-macro.png",
+      "original": "M3/vinyl-macro-v2-original.png",
+      "file": "M3/vinyl-macro-v2.png",
+      "preview": "docs/website-art-review/04/previews/M3-vinyl-macro-v2.png",
       "native_size": [
         1086,
         1448
@@ -421,9 +427,13 @@
       "export_method": "sips dimension resample; generated original retained",
       "alpha_bounds_128": null,
       "references": [
-        "References/44eac94f610a-wally.matte-vinyl.png",
-        "References/632d5781f2c1-desktop-original.png"
-      ]
+        "References/f62f8a2b0397-vinyl-macro-original.png",
+        "References/44eac94f610a-wally.matte-vinyl.png"
+      ],
+      "revision": 2,
+      "revision_reason": "Both oval eyes fully open and visible; approved teal matte vinyl retained.",
+      "previous_file": "M3/vinyl-macro.png",
+      "previous_original": "M3/vinyl-macro-original.png"
     },
     {
       "id": "M4",
@@ -436,7 +446,7 @@
         "pip.gold-confetti"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Materials",
       "alt": "Close-up of the glitter Pockle material.",
       "original": "M4/glitter-macro-original.png",
@@ -528,7 +538,7 @@
         "wally.molten-abyss"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Series and rarity",
       "alt": "All fifteen Wally finishes on pearl-grotto display risers, from Common to Secret.",
       "original": "SE1/mobile-original.png",
@@ -563,7 +573,7 @@
         "wally.kelp-mint"
       ],
       "transparent": true,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Series and rarity",
       "alt": "A transparent Wally cutout showing its rarity finish.",
       "original": "SE2/common-original.png",
@@ -600,7 +610,7 @@
         "wally.treasure-leaf"
       ],
       "transparent": true,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Series and rarity",
       "alt": "A transparent Wally cutout showing its rarity finish.",
       "original": "SE2/rare-original.png",
@@ -637,7 +647,7 @@
         "wally.diamond-frost"
       ],
       "transparent": true,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Series and rarity",
       "alt": "A transparent Wally cutout showing its rarity finish.",
       "original": "SE2/epic-original.png",
@@ -666,7 +676,7 @@
     {
       "id": "SE2",
       "name": "secret",
-      "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Wally is a spherical little whale, broad cream belly, two black oval eyes, tiny smile, exactly two side flippers and one horizontal split tail behind the body, no feet/legs/dorsal fin. Preserve actual toy proportions and rear tail shown in identity reference, not an animal redesign. Exactly ONE full Wally in molten-abyss, match approved reference colour/material. Front three-quarter tabletop collectible camera, same centered scale and pose across rarity series. Rough black obsidian crust with deep luminous electric cyan fissures, cream belly. Full silhouette centered with generous margins; no pedestal or props. Composition: 1:1, generate at highest available native quality and resolution. Deliverable 1600x1600. Transparent background with genuine alpha, NO background rectangle or floor, only one full toy, clean edges. All requested toys fully in frame.",
+      "prompt": "Use case: precise-object-edit. Change only the material of the Molten Wally toy. Reference1 is the edit target and defines exact pose, anatomy, face, silhouette, camera and framing; reference2 is approved game finish identity. Make the dark body POLISHED GLOSSY BLACK OBSIDIAN, hard glassy smooth surfaces with broad crisp reflected softbox highlights and sharp cyan specular reflections along the crack rims. Electric cyan fissures glow from within the dark stone. The cream belly is smooth satin vinyl, not cloth. Remove ALL fur, fuzz, velvet, felt, flocking, plush fibres, granular fabric, fabric nap, hair and rough sponge appearance. Both eyes stay open. Do not change the toy's shape, tail/flippers or colour pattern. Keep the existing art style, expressions and lighting palette. No words or watermark. Preserve exact centered full toy pose and same scale. Genuine transparent alpha background. No floor, props, background, shadow disk or rectangle. Output square1600x1600 delivery, generous margins.",
       "ratio": "1:1",
       "width": 1600,
       "height": 1600,
@@ -674,12 +684,12 @@
         "wally.molten-abyss"
       ],
       "transparent": true,
-      "status": "ready-for-owner-review",
+      "status": "revision-ready-for-review",
       "category": "Series and rarity",
       "alt": "A transparent Wally cutout showing its rarity finish.",
-      "original": "SE2/secret-original.png",
-      "file": "SE2/secret.png",
-      "preview": "docs/website-art-review/03/previews/SE2-secret.png",
+      "original": "SE2/secret-v2-original.png",
+      "file": "SE2/secret-v2.png",
+      "preview": "docs/website-art-review/04/previews/SE2-secret-v2.png",
       "native_size": [
         1254,
         1254
@@ -690,15 +700,19 @@
       ],
       "export_method": "sips dimension resample; generated original retained",
       "alpha_bounds_128": [
-        90,
-        334,
-        1516,
-        1323
+        89,
+        364,
+        1514,
+        1349
       ],
       "references": [
-        "References/3ccaf397d96b-wally.molten-abyss.png",
-        "References/632d5781f2c1-desktop-original.png"
-      ]
+        "References/d120561a6eef-secret-original.png",
+        "References/3ccaf397d96b-wally.molten-abyss.png"
+      ],
+      "revision": 2,
+      "revision_reason": "Polished glossy obsidian with cyan cracks; no plush or velvet surface.",
+      "previous_file": "SE2/secret.png",
+      "previous_original": "SE2/secret-original.png"
     },
     {
       "id": "SE3",
@@ -711,7 +725,7 @@
         "wally.treasure-leaf"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Series and rarity",
       "alt": "Gold Wally on a plinth with a blank brass plaque.",
       "original": "SE3/finite-edition-original.png",
@@ -743,7 +757,7 @@
         "pip.peach-jelly"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Collections",
       "alt": "Pip Pockle beside its own collection box in its world.",
       "original": "C1/pip-original.png",
@@ -777,7 +791,7 @@
         "fox.boucle-plush"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Collections",
       "alt": "Fox Pockle beside its own collection box in its world.",
       "original": "C2/fox-original.png",
@@ -811,7 +825,7 @@
         "axolotl.clear-jelly"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Collections",
       "alt": "Axolotl Pockle beside its own collection box in its world.",
       "original": "C3/axolotl-original.png",
@@ -845,7 +859,7 @@
         "firb.matte-vinyl"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Collections",
       "alt": "Firb Pockle beside its own collection box in its world.",
       "original": "C4/firb-original.png",
@@ -879,7 +893,7 @@
         "coco.matte-vinyl"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Collections",
       "alt": "Coco Pockle beside its own collection box in its world.",
       "original": "C5/coco-original.png",
@@ -913,7 +927,7 @@
         "snowy.matte-vinyl"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Collections",
       "alt": "Snowy Pockle beside its own collection box in its world.",
       "original": "C6/snowy-original.png",
@@ -947,7 +961,7 @@
         "ginger.matte-vinyl"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Collections",
       "alt": "Ginger Pockle beside its own collection box in its world.",
       "original": "C7/ginger-original.png",
@@ -981,7 +995,7 @@
         "reiny.matte-vinyl"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Collections",
       "alt": "Reiny Pockle beside its own collection box in its world.",
       "original": "C8/reiny-original.png",
@@ -1015,7 +1029,7 @@
         "guin.matte-vinyl"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Collections",
       "alt": "Guin Pockle beside its own collection box in its world.",
       "original": "C9/guin-original.png",
@@ -1049,7 +1063,7 @@
         "bundy.matte-vinyl"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Collections",
       "alt": "Bundy Pockle beside its own collection box in its world.",
       "original": "C10/bundy-original.png",
@@ -1083,7 +1097,7 @@
         "wally.gloss-vinyl"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Collections",
       "alt": "Wally Pockle beside its own collection box in its world.",
       "original": "C11/wally-original.png",
@@ -1119,7 +1133,7 @@
         "pip.fusion-dusk"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Website scenes",
       "alt": "Peach and lavender Pip toys combining into a blended Dusk Pip.",
       "original": "F1/desktop-original.png",
@@ -1156,7 +1170,7 @@
         "pip.fusion-dusk"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Website scenes",
       "alt": "Peach and lavender Pip toys combining into a blended Dusk Pip.",
       "original": "F1/mobile-original.png",
@@ -1192,7 +1206,7 @@
         "axolotl.clear-jelly"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Website scenes",
       "alt": "Plush Fox and honey Axolotl swapping between two display shelves.",
       "original": "T1/desktop-original.png",
@@ -1226,7 +1240,7 @@
         "axolotl.clear-jelly"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Website scenes",
       "alt": "Plush Fox and honey Axolotl swapping between two display shelves.",
       "original": "T1/mobile-original.png",
@@ -1259,7 +1273,7 @@
         "fox.boucle-plush"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Website scenes",
       "alt": "Fox walking a woodland path with four surprise boxes along the way.",
       "original": "W1/desktop-original.png",
@@ -1293,7 +1307,7 @@
         "fox.boucle-plush"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Website scenes",
       "alt": "Fox walking a woodland path with four surprise boxes along the way.",
       "original": "W1/mobile-original.png",
@@ -1327,7 +1341,7 @@
         "pip.icon"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Website scenes",
       "alt": "The chosen coral jelly app-icon character greeting the viewer on deep plum.",
       "original": "D1/desktop-original.png",
@@ -1360,7 +1374,7 @@
         "pip.icon"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Website scenes",
       "alt": "The chosen coral jelly app-icon character greeting the viewer on deep plum.",
       "original": "D1/mobile-original.png",
@@ -1385,7 +1399,7 @@
     {
       "id": "OG",
       "name": "social",
-      "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Reframe the owner-approved H1 illustration reference1 (same six toys and warm cream/coral palette) as a wide social share image. Cluster on right, room left. Only text: exact word Pockle in large rounded deep plum wordmark at top-left, spelled P-o-c-k-l-e. No slogan or other text. Keep characters consistent with approved hero. Composition: 40:21, generate at highest available native quality and resolution. Deliverable 1200x630.  All requested toys fully in frame.",
+      "prompt": "Use case: precise-object-edit. Remove ONLY the generated word Pockle from the top-left of this exact image. Fill its former lettering area seamlessly with the surrounding quiet cream-peach background. Keep every toy, facial detail, material, box, highlight, shadow, camera, framing and every other pixel region visually unchanged. Leave entire top-left free of all lettering so the real brand logo can be composited afterward. Do not invent a replacement logo or any writing. Output same40:21 landscape social composition,1200x630 delivery.",
       "ratio": "40:21",
       "width": 1200,
       "height": 630,
@@ -1396,12 +1410,12 @@
         "axolotl.clear-jelly"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "revision-ready-for-review",
       "category": "Website scenes",
       "alt": "Pockle toys around an open surprise box with the Pockle wordmark.",
-      "original": "OG/social-original.png",
-      "file": "OG/social.png",
-      "preview": "docs/website-art-review/03/previews/OG-social.png",
+      "original": "OG/social-v2-original.png",
+      "file": "OG/social-v2.png",
+      "preview": "docs/website-art-review/04/previews/OG-social-v2.png",
       "native_size": [
         1731,
         909
@@ -1413,8 +1427,26 @@
       "export_method": "sips dimension resample; generated original retained",
       "alpha_bounds_128": null,
       "references": [
-        "References/632d5781f2c1-desktop-original.png"
-      ]
+        "References/d669fe597d7c-social-original.png"
+      ],
+      "revision": 2,
+      "revision_reason": "Real Pockle wordmark composited onto text-free artwork.",
+      "previous_file": "OG/social.png",
+      "previous_original": "OG/social-original.png",
+      "postprocess": {
+        "operation": "Owner-requested real wordmark alpha composite; no generated lettering",
+        "source": "References/712272be2987-PockleWordmark.png",
+        "position_px": [
+          36,
+          28
+        ],
+        "size_px": [
+          360,
+          129
+        ],
+        "no_text_base": "OG/social-v2-no-text.png",
+        "resample": "Lanczos, aspect ratio preserved"
+      }
     },
     {
       "id": "ONBOARDING",
@@ -1427,7 +1459,7 @@
         "pip.peach-jelly"
       ],
       "transparent": true,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Onboarding",
       "alt": "Pip smiling in its approved finish on a transparent background.",
       "original": "ONBOARDING/pip-original.png",
@@ -1466,7 +1498,7 @@
         "fox.boucle-plush"
       ],
       "transparent": true,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Onboarding",
       "alt": "Fox smiling in its approved finish on a transparent background.",
       "original": "ONBOARDING/fox-original.png",
@@ -1505,7 +1537,7 @@
         "wally.kelp-mint"
       ],
       "transparent": true,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Onboarding",
       "alt": "Wally smiling in its approved finish on a transparent background.",
       "original": "ONBOARDING/wally-original.png",
@@ -1544,7 +1576,7 @@
         "axolotl.clear-jelly"
       ],
       "transparent": true,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Onboarding",
       "alt": "Axolotl smiling in its approved finish on a transparent background.",
       "original": "ONBOARDING/axolotl-original.png",
@@ -1583,7 +1615,7 @@
         "firb.pearl-jelly"
       ],
       "transparent": true,
-      "status": "ready-for-owner-review",
+      "status": "owner-and-claude-approved",
       "category": "Onboarding",
       "alt": "Firb smiling in its approved finish on a transparent background.",
       "original": "ONBOARDING/firb-original.png",
@@ -1611,5 +1643,7 @@
       "website_cutout": "ONBOARDING/firb-website-1600.png",
       "proposed_resource_name": "firb_pearl-jelly.png"
     }
-  ]
+  ],
+  "onboarding_import": "Five approved1024px textures and heroes.txt imported; native OnboardingUiTests9/9 passed.",
+  "latest_review": "docs/website-art-review/04/index.html"
 }

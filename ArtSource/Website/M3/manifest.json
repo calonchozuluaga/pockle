@@ -4,7 +4,7 @@
     {
       "id": "M3",
       "name": "vinyl-macro",
-      "prompt": "Use case: illustration-story. Premium Pockle website illustration in EXACTLY the owner-approved hero's tactile collection-cover style: soft painted 3D forms, warm whimsical light, richly coloured collectible materials, appealing subtle faces. Identity references define exact toy anatomy, proportions, colors and face spacing. Last reference is style only unless explicitly stated. Never copy the reference background or add its toys. Not a Unity screenshot or flat pasted collage. No human figures, extra body parts, new characters, UI, prices, labels, odds, serials or watermark. No lettering except existing Pockle branding on referenced cartons. Wally is a spherical little whale, broad cream belly, two black oval eyes, tiny smile, exactly two side flippers and one horizontal split tail behind the body, no feet/legs/dorsal fin. Preserve actual toy proportions and rear tail shown in identity reference, not an animal redesign. Smooth matte teal vinyl with broad soft highlights and cream belly. Macro material portrait, tight crop includes part of face plus tactile surface; three-quarter camera, warm upper-left broad softbox and tiny rim light, cream background. Same camera and light treatment as other material studies. Composition: 3:4, generate at highest available native quality and resolution. Deliverable 1200x1600.  All requested toys fully in frame. OVERRIDING CAMERA INSTRUCTION: EXTREME MACRO DETAIL, not a full-body portrait. Only one eye, a little cheek and a cropped area of body texture visible. Face and tactile surface continue beyond all four frame edges. Do NOT show entire toy, toy base, tabletop, legs, tail or full silhouette. Toy surface fills 95% of 3:4 frame. Identical warm broad softbox upper left and subtle rim across all four macro images.",
+      "prompt": "Use case: precise-object-edit. Edit reference1, the teal matte-vinyl Wally macro. Reference2 is the real approved Wally identity. Keep same teal matte vinyl colour, smooth tactile material, cream belly, cheek, tiny curved SMILE and warm softbox/rim light. Reframe the face closer to frontal so BOTH BLACK OVAL EYES are clearly visible and fully OPEN, each with a round highlight. NO closed curved eyelid, no wink, no one-eye-only crop. Preserve exact eye spacing and small smile from approved game reference. Tight material portrait showing face and upper belly with body sides/head edges cropped, not a full toy. Output3:4 portrait1200x1600. Cream background. No new body parts, typography, watermark.",
       "ratio": "3:4",
       "width": 1200,
       "height": 1600,
@@ -12,12 +12,12 @@
         "wally.matte-vinyl"
       ],
       "transparent": false,
-      "status": "ready-for-owner-review",
+      "status": "revision-ready-for-review",
       "category": "Materials",
       "alt": "Close-up of the vinyl Pockle material.",
-      "original": "M3/vinyl-macro-original.png",
-      "file": "M3/vinyl-macro.png",
-      "preview": "docs/website-art-review/03/previews/M3-vinyl-macro.png",
+      "original": "M3/vinyl-macro-v2-original.png",
+      "file": "M3/vinyl-macro-v2.png",
+      "preview": "docs/website-art-review/04/previews/M3-vinyl-macro-v2.png",
       "native_size": [
         1086,
         1448
@@ -29,9 +29,13 @@
       "export_method": "sips dimension resample; generated original retained",
       "alpha_bounds_128": null,
       "references": [
-        "References/44eac94f610a-wally.matte-vinyl.png",
-        "References/632d5781f2c1-desktop-original.png"
-      ]
+        "References/f62f8a2b0397-vinyl-macro-original.png",
+        "References/44eac94f610a-wally.matte-vinyl.png"
+      ],
+      "revision": 2,
+      "revision_reason": "Both oval eyes fully open and visible; approved teal matte vinyl retained.",
+      "previous_file": "M3/vinyl-macro.png",
+      "previous_original": "M3/vinyl-macro-original.png"
     }
   ]
 }
