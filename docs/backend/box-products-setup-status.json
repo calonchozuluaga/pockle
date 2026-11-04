@@ -163,10 +163,12 @@
       "app_id": "4975391761406742908",
       "production_access": "requires_closed_test_12_testers_14_continuous_days",
       "current_closed_test_opt_ins": 0,
-      "first_build": "owner_signed_bundle_accepted_saved_internal_draft"
+      "first_build": "owner_signed_bundle_accepted_saved_internal_draft",
+      "internal_test_rollout": "not_done_console_blank",
+      "owner_added_as_internal_tester": false
     }
   },
   "credentials_handled": false,
   "production_payments_enabled": false,
-  "owner_request": "None for signing/upload: done. Internal rollout, remaining product setup and sandbox purchase testing still pending."
+  "owner_request": "Refresh/reopen Google Play Console in Chrome until dashboard visible. Internal tester list/rollout not done; alternate browser blocked by auto-review origin mismatch."
 }
