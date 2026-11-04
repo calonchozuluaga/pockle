@@ -1,0 +1,19 @@
+{
+  "package_id": "com.playpockle.app",
+  "version_name": "0.1.0",
+  "version_code": 1,
+  "min_sdk": 26,
+  "target_sdk": 36,
+  "architecture": "arm64-v8a",
+  "development_build": false,
+  "billing_permission": true,
+  "billing_sdk_installed": false,
+  "checkout_enabled": false,
+  "bundletool_validate": "passed",
+  "native_unity_exit": 0,
+  "unsigned_sha256": "1d404a9edeffe14570cfd06ffa330036ebdcbdb611f0f6d00dc3696ce825319d",
+  "unsigned_bytes": 441270460,
+  "private_upload_signing": "waiting_for_owner",
+  "play_upload": "not_uploaded",
+  "release_draft": "saved_no_rollout"
+}

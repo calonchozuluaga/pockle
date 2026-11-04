@@ -37,3 +37,4 @@ supabase/.branches/
 *.p8
 *.p12
 *.keystore
+*.jks

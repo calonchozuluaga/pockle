@@ -162,10 +162,11 @@
       "app_created": true,
       "app_id": "4975391761406742908",
       "production_access": "requires_closed_test_12_testers_14_continuous_days",
-      "current_closed_test_opt_ins": 0
+      "current_closed_test_opt_ins": 0,
+      "first_build": "unsigned_release_bundle_verified_owner_private_signing_pending"
     }
   },
   "credentials_handled": false,
   "production_payments_enabled": false,
-  "owner_request": "No further permission or key action required for the saved grant; next is production-ID signed first-build upload and remaining store setup."
+  "owner_request": "Run owner signing helper locally; unsigned AAB ready, Play internal draft saved. No upload or rollout yet."
 }
