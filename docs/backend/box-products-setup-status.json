@@ -1,0 +1,133 @@
+{
+  "approved_on": "2026-11-04",
+  "branch": "codex/box-products",
+  "revenuecat": {
+    "project_id": "9abea771",
+    "name": "Pockle",
+    "url": "https://app.revenuecat.com/projects/9abea771/overview",
+    "project_created_verified": true,
+    "biotadex_project_id_untouched": "1c5098f5",
+    "offering": "launch_boxes_v1",
+    "offering_created": false,
+    "apple_app": {
+      "bundle_id": "com.playpockle.app",
+      "state": "saved_owner_entered_credentials",
+      "reason": "RevenueCat reports key not valid or incompatible with bundle ID; App Store Connect has no Pockle app record yet.",
+      "app_id": "appde6a12c13c",
+      "app_store_connect_api_credentials": "valid_verified_in_dashboard",
+      "iap_credentials": "needs_attention"
+    },
+    "google_app": {
+      "package_id": "com.playpockle.app",
+      "state": "not_created"
+    }
+  },
+  "stores": {
+    "apple_consumables_created": 13,
+    "google_consumables_created": 0,
+    "apple_app_record": {
+      "state": "created_verified",
+      "app_id": "6830781336",
+      "bundle_id": "com.playpockle.app",
+      "display_name": "Pockle: Little Toys Big Squish",
+      "sku": "pockle-ios-v1",
+      "reason": "Owner approved title; comma omitted to fit 30-character limit."
+    },
+    "apple_products": {
+      "pockle.box.axolotl.v1": {
+        "apple_id": "6830782263",
+        "state": "Prepare for Submission",
+        "type": "Consumable",
+        "pricing_configured": false,
+        "localization_configured": false
+      },
+      "pockle.box.bundy.v1": {
+        "apple_id": "6830782595",
+        "state": "Prepare for Submission",
+        "type": "Consumable",
+        "pricing_configured": false,
+        "localization_configured": false
+      },
+      "pockle.box.coco.v1": {
+        "apple_id": "6830782484",
+        "state": "Prepare for Submission",
+        "type": "Consumable",
+        "pricing_configured": false,
+        "localization_configured": false
+      },
+      "pockle.box.firb.v1": {
+        "apple_id": "6830782450",
+        "state": "Prepare for Submission",
+        "type": "Consumable",
+        "pricing_configured": false,
+        "localization_configured": false
+      },
+      "pockle.box.fox.v1": {
+        "apple_id": "6830782245",
+        "state": "Prepare for Submission",
+        "type": "Consumable",
+        "pricing_configured": false,
+        "localization_configured": false
+      },
+      "pockle.box.ginger.v1": {
+        "apple_id": "6830782574",
+        "state": "Prepare for Submission",
+        "type": "Consumable",
+        "pricing_configured": false,
+        "localization_configured": false
+      },
+      "pockle.box.guin.v1": {
+        "apple_id": "6830782664",
+        "state": "Prepare for Submission",
+        "type": "Consumable",
+        "pricing_configured": false,
+        "localization_configured": false
+      },
+      "pockle.box.pip.v1": {
+        "apple_id": "6830781898",
+        "state": "Prepare for Submission",
+        "type": "Consumable",
+        "pricing_configured": false,
+        "localization_configured": false
+      },
+      "pockle.box.reiny.v1": {
+        "apple_id": "6830782525",
+        "state": "Prepare for Submission",
+        "type": "Consumable",
+        "pricing_configured": false,
+        "localization_configured": false
+      },
+      "pockle.box.snowy.v1": {
+        "apple_id": "6830782312",
+        "state": "Prepare for Submission",
+        "type": "Consumable",
+        "pricing_configured": false,
+        "localization_configured": false
+      },
+      "pockle.box.wally.v1": {
+        "apple_id": "6830782724",
+        "state": "Prepare for Submission",
+        "type": "Consumable",
+        "pricing_configured": false,
+        "localization_configured": false
+      },
+      "pockle.mix.3.v1": {
+        "apple_id": "6830782958",
+        "state": "Prepare for Submission",
+        "type": "Consumable",
+        "pricing_configured": false,
+        "localization_configured": false
+      },
+      "pockle.mix.5.v1": {
+        "apple_id": "6830782907",
+        "state": "Prepare for Submission",
+        "type": "Consumable",
+        "pricing_configured": false,
+        "localization_configured": false
+      }
+    }
+  },
+  "credentials_handled": false,
+  "production_payments_enabled": false,
+  "owner_request": "Apple purchase key still needs validation; no production payments enabled."
+}

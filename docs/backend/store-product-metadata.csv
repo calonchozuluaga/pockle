@@ -1,0 +1,14 @@
+product_id,type,display_name_en_US,description_en_US,target_price_usd,box_count,collection_id,revenuecat_offering,revenuecat_package
+pockle.box.pip.v1,consumable,Pip Collection Box,One random Pip toy. Repeats can happen.,0.99,1,pip,launch_boxes_v1,collection_pip
+pockle.box.fox.v1,consumable,Fox Collection Box,One random Fox toy. Repeats can happen.,0.99,1,fox,launch_boxes_v1,collection_fox
+pockle.box.axolotl.v1,consumable,Axolotl Collection Box,One random Axolotl toy. Repeats can happen.,0.99,1,axolotl,launch_boxes_v1,collection_axolotl
+pockle.box.firb.v1,consumable,Firb Collection Box,One random Firb toy. Repeats can happen.,0.99,1,firb,launch_boxes_v1,collection_firb
+pockle.box.coco.v1,consumable,Coco Collection Box,One random Coco toy. Repeats can happen.,0.99,1,coco,launch_boxes_v1,collection_coco
+pockle.box.snowy.v1,consumable,Snowy Collection Box,One random Snowy toy. Repeats can happen.,0.99,1,snowy,launch_boxes_v1,collection_snowy
+pockle.box.ginger.v1,consumable,Ginger Collection Box,One random Ginger toy. Repeats can happen.,0.99,1,ginger,launch_boxes_v1,collection_ginger
+pockle.box.reiny.v1,consumable,Reiny Collection Box,One random Reiny toy. Repeats can happen.,0.99,1,reiny,launch_boxes_v1,collection_reiny
+pockle.box.guin.v1,consumable,Guin Collection Box,One random Guin toy. Repeats can happen.,0.99,1,guin,launch_boxes_v1,collection_guin
+pockle.box.bundy.v1,consumable,Bundy Collection Box,One random Bundy toy. Repeats can happen.,0.99,1,bundy,launch_boxes_v1,collection_bundy
+pockle.box.wally.v1,consumable,Wally Collection Box,One random Wally toy. Repeats can happen.,0.99,1,wally,launch_boxes_v1,collection_wally
+pockle.mix.3.v1,consumable,Mystery Mix 3,3 random toys. Repeats can happen.,2.49,3,,launch_boxes_v1,mix_3
+pockle.mix.5.v1,consumable,Mystery Mix 5,5 random toys. Repeats can happen.,3.99,5,,launch_boxes_v1,mix_5
