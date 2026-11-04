@@ -4,7 +4,17 @@ The first bundle establishes `com.playpockle.app`. It is not a purchase-ready re
 
 Unity 6000.6.5f1 builds the release-mode ARM64 IL2CPP bundle in the isolated checkout. Codex validates the manifest and strips the temporary debug JAR signature. Only the owner-signed copy may be uploaded to Play.
 
-## Owner private signing step
+## Corrected version 2
+
+Google rejected the permission-only first bundle as obsolete AIDL billing. Version 2 includes Google Play Billing Library 8.3.0; its final manifest version metadata was verified. Sign it with the existing upload key:
+
+```sh
+python3 /Users/calonchozulu/Desktop/pockle/tools/sign-play-bundle.py /Users/calonchozulu/Desktop/pockle/Builds/Pockle-Play-Internal-v2.unsigned.aab
+```
+
+Do not use `--create-key` again. The output is `Pockle-Play-Internal-v2.signed.aab`. Checkout is still unavailable; library packaging is not purchase-flow acceptance.
+
+## Original owner private signing step (completed for v1)
 
 Run this yourself in macOS Terminal, not in chat or an agent terminal:
 

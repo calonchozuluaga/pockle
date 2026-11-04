@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Xml;
 using UnityEditor;
 using UnityEditor.Android;
 using UnityEditor.Build;
@@ -35,12 +34,12 @@ namespace Pockle.Editor
                 PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
                 PlayerSettings.Android.minSdkVersion = AndroidSdkVersions.AndroidApiLevel26;
                 PlayerSettings.Android.targetSdkVersion = (AndroidSdkVersions)36;
-                PlayerSettings.Android.bundleVersionCode = 1;
+                PlayerSettings.Android.bundleVersionCode = 2;
                 // Owner signs a separate copy with their private upload key afterward.
                 PlayerSettings.Android.useCustomKeystore = false;
                 EditorUserBuildSettings.buildAppBundle = true;
                 EditorUserBuildSettings.exportAsGoogleAndroidProject = false;
-                string output = Path.GetFullPath("Builds/Pockle-Play-Internal.debug-signed.aab");
+                string output = Path.GetFullPath("Builds/Pockle-Play-Internal-v2.debug-signed.aab");
                 Directory.CreateDirectory(Path.GetDirectoryName(output));
                 var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions {
                     scenes = new[] { PockleProjectSetup.ScenePath },
@@ -69,14 +68,13 @@ namespace Pockle.Editor
         public void OnPostGenerateGradleAndroidProject(string path)
         {
             if (!building) return;
-            // Declare the planned billing capability for Play catalog setup only.
-            // This does not install a billing SDK, enable checkout, or grant purchases.
-            string manifest = Path.Combine(path, "src/main/AndroidManifest.xml");
-            var xml = new XmlDocument(); xml.Load(manifest);
-            const string ns = "http://schemas.android.com/apk/res/android";
-            var permission = xml.CreateElement("uses-permission");
-            permission.SetAttribute("name", ns, "com.android.vending.BILLING");
-            xml.DocumentElement.AppendChild(permission); xml.Save(manifest);
+            // A permission alone is classified by Play as obsolete AIDL billing.
+            // Include the supported library and its own manifest/version metadata.
+            // No BillingClient is started and checkout/delivery remain unavailable.
+            string gradle = Path.Combine(path, "build.gradle");
+            const string dependency = "implementation 'com.android.billingclient:billing:8.3.0'";
+            if (!File.ReadAllText(gradle).Contains(dependency))
+                File.AppendAllText(gradle, "\ndependencies { " + dependency + " }\n");
         }
     }
 }

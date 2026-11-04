@@ -1,0 +1,14 @@
+{
+  "version_code": 2,
+  "package": "com.playpockle.app",
+  "billing_library": "8.3.0",
+  "revenuecat_sdk_integrated": false,
+  "checkout_enabled": false,
+  "native_build_exit": 0,
+  "manifest_verified": true,
+  "zip_integrity": "passed",
+  "unsigned_sha256": "e4833a6fb9d80cf692ba67425c7ef8cb01b95c2130d4fa7fca58592bad504886",
+  "unsigned_bytes": 442297255,
+  "private_upload_signing": "waiting_owner_existing_key",
+  "play_upload": "not_uploaded"
+}

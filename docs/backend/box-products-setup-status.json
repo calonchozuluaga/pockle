@@ -164,11 +164,13 @@
       "production_access": "requires_closed_test_12_testers_14_continuous_days",
       "current_closed_test_opt_ins": 0,
       "first_build": "owner_signed_bundle_accepted_saved_internal_draft",
-      "internal_test_rollout": "not_done_console_blank",
-      "owner_added_as_internal_tester": false
+      "internal_test_rollout": "blocked_billing_library_AIDL_v1",
+      "owner_added_as_internal_tester": true,
+      "internal_test_list": "Pockle owner internal",
+      "internal_test_list_users": 1
     }
   },
   "credentials_handled": false,
   "production_payments_enabled": false,
-  "owner_request": "Refresh/reopen Google Play Console in Chrome until dashboard visible. Internal tester list/rollout not done; alternate browser blocked by auto-review origin mismatch."
+  "owner_request": "Corrected version2 bundle building; owner will sign using existing upload key, no new key needed."
 }
