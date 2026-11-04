@@ -26,7 +26,7 @@
       "service_account_play_access": "active_pockle_only",
       "in_app_catalog_check": "passed",
       "subscription_catalog_check": "passed",
-      "purchase_validation": "package_not_found_first_build_not_uploaded"
+      "purchase_validation": "package_not_found_after_first_upload_saved_draft"
     },
     "offering_id": "ofrng372375125a",
     "offering_packages_verified": 13,
@@ -163,10 +163,10 @@
       "app_id": "4975391761406742908",
       "production_access": "requires_closed_test_12_testers_14_continuous_days",
       "current_closed_test_opt_ins": 0,
-      "first_build": "unsigned_release_bundle_verified_owner_private_signing_pending"
+      "first_build": "owner_signed_bundle_accepted_saved_internal_draft"
     }
   },
   "credentials_handled": false,
   "production_payments_enabled": false,
-  "owner_request": "Run owner signing helper locally; unsigned AAB ready, Play internal draft saved. No upload or rollout yet."
+  "owner_request": "None for signing/upload: done. Internal rollout, remaining product setup and sandbox purchase testing still pending."
 }

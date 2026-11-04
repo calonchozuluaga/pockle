@@ -38,3 +38,5 @@ supabase/.branches/
 *.p12
 *.keystore
 *.jks
+
+/revenuecat-key.json

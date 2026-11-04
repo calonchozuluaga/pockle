@@ -13,7 +13,10 @@
   "native_unity_exit": 0,
   "unsigned_sha256": "1d404a9edeffe14570cfd06ffa330036ebdcbdb611f0f6d00dc3696ce825319d",
   "unsigned_bytes": 441270460,
-  "private_upload_signing": "waiting_for_owner",
-  "play_upload": "not_uploaded",
-  "release_draft": "saved_no_rollout"
+  "private_upload_signing": "owner_signed_jarsigner_verified",
+  "play_upload": "accepted_saved_in_internal_release_draft",
+  "release_draft": "saved_with_version_1_0.1.0_no_rollout",
+  "signed_payload_matches_unsigned": true,
+  "signed_sha256": "87a093397029ef4f4c515759b26e82884b4bbed5fabacecc80b935be4b48e14d",
+  "upload_certificate_sha256": "DB:F6:4A:7A:48:13:89:5F:20:6C:49:3F:47:A7:DE:03:CB:63:AF:F5:47:0D:76:B1:08:F9:54:B8:EF:25:54:1A"
 }
