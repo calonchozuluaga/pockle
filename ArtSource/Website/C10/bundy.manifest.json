@@ -1,0 +1,14 @@
+{
+    "id": "C10",
+    "file": "C10/bundy.png",
+    "alt": "Bundy Pockle beside its collection box.",
+    "world": "bundy-vanilla-kitchen",
+    "composition": "Aligned tabletop pair in the character's home world.",
+    "status": "composition-review",
+    "toys": [
+        "bundy.matte-vinyl"
+    ],
+    "width": 1600,
+    "height": 1200,
+    "transparent": false
+}

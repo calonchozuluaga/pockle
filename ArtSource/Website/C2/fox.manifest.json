@@ -1,0 +1,14 @@
+{
+    "id": "C2",
+    "file": "C2/fox.png",
+    "alt": "Fox Pockle beside its collection box.",
+    "world": "fox-hollow",
+    "composition": "Aligned tabletop pair in the character's home world.",
+    "status": "composition-review",
+    "toys": [
+        "fox.gloss-vinyl"
+    ],
+    "width": 1600,
+    "height": 1200,
+    "transparent": false
+}

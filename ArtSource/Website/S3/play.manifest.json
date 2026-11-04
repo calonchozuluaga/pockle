@@ -1,0 +1,14 @@
+{
+    "id": "S3",
+    "file": "S3/play.png",
+    "alt": "A translucent jelly Pockle being squished.",
+    "world": "Studio lighting; collection reflection environment pip-jelly-garden",
+    "composition": "Real JellyToy deformation; no hand or fake UI.",
+    "status": "composition-review",
+    "toys": [
+        "pip.peach-jelly"
+    ],
+    "width": 1600,
+    "height": 1600,
+    "transparent": false
+}

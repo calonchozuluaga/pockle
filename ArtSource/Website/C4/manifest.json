@@ -1,0 +1,22 @@
+{
+  "id": "C4",
+  "status": "composition-review",
+  "images": [
+    {
+      "id": "C4",
+      "file": "C4/firb.png",
+      "alt": "Firb Pockle beside its collection box.",
+      "world": "firb-evergreen-clearing",
+      "composition": "Aligned tabletop pair in the character's home world.",
+      "status": "composition-review",
+      "toys": [
+        "firb.matte-vinyl"
+      ],
+      "width": 1600,
+      "height": 1200,
+      "transparent": false,
+      "preview": "previews/C4-firb.jpg",
+      "lighting_note": "Collection probe exposure reduced to 0.20 for editorial detail; runtime shader/finish assets unchanged."
+    }
+  ]
+}

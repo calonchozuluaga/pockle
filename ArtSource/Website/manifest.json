@@ -1,0 +1,379 @@
+{
+    "renderer": "Unity 6000.6.5f1, Built-in",
+    "images": [
+        {
+            "id": "H1",
+            "file": "H1/desktop.png",
+            "alt": "A group of Pockle toys in jelly, plush and vinyl finishes around an open surprise box.",
+            "world": "Studio lighting; collection reflection environment pip-jelly-garden",
+            "composition": "Right-aligned group; left40% reserved for copy.",
+            "status": "composition-review",
+            "toys": [
+                "pip.peach-jelly",
+                "fox.boucle-plush",
+                "wally.gloss-vinyl",
+                "axolotl.clear-jelly",
+                "pip.gold-confetti",
+                "pip.glow-jelly"
+            ],
+            "width": 2560,
+            "height": 1440,
+            "transparent": false
+        },
+        {
+            "id": "H1",
+            "file": "H1/mobile.png",
+            "alt": "A group of Pockle toys in jelly, plush and vinyl finishes around an open surprise box.",
+            "world": "Studio lighting; collection reflection environment pip-jelly-garden",
+            "composition": "Recomposed two-column group; upper35% reserved for copy.",
+            "status": "composition-review",
+            "toys": [
+                "pip.peach-jelly",
+                "fox.boucle-plush",
+                "wally.gloss-vinyl",
+                "axolotl.clear-jelly",
+                "pip.gold-confetti",
+                "pip.glow-jelly"
+            ],
+            "width": 1080,
+            "height": 1350,
+            "transparent": false
+        },
+        {
+            "id": "S1",
+            "file": "S1/walk.png",
+            "alt": "Pip hopping along a path toward a surprise box.",
+            "world": "pip-jelly-garden",
+            "composition": "Static authored mid-hop editorial pose in Pip's garden world.",
+            "status": "composition-review",
+            "toys": [
+                "pip.peach-jelly"
+            ],
+            "width": 1600,
+            "height": 1600,
+            "transparent": false
+        },
+        {
+            "id": "S3",
+            "file": "S3/play.png",
+            "alt": "A translucent jelly Pockle being squished.",
+            "world": "Studio lighting; collection reflection environment pip-jelly-garden",
+            "composition": "Real JellyToy deformation; no hand or fake UI.",
+            "status": "composition-review",
+            "toys": [
+                "pip.peach-jelly"
+            ],
+            "width": 1600,
+            "height": 1600,
+            "transparent": false
+        },
+        {
+            "id": "S2",
+            "file": "S2/open-common.png",
+            "alt": "A Pockle box bursting open as a toy pops out.",
+            "world": "Studio lighting; collection reflection environment pip-jelly-garden",
+            "composition": "Actual hinged carton sampled open with staged rising toy; editorial still, not a captured paid transaction.",
+            "status": "composition-review",
+            "toys": [
+                "pip.peach-jelly"
+            ],
+            "width": 1600,
+            "height": 1600,
+            "transparent": false
+        },
+        {
+            "id": "S2",
+            "file": "S2/open-rare.png",
+            "alt": "A Pockle box bursting open as a toy pops out.",
+            "world": "Studio lighting; collection reflection environment wally-coral-cove",
+            "composition": "Actual hinged carton sampled open with staged rising toy; editorial still, not a captured paid transaction.",
+            "status": "composition-review",
+            "toys": [
+                "wally.treasure-leaf"
+            ],
+            "width": 1600,
+            "height": 1600,
+            "transparent": false
+        },
+        {
+            "id": "S2",
+            "file": "S2/open-epic.png",
+            "alt": "A Pockle box bursting open as a toy pops out.",
+            "world": "Studio lighting; collection reflection environment wally-coral-cove",
+            "composition": "Actual hinged carton sampled open with staged rising toy; editorial still, not a captured paid transaction.",
+            "status": "composition-review",
+            "toys": [
+                "wally.diamond-frost"
+            ],
+            "width": 1600,
+            "height": 1600,
+            "transparent": false
+        },
+        {
+            "id": "SE1",
+            "file": "SE1/desktop.png",
+            "alt": "All fifteen Wally Pockles arranged on a display, from common to secret.",
+            "world": "wally-pearl-grotto",
+            "composition": "Actual15 finishes on five ascending display rows; Pearl Grotto world.",
+            "status": "composition-review",
+            "toys": [
+                "wally.clear-jelly",
+                "wally.pearl-jelly",
+                "wally.confetti-gel",
+                "wally.mochi-foam",
+                "wally.velvet-flock",
+                "wally.boucle-plush",
+                "wally.matte-vinyl",
+                "wally.gloss-vinyl",
+                "wally.kelp-mint",
+                "wally.coated-metallic",
+                "wally.treasure-leaf",
+                "wally.rose-gold-shell",
+                "wally.glow-jelly",
+                "wally.diamond-frost",
+                "wally.molten-abyss"
+            ],
+            "width": 2560,
+            "height": 1100,
+            "transparent": false
+        },
+        {
+            "id": "SE1",
+            "file": "SE1/mobile.png",
+            "alt": "All fifteen Wally Pockles arranged on a display, from common to secret.",
+            "world": "wally-pearl-grotto",
+            "composition": "Actual15 finishes on five ascending display rows; Pearl Grotto world.",
+            "status": "composition-review",
+            "toys": [
+                "wally.clear-jelly",
+                "wally.pearl-jelly",
+                "wally.confetti-gel",
+                "wally.mochi-foam",
+                "wally.velvet-flock",
+                "wally.boucle-plush",
+                "wally.matte-vinyl",
+                "wally.gloss-vinyl",
+                "wally.kelp-mint",
+                "wally.coated-metallic",
+                "wally.treasure-leaf",
+                "wally.rose-gold-shell",
+                "wally.glow-jelly",
+                "wally.diamond-frost",
+                "wally.molten-abyss"
+            ],
+            "width": 1080,
+            "height": 1350,
+            "transparent": false
+        },
+        {
+            "id": "SE2",
+            "file": "SE2/common.png",
+            "alt": "Wally in common finish.",
+            "world": "Studio lighting; collection reflection environment wally-coral-cove",
+            "composition": "Same pose and camera; transparent background.",
+            "status": "composition-review",
+            "toys": [
+                "wally.kelp-mint"
+            ],
+            "width": 1600,
+            "height": 1600,
+            "transparent": true
+        },
+        {
+            "id": "SE2",
+            "file": "SE2/rare.png",
+            "alt": "Wally in rare finish.",
+            "world": "Studio lighting; collection reflection environment wally-coral-cove",
+            "composition": "Same pose and camera; transparent background.",
+            "status": "composition-review",
+            "toys": [
+                "wally.treasure-leaf"
+            ],
+            "width": 1600,
+            "height": 1600,
+            "transparent": true
+        },
+        {
+            "id": "SE2",
+            "file": "SE2/epic.png",
+            "alt": "Wally in epic finish.",
+            "world": "Studio lighting; collection reflection environment wally-coral-cove",
+            "composition": "Same pose and camera; transparent background.",
+            "status": "composition-review",
+            "toys": [
+                "wally.diamond-frost"
+            ],
+            "width": 1600,
+            "height": 1600,
+            "transparent": true
+        },
+        {
+            "id": "SE2",
+            "file": "SE2/secret.png",
+            "alt": "Wally in secret finish.",
+            "world": "Studio lighting; collection reflection environment wally-coral-cove",
+            "composition": "Same pose and camera; transparent background.",
+            "status": "composition-review",
+            "toys": [
+                "wally.molten-abyss"
+            ],
+            "width": 1600,
+            "height": 1600,
+            "transparent": true
+        },
+        {
+            "id": "C1",
+            "file": "C1/pip.png",
+            "alt": "Pip Pockle beside its collection box.",
+            "world": "pip-jelly-garden",
+            "composition": "Aligned tabletop pair in the character's home world.",
+            "status": "composition-review",
+            "toys": [
+                "pip.peach-jelly"
+            ],
+            "width": 1600,
+            "height": 1200,
+            "transparent": false
+        },
+        {
+            "id": "C2",
+            "file": "C2/fox.png",
+            "alt": "Fox Pockle beside its collection box.",
+            "world": "fox-hollow",
+            "composition": "Aligned tabletop pair in the character's home world.",
+            "status": "composition-review",
+            "toys": [
+                "fox.gloss-vinyl"
+            ],
+            "width": 1600,
+            "height": 1200,
+            "transparent": false
+        },
+        {
+            "id": "C3",
+            "file": "C3/axolotl.png",
+            "alt": "Axolotl Pockle beside its collection box.",
+            "world": "axolotl-blossom-pond",
+            "composition": "Aligned tabletop pair in the character's home world.",
+            "status": "composition-review",
+            "toys": [
+                "axolotl.boucle-plush"
+            ],
+            "width": 1600,
+            "height": 1200,
+            "transparent": false
+        },
+        {
+            "id": "C4",
+            "file": "C4/firb.png",
+            "alt": "Firb Pockle beside its collection box.",
+            "world": "firb-evergreen-clearing",
+            "composition": "Aligned tabletop pair in the character's home world.",
+            "status": "composition-review",
+            "toys": [
+                "firb.matte-vinyl"
+            ],
+            "width": 1600,
+            "height": 1200,
+            "transparent": false
+        },
+        {
+            "id": "C5",
+            "file": "C5/coco.png",
+            "alt": "Coco Pockle beside its collection box.",
+            "world": "coco-cocoa-nook",
+            "composition": "Aligned tabletop pair in the character's home world.",
+            "status": "composition-review",
+            "toys": [
+                "coco.matte-vinyl"
+            ],
+            "width": 1600,
+            "height": 1200,
+            "transparent": false
+        },
+        {
+            "id": "C6",
+            "file": "C6/snowy.png",
+            "alt": "Snowy Pockle beside its collection box.",
+            "world": "snowy-snowdrop-meadow",
+            "composition": "Aligned tabletop pair in the character's home world.",
+            "status": "composition-review",
+            "toys": [
+                "snowy.matte-vinyl"
+            ],
+            "width": 1600,
+            "height": 1200,
+            "transparent": false
+        },
+        {
+            "id": "C7",
+            "file": "C7/ginger.png",
+            "alt": "Ginger Pockle beside its collection box.",
+            "world": "ginger-icing-village",
+            "composition": "Aligned tabletop pair in the character's home world.",
+            "status": "composition-review",
+            "toys": [
+                "ginger.matte-vinyl"
+            ],
+            "width": 1600,
+            "height": 1200,
+            "transparent": false
+        },
+        {
+            "id": "C8",
+            "file": "C8/reiny.png",
+            "alt": "Reiny Pockle beside its collection box.",
+            "world": "reiny-birch-clearing",
+            "composition": "Aligned tabletop pair in the character's home world.",
+            "status": "composition-review",
+            "toys": [
+                "reiny.matte-vinyl"
+            ],
+            "width": 1600,
+            "height": 1200,
+            "transparent": false
+        },
+        {
+            "id": "C9",
+            "file": "C9/guin.png",
+            "alt": "Guin Pockle beside its collection box.",
+            "world": "guin-mint-ice-cove",
+            "composition": "Aligned tabletop pair in the character's home world.",
+            "status": "composition-review",
+            "toys": [
+                "guin.matte-vinyl"
+            ],
+            "width": 1600,
+            "height": 1200,
+            "transparent": false
+        },
+        {
+            "id": "C10",
+            "file": "C10/bundy.png",
+            "alt": "Bundy Pockle beside its collection box.",
+            "world": "bundy-vanilla-kitchen",
+            "composition": "Aligned tabletop pair in the character's home world.",
+            "status": "composition-review",
+            "toys": [
+                "bundy.matte-vinyl"
+            ],
+            "width": 1600,
+            "height": 1200,
+            "transparent": false
+        },
+        {
+            "id": "C11",
+            "file": "C11/wally.png",
+            "alt": "Wally Pockle beside its collection box.",
+            "world": "wally-coral-cove",
+            "composition": "Aligned tabletop pair in the character's home world.",
+            "status": "composition-review",
+            "toys": [
+                "wally.gloss-vinyl"
+            ],
+            "width": 1600,
+            "height": 1200,
+            "transparent": false
+        }
+    ]
+}

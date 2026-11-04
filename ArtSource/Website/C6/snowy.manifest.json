@@ -1,0 +1,14 @@
+{
+    "id": "C6",
+    "file": "C6/snowy.png",
+    "alt": "Snowy Pockle beside its collection box.",
+    "world": "snowy-snowdrop-meadow",
+    "composition": "Aligned tabletop pair in the character's home world.",
+    "status": "composition-review",
+    "toys": [
+        "snowy.matte-vinyl"
+    ],
+    "width": 1600,
+    "height": 1200,
+    "transparent": false
+}

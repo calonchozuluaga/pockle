@@ -1,0 +1,14 @@
+{
+    "id": "C5",
+    "file": "C5/coco.png",
+    "alt": "Coco Pockle beside its collection box.",
+    "world": "coco-cocoa-nook",
+    "composition": "Aligned tabletop pair in the character's home world.",
+    "status": "composition-review",
+    "toys": [
+        "coco.matte-vinyl"
+    ],
+    "width": 1600,
+    "height": 1200,
+    "transparent": false
+}

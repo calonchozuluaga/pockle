@@ -1,0 +1,14 @@
+{
+    "id": "SE2",
+    "file": "SE2/common.png",
+    "alt": "Wally in common finish.",
+    "world": "Studio lighting; collection reflection environment wally-coral-cove",
+    "composition": "Same pose and camera; transparent background.",
+    "status": "composition-review",
+    "toys": [
+        "wally.kelp-mint"
+    ],
+    "width": 1600,
+    "height": 1600,
+    "transparent": true
+}

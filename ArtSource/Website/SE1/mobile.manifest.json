@@ -1,0 +1,28 @@
+{
+    "id": "SE1",
+    "file": "SE1/mobile.png",
+    "alt": "All fifteen Wally Pockles arranged on a display, from common to secret.",
+    "world": "wally-pearl-grotto",
+    "composition": "Actual15 finishes on five ascending display rows; Pearl Grotto world.",
+    "status": "composition-review",
+    "toys": [
+        "wally.clear-jelly",
+        "wally.pearl-jelly",
+        "wally.confetti-gel",
+        "wally.mochi-foam",
+        "wally.velvet-flock",
+        "wally.boucle-plush",
+        "wally.matte-vinyl",
+        "wally.gloss-vinyl",
+        "wally.kelp-mint",
+        "wally.coated-metallic",
+        "wally.treasure-leaf",
+        "wally.rose-gold-shell",
+        "wally.glow-jelly",
+        "wally.diamond-frost",
+        "wally.molten-abyss"
+    ],
+    "width": 1080,
+    "height": 1350,
+    "transparent": false
+}

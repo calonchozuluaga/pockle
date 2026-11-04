@@ -1,0 +1,14 @@
+{
+    "id": "S2",
+    "file": "S2/open-epic.png",
+    "alt": "A Pockle box bursting open as a toy pops out.",
+    "world": "Studio lighting; collection reflection environment wally-coral-cove",
+    "composition": "Actual hinged carton sampled open with staged rising toy; editorial still, not a captured paid transaction.",
+    "status": "composition-review",
+    "toys": [
+        "wally.diamond-frost"
+    ],
+    "width": 1600,
+    "height": 1600,
+    "transparent": false
+}
