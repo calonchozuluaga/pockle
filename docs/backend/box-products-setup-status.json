@@ -12,15 +12,17 @@
     "apple_app": {
       "bundle_id": "com.playpockle.app",
       "state": "saved_owner_entered_credentials",
-      "reason": "Owner saved replacement IAP key; revalidation still reports valid format but invalid/incompatible key. Confirmed active Apple IAP key ID, matching issuer, and matching bundle metadata. Private key contents not inspected.",
+      "reason": "RevenueCat now displays Valid credentials for replacement IAP key; no key changes made by Codex.",
       "app_id": "appde6a12c13c",
       "app_store_connect_api_credentials": "valid_verified_in_dashboard",
-      "iap_credentials": "needs_attention",
+      "iap_credentials": "valid_verified_in_dashboard",
       "vendor_number_verified": true
     },
     "google_app": {
       "package_id": "com.playpockle.app",
-      "state": "not_created"
+      "state": "created_credentials_missing",
+      "app_id": "app57d44fc169",
+      "credentials_validated": false
     },
     "offering_id": "ofrng372375125a",
     "offering_packages_verified": 13,
@@ -146,17 +148,20 @@
       }
     },
     "google_app_record": {
-      "state": "prepared_owner_declarations_required",
+      "state": "created_verified",
       "developer_account": "Zulapp",
       "package_id": "com.playpockle.app",
       "package_availability_verified": true,
       "display_name": "Pockle: Little Toys Big Squish",
       "category": "Game",
       "pricing": "Free",
-      "app_created": false
+      "app_created": true,
+      "app_id": "4975391761406742908",
+      "production_access": "requires_closed_test_12_testers_14_continuous_days",
+      "current_closed_test_opt_ins": 0
     }
   },
   "credentials_handled": false,
   "production_payments_enabled": false,
-  "owner_request": "Complete Google Play Developer Program Policies and US export-law declarations, then Create app in prepared Chrome tab."
+  "owner_request": "Complete dedicated Pockle Google service account setup and upload JSON directly to RevenueCat Google app app57d44fc169; no private credentials in chat/Git."
 }
