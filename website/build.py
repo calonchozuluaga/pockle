@@ -69,66 +69,10 @@ def doc(path, title, description, colour, intro, sections, current=None, draft=T
 
 
 # ---------------------------------------------------------------- Home
-HOME = f"""
-<div class="hero"><div class="wrap">
-  <div>
-    <img class="wordmark" src="/assets/wordmark.png" alt="Pockle" width="330" height="118">
-    <h1>Squishy little toys you find by walking.</h1>
-    <p class="lede">Open surprise boxes, fill your shelf, squish your favourites, and trade spares with friends.</p>
-    <div class="stores"><span class="btn">Coming soon to iPhone and Android</span></div>
-  </div>
-  <div class="stage" aria-hidden="true">
-    <div class="halo"></div>
-    <img class="toy" src="/assets/toys/fox.webp" alt="" style="left:28%;top:16%;width:44%;--r:-3deg">
-    <img class="toy" src="/assets/toys/snowy.webp" alt="" style="left:2%;top:46%;width:27%;--r:4deg;animation-delay:-1.2s">
-    <img class="toy" src="/assets/toys/coco.webp" alt="" style="left:70%;top:44%;width:30%;--r:-4deg;animation-delay:-2.1s">
-    <img class="toy" src="/assets/toys/wally.webp" alt="" style="left:58%;top:4%;width:30%;--r:5deg;animation-delay:-.6s">
-    <img class="toy" src="/assets/toys/ginger.webp" alt="" style="left:4%;top:8%;width:24%;--r:3deg;animation-delay:-3s">
-  </div>
-</div></div>
+# The home page is hand-written in home/index.html (styles in assets/home/home.css, images in assets/home/,
+# re-exported from ArtSource/Website by home/build_assets.py). It is copied as is.
+HOME_SOURCE = ROOT / "home" / "index.html"
 
-<section><div class="wrap">
-  <div class="kicker">How it works</div>
-  <h2 class="section-title">Walk, open, collect, swap.</h2>
-  <div class="cards">
-    <div class="card"><div class="art" style="background-image:url(/assets/bg-tutorial3.webp)"><img src="/assets/box-wally.webp" alt="A Pockle collection box"></div>
-      <div class="body"><h3>Walk for free boxes</h3><p>Every 1,000 steps fills a box, and a new one is ready every few hours. No purchase needed.</p></div></div>
-    <div class="card"><div class="art" style="background-image:url(/assets/bg-tutorial1.webp)"><img src="/assets/toys/fox.webp" alt="A glossy fox toy"></div>
-      <div class="body"><h3>Fill your shelf</h3><p>Every toy has its own finish and personality. Squish jelly, spin vinyl, chase the rare golds, diamonds and secrets.</p></div></div>
-    <div class="card"><div class="art" style="background-image:url(/assets/bg-tutorial4.webp)"><img src="/assets/toys/coco.webp" alt="A cocoa cup toy"></div>
-      <div class="body"><h3>Trade with friends</h3><p>Swap spares toy-for-toy to finish a collection. Trades are made with taps, never money.</p></div></div>
-  </div>
-</div></section>
-
-<section style="padding-top:0"><div class="wrap">
-  <div class="kicker">Collections</div>
-  <h2 class="section-title">Eleven characters, dozens of finishes.</h2>
-  <div class="collections">
-    <figure><div class="tile" style="background:var(--jelly)"><img src="/assets/box-pip.webp" alt="Pip collection box"></div><figcaption>Pip</figcaption></figure>
-    <figure><div class="tile" style="background:var(--peach)"><img src="/assets/toys/fox.webp" alt="Fox"></div><figcaption>Fox</figcaption></figure>
-    <figure><div class="tile" style="background:var(--moon)"><img src="/assets/toys/wally.webp" alt="Wally the whale"></div><figcaption>Wally</figcaption></figure>
-    <figure><div class="tile" style="background:var(--mint)"><img src="/assets/toys/snowy.webp" alt="Snowy"></div><figcaption>Snowy</figcaption></figure>
-    <figure><div class="tile" style="background:var(--gold)"><img src="/assets/toys/ginger.webp" alt="Ginger"></div><figcaption>Ginger</figcaption></figure>
-    <figure><div class="tile" style="background:var(--fill)"><img src="/assets/toys/coco.webp" alt="Coco"></div><figcaption>Coco</figcaption></figure>
-  </div>
-</div></section>
-
-<section style="padding-top:0"><div class="wrap">
-  <div class="parents">
-    <div>
-      <div class="kicker" style="color:var(--jelly)">For parents</div>
-      <h2 style="font-size:34px">Made for players 13 and up.</h2>
-      <p>Pockle asks for a birthday before anyone can play and doesn't keep it. Players talk with preset reactions instead of open chat, and trades are toy-for-toy only.</p>
-    </div>
-    <ul>
-      <li>No open chat or free-text comments</li>
-      <li>Step counts only, never your location</li>
-      <li>Box odds shown before every box</li>
-      <li>Questions? {mail(SUPPORT)}</li>
-    </ul>
-  </div>
-</div></section>
-"""
 
 # ---------------------------------------------------------------- Privacy
 PRIV = [
@@ -258,7 +202,7 @@ def build():
     if OUT.exists():
         shutil.rmtree(OUT)
     shutil.copytree(ROOT / "assets", OUT / "assets")
-    page("", "Pockle · Squishy little toys you find by walking", "Open surprise boxes by walking, fill your shelf with squishy collectible toys, and trade spares with friends.", HOME)
+    shutil.copyfile(HOME_SOURCE, OUT / "index.html")
     doc("privacy", "Privacy Policy", "How Pockle collects, uses and protects your information.", "moon",
         f"Last updated {UPDATED}. This policy explains what {COMPANY} collects when you play Pockle, and why.", PRIV, "/privacy/")
     doc("terms", "Terms of Service", "The rules for playing Pockle.", "", f"Last updated {UPDATED}. The rules for playing Pockle.", TERMS, "/terms/")
