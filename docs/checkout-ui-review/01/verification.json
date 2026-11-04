@@ -1,0 +1,94 @@
+{
+  "result": "Passed",
+  "total": "77",
+  "passed": "77",
+  "failed": "0",
+  "skipped": "0",
+  "duration": "141.9114201",
+  "fixtures": [
+    {
+      "name": "BoxRevealUiTests",
+      "passed": "11",
+      "failed": "0",
+      "result": "Passed"
+    },
+    {
+      "name": "CheckoutUiTests",
+      "passed": "12",
+      "failed": "0",
+      "result": "Passed"
+    },
+    {
+      "name": "CollectionUiTests",
+      "passed": "27",
+      "failed": "0",
+      "result": "Passed"
+    },
+    {
+      "name": "OnboardingUiTests",
+      "passed": "9",
+      "failed": "0",
+      "result": "Passed"
+    },
+    {
+      "name": "WalkingBoxUiTests",
+      "passed": "9",
+      "failed": "0",
+      "result": "Passed"
+    },
+    {
+      "name": "WallyArtTests",
+      "passed": "2",
+      "failed": "0",
+      "result": "Passed"
+    },
+    {
+      "name": "WallyOwnerGrantTests",
+      "passed": "3",
+      "failed": "0",
+      "result": "Passed"
+    },
+    {
+      "name": "WallyPilotTests",
+      "passed": "2",
+      "failed": "0",
+      "result": "Passed"
+    },
+    {
+      "name": "WallyTests",
+      "passed": "2",
+      "failed": "0",
+      "result": "Passed"
+    }
+  ],
+  "unity": "6000.6.5f1",
+  "dimensions": [
+    1080,
+    2340
+  ],
+  "screens": [
+    "shop-collections",
+    "shop-mixes",
+    "loading-wally",
+    "ready-wally",
+    "ready-mix",
+    "waiting-for-store",
+    "payment-pending",
+    "delivery-pending",
+    "sold-out"
+  ],
+  "source_hashes": {
+    "Assets/Pockle/Runtime/UI/CheckoutView.cs": "988914ed0cea3a0336bdeb70207840ae385e9a1709cdc1702ab90ae54a5e1c8e",
+    "Assets/Pockle/Runtime/UI/CheckoutView.cs.meta": "d28a431972c59ea840d7879edb625cee8b2837edb183ba63a08046a9104da64e",
+    "Assets/Pockle/Runtime/PrototypeHud.Checkout.cs": "de368f2504ca6c981d4c6502ea12a2f2c3ff01ea57da0e48a850afa579d10a94",
+    "Assets/Pockle/Runtime/PrototypeHud.Checkout.cs.meta": "562770ebdec7737160c1b7dca5d5fd4460c930ad25b71ee4270b147cf6058865",
+    "Assets/Pockle/Tests/PlayMode/CheckoutUiTests.cs": "8d671f910650ef2bffa84215268ce394242960b5530c241c1efd225c39025374",
+    "Assets/Pockle/Tests/PlayMode/CheckoutUiTests.cs.meta": "8e8eef31e9c382bc3c9e5eb5f6a452843a28d07ac21cf4219fe456010f257927",
+    "Assets/Pockle/Runtime/PrototypeHud.Store.cs": "3648d435db6a8c4096dd7e38d562454b91b45ee81197b870fd849585206b5440",
+    "Assets/Pockle/Runtime/PrototypeHud.cs": "3a3a887cfb8aa09db3454fbf33e1f9728250876ea0d53fd420bdc8773c2ee63a"
+  },
+  "runtime_source_modified": false,
+  "real_purchase_tested": false,
+  "capture_marker": "POCKLE_CHECKOUT_CAPTURE_OK:9",
+  "capture_log_note": "Final capture exits0; Unity Search startup emits an unrelated SearchDatabase ArgumentOutOfRangeException. Do not describe capture log as error-free."
+}

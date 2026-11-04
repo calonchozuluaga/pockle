@@ -124,6 +124,9 @@ namespace Pockle.Runtime
             float w = Mathf.Min(width, 480);
             float y = LayoutWalkingCard(width) + 26;
             y += LayoutWalkRules(width, y); // UX-052
+            float launch = LayoutLaunchShop(width, y); // live checkout and the paid-box banner (Checkout partial)
+            if (launch > 0) y += launch + 12;
+            if (LaunchShopActive) { TopCentered(boxesRoot, Vector2.zero, new Vector2(width, y)); return y; }
             TopCentered(shopHeading, new Vector2(0, -y), new Vector2(w, 30));
             y += 42;
             const float cardHeight = 150, gap = 12;
