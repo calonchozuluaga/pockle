@@ -1,18 +1,15 @@
 using System;
 using System.IO;
 using UnityEditor;
-using UnityEditor.Android;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 
 namespace Pockle.Editor
 {
-    // First Play upload establishes the package. Checkout remains unavailable.
-    public sealed class PlayInternalBundleBuild : IPostGenerateGradleAndroidProject
+    // Internal purchase integration. Server policy keeps checkout unavailable until configured and verified.
+    public sealed class PlayInternalBundleBuild
     {
-        private static bool building;
-        public int callbackOrder => 100;
 
         public static void Build()
         {
@@ -28,19 +25,19 @@ namespace Pockle.Editor
             int originalCode = PlayerSettings.Android.bundleVersionCode;
             try
             {
-                building = true;
                 PlayerSettings.SetApplicationIdentifier(platform, "com.playpockle.app");
                 PlayerSettings.SetScriptingBackend(platform, ScriptingImplementation.IL2CPP);
                 PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
                 PlayerSettings.Android.minSdkVersion = AndroidSdkVersions.AndroidApiLevel26;
                 PlayerSettings.Android.targetSdkVersion = (AndroidSdkVersions)36;
-                PlayerSettings.Android.bundleVersionCode = 2;
+                PlayerSettings.Android.bundleVersionCode = 3;
                 // Owner signs a separate copy with their private upload key afterward.
                 PlayerSettings.Android.useCustomKeystore = false;
                 EditorUserBuildSettings.buildAppBundle = true;
                 EditorUserBuildSettings.exportAsGoogleAndroidProject = false;
-                string output = Path.GetFullPath("Builds/Pockle-Play-Internal-v2.debug-signed.aab");
+                string output = Path.GetFullPath("Builds/Pockle-Play-Internal-v3.debug-signed.aab");
                 Directory.CreateDirectory(Path.GetDirectoryName(output));
+                PockleAppIcon.Apply();
                 var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions {
                     scenes = new[] { PockleProjectSetup.ScenePath },
                     locationPathName = output, target = BuildTarget.Android,
@@ -52,7 +49,6 @@ namespace Pockle.Editor
             }
             finally
             {
-                building = false;
                 PlayerSettings.SetApplicationIdentifier(platform, originalId);
                 PlayerSettings.SetScriptingBackend(platform, originalBackend);
                 PlayerSettings.Android.targetArchitectures = originalArchitectures;
@@ -65,16 +61,5 @@ namespace Pockle.Editor
             }
         }
 
-        public void OnPostGenerateGradleAndroidProject(string path)
-        {
-            if (!building) return;
-            // A permission alone is classified by Play as obsolete AIDL billing.
-            // Include the supported library and its own manifest/version metadata.
-            // No BillingClient is started and checkout/delivery remain unavailable.
-            string gradle = Path.Combine(path, "build.gradle");
-            const string dependency = "implementation 'com.android.billingclient:billing:8.3.0'";
-            if (!File.ReadAllText(gradle).Contains(dependency))
-                File.AppendAllText(gradle, "\ndependencies { " + dependency + " }\n");
-        }
     }
 }

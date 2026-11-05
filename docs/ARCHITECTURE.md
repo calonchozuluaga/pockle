@@ -190,3 +190,6 @@ October22 Wally surface refinement: the molten shader derives bevel/grain normal
 
 
 October22 Wally golds: a GoldReflect branch, enabled for the three Rare Wally variants only, strengthens tinted environment Fresnel reflection and broad/strip studio highlights while retaining enough room fill for bright gold/rose pigment. Treasure Leaf keeps its irregular foil pattern and a less attenuated reflection layer. Other materials and handling remain separate. Native gold review: docs/wally-pilot-review/index.html?revision=3.
+
+## November 4 — internal paid-box boundary (UX-014)
+PaidBoxCheckoutService binds native RevenueCat offers/prices and Claude’s checkout/reveal contracts. SupabaseAccountService retains tokens and exposes only an authenticated function request/UUID. pockle-paid-boxes verifies account/session and RevenueCat purchase records; the service-only paid RPC stores each sandbox receipt and all child outcomes atomically. CollectionProgress savev5 adds PaidDeliveryIds; CollectionSession persists a candidate before exposing a cache update. This is sandbox-only, policy off until store setup; no production edition allocation or authoritative fusion/trading cutover. See backend/PAID_BOX_INTEGRATION.md for exact boundaries and outstanding acceptance.

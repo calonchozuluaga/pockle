@@ -24,6 +24,15 @@ namespace Pockle.Runtime
         private string lastDigest="";private float backupAt=-1;
         public string LastError { get;private set; }
         public bool IsSignedIn=>ready&&stored.session!=null;
+        public string UserId => IsSignedIn ? stored.session.user.id : null;
+        // Checkout uses the same verified account/session; tokens never leave this service.
+        public IEnumerator AuthorizedRequest(string function, string body, Action<string,bool> done)
+        {
+            if (function != "pockle-paid-boxes" || !IsSignedIn) { done(null,false); yield break; }
+            yield return RefreshIfNeeded();
+            if (!IsSignedIn) { done(null,false); yield break; }
+            yield return Send("/functions/v1/" + function, body, true, done);
+        }
         public string Username=>IsSignedIn?profile?.username:null;
         private static long Now=>DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         public void Initialize(CollectionSession session,Action initialized=null)

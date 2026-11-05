@@ -396,3 +396,7 @@ skip_nonce_check = false
 [functions.pockle-api]
 # handler authenticates the JWT through Auth and checks the live SQL session on every action.
 verify_jwt = false
+
+[functions.pockle-paid-boxes]
+# Auth and the live SQL session are independently verified inside the handler.
+verify_jwt = false

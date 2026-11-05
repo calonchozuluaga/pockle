@@ -47,6 +47,7 @@ FusionReviewSpareChecks.Run();
 PersistentFusionChecks.Run();
 BadgeRuntimeChecks.Run();
 MaterialTouchChecks.Run();
+            PaidDeliveryChecks.Run();
             return 0;
         }
         catch (Exception exception)

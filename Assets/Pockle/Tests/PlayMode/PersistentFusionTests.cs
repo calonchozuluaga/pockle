@@ -40,8 +40,8 @@ namespace Pockle.Tests
             var toy = new GameObject("Fused toy").AddComponent<JellyToy>(); toy.transform.SetParent(root.transform);
             foreach (var collection in ToyCatalog.Collections.Where(c => c.Id == c.CharacterId && c.Members.Any(FusionCatalog.IsSource)))
             {
-                string first = collection.Members.Single(id => ToyCatalog.TryGetCollectible(id, out var t) && t.FinishId == "gloss-vinyl");
-                string second = collection.Members.Single(id => ToyCatalog.TryGetCollectible(id, out var t) && t.FinishId == "coated-metallic");
+                string first = collection.Members.Single(id => id == collection.Id + ".gloss-vinyl");
+                string second = collection.Members.Single(id => id == collection.Id + ".coated-metallic");
                 Assert.IsTrue(service.TryFuse(second, first), collection.Id);
                 string id = session.Progress.Save.PendingFusionId;
                 Assert.IsTrue(FusionCatalog.TryGet(id, out var record));

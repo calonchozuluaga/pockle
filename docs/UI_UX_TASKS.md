@@ -281,3 +281,6 @@ Owner explicitly includes toy-for-toy trading in the first release and confirms 
 
 
 November 3 — UX-012 reveal validation: BoxRevealUiTests11/11 plus focused regression54/54 passed natively in pinned Unity6000.6.5f1 after an owner-approved single-parenthesis syntax fix. Portable core checks passed. Visual captures, phone acceptance and saved-delivery/restart runtime binding remain pending. UX-014 billing remains unfinished; these results do not establish paid delivery.
+
+### November4 — UX-014 sandbox implementation prepared, still in progress
+RevenueCat SDK/store-price adapter, private server sandbox delivery and v5 exactly-once local materialization implemented on codex/box-products. Approved icon integrated in Android code3. Native87/87, portable/source, Edge and SQL fixture checks passed. Not purchase-complete: Google products/editor access + Android offering mapping, Apple prices/metadata/key, owner signing/upload and actual two-phone sandbox/restart/refund acceptance remain. No production supply minting. Review checkout-ui-review/03/index.html; do not mark UX-014 complete.

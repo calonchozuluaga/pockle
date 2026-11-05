@@ -45,11 +45,18 @@
       "pockle.box.wally.v1": "prod81a369f035",
       "pockle.mix.3.v1": "prod09fcada320",
       "pockle.mix.5.v1": "prod1267706e02"
+    },
+    "google_products": {
+      "pockle.box.pip.v1": {
+        "rest_id": "prodd64cde1e61",
+        "type": "Consumable",
+        "store_status": "Published"
+      }
     }
   },
   "stores": {
     "apple_consumables_created": 13,
-    "google_consumables_created": 0,
+    "google_consumables_created": 13,
     "apple_app_record": {
       "state": "created_verified",
       "app_id": "6830781336",
@@ -163,16 +170,122 @@
       "app_id": "4975391761406742908",
       "production_access": "requires_closed_test_12_testers_14_continuous_days",
       "current_closed_test_opt_ins": 0,
-      "first_build": "corrected_v2_active_internal_release",
+      "first_build": "v3_active_internal_release",
       "internal_test_rollout": "active_available_to_internal_testers",
       "owner_added_as_internal_tester": true,
       "internal_test_list": "Pockle owner internal",
-      "internal_test_list_users": 1,
-      "active_version_code": 2,
-      "test_join_url": "https://play.google.com/apps/internaltest/4701639489141138394"
+      "internal_test_list_users": 2,
+      "active_version_code": 3,
+      "test_join_url": "https://play.google.com/apps/internaltest/4701639489141138394",
+      "license_test_group": "Pockle owner internal",
+      "license_test_group_users": 2,
+      "license_testing_saved_verified": true,
+      "release_id": 2
+    },
+    "google_products": {
+      "pockle.box.pip.v1": {
+        "state": "Active",
+        "purchase_option": "buy-v1",
+        "usd_price": "0.99",
+        "regions": 174
+      },
+      "pockle.box.fox.v1": {
+        "state": "Active",
+        "purchase_option": "buy-v1",
+        "usd_price": "0.99",
+        "regions": 174
+      },
+      "pockle.box.axolotl.v1": {
+        "state": "Active",
+        "purchase_option": "buy-v1",
+        "usd_price": "0.99",
+        "regions": 174
+      },
+      "pockle.box.firb.v1": {
+        "state": "Active",
+        "purchase_option": "buy-v1",
+        "usd_price": "0.99",
+        "regions": 174
+      },
+      "pockle.box.coco.v1": {
+        "state": "Active",
+        "purchase_option": "buy-v1",
+        "usd_price": "0.99",
+        "regions": 174
+      },
+      "pockle.box.snowy.v1": {
+        "state": "Active",
+        "purchase_option": "buy-v1",
+        "usd_price": "0.99",
+        "regions": 174
+      },
+      "pockle.box.ginger.v1": {
+        "state": "Active",
+        "purchase_option": "buy-v1",
+        "usd_price": "0.99",
+        "regions": 174
+      },
+      "pockle.box.reiny.v1": {
+        "state": "Active",
+        "purchase_option": "buy-v1",
+        "usd_price": "0.99",
+        "regions": 174
+      },
+      "pockle.box.guin.v1": {
+        "state": "Active",
+        "purchase_option": "buy-v1",
+        "usd_price": "0.99",
+        "regions": 174
+      },
+      "pockle.box.bundy.v1": {
+        "state": "Active",
+        "purchase_option": "buy-v1",
+        "usd_price": "0.99",
+        "regions": 174
+      },
+      "pockle.box.wally.v1": {
+        "state": "Active",
+        "purchase_option": "buy-v1",
+        "usd_price": "0.99",
+        "regions": 174
+      },
+      "pockle.mix.3.v1": {
+        "state": "Active",
+        "purchase_option": "buy-v1",
+        "usd_price": "2.49",
+        "regions": 174
+      },
+      "pockle.mix.5.v1": {
+        "state": "Active",
+        "purchase_option": "buy-v1",
+        "usd_price": "3.99",
+        "regions": 174
+      }
     }
   },
   "credentials_handled": false,
   "production_payments_enabled": false,
-  "owner_request": "Open internal-test join link on Android using carlos@zulapp.com, opt in and install from Play; device test still pending. Purchases remain unavailable."
+  "owner_request": "V3 signed by owner and published internally. All 13 Google products Active. RevenueCat Android mapping and actual license-test purchase remain; sandbox policy off.",
+  "runtime_integration": {
+    "state": "published_internal_sandbox_setup_incomplete",
+    "sdk": "RevenueCat Unity 10.0.0",
+    "billing_library": "9.1.0",
+    "save_version": 5,
+    "migration": "20261105033943_paid_box_sandbox_ledger",
+    "migration_applied": true,
+    "edge_function": "pockle-paid-boxes",
+    "edge_version": 1,
+    "policy_enabled": false,
+    "native_tests": {
+      "passed": 87,
+      "failed": 0,
+      "skipped": 0
+    },
+    "server_key_entered_by_owner": true,
+    "server_key_purchase_verification": false,
+    "google_products_created": true,
+    "android_offering_mapped": false,
+    "bundle": "/Users/calonchozulu/Desktop/pockle/Builds/Pockle-Play-Internal-v3.unsigned.aab",
+    "bundle_sha256": "7cc02ee00602fd7bf8fe2e5cb66569a62028693ee94db1d1ff686f075b311f90"
+  }
 }

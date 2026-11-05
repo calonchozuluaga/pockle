@@ -40,3 +40,6 @@ supabase/.branches/
 *.jks
 
 /revenuecat-key.json
+
+# Isolated Node tooling dependencies
+**/node_modules/

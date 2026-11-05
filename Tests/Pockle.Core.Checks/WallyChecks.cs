@@ -19,7 +19,7 @@ internal static class WallyChecks
         Check(c.Members.Take(9).All(id=>WallyCatalog.Tier(id)==ToyTier.Common)&&c.Members[14]==WallyCatalog.SpecialId,"Lineup groups tiers with molten last.");
         Check(!c.HasApprovedOdds,"Pilot art does not approve draw odds.");
         var legacy=new CollectionProgress(new CollectionSave{Version=4,Day=42,Inventory=new System.Collections.Generic.List<OwnedCollectible>{new OwnedCollectible(WallyCatalog.GlowId,7),new OwnedCollectible("wally.coated-metallic",5)}},42);
-        Check(legacy.GetOwnedCount(WallyCatalog.GlowId)==7&&legacy.GetOwnedCount("wally.coated-metallic")==5&&legacy.Save.Version==4,"Tier changes preserve legacy ownership without a save migration.");
+        Check(legacy.GetOwnedCount(WallyCatalog.GlowId)==7&&legacy.GetOwnedCount("wally.coated-metallic")==5&&legacy.Save.Version==CollectionProgress.SaveVersion,"Tier changes preserve legacy ownership through the current save migration.");
         Check(CharacterMotion.TryGetProfile("wally",out _),"Wally needs its own shelf idle.");
         foreach(WallyAction action in Enum.GetValues(typeof(WallyAction)))
         {

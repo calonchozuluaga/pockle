@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Pockle.Runtime
 {
-    /// <summary>Single persisted local collection; no payment can grant through this service.</summary>
+    /// <summary>Local collection cache; paid copies require an authenticated, already-saved server delivery.</summary>
     public sealed class CollectionSession : MonoBehaviour
     {
         private const string SaveKey = "pockle.collection.v1";
@@ -67,6 +67,8 @@ namespace Pockle.Runtime
                     && !PlayerPrefs.HasKey(SaveKey + ".before-v3")) PlayerPrefs.SetString(SaveKey + ".before-v3", json);
                 if (!readOnlySave && saved != null && saved.Version >= 1 && saved.Version < 4
                     && !PlayerPrefs.HasKey(SaveKey + ".before-v4")) PlayerPrefs.SetString(SaveKey + ".before-v4", json);
+                if (!readOnlySave && saved != null && saved.Version >= 1 && saved.Version < 5
+                    && !PlayerPrefs.HasKey(SaveKey + ".before-v5")) PlayerPrefs.SetString(SaveKey + ".before-v5", json);
                 if (saved != null && (saved.Version < 1 || saved.Version > CollectionProgress.SaveVersion))
                 {
                     // Do not overwrite a newer schema. Show its legacy snapshot without allowing rewards.
@@ -87,6 +89,26 @@ namespace Pockle.Runtime
         }
 
         /// <summary>Persistence can be replaced in tests; production always saves the complete candidate as one JSON value.</summary>
+        internal bool CommitPaidDelivery(string receipt, string product, IReadOnlyList<string> toys, Action<string> saveCandidate = null)
+        {
+            if (readOnlySave || Progress == null) return false;
+            string before = JsonUtility.ToJson(Progress.Save);
+            var candidate = new CollectionProgress(JsonUtility.FromJson<CollectionSave>(before), Today);
+            if (!candidate.ApplyPaidDelivery(receipt, product, toys)) return false;
+            try
+            {
+                string json = JsonUtility.ToJson(candidate.Save);
+                if (saveCandidate != null) saveCandidate(json);
+                else { PlayerPrefs.SetString(SaveKey, json); PlayerPrefs.Save(); }
+            }
+            catch (Exception)
+            {
+                PlayerPrefs.SetString(SaveKey, before);
+                return false;
+            }
+            Progress = candidate; dirty = false; Changed?.Invoke(); return true;
+        }
+
         internal bool CommitFusion(FusedToy result, Action<string> saveCandidate = null)
         {
             if (readOnlySave || Progress == null) return false;
