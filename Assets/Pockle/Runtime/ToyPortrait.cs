@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Pockle.Runtime
 {
-    /// <summary>One-time 256px renders, using the actual toy mesh and finish. No idle cameras.</summary>
+    /// <summary>One-time antialiased 512px renders, using the actual toy mesh and finish. No idle cameras.</summary>
     internal static class ToyPortrait
     {
         public static RenderTexture Render(PipVariant variant)
@@ -28,11 +28,11 @@ namespace Pockle.Runtime
                 var camera = cameraObject.GetComponent<Camera>(); camera.enabled = false;
                 camera.cullingMask = 1 << 30; camera.orthographic = true; camera.orthographicSize = 1.13f;
                 camera.clearFlags = CameraClearFlags.SolidColor; camera.backgroundColor = background;
-                camera.nearClipPlane = .1f; camera.farClipPlane = 10; camera.allowHDR = false; camera.allowMSAA = false;
+                camera.nearClipPlane = .1f; camera.farClipPlane = 10; camera.allowHDR = false; camera.allowMSAA = true;
                 camera.transform.localPosition = new Vector3(0, .18f, -5);
                 camera.transform.LookAt(root.transform.position + new Vector3(0, .05f, 0));
-                texture = new RenderTexture(256, 256, 16, RenderTextureFormat.ARGB32)
-                { name = "Shelf · " + id, filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Clamp };
+                texture = new RenderTexture(512, 512, 24, RenderTextureFormat.ARGB32)
+                { antiAliasing = 4, name = "Shelf · " + id, filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Clamp };
                 if (!texture.Create()) throw new System.InvalidOperationException("Cannot allocate shelf portrait.");
                 camera.targetTexture = texture; camera.Render(); camera.targetTexture = null;
                 return texture;
