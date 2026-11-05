@@ -30,12 +30,12 @@ namespace Pockle.Editor
                 PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
                 PlayerSettings.Android.minSdkVersion = AndroidSdkVersions.AndroidApiLevel26;
                 PlayerSettings.Android.targetSdkVersion = (AndroidSdkVersions)36;
-                PlayerSettings.Android.bundleVersionCode = 3;
+                PlayerSettings.Android.bundleVersionCode = 4;
                 // Owner signs a separate copy with their private upload key afterward.
                 PlayerSettings.Android.useCustomKeystore = false;
                 EditorUserBuildSettings.buildAppBundle = true;
                 EditorUserBuildSettings.exportAsGoogleAndroidProject = false;
-                string output = Path.GetFullPath("Builds/Pockle-Play-Internal-v3.debug-signed.aab");
+                string output = Path.GetFullPath("Builds/Pockle-Play-Internal-v4.debug-signed.aab");
                 Directory.CreateDirectory(Path.GetDirectoryName(output));
                 PockleAppIcon.Apply();
                 var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions {
