@@ -1,0 +1,20 @@
+{
+  "version_code": 4,
+  "package": "com.playpockle.app",
+  "unsigned_bundle": "/Users/calonchozulu/Desktop/pockle/Builds/Pockle-Play-Internal-v4.unsigned.aab",
+  "unsigned_bytes": 446641030,
+  "unsigned_sha256": "2b453fe04bf99a5952bad580bfdd5735c5d88aae0d7eb53e9fa2218a68094b6f",
+  "source_commit": "c18d00a9a4b74cb394484d290074223d39209f26",
+  "unsigned_payload_matches_debug_bundle": true,
+  "private_signing": "owner_pending",
+  "uploaded": false,
+  "manifest_verified": true,
+  "min_sdk": 26,
+  "target_sdk": 36,
+  "launch_mode": "singleTop",
+  "billing_library": "9.1.0",
+  "native_sdk_bridge_verified": true,
+  "contents_gallery_in_il2cpp_metadata": true,
+  "approved_packaged_icon_unchanged_from_v3": true,
+  "bundletool_validation": "passed"
+}
