@@ -233,17 +233,17 @@
       "app_id": "4975391761406742908",
       "production_access": "requires_closed_test_12_testers_14_continuous_days",
       "current_closed_test_opt_ins": 0,
-      "first_build": "v3_active_internal_release",
+      "first_build": "v4_active_internal_release",
       "internal_test_rollout": "active_available_to_internal_testers",
       "owner_added_as_internal_tester": true,
       "internal_test_list": "Pockle owner internal",
       "internal_test_list_users": 2,
-      "active_version_code": 3,
+      "active_version_code": 4,
       "test_join_url": "https://play.google.com/apps/internaltest/4701639489141138394",
       "license_test_group": "Pockle owner internal",
       "license_test_group_users": 2,
       "license_testing_saved_verified": true,
-      "release_id": 2
+      "release_id": 3
     },
     "google_products": {
       "pockle.box.pip.v1": {
@@ -328,7 +328,7 @@
   },
   "credentials_handled": false,
   "production_payments_enabled": false,
-  "owner_request": "Update v3 via Play internal track, reopen/sign in, test one Collection Box using explicit Google test card only. Verify reveal and restart. All13 Android products Published and offering mappings saved; sandbox enabled, production rejected. Server secret validity awaits actual account recovery.",
+  "owner_request": "Version4 Active and available internally: update through Google Play to test contents gallery and sharper portraits. Phone acceptance for new gallery remains pending. Use explicit Google test instruments only for purchases.",
   "runtime_integration": {
     "state": "internal_sandbox_ready_awaiting_native_purchase",
     "sdk": "RevenueCat Unity 10.0.0",
@@ -348,8 +348,8 @@
     "server_key_purchase_verification": false,
     "google_products_created": true,
     "android_offering_mapped": true,
-    "bundle": "/Users/calonchozulu/Desktop/pockle/Builds/Pockle-Play-Internal-v3.unsigned.aab",
-    "bundle_sha256": "7cc02ee00602fd7bf8fe2e5cb66569a62028693ee94db1d1ff686f075b311f90",
+    "bundle": "/Users/calonchozulu/Desktop/pockle/Builds/Pockle-Play-Internal-v4.signed.aab",
+    "bundle_sha256": "8eca020aa85a9bb83dd14b850b6ef08e74d5e75d2b45ebd27207ae037874e042",
     "saved_deliveries_before_owner_test": 0
   }
 }

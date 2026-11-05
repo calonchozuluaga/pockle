@@ -6,8 +6,8 @@
   "unsigned_sha256": "2b453fe04bf99a5952bad580bfdd5735c5d88aae0d7eb53e9fa2218a68094b6f",
   "source_commit": "c18d00a9a4b74cb394484d290074223d39209f26",
   "unsigned_payload_matches_debug_bundle": true,
-  "private_signing": "owner_pending",
-  "uploaded": false,
+  "private_signing": "owner_completed_verified",
+  "uploaded": true,
   "manifest_verified": true,
   "min_sdk": 26,
   "target_sdk": 36,
@@ -16,5 +16,22 @@
   "native_sdk_bridge_verified": true,
   "contents_gallery_in_il2cpp_metadata": true,
   "approved_packaged_icon_unchanged_from_v3": true,
-  "bundletool_validation": "passed"
+  "bundletool_validation": "passed",
+  "signed_bundle": "/Users/calonchozulu/Desktop/pockle/Builds/Pockle-Play-Internal-v4.signed.aab",
+  "signed_sha256": "8eca020aa85a9bb83dd14b850b6ef08e74d5e75d2b45ebd27207ae037874e042",
+  "signed_bytes": 446724732,
+  "signature_verified": true,
+  "public_upload_certificate_sha256": "DB:F6:4A:7A:48:13:89:5F:20:6C:49:3F:47:A7:DE:03:CB:63:AF:F5:47:0D:76:B1:08:F9:54:B8:EF:25:54:1A",
+  "signed_payload_identical_to_unsigned": true,
+  "play_artifact_version_verified": 4,
+  "internal_release_id": 3,
+  "published": true,
+  "internal_track_state": "Active",
+  "availability": "Available to internal testers",
+  "play_validation_errors": 0,
+  "play_validation_warnings": [
+    "missing_deobfuscation_file",
+    "missing_native_debug_symbols"
+  ],
+  "device_support_changed": false
 }
