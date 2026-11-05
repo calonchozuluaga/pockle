@@ -51,8 +51,71 @@
         "rest_id": "prodd64cde1e61",
         "type": "Consumable",
         "store_status": "Published"
+      },
+      "pockle.box.fox.v1": {
+        "rest_id": "prod354be79d81",
+        "type": "Consumable",
+        "store_status": "Published"
+      },
+      "pockle.box.axolotl.v1": {
+        "rest_id": "prod126c50611d",
+        "type": "Consumable",
+        "store_status": "Published"
+      },
+      "pockle.box.firb.v1": {
+        "rest_id": "prodb9b78f5a95",
+        "type": "Consumable",
+        "store_status": "Published"
+      },
+      "pockle.box.coco.v1": {
+        "rest_id": "prod255ce63a5b",
+        "type": "Consumable",
+        "store_status": "Published"
+      },
+      "pockle.box.snowy.v1": {
+        "rest_id": "prod2d6a6d43fe",
+        "type": "Consumable",
+        "store_status": "Published"
+      },
+      "pockle.box.ginger.v1": {
+        "rest_id": "prod8c59f3ec70",
+        "type": "Consumable",
+        "store_status": "Published"
+      },
+      "pockle.box.reiny.v1": {
+        "rest_id": "prodf16f29c212",
+        "type": "Consumable",
+        "store_status": "Published"
+      },
+      "pockle.box.guin.v1": {
+        "rest_id": "prodbe146dddf1",
+        "type": "Consumable",
+        "store_status": "Published"
+      },
+      "pockle.box.bundy.v1": {
+        "rest_id": "prodb908caa980",
+        "type": "Consumable",
+        "store_status": "Published"
+      },
+      "pockle.box.wally.v1": {
+        "rest_id": "prodf536fb2efc",
+        "type": "Consumable",
+        "store_status": "Published"
+      },
+      "pockle.mix.3.v1": {
+        "rest_id": "prod5595f6a9cf",
+        "type": "Consumable",
+        "store_status": "Published"
+      },
+      "pockle.mix.5.v1": {
+        "rest_id": "prodc396f8689c",
+        "type": "Consumable",
+        "store_status": "Published"
       }
-    }
+    },
+    "google_products_created": 13,
+    "google_products_mapped": 13,
+    "apple_mappings_preserved": 13
   },
   "stores": {
     "apple_consumables_created": 13,
@@ -265,9 +328,9 @@
   },
   "credentials_handled": false,
   "production_payments_enabled": false,
-  "owner_request": "V3 signed by owner and published internally. All 13 Google products Active. RevenueCat Android mapping and actual license-test purchase remain; sandbox policy off.",
+  "owner_request": "Update v3 via Play internal track, reopen/sign in, test one Collection Box using explicit Google test card only. Verify reveal and restart. All13 Android products Published and offering mappings saved; sandbox enabled, production rejected. Server secret validity awaits actual account recovery.",
   "runtime_integration": {
-    "state": "published_internal_sandbox_setup_incomplete",
+    "state": "internal_sandbox_ready_awaiting_native_purchase",
     "sdk": "RevenueCat Unity 10.0.0",
     "billing_library": "9.1.0",
     "save_version": 5,
@@ -275,7 +338,7 @@
     "migration_applied": true,
     "edge_function": "pockle-paid-boxes",
     "edge_version": 1,
-    "policy_enabled": false,
+    "policy_enabled": true,
     "native_tests": {
       "passed": 87,
       "failed": 0,
@@ -284,8 +347,9 @@
     "server_key_entered_by_owner": true,
     "server_key_purchase_verification": false,
     "google_products_created": true,
-    "android_offering_mapped": false,
+    "android_offering_mapped": true,
     "bundle": "/Users/calonchozulu/Desktop/pockle/Builds/Pockle-Play-Internal-v3.unsigned.aab",
-    "bundle_sha256": "7cc02ee00602fd7bf8fe2e5cb66569a62028693ee94db1d1ff686f075b311f90"
+    "bundle_sha256": "7cc02ee00602fd7bf8fe2e5cb66569a62028693ee94db1d1ff686f075b311f90",
+    "saved_deliveries_before_owner_test": 0
   }
 }
