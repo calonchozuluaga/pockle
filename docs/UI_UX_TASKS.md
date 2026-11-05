@@ -284,3 +284,7 @@ November 3 — UX-012 reveal validation: BoxRevealUiTests11/11 plus focused regr
 
 ### November4 — UX-014 sandbox implementation prepared, still in progress
 RevenueCat SDK/store-price adapter, private server sandbox delivery and v5 exactly-once local materialization implemented on codex/box-products. Approved icon integrated in Android code3. Native87/87, portable/source, Edge and SQL fixture checks passed. Not purchase-complete: Google products/editor access + Android offering mapping, Apple prices/metadata/key, owner signing/upload and actual two-phone sandbox/restart/refund acceptance remain. No production supply minting. Review checkout-ui-review/03/index.html; do not mark UX-014 complete.
+
+
+### November5 — UX-014 per-toy contents before purchase
+Owner-approved direct checkout HUD/contracts/test exception. Collection boxes and both mix packs now open an all-finishes gallery with real server per-box probabilities, portraits, names and rarity, ahead of Buy. All115 mix possibilities and10/15 collection rosters verified; malformed disclosure disables payment. Native54/54 focused UI regression +15/15 final checkout tests,9Deno security tests, local SQL and real transactional Supabase checks pass. Review checkout-ui-review/04/index.html. Android sandbox purchase/reveal onv3 previously owner-reported successful; this gallery and improved portraits still require a new phone build. UX-014 overall remains in progress (production ledger, iOS purchases and full restart/retry/refund acceptance outstanding).

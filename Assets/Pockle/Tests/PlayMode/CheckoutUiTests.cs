@@ -74,14 +74,30 @@ namespace Pockle.Tests
             }
         };
 
-        private CheckoutQuote WallyQuote(string id = "q1") => new CheckoutQuote
+        private static CheckoutQuote WithContents(CheckoutQuote quote)
+        {
+            foreach (var group in quote.Odds)
+            {
+                var contents = new System.Collections.Generic.List<CheckoutContentsItem>();
+                foreach (var row in group.Rows)
+                {
+                    var toys = ToyCatalog.Collectibles.Where(t => t.CollectionId == group.CollectionId && RarityLook.FromTier(t.Tier) == row.Tier).ToArray();
+                    foreach (var toy in toys) contents.Add(new CheckoutContentsItem { CollectibleId = toy.Id, Tier = row.Tier,
+                        WithinCollectionPercent = row.Percent / toys.Length, Percent = row.Percent / toys.Length * (group.CollectionPercent ?? 100) / 100 });
+                }
+                group.Contents = contents;
+            }
+            return quote;
+        }
+
+        private CheckoutQuote WallyQuote(string id = "q1") => WithContents(new CheckoutQuote
         {
             QuoteId = id, OfferId = "single." + wally, Kind = CheckoutOfferKind.CollectionBox, CollectionId = wally, LocalizedPrice = "0,99 €",
             Odds = new[] { new CheckoutOddsGroup { CollectionId = wally, Rows = new[] {
                 new CheckoutOddsRow { Tier = RarityTier.Common, Percent = 77.187 }, new CheckoutOddsRow { Tier = RarityTier.Rare, Percent = 15.4374 },
                 new CheckoutOddsRow { Tier = RarityTier.Epic, Percent = 6.0034 }, new CheckoutOddsRow { Tier = RarityTier.Secret, Percent = 1.3722, Remaining = 1598 } } } },
             Notes = new[] { "Common toys you're missing are a little more likely. Rare, Epic and Secret chances stay the same." }
-        };
+        });
 
         [UnityTest]
         public IEnumerator WithoutALiveCatalogTheLaunchLineupSaysComingSoonAndNothingIsSold()
@@ -175,7 +191,7 @@ namespace Pockle.Tests
             hud.SetCheckoutCatalog(Catalog()); yield return null;
             Named("Buy · Mystery Mix 3").onClick.Invoke(); yield return null;
             Assert.That(quotes.Last(), Is.EqualTo(("mix3", (string)null)), "a mix never sends a collection");
-            hud.ShowCheckoutQuote(new CheckoutQuote
+            hud.ShowCheckoutQuote(WithContents(new CheckoutQuote
             {
                 QuoteId = "m1", OfferId = "mix3", Kind = CheckoutOfferKind.MysteryMix, BoxCount = 3, LocalizedPrice = "2,49 €",
                 Odds = new[]
@@ -183,7 +199,7 @@ namespace Pockle.Tests
                     new CheckoutOddsGroup { CollectionId = wally, CollectionPercent = 50, Rows = new[] { new CheckoutOddsRow { Tier = RarityTier.Common, Percent = 100 } } },
                     new CheckoutOddsGroup { CollectionId = other, CollectionPercent = 50, Rows = new[] { new CheckoutOddsRow { Tier = RarityTier.Common, Percent = 100 } } }
                 }
-            }); yield return null;
+            })); yield return null;
             Assert.That(Texts, Has.Member("Mystery Mix · 3 boxes"));
             Assert.That(Texts, Has.Member(Wally + " · 50.0% of boxes")); Assert.That(Texts, Has.Member(Other + " · 50.0% of boxes"));
             Assert.That(Texts.Any(t => t.Contains("No guaranteed rare")), Is.True);
@@ -266,6 +282,67 @@ namespace Pockle.Tests
             Assert.That(closed.Last(), Is.EqualTo(((string)null, CheckoutState.LoadingQuote)));
         }
 
+        [UnityTest]
+        public IEnumerator TappingTheBoxShowsEveryFinishWithoutStartingPayment()
+        {
+            hud.SetCheckoutCatalog(Catalog()); yield return null;
+            int owned = session.Progress.Save.Inventory.Sum(i => i.Count);
+            Named("View contents · " + Wally).onClick.Invoke(); yield return null;
+            Assert.That(confirmed, Is.Empty);
+            Assert.That(hud.ShowCheckoutQuote(WallyQuote()), Is.True); yield return null;
+            Assert.That(root.GetComponentsInChildren<RectTransform>().Count(t => t.name.StartsWith("Possible toy · ")), Is.EqualTo(15));
+            Assert.That(Texts, Has.Member("All possible contents"));
+            Assert.That(Texts, Has.Member("Common"));
+            foreach (var item in WallyQuote().Odds[0].Contents)
+            {
+                Assert.That(Texts, Has.Member(ToyCatalog.Collectibles.First(t => t.Id == item.CollectibleId).FinishDisplayName));
+                Assert.That(Texts, Has.Member(item.PercentText + " per box"));
+            }
+            Assert.That(session.Progress.Save.Inventory.Sum(i => i.Count), Is.EqualTo(owned));
+            Assert.That(confirmed, Is.Empty, "browsing the contents never buys or grants a toy");
+        }
+
+        [UnityTest]
+        public IEnumerator MissingDuplicateOrMisleadingContentsNeverEnablePayment()
+        {
+            hud.SetCheckoutCatalog(Catalog()); yield return null;
+            Named("Buy · " + Wally).onClick.Invoke(); yield return null;
+            var quote = WallyQuote(); quote.Odds[0].Contents = new CheckoutContentsItem[0];
+            Assert.That(hud.ShowCheckoutQuote(quote), Is.False);
+            quote = WallyQuote(); var items = quote.Odds[0].Contents.ToArray(); items[1] = items[0]; quote.Odds[0].Contents = items;
+            Assert.That(hud.ShowCheckoutQuote(quote), Is.False);
+            quote = WallyQuote(); quote.Odds[0].Contents[0].Percent = double.NaN;
+            Assert.That(hud.ShowCheckoutQuote(quote), Is.False);
+            Assert.That(confirmed, Is.Empty);
+        }
+
+        [UnityTest]
+        public IEnumerator BothMixPacksDiscloseAll115PossibilitiesWithPerBoxOdds()
+        {
+            foreach (int count in new[] { 3, 5 })
+            {
+                hud.SetCheckoutCatalog(Catalog()); yield return null;
+                Named("View contents · Mystery Mix " + count).onClick.Invoke(); yield return null;
+                var groups = ToyCatalog.Collections.Where(c => c.Id != PipFusionStudies.CollectionId).Select(c => new CheckoutOddsGroup
+                {
+                    CollectionId = c.Id, CollectionPercent = 100.0 / 11,
+                    Rows = c.Id == "wally" ? new[] { new CheckoutOddsRow { Tier = RarityTier.Common, Percent = 88 },
+                        new CheckoutOddsRow { Tier = RarityTier.Rare, Percent = 8 }, new CheckoutOddsRow { Tier = RarityTier.Epic, Percent = 3 },
+                        new CheckoutOddsRow { Tier = RarityTier.Secret, Percent = 1 } } : new[] {
+                        new CheckoutOddsRow { Tier = RarityTier.Common, Percent = 99 }, new CheckoutOddsRow { Tier = RarityTier.Secret, Percent = 1 } }
+                }).ToArray();
+                var quote = WithContents(new CheckoutQuote { QuoteId = "mix" + count, OfferId = "mix" + count,
+                    Kind = CheckoutOfferKind.MysteryMix, BoxCount = count, LocalizedPrice = count == 3 ? "2,49 €" : "3,99 €", Odds = groups });
+                Assert.That(hud.ShowCheckoutQuote(quote), Is.True); yield return null;
+                Assert.That(root.GetComponentsInChildren<RectTransform>().Count(t => t.name.StartsWith("Possible toy · ")), Is.EqualTo(115));
+                Assert.That(Texts, Has.Member("Possible contents · odds per box"));
+                Assert.That(root.GetComponentsInChildren<RawImage>().Where(i => i.name == "Contents portrait").Count(i => i.texture != null), Is.LessThan(10), "Only visible thumbnails render");
+                Assert.That(quote.Odds.SelectMany(g => g.Contents).Sum(i => i.Percent), Is.EqualTo(100).Within(.00001));
+                Assert.That(confirmed, Is.Empty);
+                hud.GoBack(); yield return null;
+            }
+        }
+
         [Test]
         public void OddsTextIsInvariantAndOneInOnlyForSmallChances()
         {
@@ -274,6 +351,7 @@ namespace Pockle.Tests
             Assert.That(new CheckoutOddsRow { Percent = 1.3722 }.OneInText, Is.EqualTo("about 1 in 73"));
             Assert.That(new CheckoutOddsRow { Percent = 15 }.OneInText, Is.Null);
             Assert.That(new CheckoutOddsRow { Percent = 0 }.PercentText, Is.EqualTo("0%"));
+            Assert.That(new CheckoutContentsItem { Percent = .0001 }.PercentText, Is.EqualTo("<0.01%"));
         }
     }
 }

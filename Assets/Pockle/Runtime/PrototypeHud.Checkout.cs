@@ -177,6 +177,8 @@ namespace Pockle.Runtime
             ToyCatalog.TryGetCollection(offer.CollectionId, out var collection);
             Color field = PockleTheme.CollectionField(offer.CollectionId, out Color ink, out _);
             var tile = Rect(collection.DisplayName + " · offer", launchShop); LeftLabel(tile, position, size); Card(tile, field);
+            var tap = tile.gameObject.AddComponent<Button>(); tap.transition = Selectable.Transition.None; tap.interactable = offer.Buyable && !offer.ComingSoon;
+            tap.onClick.AddListener(() => OpenCheckout(offer)); tap.name = "View contents · " + collection.DisplayName;
             var art = Rect("Box", tile); art.anchorMin = art.anchorMax = art.pivot = new Vector2(.5f, 1);
             var texture = CollectionLook.Box(collection, out float aspect);
             var raw = art.gameObject.AddComponent<RawImage>(); raw.texture = texture; raw.raycastTarget = false; raw.color = texture != null ? Color.white : Color.clear;
@@ -201,6 +203,8 @@ namespace Pockle.Runtime
         {
             int count = Mathf.Max(1, offer.BoxCount);
             var card = Rect("Mystery Mix " + count + " · offer", launchShop); LeftLabel(card, position, size); Card(card, PockleTheme.Confetti);
+            var tap = card.gameObject.AddComponent<Button>(); tap.transition = Selectable.Transition.None; tap.interactable = offer.Buyable && !offer.ComingSoon;
+            tap.onClick.AddListener(() => OpenCheckout(offer)); tap.name = "View contents · Mystery Mix " + count;
             // A small fanned stack of real collection boxes (1024px renders): the mix's "any collection" picture.
             var fan = new List<Texture2D>();
             foreach (var c in ToyCatalog.Collections)
@@ -359,7 +363,7 @@ namespace Pockle.Runtime
             ClearCheckoutOdds();
             float w = checkoutOdds.rect.width, y = 0;
             bool mix = quote.Kind == CheckoutOfferKind.MysteryMix;
-            y = OddsLine(mix ? "Odds for each box" : "Odds for this box", PockleTheme.BodySize, FontStyle.Bold, Ink, w, y, 26);
+            y = OddsLine(mix ? "Possible contents · odds per box" : "All possible contents", PockleTheme.BodySize, FontStyle.Bold, Ink, w, y, 26);
             if (mix) y = OddsLine("Each box picks a collection first, then a toy using that collection's odds.", PockleTheme.SmallSize, FontStyle.Normal, MutedInk, w, y, 36);
             foreach (var group in quote.Odds)
             {
@@ -369,14 +373,39 @@ namespace Pockle.Runtime
                     if (group.CollectionPercent.HasValue) head += " · " + new CheckoutOddsRow { Percent = group.CollectionPercent.Value }.PercentText + " of boxes";
                     y = OddsLine(head, PockleTheme.CaptionSize, FontStyle.Bold, Ink, w, y + 6, 22);
                 }
+                for (int i = 0; i < group.Contents.Count; i++)
+                    BuildCheckoutContentsTile(group.Contents[i], w, y, i);
+                y += Mathf.CeilToInt(group.Contents.Count / 2f) * 198 + 8;
+                y = OddsLine(mix ? "Rarity odds within this collection" : "Rarity odds", PockleTheme.CaptionSize, FontStyle.Bold, Ink, w, y, 24);
                 foreach (var row in group.Rows) y = OddsRow(row, w, y);
             }
             if (quote.Notes != null)
                 foreach (var note in quote.Notes) if (!string.IsNullOrEmpty(note)) y = OddsLine(note, PockleTheme.SmallSize, FontStyle.Normal, MutedInk, w, y + 6, 36);
-            y = OddsLine("These are the odds for this purchase right now. They change as copies run out. Extras become spares for fusing or trading.",
+            y = OddsLine("Chances shown are per box and rounded. Each box draws independently; repeats are possible. Extras stay as spares for fusing or trading.",
                 PockleTheme.SmallSize, FontStyle.Normal, MutedInk, w, y + 8, 52);
             checkoutOddsContent.sizeDelta = new Vector2(0, y);
             checkoutOddsContent.anchoredPosition = Vector2.zero;
+        }
+
+        private void BuildCheckoutContentsTile(CheckoutContentsItem item, float w, float y, int index)
+        {
+            if (!ToyCatalog.TryGetCollectible(item.CollectibleId, out var toy)) return;
+            float width = (w - 10) / 2;
+            var tile = Rect("Possible toy · " + item.CollectibleId, checkoutOddsContent);
+            LeftLabel(tile, new Vector2((index % 2) * (width + 10), -(y + index / 2 * 198)), new Vector2(width, 188));
+            Surface(tile, PockleTheme.Fill, 16);
+            var picture = Rect("Contents portrait", tile);
+            LeftLabel(picture, new Vector2((width - 100) / 2, -4), new Vector2(100, 100));
+            var raw = picture.gameObject.AddComponent<RawImage>(); raw.raycastTarget = false;
+            raw.color = Color.clear;
+            picture.gameObject.AddComponent<CheckoutContentsPortrait>().Initialize(item.CollectibleId, checkoutOdds, raw, CutoutPortrait);
+            var name = Label(toy.FinishDisplayName, tile, PockleTheme.CaptionSize, Ink, FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
+            name.horizontalOverflow = HorizontalWrapMode.Wrap;
+            LeftLabel(name.rectTransform, new Vector2(6, -104), new Vector2(width - 12, 36));
+            var rarity = Label(item.Tier == RarityTier.Common ? "Common" : RarityLook.Words(item.Tier), tile, PockleTheme.SmallSize, MutedInk, FontStyle.Normal, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
+            LeftLabel(rarity.rectTransform, new Vector2(6, -140), new Vector2(width - 12, 18));
+            var chance = Label(item.PercentText + " per box", tile, PockleTheme.CaptionSize, Ink, FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
+            LeftLabel(chance.rectTransform, new Vector2(6, -160), new Vector2(width - 12, 22));
         }
 
         private float OddsLine(string text, int size, FontStyle style, Color colour, float w, float y, float h)
@@ -395,7 +424,7 @@ namespace Pockle.Runtime
             var look = RarityLook.For(row.Tier, row.Tier == RarityTier.Secret, RarityLook.Words(row.Tier));
             var dot = Rect("Tier", line); dot.anchorMin = dot.anchorMax = dot.pivot = new Vector2(0, .5f); dot.anchoredPosition = new Vector2(10, 0); dot.sizeDelta = new Vector2(12, 12);
             Surface(dot, row.Tier == RarityTier.Common ? PockleTheme.FillDeep : look.Fill, 6);
-            var tier = Label(RarityLook.Words(row.Tier), line, PockleTheme.CaptionSize, Ink, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
+            var tier = Label(row.Tier == RarityTier.Common ? "Common" : RarityLook.Words(row.Tier), line, PockleTheme.CaptionSize, Ink, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
             LeftLabel(tier.rectTransform, new Vector2(30, 0), new Vector2(w * .35f, h - 4));
             string detail = row.OneInText ?? "";
             if (row.Remaining.HasValue) detail = (detail.Length > 0 ? detail + " · " : "") + row.Remaining.Value.ToString("N0", CultureInfo.InvariantCulture) + " left";

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using Pockle.Core;
 
 namespace Pockle.Runtime
 {
@@ -90,6 +91,15 @@ namespace Pockle.Runtime
         public string OneInText => Percent > 0 && Percent < 5 ? "about 1 in " + Math.Round(100 / Percent).ToString("N0", CultureInfo.InvariantCulture) : null;
     }
 
+    /// <summary>One eligible finish. Percent is its unconditional chance per box, including mix collection selection.</summary>
+    public sealed class CheckoutContentsItem
+    {
+        public string CollectibleId;
+        public RarityTier Tier;
+        public double Percent, WithinCollectionPercent;
+        public string PercentText => Percent > 0 && Percent < .01 ? "<0.01%" : new CheckoutOddsRow { Percent = Percent }.PercentText;
+    }
+
     /// <summary>A collection's odds. For a Mystery Mix, <see cref="CollectionPercent"/> is the chance each box picks it.</summary>
     public sealed class CheckoutOddsGroup
     {
@@ -97,6 +107,7 @@ namespace Pockle.Runtime
         /// <summary>Mystery Mix only: chance each box picks this collection. Null for a Collection Box.</summary>
         public double? CollectionPercent;
         public IReadOnlyList<CheckoutOddsRow> Rows = Array.Empty<CheckoutOddsRow>();
+        public IReadOnlyList<CheckoutContentsItem> Contents = Array.Empty<CheckoutContentsItem>();
     }
 
     /// <summary>The server's accepted quote: the only source for the prices and odds shown before paying.</summary>
@@ -119,7 +130,35 @@ namespace Pockle.Runtime
             get
             {
                 if (string.IsNullOrEmpty(QuoteId) || string.IsNullOrEmpty(LocalizedPrice) || Odds == null || Odds.Count == 0) return false;
-                foreach (var group in Odds) if (group == null || group.Rows == null || group.Rows.Count == 0) return false;
+                var ids = new HashSet<string>(StringComparer.Ordinal);
+                double total = 0, collectionTotal = 0;
+                foreach (var group in Odds)
+                {
+                    if (group == null || group.Rows == null || group.Rows.Count == 0 || group.Contents == null || group.Contents.Count == 0) return false;
+                    double factor = Kind == CheckoutOfferKind.MysteryMix ? group.CollectionPercent.GetValueOrDefault() / 100 : 1;
+                    if (!(factor > 0 && factor <= 1) || (Kind == CheckoutOfferKind.CollectionBox && group.CollectionId != CollectionId)) return false;
+                    collectionTotal += factor;
+                    double conditional = 0, tierTotal = 0;
+                    var tiers = new HashSet<RarityTier>();
+                    foreach (var item in group.Contents)
+                    {
+                        if (item == null || !ids.Add(item.CollectibleId ?? "") || !ToyCatalog.TryGetCollectible(item.CollectibleId, out var toy)
+                            || toy.CollectionId != group.CollectionId || RarityLook.FromTier(toy.Tier) != item.Tier
+                            || !(item.Percent > 0 && item.Percent <= 100) || !(item.WithinCollectionPercent > 0 && item.WithinCollectionPercent <= 100)
+                            || Math.Abs(item.Percent - item.WithinCollectionPercent * factor) > .00001) return false;
+                        conditional += item.WithinCollectionPercent; total += item.Percent;
+                    }
+                    foreach (var row in group.Rows)
+                    {
+                        if (row == null || !tiers.Add(row.Tier) || !(row.Percent >= 0 && row.Percent <= 100)) return false;
+                        double sum = 0;
+                        foreach (var item in group.Contents) if (item.Tier == row.Tier) sum += item.WithinCollectionPercent;
+                        if (Math.Abs(sum - row.Percent) > .00001) return false;
+                        tierTotal += row.Percent;
+                    }
+                    if (Math.Abs(conditional - 100) > .00001 || Math.Abs(tierTotal - 100) > .00001) return false;
+                }
+                if (Math.Abs(total - 100) > .00001 || Math.Abs(collectionTotal - 1) > .00001) return false;
                 return Kind != CheckoutOfferKind.CollectionBox || !string.IsNullOrEmpty(CollectionId);
             }
         }

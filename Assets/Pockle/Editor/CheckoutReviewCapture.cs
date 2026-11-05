@@ -16,7 +16,7 @@ namespace Pockle.Editor
     public static class CheckoutReviewCapture
     {
         private const string ActiveKey = "Pockle.CheckoutReview.Active";
-        private static readonly string[] FixtureShots = { "shop-collections", "shop-mixes", "loading-wally", "ready-wally", "waiting-for-store", "payment-pending", "delivery-pending", "sold-out", "ready-mix" };
+        private static readonly string[] FixtureShots = { "shop-collections", "shop-mixes", "loading-wally", "ready-wally", "waiting-for-store", "payment-pending", "delivery-pending", "sold-out", "ready-mix", "mix-last-contents", "wally-secret" };
         private static bool ComingSoon => SessionState.GetBool(ActiveKey + ".ComingSoon", false);
         private static string[] Shots => ComingSoon ? new[] { "coming-soon-collections", "coming-soon-more-collections", "coming-soon-mixes" } : FixtureShots;
         private static PrototypeHud hud;
@@ -176,13 +176,26 @@ namespace Pockle.Editor
             if (shot == 5) { hud.SetCheckoutState("review-wally", CheckoutState.PaymentPending); return; }
             if (shot == 6) { hud.SetCheckoutState("review-wally", CheckoutState.DeliveryPending); return; }
             if (shot == 7) { hud.SetCheckoutState("review-wally", CheckoutState.SoldOut); return; }
+            if (shot == 9)
+            {
+                var odds = Field<RectTransform>("checkoutOddsContent");
+                odds.anchoredPosition = new Vector2(0, Mathf.Max(0, odds.rect.height - Field<RectTransform>("checkoutOdds").rect.height)); return;
+            }
+            if (shot == 10)
+            {
+                hud.GoBack(); Button("Buy · Wally").onClick.Invoke(); hud.ShowCheckoutQuote(WallyQuote());
+                Field<RectTransform>("checkoutOddsContent").anchoredPosition = new Vector2(0, 26 + 7 * 198); return;
+            }
             hud.GoBack(); Button("Buy · Mystery Mix 3").onClick.Invoke();
-            hud.ShowCheckoutQuote(new CheckoutQuote
+            hud.ShowCheckoutQuote(WithContents(new CheckoutQuote
             {
                 QuoteId = "review-mix", OfferId = "review-mix3", Kind = CheckoutOfferKind.MysteryMix, BoxCount = 3, LocalizedPrice = "2,49 €",
-                Odds = new[] { new CheckoutOddsGroup { CollectionId = "wally", CollectionPercent = 50, Rows = WallyQuote().Odds[0].Rows },
-                    new CheckoutOddsGroup { CollectionId = "pip", CollectionPercent = 50, Rows = new[] { new CheckoutOddsRow { Tier = RarityTier.Common, Percent = 100 } } } }
-            });
+                Odds = ToyCatalog.Collections.Where(c => c.Id != PipFusionStudies.CollectionId).OrderBy(c => c.Id == "wally" ? 0 : 1).Select(c => new CheckoutOddsGroup
+                {
+                    CollectionId = c.Id, CollectionPercent = 100.0 / 11,
+                    Rows = c.Id == "wally" ? WallyQuote().Odds[0].Rows : new[] { new CheckoutOddsRow { Tier = RarityTier.Common, Percent = 99 }, new CheckoutOddsRow { Tier = RarityTier.Secret, Percent = 1 } }
+                }).ToArray()
+            }));
         }
 
         private static CheckoutCatalog Catalog() => new CheckoutCatalog
@@ -197,13 +210,29 @@ namespace Pockle.Editor
             }
         };
 
-        private static CheckoutQuote WallyQuote() => new CheckoutQuote
+        private static CheckoutQuote WithContents(CheckoutQuote quote)
+        {
+            foreach (var group in quote.Odds)
+            {
+                var contents = new System.Collections.Generic.List<CheckoutContentsItem>();
+                foreach (var row in group.Rows)
+                {
+                    var toys = ToyCatalog.Collectibles.Where(t => t.CollectionId == group.CollectionId && RarityLook.FromTier(t.Tier) == row.Tier).ToArray();
+                    foreach (var toy in toys) contents.Add(new CheckoutContentsItem { CollectibleId = toy.Id, Tier = row.Tier,
+                        WithinCollectionPercent = row.Percent / toys.Length, Percent = row.Percent / toys.Length * (group.CollectionPercent ?? 100) / 100 });
+                }
+                group.Contents = contents;
+            }
+            return quote;
+        }
+
+        private static CheckoutQuote WallyQuote() => WithContents(new CheckoutQuote
         {
             QuoteId = "review-wally", OfferId = "review-single", Kind = CheckoutOfferKind.CollectionBox, CollectionId = "wally", LocalizedPrice = "0,99 €",
             Odds = new[] { new CheckoutOddsGroup { CollectionId = "wally", Rows = new[] {
-                new CheckoutOddsRow { Tier = RarityTier.Common, Percent = 77.187 }, new CheckoutOddsRow { Tier = RarityTier.Rare, Percent = 15.4374 },
-                new CheckoutOddsRow { Tier = RarityTier.Epic, Percent = 6.0034 }, new CheckoutOddsRow { Tier = RarityTier.Secret, Percent = 1.3722, Remaining = 1598 } } } },
-            Notes = new[] { "Common toys you're missing are a little more likely. Rare, Epic and Secret chances stay the same." }
-        };
+                new CheckoutOddsRow { Tier = RarityTier.Common, Percent = 88 }, new CheckoutOddsRow { Tier = RarityTier.Rare, Percent = 8 },
+                new CheckoutOddsRow { Tier = RarityTier.Epic, Percent = 3 }, new CheckoutOddsRow { Tier = RarityTier.Secret, Percent = 1 } } } },
+            Notes = new[] { "Internal sandbox fixture. No completion boost is applied." }
+        });
     }
 }

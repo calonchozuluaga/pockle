@@ -13,7 +13,8 @@ namespace Pockle.Runtime
         [Serializable] private sealed class Status { public bool available; public string environment=""; }
         [Serializable] private sealed class ProductPayload { public string product_id; }
         [Serializable] private sealed class Row { public int tier; public double percent; }
-        [Serializable] private sealed class Group { public string collection_id; public double collection_percent; public Row[] rows; }
+        [Serializable] private sealed class Content { public string collectible_id; public int tier; public double percent,within_collection_percent; }
+        [Serializable] private sealed class Group { public string collection_id; public double collection_percent; public Row[] rows; public Content[] contents; }
         [Serializable] private sealed class Quote { public string quote_id,product_id,collection_id; public int box_count; public Group[] odds; public string[] notes; }
         [Serializable] private sealed class Item { public string collectible_id,collection_id; public int tier; public bool is_new; }
         [Serializable] private sealed class Delivery { public string receipt_id,product_id; public Item[] items; public int revealed; public bool finished; }
@@ -135,7 +136,10 @@ namespace Pockle.Runtime
             {
                 var rows=new List<CheckoutOddsRow>();
                 if(group.rows!=null)foreach(var row in group.rows)rows.Add(new CheckoutOddsRow{Tier=RarityLook.FromTier((ToyTier)row.tier),Percent=row.percent});
-                groups.Add(new CheckoutOddsGroup{CollectionId=group.collection_id,CollectionPercent=policy.CollectionId==null?(double?)group.collection_percent:null,Rows=rows});
+                var contents=new List<CheckoutContentsItem>();
+                if(group.contents!=null)foreach(var item in group.contents)contents.Add(new CheckoutContentsItem{CollectibleId=item.collectible_id,
+                    Tier=RarityLook.FromTier((ToyTier)item.tier),Percent=item.percent,WithinCollectionPercent=item.within_collection_percent});
+                groups.Add(new CheckoutOddsGroup{CollectionId=group.collection_id,CollectionPercent=policy.CollectionId==null?(double?)group.collection_percent:null,Rows=rows,Contents=contents});
             }
             var view=new CheckoutQuote{QuoteId=q.quote_id,OfferId=product,CollectionId=q.collection_id,BoxCount=q.box_count,
                 Kind=policy.CollectionId==null?CheckoutOfferKind.MysteryMix:CheckoutOfferKind.CollectionBox,

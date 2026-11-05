@@ -705,3 +705,7 @@ Final Android code3 build succeeded, native RevenueCat core/Unity bridge/account
 
 ### November 4 — reveal portrait quality
 Actual model cache increased256→512px with4xMSAA. Native before/after Fox Mochi/Gloss and Pip captures completed; review docs/reveal-portrait-review/01/index.html.17/17 focused graphics PlayMode tests (BoxRevealUiTests and PersistentFusionTests), portable suite and source checks passed. No HUD edits. Phone build not yet updated. Portrait CPU texture budget256KiB→1MiB per cached toy; transient render targets freed as before.
+
+
+### November5 — pre-purchase contents disclosure
+Native graphics54/54 (CheckoutUiTests, BoxRevealUiTests, CollectionUiTests), zero skipped/failed, /private/tmp/pockle-contents-tests.xml. Final Common tile label covered by15/15 checkout tests, /private/tmp/pockle-contents-final-tests.xml; final common summary label is a display-only follow-up inspected in capture. Nine Deno handler tests and local Postgres checks pass. Real Supabase rollback fixtures cover all13 products, complete eligible lists, exact per-tier/collection/per-box probabilities and100% totals, no awards, real-session rejection and private RPC. Applied migration20261105143457, Edge ACTIVEv3; unauthenticated quote401. Native11 portrait UI fixture captures reviewed, including115-item mix and Wally Secret. Unity Editor QuickSearch startup reports its own index exception; capture executes and exits0, no runtime/gallery exception observed. No phone build, new-gallery purchase or hosted CI claimed.

@@ -10,7 +10,7 @@ let sql=await fs.readFile(new URL('../../supabase/migrations/20261105033943_paid
 const start=sql.indexOf('-- Preserve the existing legacy backup contract');const seed=sql.indexOf('insert into pockle_private.paid_box_finishes',start);
 sql=sql.slice(0,start)+sql.slice(seed);
 await pg.exec(sql);
-await pg.exec(await fs.readFile(new URL('../../supabase/migrations/20261105141903_paid_box_contents_quote.sql',import.meta.url),'utf8'));
+await pg.exec(await fs.readFile(new URL('../../supabase/migrations/20261105143457_paid_box_contents_quote.sql',import.meta.url),'utf8'));
 await pg.exec(`insert into pockle_private.players(id) values('11111111-1111-4111-8111-111111111111'),('22222222-2222-4222-8222-222222222222');`);
 const a='11111111-1111-4111-8111-111111111111',b='22222222-2222-4222-8222-222222222222';
 async function call(action,payload={},uid=a){return(await pg.query('select public.pockle_paid_box_api($1::uuid,$1::uuid,$2,$3::jsonb) as result',[uid,action,JSON.stringify(payload)])).rows[0].result;}
