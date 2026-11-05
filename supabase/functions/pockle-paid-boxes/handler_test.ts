@@ -46,3 +46,16 @@ Deno.test('unknown actions and invalid product IDs never reach grant RPC',async(
  assert((await handlePaid(req('quote',{product_id:'pockle.retired.box'}),env,mock({},log))).status===400);
  assert(!log.some(c=>c.action==='deliver'));
 });
+
+Deno.test('quote contents come only from the authenticated server quote RPC',async()=>{
+ let quoted=false;
+ const response=await handlePaid(req('quote',{product_id:'pockle.box.fox.v1',contents:[{collectible_id:'forged',percent:100}]}),env,async(input,init)=>{
+  if(String(input).endsWith('/auth/v1/user'))return Response.json(user);
+  const b=JSON.parse(String(init?.body));assert(b.actor===uid&&b.session_id===sid);
+  if(b.action==='status')return Response.json({available:true});
+  assert(String(input).endsWith('/rpc/pockle_paid_box_quote'));
+  assert(JSON.stringify(b.payload)===JSON.stringify({product_id:'pockle.box.fox.v1'}));quoted=true;
+  return Response.json({quote_id:'server',odds:[{contents:[{collectible_id:'fox.mochi-foam',percent:11}]}]});
+ });
+ assert(response.status===200&&quoted);const result=await response.json();assert(result.odds[0].contents[0].percent===11);
+});

@@ -18,7 +18,8 @@ export async function handlePaid(req: Request,env: Env,request: typeof fetch=fet
   if(!['status','quote','recover','progress'].includes(action as string))return reply({error:'invalid_action'},400);
   const payload=body.payload as Record<string,unknown>??{};
   async function rpc(action: string,payload: unknown) {
-   const result=await request(env.url+'/rest/v1/rpc/pockle_paid_box_api',{method:'POST',headers:{apikey:env.service,Authorization:'Bearer '+env.service,'Content-Type':'application/json'},
+   const endpoint=action==='quote'?'pockle_paid_box_quote':'pockle_paid_box_api';
+   const result=await request(env.url+'/rest/v1/rpc/'+endpoint,{method:'POST',headers:{apikey:env.service,Authorization:'Bearer '+env.service,'Content-Type':'application/json'},
     body:JSON.stringify({actor:user.id,session_id:sid,action,payload}),signal:AbortSignal.timeout(20000)});
    if(!result.ok)throw Error('delivery_unavailable');
    return await result.json();
