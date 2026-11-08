@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace Pockle.Runtime
@@ -14,17 +15,40 @@ namespace Pockle.Runtime
 #if UNITY_ANDROID && !UNITY_EDITOR
                 if (!HasPermission()) started = false;
                 return started && !Failed;
+#elif UNITY_IOS && !UNITY_EDITOR
+                return !Failed && PockleStepsState() == 2;
 #else
                 return false;
 #endif
             }
         }
-        public string Status { get; private set; } = "Walking is available on supported Android phones.";
+        public string Status { get; private set; } = "Enable walking on a supported phone.";
 #if UNITY_ANDROID && !UNITY_EDITOR
         private const string Permission = "android.permission.ACTIVITY_RECOGNITION";
         private AndroidJavaObject counter;
         private bool requested;
         private bool started;
+#endif
+#if UNITY_IOS && !UNITY_EDITOR
+        [DllImport("__Internal")] private static extern void PockleStepsResume(int request);
+        [DllImport("__Internal")] private static extern int PockleStepsState();
+        [DllImport("__Internal")] private static extern long PockleStepsTotal();
+        [DllImport("__Internal")] private static extern double PockleStepsUptime();
+        [DllImport("__Internal")] private static extern int PockleStepsBoot();
+        [DllImport("__Internal")] private static extern void PockleStepsStop();
+        private void RefreshIosStatus()
+        {
+            switch (PockleStepsState())
+            {
+                case 1: Status = "Allow Motion & Fitness to count steps."; break;
+                case 2: Status = "Your iPhone counts steps with Motion & Fitness. No location access needed."; break;
+                case 3: Status = "Allow Motion & Fitness for Pockle in iPhone Settings."; break;
+                case 4: Status = "Motion & Fitness access is restricted on this iPhone."; break;
+                case 5: Status = "Step tracking isn't available on this iPhone."; break;
+                case 6: Status = "Step tracking stopped. Tap Enable walking to retry."; break;
+                default: Status = "Enable walking to allow Motion & Fitness access."; break;
+            }
+        }
 #endif
         public void Enable()
         {
@@ -36,6 +60,10 @@ namespace Pockle.Runtime
                 Status = "Allow Physical activity in Android settings to count steps.";
                 return;
             }
+#elif UNITY_IOS && !UNITY_EDITOR
+            try { PockleStepsResume(1); RefreshIosStatus(); }
+            catch (Exception exception) { ReportFailure(exception, "Step tracking is unavailable on this iPhone."); }
+            return;
 #endif
             ResumeIfAllowed();
         }
@@ -59,6 +87,10 @@ namespace Pockle.Runtime
             }
             catch (Exception exception)
             { ReportFailure(exception, "Step tracking is unavailable on this device."); }
+#elif UNITY_IOS && !UNITY_EDITOR
+            if (Failed) return;
+            try { PockleStepsResume(0); RefreshIosStatus(); }
+            catch (Exception exception) { ReportFailure(exception, "Step tracking is unavailable on this iPhone."); }
 #endif
         }
 
@@ -75,6 +107,10 @@ namespace Pockle.Runtime
                 return total >= 0;
             }
             catch (Exception exception) { ReportFailure(exception, "Step tracking stopped. Reopen Pockle to retry."); }
+#elif UNITY_IOS && !UNITY_EDITOR
+            if (!Active) return false;
+            total = PockleStepsTotal(); uptime = PockleStepsUptime(); boot = PockleStepsBoot();
+            return total >= 0;
 #endif
             return false;
         }
@@ -99,7 +135,9 @@ namespace Pockle.Runtime
 
         public void Dispose()
         {
-#if UNITY_ANDROID && !UNITY_EDITOR
+#if UNITY_IOS && !UNITY_EDITOR
+            PockleStepsStop();
+#elif UNITY_ANDROID && !UNITY_EDITOR
             started = false;
             if (counter != null)
             {

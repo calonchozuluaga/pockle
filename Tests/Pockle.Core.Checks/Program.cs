@@ -46,6 +46,7 @@ WinterTrioChecks.Run();
 FusionReviewSpareChecks.Run();
 PersistentFusionChecks.Run();
 BadgeRuntimeChecks.Run();
+IosPedometerChecks.Run();
 MaterialTouchChecks.Run();
             PaidDeliveryChecks.Run();
             return 0;

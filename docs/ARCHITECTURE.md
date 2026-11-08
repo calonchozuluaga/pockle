@@ -197,3 +197,7 @@ PaidBoxCheckoutService binds native RevenueCat offers/prices and Claude’s chec
 
 ## November 5 — pre-purchase contents disclosure (UX-014)
 The service-only pockle_paid_box_quote RPC decorates the existing tier quote with every eligible finish and its conditional/unconditional per-box probability, using actual server tier counts. Edge quote routing uses this wrapper; delivery and drawing logic are unchanged. CheckoutQuote validates unique known collectible IDs, matching collection/tier, finite per-box/conditional probabilities and100% totals. The HUD box/card tap opens a scrollable gallery and only permits payment with complete data. Mystery Mix displays per-box chances including collection selection. CheckoutContentsPortrait lazily renders visible thumbnails, at most one per frame, reusing shared antialiased model portraits.
+
+
+## November8 — iPhone walking adapter
+The existing walking tracker now supports iOS through a local CMPedometer Objective-C++ bridge. Only explicit Enable can request Motion & Fitness authorization; resume checks permission without prompting. Daily cumulative snapshots, monotonic continuous time and boot identity feed unchanged CollectionProgress.ObserveSteps (baseline, replay/day/boot protection). Callback generations discard stale data; mutations return to Unity's main thread. AccountIosBuild adds CoreMotion.framework and NSMotionUsageDescription. No location, HealthKit or live AI calls. Android remains on its existing StepCounter plugin.

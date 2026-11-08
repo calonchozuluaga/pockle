@@ -713,3 +713,11 @@ Native graphics54/54 (CheckoutUiTests, BoxRevealUiTests, CollectionUiTests), zer
 
 ### November5 — internal v4 packaging
 Native Unity Android ARM64 IL2CPP release build exit0; bundletool validation passed. Final manifest verifiescom.playpockle.app/code4/min26/target36, non-debuggable/singleTop, Billing9.1.0/noAD_IDpermission. New gallery methods/type in IL2CPP metadata; native RevenueCat core/Unity bridge retained; packaged icon PNGs byte-identical tov3. Unsigned payload bytes match build after stripping only debug JAR signatures. Artifact verification docs/backend/play-internal-v4-build-verification.json. Owner private signing/upload/rollout pending. Source branch pushed; main not merged.
+
+
+### November8 — latest development iPhone install
+Unity export +Xcode27.2 Debug arm64 native build passed, deep strict codesign/profile/device/native Keychain callback checks passed. Installed0.1.0/build4 over existing studio.pockle.prototype. Preference comparison proves75existing inventory rows/copycounts and1fusion retained throughv4→v5 migration. Actual visible phone screen/session acceptance pending because activation returned deviceLocked. Apple paid checkout remains unconfigured. See backend/ios-device-update-20261108.json and own handoff for warnings/scope.
+
+
+### November8 — iOS walking build5
+Fixed previously absent iOS implementation. Native Unity export/Xcode Debug device build/code signature checks passed; all6 PockleSteps functions +CoreMotion framework/usage description verified. Portable full core suite with iOS cumulative-snapshot boundary checks and source checks passed; existing WalkingBoxUiTests9/9 passed. Installed/launched build5 on first iPhone; private save comparison preserves76rows/2fusions; native sensor snapshot observed and owner confirms steps increase. Second phone blocked on DeveloperMode/profile registration, not installed yet. Background longevity, production walking rewards and Apple purchases unverified.

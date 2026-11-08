@@ -38,6 +38,7 @@
     <Compile Include="FusionReviewSpareChecks.cs" />
     <Compile Include="PersistentFusionChecks.cs" />
     <Compile Include="BadgeRuntimeChecks.cs" />
+    <Compile Include="IosPedometerChecks.cs" />
     <Compile Include="MaterialTouchChecks.cs" />
     <Compile Include="WallyChecks.cs" />
   </ItemGroup>

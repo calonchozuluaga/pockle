@@ -1,0 +1,53 @@
+{
+  "date": "2026-11-08",
+  "branch": "codex/ios-latest-test",
+  "source_commit": "5868c4b9bd966ca70653cd30b3cf3f2bcc6bec3e",
+  "unity": "6000.6.5f1",
+  "xcode": "27.2 (27B52)",
+  "bundle_id": "studio.pockle.prototype",
+  "version": "0.1.0",
+  "build": "5",
+  "minimum_ios": "15.0",
+  "app_path": "/private/tmp/pockle-ios-update-derived/Build/Products/Debug-iphoneos/Pockle.app",
+  "executable_sha256": "9378a190e0fdf330ff3c98df3b0f4cfb88c73d0a3e65e226e0cb3d96aa13c6c7",
+  "development_signed": true,
+  "deep_strict_codesign_verified": true,
+  "existing_team_and_registered_device_verified": true,
+  "keychain_callback_preflight": "passed",
+  "gallery_metadata_verified": true,
+  "native_dependencies": {
+    "PurchasesHybridCommon": "20.0.0",
+    "RevenueCat": "5.99.0",
+    "integration": "Swift Package Manager"
+  },
+  "installed_verified": true,
+  "uninstall_or_data_clear": false,
+  "remote_launch": "succeeded",
+  "visible_phone_acceptance": "owner_reports_steps_work_now",
+  "apple_paid_checkout": "unconfigured_public_sdk_key_blank",
+  "save_preservation": {
+    "existing_inventory_rows_preserved": 76,
+    "existing_fusions_preserved": 2,
+    "save_version": 5,
+    "motion_snapshot_received": true,
+    "walking_progress": 0
+  },
+  "ios_walking": {
+    "implementation": "CMPedometer/CoreMotion",
+    "permission_requested_only_by_enable": true,
+    "motion_usage_description_verified": true,
+    "native_bridge_functions_linked": 6,
+    "hardware_snapshot_observed": true,
+    "owner_reported_step_progress": true,
+    "ui_regressions_passed": 9,
+    "portable_counter_boundary_checks": "passed"
+  },
+  "second_phone": {
+    "detected": true,
+    "developer_mode": "disabled",
+    "profile_includes_second_device": false,
+    "registration": "awaiting_owner_permission",
+    "installed": false
+  },
+  "walking_native_source_sha256": "e388d9e35d01ec7701f28ada2688c78139261ffa94b445edcdd7618688c94342"
+}
