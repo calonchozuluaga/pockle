@@ -1,0 +1,135 @@
+{
+  "date": "2026-11-08",
+  "appleAppId": "6830781336",
+  "bundleId": "com.playpockle.app",
+  "version": "1.0",
+  "build": "8",
+  "paidAppsAgreement": "Active",
+  "banking": "Active",
+  "tax": "Active",
+  "compliance": "Active",
+  "revenuecatProject": "9abea771",
+  "revenuecatAppleApp": "appde6a12c13c",
+  "iapKeyValidation": "Valid",
+  "appStoreConnectKeyValidation": "Valid",
+  "offering": "launch_boxes_v1",
+  "appleMappedPackages": 13,
+  "applePublicSdkKeyConfigured": true,
+  "ownerFlagsDisabledInExport": 8,
+  "audioResourcePathsPackaged": 143,
+  "nativeTestsPassed": 23,
+  "nativeTestsFailed": 0,
+  "distributionCertificateCreatedWithOwnerApproval": true,
+  "archive": "App Store distribution signed; deep strict signature verification passed",
+  "uploadedToTestFlight": true,
+  "appleSandboxPurchaseVerified": false,
+  "products": [
+    {
+      "product": "pockle.box.pip.v1",
+      "usd": "0.99",
+      "localizationVerified": true,
+      "availabilityVerified": true,
+      "reloadedFromApple": true,
+      "reviewScreenshot": false
+    },
+    {
+      "product": "pockle.box.fox.v1",
+      "usd": "0.99",
+      "localizationVerified": true,
+      "availabilityVerified": true,
+      "reloadedFromApple": true,
+      "reviewScreenshot": false
+    },
+    {
+      "product": "pockle.box.axolotl.v1",
+      "usd": "0.99",
+      "localizationVerified": true,
+      "availabilityVerified": true,
+      "reloadedFromApple": true,
+      "reviewScreenshot": false
+    },
+    {
+      "product": "pockle.box.firb.v1",
+      "usd": "0.99",
+      "localizationVerified": true,
+      "availabilityVerified": true,
+      "reloadedFromApple": true,
+      "reviewScreenshot": false
+    },
+    {
+      "product": "pockle.box.coco.v1",
+      "usd": "0.99",
+      "localizationVerified": true,
+      "availabilityVerified": true,
+      "reloadedFromApple": true,
+      "reviewScreenshot": false
+    },
+    {
+      "product": "pockle.box.snowy.v1",
+      "usd": "0.99",
+      "localizationVerified": true,
+      "availabilityVerified": true,
+      "reloadedFromApple": true,
+      "reviewScreenshot": false
+    },
+    {
+      "product": "pockle.box.ginger.v1",
+      "usd": "0.99",
+      "localizationVerified": true,
+      "availabilityVerified": true,
+      "reloadedFromApple": true,
+      "reviewScreenshot": false
+    },
+    {
+      "product": "pockle.box.reiny.v1",
+      "usd": "0.99",
+      "localizationVerified": true,
+      "availabilityVerified": true,
+      "reloadedFromApple": true,
+      "reviewScreenshot": false
+    },
+    {
+      "product": "pockle.box.guin.v1",
+      "usd": "0.99",
+      "localizationVerified": true,
+      "availabilityVerified": true,
+      "reloadedFromApple": true,
+      "reviewScreenshot": false
+    },
+    {
+      "product": "pockle.box.bundy.v1",
+      "usd": "0.99",
+      "localizationVerified": true,
+      "availabilityVerified": true,
+      "reloadedFromApple": true,
+      "reviewScreenshot": false
+    },
+    {
+      "product": "pockle.box.wally.v1",
+      "usd": "0.99",
+      "localizationVerified": true,
+      "availabilityVerified": true,
+      "reloadedFromApple": true,
+      "reviewScreenshot": false
+    },
+    {
+      "product": "pockle.mix.3.v1",
+      "usd": "2.49",
+      "localizationVerified": true,
+      "availabilityVerified": true,
+      "reloadedFromApple": true,
+      "reviewScreenshot": false
+    },
+    {
+      "product": "pockle.mix.5.v1",
+      "usd": "3.99",
+      "localizationVerified": true,
+      "availabilityVerified": true,
+      "reloadedFromApple": true,
+      "reviewScreenshot": false
+    }
+  ],
+  "testflightStatus": "Missing Compliance; owner export declaration pending",
+  "distributionProfileVerified": true,
+  "debugSymbolsWarning": "UnityRuntime.framework dSYM missing: B5BCB31B-E424-3C81-A0EE-2EF2ADFA93D7"
+}

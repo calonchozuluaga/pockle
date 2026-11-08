@@ -67,8 +67,9 @@ namespace Pockle.Runtime
             if(owner!=account.UserId){working=false;yield break;}
             if(status==null||!status.available||status.environment!="SANDBOX")
             {hud.SetCheckoutCatalog(null);working=false;yield break;}
-            string key=Application.platform==RuntimePlatform.Android?config?.androidPublicKey:config?.applePublicKey;
-            if(string.IsNullOrEmpty(key)||!(key.StartsWith("goog_",StringComparison.Ordinal)||key.StartsWith("appl_",StringComparison.Ordinal)))
+            string prefix=Application.platform==RuntimePlatform.Android?"goog_":Application.platform==RuntimePlatform.IPhonePlayer?"appl_":"";
+            string key=Application.platform==RuntimePlatform.Android?config?.androidPublicKey:Application.platform==RuntimePlatform.IPhonePlayer?config?.applePublicKey:null;
+            if(prefix.Length==0||string.IsNullOrEmpty(key)||!key.StartsWith(prefix,StringComparison.Ordinal))
             {hud.SetCheckoutCatalog(null);working=false;yield break;}
             if(purchases==null)
             {

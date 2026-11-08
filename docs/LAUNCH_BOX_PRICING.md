@@ -66,3 +66,7 @@ Sources checked November4: [RevenueCat consumables](https://www.revenuecat.com/d
 
 ## November 4 — product setup approved
 Owner explicitly approved all thirteen consumables, eleven launch collections, RevenueCat Pockle/launch_boxes_v1, and com.playpockle.app on both production stores. Proceed with setup; no second approval of these IDs required. Existing beta app unchanged. Owner retains all agreement, financial and credential-entry actions. External setup/real sandbox acceptance are not yet verified.
+
+
+## November 8 — Apple configuration verified
+All13approved existing consumables have EnglishUS metadata, USbaseprices0.99/2.49/3.99 and175current storefronts; all13reloaded and actual USprice checked. DefaultRC launch_boxes_v1 maps all13toApple/Android. Apple IAP review screenshots and actual sandbox delivery/restart acceptance stillpending; no IAP submission or live purchase claim. See docs/backend/APPLE_TESTFLIGHT_SETUP.md.

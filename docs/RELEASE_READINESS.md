@@ -71,3 +71,7 @@ November 3 Apple provider setup completed: approved primary App ID com.playpockl
 
 
 November 3 owner acceptance: real Apple sign-in on the installed iPhone succeeded (“worked!”). Session persistence after cold restart and token refresh remain unverified; no cross-device collection restore is implied.
+
+
+## November 8 — Apple TestFlight checkpoint
+Production-ID version1.0/build8 uploaded and processed; owner export compliance pending. All13Apple products now have verified saved metadata/prices/storefronts and RC mappings. Distribution IPA verified,23native checks/Core/Source pass. Apple sandbox purchase, restart/retry acceptance and IAP review screenshots remain unverified. Missing UnityRuntime dSYM warning affects crash symbolication. This does not resolve authoritative inventory/trading/stock or authorize public submission. See docs/backend/APPLE_TESTFLIGHT_SETUP.md.
