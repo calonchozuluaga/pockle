@@ -1,0 +1,21 @@
+{
+  "date": "2026-11-08",
+  "branch": "codex/approved-reaction-audio",
+  "sourceCommit": "8353cb7",
+  "bundleId": "studio.pockle.prototype",
+  "build": "7",
+  "installed": true,
+  "launched": true,
+  "signedVerificationPassed": true,
+  "packagedApprovedSoundPaths": 143,
+  "nativeAudioTestsPassed": 5,
+  "savePreservation": {
+    "inventoryRows": 98,
+    "totalCopies": 99,
+    "fusionRows": 24,
+    "allInventoryCountsEqual": true,
+    "allFusionRecordsEqual": true,
+    "version": 5
+  },
+  "ownerAudiblePhoneAcceptance": "pending"
+}
