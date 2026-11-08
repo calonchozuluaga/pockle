@@ -11,6 +11,7 @@ namespace Pockle.Runtime
         private AudioSource source;
         private bool soundEnabled = true;
         private float volume = 1, nextVoice;
+        public bool IsBusy => source != null && Time.unscaledTime < nextVoice;
         public AudioClip CurrentClip => source == null ? null : source.clip;
         private void Awake()
         {
@@ -29,15 +30,32 @@ namespace Pockle.Runtime
         {
             if (!ToyCatalog.TryGetCollectible(collectibleId, out var toy)) return null;
             string path = CollectionVoicePolicy.Resource(toy.CharacterId, mood);
-            if (path.Length == 0) return null;
+            return Load(path);
+        }
+        private AudioClip Load(string path)
+        {
+            if (string.IsNullOrEmpty(path)) return null;
             if (!clips.TryGetValue(path, out var clip)) { clip = Resources.Load<AudioClip>(path); clips.Add(path, clip); }
             return clip;
         }
-        public bool TryPlay(string id, CollectionVoiceMood mood)
+        public bool TryPlayAction(string id, System.Enum action, CollectionVoiceMood fallback)
         {
-            if (!soundEnabled || volume <= 0 || !isActiveAndEnabled || source == null || Time.unscaledTime < nextVoice) return false;
-            var clip = ClipFor(id, mood);
-            if (clip == null) return false;
+            if (!ToyCatalog.TryGetCollectible(id, out var toy)) return false;
+            string path = CollectionVoicePolicy.ActionResource(toy.CharacterId, action);
+            if (path.Length == 0) return false;
+            return Play(Load(path) ?? ClipFor(id, fallback));
+        }
+        public bool TryPlayTemperament(string id, PipTemperament temperament, CollectionVoiceMood fallback)
+        {
+            if (!ToyCatalog.TryGetCollectible(id, out var toy)) return false;
+            string path = CollectionVoicePolicy.TemperamentResource(toy.CharacterId, temperament);
+            if (path.Length == 0) return false;
+            return Play(Load(path) ?? ClipFor(id, fallback));
+        }
+        public bool TryPlay(string id, CollectionVoiceMood mood) => Play(ClipFor(id, mood));
+        private bool Play(AudioClip clip)
+        {
+            if (!soundEnabled || volume <= 0 || !isActiveAndEnabled || source == null || IsBusy || clip == null) return false;
             source.clip = clip; source.Play(); nextVoice = Time.unscaledTime + Mathf.Max(.3f, clip.length); return true;
         }
         public void Stop() { if (source != null) { source.Stop(); source.clip = null; } nextVoice = float.NegativeInfinity; }

@@ -287,20 +287,33 @@ namespace Pockle.Runtime
                 if(screen.z>0)head=new Vector2(screen.x,screen.y);
             }
             hud.ShowToyExpression(cue,head);ToyReactionStarted?.Invoke(cue,head);RecordToyActivity();
-            if (cue == ReactionCue.Squish || cue == ReactionCue.Hello) collectionVoice?.TryPlay(toy.CollectibleId, CollectionVoiceMood.Happy);
-            else if (cue == ReactionCue.PickUp) collectionVoice?.TryPlay(toy.CollectibleId, CollectionVoiceMood.Curious);
+            if (cue == ReactionCue.Squish || cue == ReactionCue.Hello || cue == ReactionCue.PickUp)
+            {
+                var face = toy.GetComponentInChildren<ToyTemperamentDriver>(true);
+                var fallback = cue == ReactionCue.PickUp ? CollectionVoiceMood.Curious : CollectionVoiceMood.Happy;
+                if (face != null) collectionVoice?.TryPlayTemperament(toy.CollectibleId, face.CurrentTemperament, fallback);
+                else collectionVoice?.TryPlay(toy.CollectibleId, fallback);
+            }
         }
         private bool AnyReactionPlaying => pipReactions.IsPlaying||foxReactions.IsPlaying||axolotlReactions.IsPlaying||firbReactions.IsPlaying||cocoReactions.IsPlaying||gingerReactions.IsPlaying||snowyReactions.IsPlaying||winterReactions.IsPlaying||wallyReactions.IsPlaying;
         private void PlayTapReaction()
         {
-            if(ToyInputBlocked||AnyReactionPlaying)return;
+            if(ToyInputBlocked||AnyReactionPlaying||(collectionVoice != null && collectionVoice.IsBusy))return;
             if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var wally)&&wally.CharacterId=="wally")wallyReactions.PlayRandom();else if(ToyCatalog.IsFoxCollectible(toy.CollectibleId))foxReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var tapped)&&tapped.CharacterId=="axolotl")axolotlReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var firb)&&firb.CharacterId=="firb")firbReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var coco)&&coco.CharacterId=="coco")cocoReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var ginger)&&ginger.CharacterId=="ginger")gingerReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var snowy)&&snowy.CharacterId=="snowy")snowyReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var winter)&&HolidayCatalog.IsWinterTrio(winter.CharacterId))winterReactions.PlayRandom();else pipReactions.PlayRandom();
             if(AnyReactionPlaying)
             {
                 SayToyCue(ReactionCue.Poke);
                 CollectionVoiceMood mood = wallyReactions.IsPlaying ? CollectionVoicePolicy.For(wallyReactions.CurrentAction)
                     : foxReactions.IsPlaying ? CollectionVoicePolicy.For(foxReactions.CurrentAction) : CollectionVoicePolicy.For(pipReactions.CurrentAction);
-                collectionVoice?.TryPlay(toy.CollectibleId, mood);
+                System.Enum action = wallyReactions.IsPlaying ? (System.Enum)wallyReactions.CurrentAction
+                    : foxReactions.IsPlaying ? foxReactions.CurrentAction
+                    : axolotlReactions.IsPlaying ? axolotlReactions.CurrentAction
+                    : firbReactions.IsPlaying ? firbReactions.CurrentAction
+                    : cocoReactions.IsPlaying ? cocoReactions.CurrentAction
+                    : snowyReactions.IsPlaying ? snowyReactions.CurrentAction
+                    : gingerReactions.IsPlaying ? gingerReactions.CurrentAction
+                    : winterReactions.IsPlaying ? winterReactions.CurrentAction : pipReactions.CurrentAction;
+                collectionVoice?.TryPlayAction(toy.CollectibleId, action, mood);
             }
         }
         private string PlayHint
@@ -338,7 +351,6 @@ namespace Pockle.Runtime
         public void ResetToy()
         {
             if (toy == null) return;
-            collectionVoice?.Stop();
             ReleasePointer(false);
             pipReactions?.Cancel();foxReactions?.Cancel();axolotlReactions?.Cancel();firbReactions?.Cancel();cocoReactions?.Cancel();gingerReactions?.Cancel();snowyReactions?.Cancel();winterReactions?.Cancel();wallyReactions?.Cancel();
             revealing = false;
@@ -363,6 +375,7 @@ namespace Pockle.Runtime
         public void Reveal()
         {
             if (toy == null || revealing) return;
+            collectionVoice?.Stop();
             ResetToy();
             revealing = true;
             revealTime = 0f;
@@ -430,6 +443,7 @@ namespace Pockle.Runtime
 
         private void SetVariant(PipVariant choice)
         {
+            collectionVoice?.Stop();
             ResetToy();
             toy.SetVariant(choice);
             ConfigureHandling();
@@ -480,6 +494,7 @@ namespace Pockle.Runtime
         {
             if (toy == null || collection == null || revealing ||
                 !collection.IsOwnedAndAvailable(id) || !toy.TrySetCollectible(id)) return false;
+            collectionVoice?.Stop();
             ResetToy();
             ConfigureHandling();
             ApplyStage();
@@ -509,6 +524,7 @@ namespace Pockle.Runtime
                 PlayerPrefs.Save();
             }
             if (!toy.TrySetCollectible(id)) return false;
+            collectionVoice?.Stop();
             ResetToy();
             ConfigureHandling();
             if (ToyCatalog.TryGetCollectible(id, out var definition))
@@ -519,7 +535,7 @@ namespace Pockle.Runtime
 
         private void StoreVisibilityChanged(bool visible)
         {
-            if (visible) { ReleasePointer(false); ClearMotion(); }
+            if (visible) { collectionVoice?.Stop(); ReleasePointer(false); ClearMotion(); }
             // Browsing uses cached portraits; no toy cameras render behind the collection UI.
             viewCamera.enabled = !visible;
             turntable.gameObject.SetActive(!visible);

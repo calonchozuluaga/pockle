@@ -1,0 +1,3 @@
+# Native bulk-download archives are local provenance backups; individual sources are tracked.
+*.zip
+sources/*.zip
