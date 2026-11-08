@@ -44,10 +44,19 @@
   },
   "second_phone": {
     "detected": true,
-    "developer_mode": "disabled",
-    "profile_includes_second_device": false,
-    "registration": "awaiting_owner_permission",
-    "installed": false
+    "developer_mode": "owner_enabled",
+    "registration": "owner_approved_completed",
+    "existing_pockle_install": false,
+    "profile_includes_both_devices": true,
+    "same_certificate_and_entitlements_verified": true,
+    "deep_strict_signature_verified": true,
+    "installed": true,
+    "installed_build": "5",
+    "launched": true,
+    "onboarding_and_walking_acceptance": "owner_pending"
   },
-  "walking_native_source_sha256": "e388d9e35d01ec7701f28ada2688c78139261ffa94b445edcdd7618688c94342"
+  "walking_native_source_sha256": "e388d9e35d01ec7701f28ada2688c78139261ffa94b445edcdd7618688c94342",
+  "source_change_commit": "aa5812f",
+  "app_path_second_device": "/private/tmp/pockle-ios-update-derived/Build/Products/Debug-iphoneos/Pockle.app",
+  "second_device_executable_sha256": "b71a164d764ac62992f2aca8447316b0dc16931d07e2a751b24633e44160842f"
 }
