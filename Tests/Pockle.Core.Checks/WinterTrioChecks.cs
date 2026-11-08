@@ -8,7 +8,7 @@ internal static class WinterTrioChecks
     {
         foreach(string id in new[]{"reiny","guin","bundy"})
         {
-            Check(ToyCatalog.TryGetCollection(id,out var collection)&&collection.Members.Count==10,"Winter trio collection must have ten finishes.");
+            Check(ToyCatalog.TryGetCollection(id,out var collection)&&collection.Members.Count==15,"Winter trio collection must have fifteen finishes.");
             Check(collection.Members.Count(m=>ToyCatalog.TryGetCollectible(m,out var toy)&&toy.Available&&toy.IsSecret)==1,"Exactly one playable rare required.");
             Check(collection.CoverArt=="Collections/"+HolidayCatalog.Title(id)+"/Cover"&&collection.BoxArt=="UI/Boxes/Collection-"+id&&collection.BoxModel=="Boxes/"+HolidayCatalog.Title(id)+"CollectionBox"&&collection.Worlds.Count==5,"Winter trio requires its own five worlds, cover and opening carton.");
             Check(collection.Members.All(m=>!ToyCatalog.IsDailyEligible(m)),"New art must not silently alter walking odds.");

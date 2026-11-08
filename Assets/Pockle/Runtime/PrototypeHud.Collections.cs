@@ -313,7 +313,7 @@ namespace Pockle.Runtime
             heroStandIn.gameObject.SetActive(heroBoxArt == null);
             heroStandIn.GetComponent<Image>().color = field;
             heroTitle.text = selected.DisplayName;
-            heroCaption.text = (selected.SeriesNumber > 0 ? "Series " + selected.SeriesNumber + " · " : "") + selectedTotal + " to find" + (selected.HasSecret ? " + a secret" : "");
+            heroCaption.text = (selected.SeriesNumber > 0 ? "Series " + selected.SeriesNumber + " · " : "") + selectedTotal + " to find" + (selected.HasSecret ? " · 1 Secret" : "");
             heroCaption.text = heroCaption.text.ToUpperInvariant();
             progressCard.GetComponent<Image>().color = accent;
             heroCount.text = selectedFound + " of " + selectedTotal + " found";
@@ -362,13 +362,13 @@ namespace Pockle.Runtime
                 lineupTiles[i].GetComponent<Image>().color = playable ? PockleTheme.FieldFor(id) : PockleTheme.Mystery;
                 if (playable && lineupPictures[i].texture == null) ShowLineupPortrait(i, id);
                 var tier = known ? RarityLook.Of(collectible) : RarityLook.For(RarityTier.Common, false, "");
-                bool ladder = tier.Tier == RarityTier.Rare || tier.Tier == RarityTier.Epic || tier.Tier == RarityTier.Secret;
+                bool ladder = known; // Rarity is public even when the toy itself is still hidden.
                 var badge = lineupTierBadges[i];
                 badge.gameObject.SetActive(ladder);
                 if (ladder)
                 {
-                    badge.color = tier.Fill;
-                    var words = badge.GetComponentInChildren<Text>(); words.text = RarityLook.Words(tier.Tier); words.color = tier.Ink;
+                    badge.color = tier.Tier == RarityTier.Common ? new Color(.91f, .88f, .85f) : tier.Fill;
+                    var words = badge.GetComponentInChildren<Text>(); words.text = tier.Tier == RarityTier.Common ? "Common" : RarityLook.Words(tier.Tier); words.color = tier.Tier == RarityTier.Common ? Ink : tier.Ink;
                 }
                 lineupNames[i].color = playable ? deep : Ink;
             }

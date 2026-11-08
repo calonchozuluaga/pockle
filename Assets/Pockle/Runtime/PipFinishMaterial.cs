@@ -12,6 +12,7 @@ namespace Pockle.Runtime
         }
         public static void Apply(Material material, string id)
         {
+            material.SetFloat("_EditionEffect", 0); material.SetFloat("_RosterPalette", 0);
             if (FusionCatalog.TryGet(id, out var fused)) { FusionMaterial.Apply(material, fused); return; }
             material.SetFloat("_FusionMode",0);
             material.SetColor("_FusionColorA",Color.white);material.SetColor("_FusionColorB",Color.white);
@@ -76,7 +77,7 @@ namespace Pockle.Runtime
                     material.SetFloat("_Transmission",.04f); material.SetFloat("_Opacity",1); material.SetFloat("_ZWrite",1);
                     material.renderQueue=2001; break;
             }
-            if (ToyCatalog.TryGetCollectible(id,out var item)) material.name=item.DisplayName + " · approved Pip shell";
+            if (ToyCatalog.TryGetCollectible(id,out var item)) { RosterFinishMaterial.Apply(material, item); material.name=item.DisplayName + " · approved Pip shell"; }
         }
     }
 }

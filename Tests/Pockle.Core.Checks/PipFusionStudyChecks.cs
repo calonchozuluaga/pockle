@@ -7,7 +7,7 @@ internal static class PipFusionStudyChecks
     private static void Check(bool ok,string message){if(!ok)throw new Exception(message);}
     public static void Run()
     {
-        Check(ToyCatalog.TryGetCollection("pip",out var regular)&&regular.Members.Count==10,"Original Pip completion changes.");
+        Check(ToyCatalog.TryGetCollection("pip",out var regular)&&regular.Members.Count==15,"Original Pip completion changes.");
         Check(ToyCatalog.TryGetCollection(PipFusionStudies.CollectionId,out var lab)&&lab.Members.Count==4&&!lab.HasSecret&&!lab.HasApprovedOdds&&lab.Worlds.Count==5,"Material lab metadata incorrect.");
         foreach(string id in lab.Members)
         {

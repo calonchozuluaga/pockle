@@ -48,7 +48,7 @@ namespace Pockle.Core
         public string CollectionId { get; }
         public CatalogColor SwatchColor => FusionCatalog.TryGet(Id, out var fused) ? FusionCatalog.Swatch(fused) : ToyCatalog.FinishSwatch(Id, FinishId);
         /// <summary>Derived from the character collection's explicit secret identity.</summary>
-        public ToyTier Tier => CharacterId == "wally" ? WallyCatalog.Tier(Id) : IsSecret ? ToyTier.Secret : ToyTier.Common;
+        public ToyTier Tier => RosterFinishDesign.Tier(Id, CharacterId, FinishId, CollectionId);
         public bool IsSecret => ToyCatalog.TryGetCollection(CollectionId, out var collection) && collection.SecretId == Id;
         internal CollectibleDefinition(string id, CharacterDefinition character, FinishDefinition finish,
             string label, bool available, string collection)
@@ -173,8 +173,10 @@ namespace Pockle.Core
                     var finish = finishes[index];
                     bool existing = character.Id == "pip" && index < legacyIds.Length;
                     string id = existing ? legacyIds[index] : character.Id + "." + finish.Id;
-                    var collectible = new CollectibleDefinition(id, character, finish,
-                        character.Id == "wally" ? WallyCatalog.Label(index) : existing ? pipLabels[index] : id == PipSpecialId ? "Starlight Glow · Ultra rare" : character.Id == "fox" ? foxLabels[index] : character.Id == "axolotl" ? axolotlLabels[index] : HolidayCatalog.IsCharacter(character.Id) ? (finish.Id == "matte-vinyl" ? "Classic" : finish.Id == "glow-jelly" ? HolidayCatalog.SpecialLabel(character.Id) + " · Ultra rare" : finish.DisplayName) : finish.DisplayName, character.Id == "pip" || character.Id == "fox" || character.Id == "axolotl" || character.Id == "wally" || HolidayCatalog.IsCharacter(character.Id), character.Id);
+                    string label = character.Id == "wally" ? WallyCatalog.Label(index)
+                        : finish.Id == "glow-jelly" ? (character.Id == "pip" ? "Starlight Glow" : character.Id == "fox" ? "Aurora Glow" : character.Id == "axolotl" ? "Biolume Glow" : HolidayCatalog.SpecialLabel(character.Id))
+                        : finish.Id == "coated-metallic" ? "Polished Gold" : RosterFinishDesign.CommonLabel(character.Id, RosterFinishDesign.CommonIndex(finish.Id));
+                    var collectible = new CollectibleDefinition(id, character, finish, label, true, character.Id);
                     collectibles.Add(collectible); collectiblesById.Add(id, collectible);
                 }
             }
@@ -186,6 +188,18 @@ namespace Pockle.Core
                 new CollectibleDefinition(WallyCatalog.DiamondId,charactersById["wally"],finishesById["gloss-vinyl"],"Diamond Frost",true,"wally"),
                 new CollectibleDefinition(WallyCatalog.SpecialId,charactersById["wally"],finishesById["coated-metallic"],"Molten Abyss",true,"wally") })
             {collectibles.Add(extra);collectiblesById.Add(extra.Id,extra);}
+            foreach (var character in characters)
+            {
+                if (character.Id == "wally") continue;
+                string[] suffixes = { RosterFinishDesign.Signature, RosterFinishDesign.Leaf, RosterFinishDesign.Rose, RosterFinishDesign.Diamond, RosterFinishDesign.Secret };
+                string[] profiles = { "matte-vinyl", "coated-metallic", "coated-metallic", "gloss-vinyl", character.Id == "pip" || character.Id == "axolotl" || character.Id == "bundy" ? "glow-jelly" : "gloss-vinyl" };
+                string[] labels = { RosterFinishDesign.CommonLabel(character.Id, 8), "Gilded Leaf", "Rose Gold", "Diamond Prism", RosterFinishDesign.SecretLabel(character.Id) };
+                for (int i = 0; i < suffixes.Length; i++)
+                {
+                    var extra = new CollectibleDefinition(character.Id + "." + suffixes[i], character, finishesById[profiles[i]], labels[i], true, character.Id);
+                    collectibles.Add(extra); collectiblesById.Add(extra.Id, extra);
+                }
+            }
             foreach(var study in new[] {
                 new CollectibleDefinition(PipFusionStudies.DuskId,charactersById["pip"],finishesById["pearl-jelly"],"Dusk · fusion study",true,PipFusionStudies.CollectionId),
                 new CollectibleDefinition(PipFusionStudies.SorbetId,charactersById["pip"],finishesById["mochi-foam"],"Sorbet · fusion study",true,PipFusionStudies.CollectionId),
@@ -200,22 +214,18 @@ namespace Pockle.Core
             };
             BoxPools = Array.AsReadOnly(pools);
             foreach (var pool in pools) poolsById.Add(pool.Id, pool);
-            // A collection is one character with >=10 varieties. Pip belongs to Series 1;
+            // A collection is one character with 15 varieties. Pip belongs to Series 1;
             // dates/full collection odds and other characters' public numbering remain unapproved.
             var collections = new List<CollectionDefinition>(characters.Length);
             foreach (var character in characters)
             {
                 var members = new List<string>(finishes.Length);
-                foreach (var item in collectibles) if (item.CollectionId == character.Id) members.Add(item.Id);
-                if(character.Id=="wally")
-                {
-                    members.Clear();
-                    for(int tier=0;tier<4;tier++)foreach(var item in collectibles)
-                        if(item.CollectionId=="wally"&&(int)WallyCatalog.Tier(item.Id)==tier)members.Add(item.Id);
-                }
+                for (int tier = 0; tier < 4; tier++)
+                    foreach (var item in collectibles)
+                        if (item.CollectionId == character.Id && (int)item.Tier == tier) members.Add(item.Id);
                 uint field = character.Id == "wally" ? 0xdff2f8u : character.Id == "pip" ? 0xf8d9c6u : character.Id == "fox" ? 0xffe0cbu : 0xfaf5eeu;
                 collections.Add(new CollectionDefinition(character.Id, character.DisplayName, character.Id, members,
-                    seriesNumber: character.Id == "pip" ? 1 : 0, secretId: character.Id == "wally" ? WallyCatalog.SpecialId : character.Id == "fox" ? FoxAuroraId : character.Id == "pip" ? PipSpecialId : character.Id == "axolotl" ? AxolotlSpecialId : HolidayCatalog.IsCharacter(character.Id) ? character.Id + ".glow-jelly" : "", fieldColor: field, inkColor: character.Id == "fox" ? 0x7a3210u : character.Id == "pip" ? 0x7a2a4eu : character.Id == "axolotl" ? 0x2a2a5au : 0x49344cu));
+                    seriesNumber: character.Id == "pip" ? 1 : 0, secretId: RosterFinishDesign.SecretId(character.Id), fieldColor: field, inkColor: character.Id == "fox" ? 0x7a3210u : character.Id == "pip" ? 0x7a2a4eu : character.Id == "axolotl" ? 0x2a2a5au : 0x49344cu));
             }
             collections.Add(new CollectionDefinition(PipFusionStudies.CollectionId,"Pip Fusion Lab", "pip",
                 PipFusionStudies.Ids,fieldColor:0xf7e2de,inkColor:0x7a2a4e));
@@ -230,6 +240,7 @@ namespace Pockle.Core
             if (id == PipFusionStudies.DuskId) return new CatalogColor(0xb99cde);
             if (id == PipFusionStudies.SorbetId) return new CatalogColor(0xb3dac1);
             if (id.StartsWith("wally.", StringComparison.Ordinal)) return WallyCatalog.SwatchFor(id,finish);
+            if (TryGetCollectible(id, out var designed) && designed.CollectionId != PipFusionStudies.CollectionId) return RosterFinishDesign.Swatch(id, designed.CharacterId, finish);
             if (id == PeachId) return new CatalogColor(0xf5b89c);
             if (id == MoonId) return new CatalogColor(0x73b8f5);
             if (id == GoldId) return new CatalogColor(0xffb02e);

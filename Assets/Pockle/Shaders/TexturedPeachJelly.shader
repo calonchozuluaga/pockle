@@ -2,6 +2,11 @@ Shader "Pockle/Textured Peach Jelly"
 {
     Properties
     {
+        _EditionClock ("Local edition motion time", Float) = 0
+        _EditionEffect ("Collection edition effect", Float) = 0
+        _EditionColor ("Edition light color", Color) = (0.4,0.85,1,1)
+        _RosterPalette ("Collection palette", Float) = 0
+
         _BrushTrailWeights ("Recovering stroke trail", Vector) = (0,0,0,0)
         _SurfaceKind ("Touch response: none / wobble / contents / nap", Float) = 0
         _ContentsPhase ("Interior flow angle", Float) = 0
@@ -83,6 +88,7 @@ Shader "Pockle/Textured Peach Jelly"
         half _FusionMode;
         half _TintStrength, _GlitterStrength, _PearlSheen, _Fuzz, _Metallic, _Iridescence, _Glow;
         half _LidAngle, _SleepCurve, _MouthOpen, _MouthTilt, _HighlightStyle;
+        #include "Assets/Pockle/Shaders/CollectionEdition.cginc"
         float4 _LeftEye, _RightEye, _Mouth;
         struct appdata { float4 vertex : POSITION; float3 normal : NORMAL; float2 uv : TEXCOORD0; float3 faceRest : TEXCOORD1; };
         struct v2f { float4 vertex : SV_POSITION; float3 world : TEXCOORD0; half3 normal : TEXCOORD1; float2 uv : TEXCOORD2; float3 local : TEXCOORD3; };
@@ -264,6 +270,10 @@ Shader "Pockle/Textured Peach Jelly"
             half alpha = lerp(saturate(fusionSurface.w+.22*rim),.98,pigment);
             half reflectedAlpha = fusionDetail.x*(max(studio.r,max(studio.g,studio.b))*.55+softbox*.65);
             alpha = max(alpha,saturate(reflectedAlpha));
+            half eyeRegion=max(Region(i.local.xy,_LeftEye),Region(i.local.xy,_RightEye))*smoothstep(.45,.62,-i.local.z);
+            half whiteGlint=eyeRegion*smoothstep(.8,.95,min(paint.r,min(paint.g,paint.b)));
+            color=CollectionEdition(color,i.local,n,view,(1-pigment)*(1-whiteGlint),_FinishTint.rgb);
+            if (_EditionEffect > 3.5) color=lerp(color,half3(.74,.94,1),Region(i.local.xy,_Mouth)*pigment*smoothstep(.45,.62,-i.local.z));
             color=BrushNap(i.local,color,1-pigment);color+=ContentsLight(i.local,view)*(1-pigment);
             return fixed4(saturate(color * _StageTint.rgb + PockleStageGlow(half3(.23,.65,.64), _StageEmission, 1-pigment, facing)),alpha);
         }

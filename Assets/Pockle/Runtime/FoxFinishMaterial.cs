@@ -25,11 +25,12 @@ namespace Pockle.Runtime
                 case "pearl-jelly": tint = new Color(.97f, .77f, .72f); gloss = .66f; material.SetFloat("_Pearl", 1); break;
                 case "clear-jelly": tint = new Color(1, .49f, .08f); gloss = .87f; opacity = .40f; material.SetFloat("_Glitter", .7f); break;
                 case "confetti-gel": tint = new Color(.96f, .42f, .63f); gloss = .80f; opacity = .52f; material.SetFloat("_Crystal", 1); break;
-                case "boucle-plush": tint = new Color(.12f, .075f, .25f); gloss = .38f; break;
+                case "boucle-plush": tint = new Color(.12f, .075f, .25f); gloss = .025f; material.SetFloat("_Fuzz", .7f); break;
                 case "glow-jelly": tint = new Color(.48f, .32f, .72f); gloss = .86f; opacity = .43f; material.SetFloat("_Iridescence", 1); material.SetFloat("_Glitter", 1); break;
             }
             material.SetColor("_BodyColor", tint); material.SetFloat("_Gloss", gloss); material.SetFloat("_Opacity", opacity);
             material.renderQueue = opacity < 1 ? 3000 : 2000;
+            RosterFinishMaterial.Apply(material, item);
             return material;
         }
     }

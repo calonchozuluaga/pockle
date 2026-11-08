@@ -201,3 +201,7 @@ The service-only pockle_paid_box_quote RPC decorates the existing tier quote wit
 
 ## November8 — iPhone walking adapter
 The existing walking tracker now supports iOS through a local CMPedometer Objective-C++ bridge. Only explicit Enable can request Motion & Fitness authorization; resume checks permission without prompting. Daily cumulative snapshots, monotonic continuous time and boot identity feed unchanged CollectionProgress.ObserveSteps (baseline, replay/day/boot protection). Callback generations discard stale data; mutations return to Unity's main thread. AccountIosBuild adds CoreMotion.framework and NSMotionUsageDescription. No location, HealthKit or live AI calls. Android remains on its existing StepCounter plugin.
+
+
+## November 8 — full roster rarity designs (local review branch)
+`RosterFinishDesign` supplies the 15-slot ladder and collection-specific pigments/Secret identities. `RosterFinishMaterial` applies a shared, local `CollectionEdition.cginc` layer over each existing character shader, preserving Wally's separate approved shader. `JellyToy.EditionMotion` provides a local clock that freezes in Calm; edition state resets when Pip changes to an ordinary finish or fusion. Rarity is explicit Core metadata and the collection HUD shows all four tier labels on discovered and undiscovered slots. Existing IDs and fusion references survive; no save-version change. See `ROSTER_RARITY_REFRESH.md` for the boundary between the local 165-finish roster and unchanged live paid stock.

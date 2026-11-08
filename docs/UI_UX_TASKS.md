@@ -288,3 +288,7 @@ RevenueCat SDK/store-price adapter, private server sandbox delivery and v5 exact
 
 ### November5 — UX-014 per-toy contents before purchase
 Owner-approved direct checkout HUD/contracts/test exception. Collection boxes and both mix packs now open an all-finishes gallery with real server per-box probabilities, portraits, names and rarity, ahead of Buy. All115 mix possibilities and10/15 collection rosters verified; malformed disclosure disables payment. Native54/54 focused UI regression +15/15 final checkout tests,9Deno security tests, local SQL and real transactional Supabase checks pass. Review checkout-ui-review/04/index.html. Android sandbox purchase/reveal onv3 previously owner-reported successful; this gallery and improved portraits still require a new phone build. UX-014 overall remains in progress (production ledger, iOS purchases and full restart/retry/refund acceptance outstanding).
+
+
+## November 8 — UX-052 roster rarity rollout (local visual review)
+Owner requests the approved 9 Common / 3 Rare / 2 Epic / 1 Secret ladder across all eleven collections, with collection-specific Secrets rather than mandatory molten. Local catalog now has 165 base finishes; all previous IDs remain. Firb's canopy pigment mask and palettes are separated. Owner authorizes collection HUD/test edits: every slot now shows its tier, including hidden toys. Review: `roster-finish-review/02/index.html`. Status: local implementation/review; live stock/quote reconciliation, design acceptance and phone verification remain before release.

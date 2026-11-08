@@ -30,7 +30,7 @@ namespace Pockle.Runtime
             }
             m.SetFloat("_Gloss", gloss); m.SetFloat("_Opacity", opacity);
             m.renderQueue = opacity < 1 ? 3000 : 2000;
-            return m;
+            RosterFinishMaterial.Apply(m, toy); return m;
         }
     }
 }

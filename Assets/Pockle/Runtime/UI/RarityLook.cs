@@ -71,7 +71,7 @@ namespace Pockle.Runtime
         {
             if (toy == null) return For(RarityTier.Common, false, "");
             if (FusionCatalog.TryGet(toy.Id, out _)) return For(RarityTier.Fusion, false, "Fusion · One of a kind");
-            var given = TierSource?.Invoke(toy.Id);
+            var given = TierSource?.Invoke(toy.Id) ?? (toy.CollectionId == PipFusionStudies.CollectionId ? (RarityTier?)null : FromTier(toy.Tier));
             if (given.HasValue) return For(given.Value, given.Value == RarityTier.Secret || toy.IsSecret, Words(given.Value));
             string name = toy.FinishDisplayName ?? "";
             int dot = name.IndexOf(" · ", StringComparison.Ordinal);

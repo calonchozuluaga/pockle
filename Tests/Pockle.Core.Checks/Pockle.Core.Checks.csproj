@@ -41,5 +41,6 @@
     <Compile Include="IosPedometerChecks.cs" />
     <Compile Include="MaterialTouchChecks.cs" />
     <Compile Include="WallyChecks.cs" />
+    <Compile Include="RosterRarityChecks.cs" />
   </ItemGroup>
 </Project>

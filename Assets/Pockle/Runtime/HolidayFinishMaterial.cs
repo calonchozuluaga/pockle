@@ -50,7 +50,7 @@ namespace Pockle.Runtime
             else if(toy.CharacterId=="snowy") {left=new Vector4(-.22f,.20f,.12f,.14f);right=new Vector4(.22f,.20f,.12f,.14f);mouth=new Vector4(0,.04f,.12f,.07f);}
             else {left=new Vector4(-.30f,.18f,.16f,.16f);right=new Vector4(.30f,.18f,.16f,.16f);mouth=new Vector4(0,.10f,.13f,.08f);}
             m.SetVector("_LeftEyeCenter",left);m.SetVector("_RightEyeCenter",right);m.SetVector("_MouthCenter",mouth);
-            m.renderQueue=opacity<1?3000:2000;return m;
+            m.renderQueue=opacity<1?3000:2000;RosterFinishMaterial.Apply(m, toy); return m;
         }
         private static Color WinterTint(string character, string finish)
         {

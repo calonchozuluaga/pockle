@@ -39,6 +39,7 @@ CocoReactionChecks.Run();
 GingerReactionChecks.Run();
 SnowyReactionChecks.Run();
 WallyChecks.Run();
+RosterRarityChecks.Run();
 AccountProtocolChecks.Run();
 PipFusionStudyChecks.Run();
 PipFaceChecks.Run();

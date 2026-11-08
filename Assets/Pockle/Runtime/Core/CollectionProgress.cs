@@ -217,7 +217,7 @@ namespace Pockle.Core
                 bool collection = toy.CollectionId == "pip" || toy.CollectionId == "fox" || toy.CollectionId == "axolotl"
                     || toy.CollectionId == "reiny" || toy.CollectionId == "guin" || toy.CollectionId == "bundy";
                 bool finish = toy.FinishId == "clear-jelly" || toy.FinishId == "gloss-vinyl" || toy.FinishId == "coated-metallic";
-                if (!collection || !finish || !toy.Available || GetOwnedCount(toy.Id) >= 3) continue;
+                if (!collection || !finish || RosterFinishDesign.IsAddition(toy.Id) || !toy.Available || GetOwnedCount(toy.Id) >= 3) continue;
                 counts[toy.Id] = 3;
                 changed = true;
             }

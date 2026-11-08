@@ -34,7 +34,7 @@ namespace Pockle.Runtime
         }
         public void Configure(string id,StageLight light)
         {
-            bool glow=ToyCatalog.TryGetCollectible(id,out var toy)&&(toy.FinishId=="glow-jelly"||WallyCatalog.EmitsLight(id));
+            bool glow=ToyCatalog.TryGetCollectible(id,out var toy)&&(toy.FinishId=="glow-jelly"||toy.Tier==ToyTier.Secret||WallyCatalog.EmitsLight(id));
             bool glitter=toy!=null&&(toy.FinishId=="confetti-gel"||id=="fox.clear-jelly");
             string appearance = FusionMaterial.AppearanceId(id);
             if (FusionCatalog.TryGet(id, out var fused))
@@ -45,6 +45,8 @@ namespace Pockle.Runtime
             }
             Strength=light==StageLight.Night?(glow?.50f:glitter?.07f:0):glow?.08f:0;
             Color colour=toy!=null&&HolidayCatalog.IsCharacter(toy.CharacterId)?HolidayFinishMaterial.GlowTint(toy.CharacterId):glitter?new Color(1,.70f,.25f):toy!=null&&toy.CharacterId=="fox"?new Color(.65f,.44f,1):new Color(.25f,.88f,1);
+            if (toy != null && toy.Tier == ToyTier.Secret && toy.CharacterId != "wally")
+            { var c = RosterFinishDesign.SecretColor(toy.CharacterId); colour = new Color(c.Red, c.Green, c.Blue); }
             if(appearance==PipFusionStudies.EclipseId)colour=new Color(1,.65f,.23f);
             colour.a=Strength*.22f;haloMaterial.color=colour;colour.a=Strength*.8f;poolMaterial.color=colour;
             halo.gameObject.SetActive(Strength>0);pool.gameObject.SetActive(Strength>0);

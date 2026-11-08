@@ -2,6 +2,11 @@ Shader "Pockle/Fox Finish"
 {
     Properties
     {
+        _EditionClock ("Local edition motion time", Float) = 0
+        _EditionEffect ("Collection edition effect", Float) = 0
+        _EditionColor ("Edition light color", Color) = (0.4,0.85,1,1)
+        _RosterPalette ("Collection palette", Float) = 0
+
         _BrushTrailWeights ("Recovering stroke trail", Vector) = (0,0,0,0)
         _SurfaceKind ("Touch response: none / wobble / contents / nap", Float) = 0
         _ContentsPhase ("Interior flow angle", Float) = 0
@@ -79,6 +84,7 @@ Shader "Pockle/Fox Finish"
     half4 _BodyColor; half _TemperClassic;
     half _Gloss, _Opacity, _Fuzz, _Grain, _Metallic, _Pearl, _Crystal, _Iridescence, _Glitter;
     #include "Assets/Pockle/Shaders/TemperamentFace.cginc"
+    #include "Assets/Pockle/Shaders/CollectionEdition.cginc"
     struct appdata { float4 vertex:POSITION; float3 normal:NORMAL; float2 uv:TEXCOORD0; float3 faceRest:TEXCOORD1; };
     struct v2f { float4 vertex:SV_POSITION; float3 world:TEXCOORD0; float3 local:TEXCOORD1; half3 normal:TEXCOORD2; float2 uv:TEXCOORD3; float3 face:TEXCOORD4; };
     v2f vert(appdata v)
@@ -130,6 +136,7 @@ Shader "Pockle/Fox Finish"
         half fleck=smoothstep(.996,.999,hash(floor(ContentsCoordinate(i.local)*480)));
         base+=body*fusionDetail.w*fleck*half3(.8,.55,.16);
         base+=body*texCUBE(_StageEnvironment,refract(-view,n,.74)).rgb*_StageEnvironmentStrength*(1-fusionSurface.w)*.24;
+        base=CollectionEdition(base,i.face,n,view,body*(1-TemperFeatures(i.face).a),_BodyColor.rgb);
         half alpha=lerp(1,fusionSurface.w+(1-fusionSurface.w)*rim*.42,body);
         base=BrushNap(i.face,base,smoothstep(.05,.20,max(paint.r,max(paint.g,paint.b)))*(1-TemperFeatures(i.face).a));base+=ContentsLight(i.face,view)*body;
         if(back) alpha*=.32;

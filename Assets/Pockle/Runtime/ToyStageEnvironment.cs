@@ -169,7 +169,7 @@ namespace Pockle.Runtime
             if(backgroundMaterial!=null)backgroundMaterial.SetColor("_Tint",night&&World!=StageWorld.Midnight?new Color(.48f,.54f,.70f):golden?new Color(1,.90f,.75f):Color.white);
             if(glowAura!=null)glowAura.Configure(collectibleId,Lighting);
             Color tint=night?new Color(.53f,.56f,.75f):golden?new Color(1,.86f,.68f):Color.white;
-            bool glow=ToyCatalog.TryGetCollectible(collectibleId,out var item)&&(item.FinishId=="glow-jelly"||WallyCatalog.EmitsLight(collectibleId));
+            bool glow=ToyCatalog.TryGetCollectible(collectibleId,out var item)&&(item.FinishId=="glow-jelly"||item.Tier==ToyTier.Secret||WallyCatalog.EmitsLight(collectibleId));
             foreach(var renderer in toyMount.GetComponentsInChildren<Renderer>(true))
                 foreach(var material in renderer.sharedMaterials)
                 {

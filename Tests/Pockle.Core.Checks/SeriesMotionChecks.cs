@@ -29,7 +29,7 @@ internal static class SeriesMotionChecks
             Assert(!series.TryGetOdds("future.toy", out _) && !series.TryGetOdds(null, out _), "Unknown identity received display odds.");
         }
         Assert(!ToyCatalog.TryGetCollection(null, out _) && !ToyCatalog.TryGetCollection("jelly-garden", out _), "Legacy variant theme was treated as a character collection.");
-        Assert(ToyCatalog.Collectibles.Count(c => c.IsSecret) == 11 && ToyCatalog.Collectibles.Where(c => c.IsSecret).All(c => c.Id == ToyCatalog.FoxAuroraId || c.Id == ToyCatalog.PipSpecialId || c.Id == ToyCatalog.AxolotlSpecialId || c.Id == WallyCatalog.SpecialId || HolidayCatalog.IsCharacter(c.CharacterId)), "A prototype collectible was silently made secret.");
+        Assert(ToyCatalog.Collectibles.Count(c => c.IsSecret) == 11 && ToyCatalog.Collectibles.Where(c => c.IsSecret).All(c => c.Id == RosterFinishDesign.SecretId(c.CharacterId)), "Every active collection needs its own explicit Secret.");
         Assert(ToyCatalog.TryGetCollection("pip", out var pip) && pip.SeriesNumber == 1 &&
             pip.Members.Contains(ToyCatalog.PeachId) && pip.Members.Contains(ToyCatalog.MoonId) && pip.Members.Contains(ToyCatalog.GoldId),
             "Existing Pip finishes did not join one Series 1 collection.");

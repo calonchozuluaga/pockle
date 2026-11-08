@@ -142,3 +142,6 @@ Every collection requires exactly ten Pockles (nine common and one rare), five u
 ## Current active roster — October15 owner update
 
 Pip, Tula, Fox, Axolotl, Firb, Coco, Snowy and Ginger remain:8 collections/80 slots, seven models playable. Loop, Mallow, Moss, Nook, Ripple, Rolo, Sprig, Wisp, Bop and Dew are retired from the app. This supersedes the older active launch-roster counts; historical plans remain above. See ACTIVE_ROSTER.md.
+
+
+November 8 owner direction: apply a consistent15-toy rarity ladder across all11 collections (9Common,3Rare,2Epic,1Secret), with stronger color/material separation and collection-specific Secret designs. Molten is Wally's identity, not mandatory for every Secret. Disclose each collection slot's rarity even before discovery. Local designs remain under review; live sale stock and draw policy do not change until integration is verified.

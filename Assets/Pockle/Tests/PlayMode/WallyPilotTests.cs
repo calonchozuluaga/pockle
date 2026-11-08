@@ -9,14 +9,14 @@ namespace Pockle.Tests
     public sealed class WallyPilotTests
     {
         [Test]
-        public void AcceptedPilotBindsOnlyKnownWallyIdsToTheNewLadder()
+        public void CatalogBindsEveryKnownCollectionToTheNewLadder()
         {
-            var method = typeof(TactilePrototype).GetMethod("WallyRarityTier", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+            var method = typeof(TactilePrototype).GetMethod("CatalogRarityTier", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
             var resolve = (System.Func<string, RarityTier?>)System.Delegate.CreateDelegate(typeof(System.Func<string, RarityTier?>), method);
             Assert.IsTrue(ToyCatalog.TryGetCollection("wally", out var collection));
             foreach (var member in collection.Members)
                 { Assert.IsTrue(ToyCatalog.TryGetCollectible(member, out var toy)); Assert.AreEqual(RarityLook.FromTier(toy.Tier), resolve(member)); }
-            Assert.IsNull(resolve(null)); Assert.IsNull(resolve("wally.unknown")); Assert.IsNull(resolve("pip.peach-jelly"));
+            Assert.IsNull(resolve(null)); Assert.IsNull(resolve("wally.unknown")); Assert.AreEqual(RarityTier.Common, resolve("pip.peach-jelly"));
         }
 
         [UnityTest]

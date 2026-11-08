@@ -82,7 +82,7 @@ namespace Pockle.Runtime
 
         private void Start()
         {
-            RarityLook.TierSource = WallyRarityTier;
+            RarityLook.TierSource = CatalogRarityTier;
             Application.targetFrameRate = 60;
             QualitySettings.vSyncCount = 0;
             soundEnabled = PlayerPrefs.GetInt(PrefPrefix + "sound", 1) == 1;
@@ -560,15 +560,15 @@ namespace Pockle.Runtime
         private void OnDisable() { ReleasePointer(false); ClearMotion(); }
         private void SelectCollectible(string id) { TryPlayCollectible(id); }
 
-        private static RarityTier? WallyRarityTier(string id)
+        private static RarityTier? CatalogRarityTier(string id)
         {
-            if (!ToyCatalog.TryGetCollectible(id, out var toy) || toy.CharacterId != "wally") return null;
+            if (!ToyCatalog.TryGetCollectible(id, out var toy)) return null;
             return RarityLook.FromTier(toy.Tier);
         }
 
         private void OnDestroy()
         {
-            if (RarityLook.TierSource == WallyRarityTier) RarityLook.TierSource = null;
+            if (RarityLook.TierSource == CatalogRarityTier) RarityLook.TierSource = null;
             if (hud != null) hud.VariantChanged -= SetVariant;
             if (hud != null) hud.CollectibleChanged -= SelectCollectible;
             if (hud != null) { hud.StoreVisibilityChanged -= StoreVisibilityChanged; hud.StageViewportChanged -= SetStageViewport; }

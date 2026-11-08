@@ -131,6 +131,8 @@ namespace Pockle.Tests
                 yield return null; CaptureShelfUi(canvas, camera, target, "motion-calm");
                 hud.GoBack(); ButtonNamed("Collection · wally").onClick.Invoke();
                 yield return null; FocusFirstSilhouette(scroll); yield return null; CaptureShelfUi(canvas, camera, target, "unfound-wally");
+                hud.GoBack(); ButtonNamed("Collection · firb").onClick.Invoke();
+                yield return null; FocusFirstSilhouette(scroll); yield return null; CaptureShelfUi(canvas, camera, target, "unfound-firb");
                 Assert.That(hud.ShelfPreviews.AllocatedTargetCount, Is.LessThanOrEqualTo(ShelfPreviewRuntime.Capacity));
                 Debug.Log("SHELF_REVIEW_CAPTURES " + SystemInfo.graphicsDeviceName);
             }
@@ -265,6 +267,26 @@ namespace Pockle.Tests
             Assert.That(previews.AllocatedTargetCount, Is.Zero);
             Assert.That(previews.CameraCount, Is.Zero);
             Assert.IsTrue(targets.Any(target => !target.IsCreated()), "Disposal must release native live targets.");
+        }
+
+        [UnityTest]
+        public IEnumerator AllHiddenSlotsDiscloseRarityWithoutRevealingTheToy()
+        {
+            ButtonNamed("Home collections · all").onClick.Invoke();
+            ButtonNamed("Collection · firb").onClick.Invoke();
+            yield return null;
+            Assert.IsTrue(ToyCatalog.TryGetCollection("firb", out var collection));
+            foreach (string id in collection.Members)
+            {
+                var slot = ButtonNamed("Collectible · " + id);
+                Assert.IsFalse(slot.interactable, id);
+                Assert.IsFalse(slot.GetComponentsInChildren<RawImage>().Any(), id + " exposed a finish");
+                Assert.IsTrue(slot.GetComponentsInChildren<CharacterSilhouetteGraphic>().Any(), id);
+                var badge = slot.GetComponentsInChildren<Image>().Single(i => i.name == "Tier badge");
+                ToyCatalog.TryGetCollectible(id, out var toy);
+                Assert.AreEqual(toy.Tier.ToString(), badge.GetComponentInChildren<Text>().text, id);
+                Assert.AreEqual(0, session.Progress.GetOwnedCount(id));
+            }
         }
 
         [UnityTest]
@@ -526,7 +548,7 @@ namespace Pockle.Tests
             Assert.IsTrue(VisibleText("3 of 4 finishes · 5 toys on your shelf"));
             ButtonWithText("See all").onClick.Invoke();
             yield return null; Canvas.ForceUpdateCanvases();
-            Assert.IsTrue(VisibleText("3/10"), "The Pip card counts the toys found.");
+            Assert.IsTrue(VisibleText("3/15"), "The Pip card counts the toys found.");
             Assert.IsFalse(VisibleText("Moon Jelly"), "An undiscovered toy's name must not be shown.");
             var moon = ButtonNamed("Slot · " + ToyCatalog.MoonId);
             Assert.IsFalse(moon.interactable, "An undiscovered toy cannot be played.");
@@ -565,7 +587,7 @@ namespace Pockle.Tests
                 ButtonNamed("Collection · pip").onClick.Invoke();
                 Assert.AreEqual(AppPage.Collection, hud.CurrentPage);
                 var slots = root.GetComponentsInChildren<Button>().Where(button => button.name.StartsWith("Collectible · ")).ToArray();
-                Assert.AreEqual(10, slots.Length);
+                Assert.AreEqual(15, slots.Length);
                 Assert.AreEqual(4, slots.Count(button => button.interactable));
                 Assert.IsFalse(ButtonNamed("Collectible · pip.glow-jelly").interactable);
                 Assert.IsTrue(VisibleText("???"), "Available but unowned Pip finishes remain undiscovered.");
@@ -644,7 +666,7 @@ namespace Pockle.Tests
             Assert.IsTrue(VisibleText("Best buds · Lv 1"), "Neighbours today are level-1 best buds.");
             Assert.AreEqual(1, ShelfFriendships.Level(ToyCatalog.GoldId, ToyCatalog.MoonId), "Sitting side by side on the open shelf counts a day.");
             Assert.AreEqual(0, ShelfFriendships.Level(ToyCatalog.GoldId, ToyCatalog.PeachId), "Only neighbours become friends.");
-            Assert.AreEqual(10, root.GetComponentsInChildren<Button>().Count(button => button.name.StartsWith("Family · ")), "The family strip shows every Pip.");
+            Assert.AreEqual(15, root.GetComponentsInChildren<Button>().Count(button => button.name.StartsWith("Family · ")), "The family strip shows every Pip.");
             ButtonWithText("Play with Gold Glitter").onClick.Invoke();
             Assert.AreEqual(AppPage.Play, hud.CurrentPage);
             hud.GoBack(); Assert.AreEqual(AppPage.Personality, hud.CurrentPage);
@@ -1049,7 +1071,7 @@ namespace Pockle.Tests
             Assert.IsTrue(PersonalityBook.TryGet(ToyCatalog.FoxAuroraId, out var aurora));
             Assert.AreEqual("fox", aurora.CharacterId);
             Assert.AreEqual("Alert and curious", aurora.Nature);
-            Assert.AreEqual("Aurora touch", aurora.TouchName);
+            Assert.AreEqual("Aurora Glow touch", aurora.TouchName);
             Assert.AreEqual("Dreamy", aurora.TouchTrait);
             Assert.AreEqual(PersonalityMotionStyle.Dream, aurora.Motion);
             Assert.IsTrue(aurora.Reactions.Any(r => r.Key == "At night" && r.Value == "Glows and stargazes"));
