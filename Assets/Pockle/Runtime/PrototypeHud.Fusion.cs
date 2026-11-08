@@ -8,8 +8,8 @@ namespace Pockle.Runtime
 {
     /// <summary>
     /// Fusion (owner-approved canvases "Fuse spares" and "Fusion reveal", October 12; docs/FUSION.md). Pick two spares and
-    /// see what they'd make. The HUD never changes inventory: it calls <see cref="IFusionService"/>. Until Codex's runtime
-    /// exists the service is preview-only, so the reveal says so and nothing is used.
+    /// consume them to create a saved toy. The HUD never changes inventory: it calls <see cref="IFusionService"/>.
+    /// An unavailable service cannot animate a successful fusion or reuse the same spares as a preview.
     /// </summary>
     public sealed partial class PrototypeHud
     {
@@ -221,11 +221,12 @@ namespace Pockle.Runtime
             if (fuseFirst == null || fuseSecond == null || fusionCommitBusy || FusionMomentPlaying || page != AppPage.Fusion) return;
             string first = fuseFirst, second = fuseSecond;
             if (!ToyCatalog.TryGetCollectible(first, out var a) || !ToyCatalog.TryGetCollectible(second, out var b) || a.CharacterId != b.CharacterId) return;
+            if (!fusion.Available) { fusionGoNote.text = "Fusion is unavailable. Your spares are safe."; return; }
             fusionCommitBusy = true;
             try
             {
-                lastFusionWasPreview = !fusion.Available;
-                if (!lastFusionWasPreview && !fusion.TryFuse(first, second))
+                lastFusionWasPreview = false;
+                if (!fusion.TryFuse(first, second))
                 { fusionGoNote.text = "Fusion couldn't be saved. Your spares were kept. Check your picks and try again."; return; }
                 fuseFirst = first; fuseSecond = second;
                 lastFusedId = lastFusionWasPreview ? null : session.Progress.Save.PendingFusionId;
@@ -318,11 +319,13 @@ namespace Pockle.Runtime
             // remaining spares pack from the top left instead of keeping their old slots (owner, October 18 and 19).
             if (page == AppPage.Fusion && lastLayoutSize.x > 0 && FusionVisibleSet() != visibleBefore) AdaptLayout();
 
-            fusionGo.interactable = ready;
+            fusionGo.interactable = ready && fusion.Available;
             fusionGo.GetComponentInChildren<Text>().text = ready ? "Fuse " + FirstName(fuseFirst) + " + " + FirstName(fuseSecond) : "Pick two spares";
             fusionGo.GetComponent<Image>().color = ready ? PockleTheme.Plum : PockleTheme.FillDeep;
             fusionGo.GetComponentInChildren<Text>().color = ready ? PockleTheme.OnPlum : MutedInk;
-            fusionGoNote.text = ready ? "Uses one spare of each. It can't be undone or traded." : "Pick two spares of the same character. Your last copy stays.";
+            fusionGoNote.text = !fusion.Available ? "Fusion is unavailable. Your spares are safe." : ready
+                ? (fuseFirst == fuseSecond ? "Uses two spares of this finish. They are spent permanently." : "Uses one spare of each finish. They are spent permanently.")
+                : "Pick two spares of the same character. Your last copy stays.";
         }
 
         /// <summary>A toy's own colour (its finish swatch), for the mystery toy and the fusion moment.</summary>

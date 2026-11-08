@@ -1,0 +1,1324 @@
+{
+    "entries": [
+        {
+            "id": "pip.peach-jelly",
+            "collection": "pip",
+            "collectionName": "Pip",
+            "name": "Pip · Peach Jelly",
+            "finish": "Peach Jelly",
+            "tier": "Common"
+        },
+        {
+            "id": "pip.moon-pearl",
+            "collection": "pip",
+            "collectionName": "Pip",
+            "name": "Pip · Moon Jelly",
+            "finish": "Moon Jelly",
+            "tier": "Common"
+        },
+        {
+            "id": "pip.gold-confetti",
+            "collection": "pip",
+            "collectionName": "Pip",
+            "name": "Pip · Gold Glitter",
+            "finish": "Gold Glitter",
+            "tier": "Common"
+        },
+        {
+            "id": "pip.mint-mochi",
+            "collection": "pip",
+            "collectionName": "Pip",
+            "name": "Pip · Mint Soft",
+            "finish": "Mint Soft",
+            "tier": "Common"
+        },
+        {
+            "id": "pip.velvet-flock",
+            "collection": "pip",
+            "collectionName": "Pip",
+            "name": "Pip · Lavender Flock",
+            "finish": "Lavender Flock",
+            "tier": "Common"
+        },
+        {
+            "id": "pip.boucle-plush",
+            "collection": "pip",
+            "collectionName": "Pip",
+            "name": "Pip · Rose Plush",
+            "finish": "Rose Plush",
+            "tier": "Common"
+        },
+        {
+            "id": "pip.matte-vinyl",
+            "collection": "pip",
+            "collectionName": "Pip",
+            "name": "Pip · Cloud Vinyl",
+            "finish": "Cloud Vinyl",
+            "tier": "Common"
+        },
+        {
+            "id": "pip.gloss-vinyl",
+            "collection": "pip",
+            "collectionName": "Pip",
+            "name": "Pip · Berry Gloss",
+            "finish": "Berry Gloss",
+            "tier": "Common"
+        },
+        {
+            "id": "pip.signature-matte",
+            "collection": "pip",
+            "collectionName": "Pip",
+            "name": "Pip · Vanilla Custard",
+            "finish": "Vanilla Custard",
+            "tier": "Common"
+        },
+        {
+            "id": "pip.coated-metallic",
+            "collection": "pip",
+            "collectionName": "Pip",
+            "name": "Pip · Polished Gold",
+            "finish": "Polished Gold",
+            "tier": "Rare"
+        },
+        {
+            "id": "pip.gilded-leaf",
+            "collection": "pip",
+            "collectionName": "Pip",
+            "name": "Pip · Gilded Leaf",
+            "finish": "Gilded Leaf",
+            "tier": "Rare"
+        },
+        {
+            "id": "pip.rose-gold",
+            "collection": "pip",
+            "collectionName": "Pip",
+            "name": "Pip · Rose Gold",
+            "finish": "Rose Gold",
+            "tier": "Rare"
+        },
+        {
+            "id": "pip.glow-jelly",
+            "collection": "pip",
+            "collectionName": "Pip",
+            "name": "Pip · Starlight Glow",
+            "finish": "Starlight Glow",
+            "tier": "Epic"
+        },
+        {
+            "id": "pip.diamond-prism",
+            "collection": "pip",
+            "collectionName": "Pip",
+            "name": "Pip · Diamond Prism",
+            "finish": "Diamond Prism",
+            "tier": "Epic"
+        },
+        {
+            "id": "pip.secret-edition",
+            "collection": "pip",
+            "collectionName": "Pip",
+            "name": "Pip · Cosmic Core",
+            "finish": "Cosmic Core",
+            "tier": "Secret"
+        },
+        {
+            "id": "fox.clear-jelly",
+            "collection": "fox",
+            "collectionName": "Fox",
+            "name": "Fox · Amber Jelly",
+            "finish": "Amber Jelly",
+            "tier": "Common"
+        },
+        {
+            "id": "fox.pearl-jelly",
+            "collection": "fox",
+            "collectionName": "Fox",
+            "name": "Fox · Bluebell Pearl",
+            "finish": "Bluebell Pearl",
+            "tier": "Common"
+        },
+        {
+            "id": "fox.confetti-gel",
+            "collection": "fox",
+            "collectionName": "Fox",
+            "name": "Fox · Berry Confetti",
+            "finish": "Berry Confetti",
+            "tier": "Common"
+        },
+        {
+            "id": "fox.mochi-foam",
+            "collection": "fox",
+            "collectionName": "Fox",
+            "name": "Fox · Mochi Pink",
+            "finish": "Mochi Pink",
+            "tier": "Common"
+        },
+        {
+            "id": "fox.velvet-flock",
+            "collection": "fox",
+            "collectionName": "Fox",
+            "name": "Fox · Violet Flock",
+            "finish": "Violet Flock",
+            "tier": "Common"
+        },
+        {
+            "id": "fox.boucle-plush",
+            "collection": "fox",
+            "collectionName": "Fox",
+            "name": "Fox · Juniper Plush",
+            "finish": "Juniper Plush",
+            "tier": "Common"
+        },
+        {
+            "id": "fox.matte-vinyl",
+            "collection": "fox",
+            "collectionName": "Fox",
+            "name": "Fox · Apricot Vinyl",
+            "finish": "Apricot Vinyl",
+            "tier": "Common"
+        },
+        {
+            "id": "fox.gloss-vinyl",
+            "collection": "fox",
+            "collectionName": "Fox",
+            "name": "Fox · Classic Orange",
+            "finish": "Classic Orange",
+            "tier": "Common"
+        },
+        {
+            "id": "fox.signature-matte",
+            "collection": "fox",
+            "collectionName": "Fox",
+            "name": "Fox · Meadow Mint",
+            "finish": "Meadow Mint",
+            "tier": "Common"
+        },
+        {
+            "id": "fox.coated-metallic",
+            "collection": "fox",
+            "collectionName": "Fox",
+            "name": "Fox · Polished Gold",
+            "finish": "Polished Gold",
+            "tier": "Rare"
+        },
+        {
+            "id": "fox.gilded-leaf",
+            "collection": "fox",
+            "collectionName": "Fox",
+            "name": "Fox · Gilded Leaf",
+            "finish": "Gilded Leaf",
+            "tier": "Rare"
+        },
+        {
+            "id": "fox.rose-gold",
+            "collection": "fox",
+            "collectionName": "Fox",
+            "name": "Fox · Rose Gold",
+            "finish": "Rose Gold",
+            "tier": "Rare"
+        },
+        {
+            "id": "fox.glow-jelly",
+            "collection": "fox",
+            "collectionName": "Fox",
+            "name": "Fox · Aurora Glow",
+            "finish": "Aurora Glow",
+            "tier": "Epic"
+        },
+        {
+            "id": "fox.diamond-prism",
+            "collection": "fox",
+            "collectionName": "Fox",
+            "name": "Fox · Diamond Prism",
+            "finish": "Diamond Prism",
+            "tier": "Epic"
+        },
+        {
+            "id": "fox.secret-edition",
+            "collection": "fox",
+            "collectionName": "Fox",
+            "name": "Fox · Sunfire Spirit",
+            "finish": "Sunfire Spirit",
+            "tier": "Secret"
+        },
+        {
+            "id": "axolotl.clear-jelly",
+            "collection": "axolotl",
+            "collectionName": "Axolotl",
+            "name": "Axolotl · Honey Jelly",
+            "finish": "Honey Jelly",
+            "tier": "Common"
+        },
+        {
+            "id": "axolotl.pearl-jelly",
+            "collection": "axolotl",
+            "collectionName": "Axolotl",
+            "name": "Axolotl · Lilac Pearl",
+            "finish": "Lilac Pearl",
+            "tier": "Common"
+        },
+        {
+            "id": "axolotl.confetti-gel",
+            "collection": "axolotl",
+            "collectionName": "Axolotl",
+            "name": "Axolotl · Petal Confetti",
+            "finish": "Petal Confetti",
+            "tier": "Common"
+        },
+        {
+            "id": "axolotl.mochi-foam",
+            "collection": "axolotl",
+            "collectionName": "Axolotl",
+            "name": "Axolotl · Mint Mochi",
+            "finish": "Mint Mochi",
+            "tier": "Common"
+        },
+        {
+            "id": "axolotl.velvet-flock",
+            "collection": "axolotl",
+            "collectionName": "Axolotl",
+            "name": "Axolotl · Orchid Flock",
+            "finish": "Orchid Flock",
+            "tier": "Common"
+        },
+        {
+            "id": "axolotl.boucle-plush",
+            "collection": "axolotl",
+            "collectionName": "Axolotl",
+            "name": "Axolotl · Blush Plush",
+            "finish": "Blush Plush",
+            "tier": "Common"
+        },
+        {
+            "id": "axolotl.matte-vinyl",
+            "collection": "axolotl",
+            "collectionName": "Axolotl",
+            "name": "Axolotl · Ice Vinyl",
+            "finish": "Ice Vinyl",
+            "tier": "Common"
+        },
+        {
+            "id": "axolotl.gloss-vinyl",
+            "collection": "axolotl",
+            "collectionName": "Axolotl",
+            "name": "Axolotl · Coral Gloss",
+            "finish": "Coral Gloss",
+            "tier": "Common"
+        },
+        {
+            "id": "axolotl.signature-matte",
+            "collection": "axolotl",
+            "collectionName": "Axolotl",
+            "name": "Axolotl · Lagoon Teal",
+            "finish": "Lagoon Teal",
+            "tier": "Common"
+        },
+        {
+            "id": "axolotl.coated-metallic",
+            "collection": "axolotl",
+            "collectionName": "Axolotl",
+            "name": "Axolotl · Polished Gold",
+            "finish": "Polished Gold",
+            "tier": "Rare"
+        },
+        {
+            "id": "axolotl.gilded-leaf",
+            "collection": "axolotl",
+            "collectionName": "Axolotl",
+            "name": "Axolotl · Gilded Leaf",
+            "finish": "Gilded Leaf",
+            "tier": "Rare"
+        },
+        {
+            "id": "axolotl.rose-gold",
+            "collection": "axolotl",
+            "collectionName": "Axolotl",
+            "name": "Axolotl · Rose Gold",
+            "finish": "Rose Gold",
+            "tier": "Rare"
+        },
+        {
+            "id": "axolotl.glow-jelly",
+            "collection": "axolotl",
+            "collectionName": "Axolotl",
+            "name": "Axolotl · Biolume Glow",
+            "finish": "Biolume Glow",
+            "tier": "Epic"
+        },
+        {
+            "id": "axolotl.diamond-prism",
+            "collection": "axolotl",
+            "collectionName": "Axolotl",
+            "name": "Axolotl · Diamond Prism",
+            "finish": "Diamond Prism",
+            "tier": "Epic"
+        },
+        {
+            "id": "axolotl.secret-edition",
+            "collection": "axolotl",
+            "collectionName": "Axolotl",
+            "name": "Axolotl · Biolume Bloom",
+            "finish": "Biolume Bloom",
+            "tier": "Secret"
+        },
+        {
+            "id": "firb.clear-jelly",
+            "collection": "firb",
+            "collectionName": "Firb",
+            "name": "Firb · Cranberry Jelly",
+            "finish": "Cranberry Jelly",
+            "tier": "Common"
+        },
+        {
+            "id": "firb.pearl-jelly",
+            "collection": "firb",
+            "collectionName": "Firb",
+            "name": "Firb · Sugarplum Pearl",
+            "finish": "Sugarplum Pearl",
+            "tier": "Common"
+        },
+        {
+            "id": "firb.confetti-gel",
+            "collection": "firb",
+            "collectionName": "Firb",
+            "name": "Firb · Tinsel Teal",
+            "finish": "Tinsel Teal",
+            "tier": "Common"
+        },
+        {
+            "id": "firb.mochi-foam",
+            "collection": "firb",
+            "collectionName": "Firb",
+            "name": "Firb · Peach Mochi",
+            "finish": "Peach Mochi",
+            "tier": "Common"
+        },
+        {
+            "id": "firb.velvet-flock",
+            "collection": "firb",
+            "collectionName": "Firb",
+            "name": "Firb · Amethyst Flock",
+            "finish": "Amethyst Flock",
+            "tier": "Common"
+        },
+        {
+            "id": "firb.boucle-plush",
+            "collection": "firb",
+            "collectionName": "Firb",
+            "name": "Firb · Pistachio Plush",
+            "finish": "Pistachio Plush",
+            "tier": "Common"
+        },
+        {
+            "id": "firb.matte-vinyl",
+            "collection": "firb",
+            "collectionName": "Firb",
+            "name": "Firb · Classic Evergreen",
+            "finish": "Classic Evergreen",
+            "tier": "Common"
+        },
+        {
+            "id": "firb.gloss-vinyl",
+            "collection": "firb",
+            "collectionName": "Firb",
+            "name": "Firb · Blue Spruce Gloss",
+            "finish": "Blue Spruce Gloss",
+            "tier": "Common"
+        },
+        {
+            "id": "firb.signature-matte",
+            "collection": "firb",
+            "collectionName": "Firb",
+            "name": "Firb · Vanilla Fir",
+            "finish": "Vanilla Fir",
+            "tier": "Common"
+        },
+        {
+            "id": "firb.coated-metallic",
+            "collection": "firb",
+            "collectionName": "Firb",
+            "name": "Firb · Polished Gold",
+            "finish": "Polished Gold",
+            "tier": "Rare"
+        },
+        {
+            "id": "firb.gilded-leaf",
+            "collection": "firb",
+            "collectionName": "Firb",
+            "name": "Firb · Gilded Leaf",
+            "finish": "Gilded Leaf",
+            "tier": "Rare"
+        },
+        {
+            "id": "firb.rose-gold",
+            "collection": "firb",
+            "collectionName": "Firb",
+            "name": "Firb · Rose Gold",
+            "finish": "Rose Gold",
+            "tier": "Rare"
+        },
+        {
+            "id": "firb.glow-jelly",
+            "collection": "firb",
+            "collectionName": "Firb",
+            "name": "Firb · Starfall Glow",
+            "finish": "Starfall Glow",
+            "tier": "Epic"
+        },
+        {
+            "id": "firb.diamond-prism",
+            "collection": "firb",
+            "collectionName": "Firb",
+            "name": "Firb · Diamond Prism",
+            "finish": "Diamond Prism",
+            "tier": "Epic"
+        },
+        {
+            "id": "firb.secret-edition",
+            "collection": "firb",
+            "collectionName": "Firb",
+            "name": "Firb · Aurora Evergreen",
+            "finish": "Aurora Evergreen",
+            "tier": "Secret"
+        },
+        {
+            "id": "coco.clear-jelly",
+            "collection": "coco",
+            "collectionName": "Coco",
+            "name": "Coco · Caramel Jelly",
+            "finish": "Caramel Jelly",
+            "tier": "Common"
+        },
+        {
+            "id": "coco.pearl-jelly",
+            "collection": "coco",
+            "collectionName": "Coco",
+            "name": "Coco · Lavender Cream",
+            "finish": "Lavender Cream",
+            "tier": "Common"
+        },
+        {
+            "id": "coco.confetti-gel",
+            "collection": "coco",
+            "collectionName": "Coco",
+            "name": "Coco · Peppermint Confetti",
+            "finish": "Peppermint Confetti",
+            "tier": "Common"
+        },
+        {
+            "id": "coco.mochi-foam",
+            "collection": "coco",
+            "collectionName": "Coco",
+            "name": "Coco · Butterscotch Mochi",
+            "finish": "Butterscotch Mochi",
+            "tier": "Common"
+        },
+        {
+            "id": "coco.velvet-flock",
+            "collection": "coco",
+            "collectionName": "Coco",
+            "name": "Coco · Berry Truffle Flock",
+            "finish": "Berry Truffle Flock",
+            "tier": "Common"
+        },
+        {
+            "id": "coco.boucle-plush",
+            "collection": "coco",
+            "collectionName": "Coco",
+            "name": "Coco · Strawberry Plush",
+            "finish": "Strawberry Plush",
+            "tier": "Common"
+        },
+        {
+            "id": "coco.matte-vinyl",
+            "collection": "coco",
+            "collectionName": "Coco",
+            "name": "Coco · Classic Cocoa",
+            "finish": "Classic Cocoa",
+            "tier": "Common"
+        },
+        {
+            "id": "coco.gloss-vinyl",
+            "collection": "coco",
+            "collectionName": "Coco",
+            "name": "Coco · Blueberry Glaze",
+            "finish": "Blueberry Glaze",
+            "tier": "Common"
+        },
+        {
+            "id": "coco.signature-matte",
+            "collection": "coco",
+            "collectionName": "Coco",
+            "name": "Coco · Pistachio Cream",
+            "finish": "Pistachio Cream",
+            "tier": "Common"
+        },
+        {
+            "id": "coco.coated-metallic",
+            "collection": "coco",
+            "collectionName": "Coco",
+            "name": "Coco · Polished Gold",
+            "finish": "Polished Gold",
+            "tier": "Rare"
+        },
+        {
+            "id": "coco.gilded-leaf",
+            "collection": "coco",
+            "collectionName": "Coco",
+            "name": "Coco · Gilded Leaf",
+            "finish": "Gilded Leaf",
+            "tier": "Rare"
+        },
+        {
+            "id": "coco.rose-gold",
+            "collection": "coco",
+            "collectionName": "Coco",
+            "name": "Coco · Rose Gold",
+            "finish": "Rose Gold",
+            "tier": "Rare"
+        },
+        {
+            "id": "coco.glow-jelly",
+            "collection": "coco",
+            "collectionName": "Coco",
+            "name": "Coco · Ember Glow",
+            "finish": "Ember Glow",
+            "tier": "Epic"
+        },
+        {
+            "id": "coco.diamond-prism",
+            "collection": "coco",
+            "collectionName": "Coco",
+            "name": "Coco · Diamond Prism",
+            "finish": "Diamond Prism",
+            "tier": "Epic"
+        },
+        {
+            "id": "coco.secret-edition",
+            "collection": "coco",
+            "collectionName": "Coco",
+            "name": "Coco · Midnight Ganache",
+            "finish": "Midnight Ganache",
+            "tier": "Secret"
+        },
+        {
+            "id": "snowy.clear-jelly",
+            "collection": "snowy",
+            "collectionName": "Snowy",
+            "name": "Snowy · Glacier Jelly",
+            "finish": "Glacier Jelly",
+            "tier": "Common"
+        },
+        {
+            "id": "snowy.pearl-jelly",
+            "collection": "snowy",
+            "collectionName": "Snowy",
+            "name": "Snowy · Lilac Pearl",
+            "finish": "Lilac Pearl",
+            "tier": "Common"
+        },
+        {
+            "id": "snowy.confetti-gel",
+            "collection": "snowy",
+            "collectionName": "Snowy",
+            "name": "Snowy · Berry Snow Confetti",
+            "finish": "Berry Snow Confetti",
+            "tier": "Common"
+        },
+        {
+            "id": "snowy.mochi-foam",
+            "collection": "snowy",
+            "collectionName": "Snowy",
+            "name": "Snowy · Peach Snow Mochi",
+            "finish": "Peach Snow Mochi",
+            "tier": "Common"
+        },
+        {
+            "id": "snowy.velvet-flock",
+            "collection": "snowy",
+            "collectionName": "Snowy",
+            "name": "Snowy · Twilight Flock",
+            "finish": "Twilight Flock",
+            "tier": "Common"
+        },
+        {
+            "id": "snowy.boucle-plush",
+            "collection": "snowy",
+            "collectionName": "Snowy",
+            "name": "Snowy · Mint Cloud Plush",
+            "finish": "Mint Cloud Plush",
+            "tier": "Common"
+        },
+        {
+            "id": "snowy.matte-vinyl",
+            "collection": "snowy",
+            "collectionName": "Snowy",
+            "name": "Snowy · Classic Snow",
+            "finish": "Classic Snow",
+            "tier": "Common"
+        },
+        {
+            "id": "snowy.gloss-vinyl",
+            "collection": "snowy",
+            "collectionName": "Snowy",
+            "name": "Snowy · Winter Blue Gloss",
+            "finish": "Winter Blue Gloss",
+            "tier": "Common"
+        },
+        {
+            "id": "snowy.signature-matte",
+            "collection": "snowy",
+            "collectionName": "Snowy",
+            "name": "Snowy · Lemon Snow",
+            "finish": "Lemon Snow",
+            "tier": "Common"
+        },
+        {
+            "id": "snowy.coated-metallic",
+            "collection": "snowy",
+            "collectionName": "Snowy",
+            "name": "Snowy · Polished Gold",
+            "finish": "Polished Gold",
+            "tier": "Rare"
+        },
+        {
+            "id": "snowy.gilded-leaf",
+            "collection": "snowy",
+            "collectionName": "Snowy",
+            "name": "Snowy · Gilded Leaf",
+            "finish": "Gilded Leaf",
+            "tier": "Rare"
+        },
+        {
+            "id": "snowy.rose-gold",
+            "collection": "snowy",
+            "collectionName": "Snowy",
+            "name": "Snowy · Rose Gold",
+            "finish": "Rose Gold",
+            "tier": "Rare"
+        },
+        {
+            "id": "snowy.glow-jelly",
+            "collection": "snowy",
+            "collectionName": "Snowy",
+            "name": "Snowy · Aurora Glow",
+            "finish": "Aurora Glow",
+            "tier": "Epic"
+        },
+        {
+            "id": "snowy.diamond-prism",
+            "collection": "snowy",
+            "collectionName": "Snowy",
+            "name": "Snowy · Diamond Prism",
+            "finish": "Diamond Prism",
+            "tier": "Epic"
+        },
+        {
+            "id": "snowy.secret-edition",
+            "collection": "snowy",
+            "collectionName": "Snowy",
+            "name": "Snowy · Polar Opal",
+            "finish": "Polar Opal",
+            "tier": "Secret"
+        },
+        {
+            "id": "ginger.clear-jelly",
+            "collection": "ginger",
+            "collectionName": "Ginger",
+            "name": "Ginger · Honey Jelly",
+            "finish": "Honey Jelly",
+            "tier": "Common"
+        },
+        {
+            "id": "ginger.pearl-jelly",
+            "collection": "ginger",
+            "collectionName": "Ginger",
+            "name": "Ginger · Lavender Icing",
+            "finish": "Lavender Icing",
+            "tier": "Common"
+        },
+        {
+            "id": "ginger.confetti-gel",
+            "collection": "ginger",
+            "collectionName": "Ginger",
+            "name": "Ginger · Cherry Confetti",
+            "finish": "Cherry Confetti",
+            "tier": "Common"
+        },
+        {
+            "id": "ginger.mochi-foam",
+            "collection": "ginger",
+            "collectionName": "Ginger",
+            "name": "Ginger · Mint Cookie Mochi",
+            "finish": "Mint Cookie Mochi",
+            "tier": "Common"
+        },
+        {
+            "id": "ginger.velvet-flock",
+            "collection": "ginger",
+            "collectionName": "Ginger",
+            "name": "Ginger · Sugarplum Flock",
+            "finish": "Sugarplum Flock",
+            "tier": "Common"
+        },
+        {
+            "id": "ginger.boucle-plush",
+            "collection": "ginger",
+            "collectionName": "Ginger",
+            "name": "Ginger · Strawberry Plush",
+            "finish": "Strawberry Plush",
+            "tier": "Common"
+        },
+        {
+            "id": "ginger.matte-vinyl",
+            "collection": "ginger",
+            "collectionName": "Ginger",
+            "name": "Ginger · Classic Ginger",
+            "finish": "Classic Ginger",
+            "tier": "Common"
+        },
+        {
+            "id": "ginger.gloss-vinyl",
+            "collection": "ginger",
+            "collectionName": "Ginger",
+            "name": "Ginger · Blue Icing Gloss",
+            "finish": "Blue Icing Gloss",
+            "tier": "Common"
+        },
+        {
+            "id": "ginger.signature-matte",
+            "collection": "ginger",
+            "collectionName": "Ginger",
+            "name": "Ginger · Vanilla Biscuit",
+            "finish": "Vanilla Biscuit",
+            "tier": "Common"
+        },
+        {
+            "id": "ginger.coated-metallic",
+            "collection": "ginger",
+            "collectionName": "Ginger",
+            "name": "Ginger · Polished Gold",
+            "finish": "Polished Gold",
+            "tier": "Rare"
+        },
+        {
+            "id": "ginger.gilded-leaf",
+            "collection": "ginger",
+            "collectionName": "Ginger",
+            "name": "Ginger · Gilded Leaf",
+            "finish": "Gilded Leaf",
+            "tier": "Rare"
+        },
+        {
+            "id": "ginger.rose-gold",
+            "collection": "ginger",
+            "collectionName": "Ginger",
+            "name": "Ginger · Rose Gold",
+            "finish": "Rose Gold",
+            "tier": "Rare"
+        },
+        {
+            "id": "ginger.glow-jelly",
+            "collection": "ginger",
+            "collectionName": "Ginger",
+            "name": "Ginger · Sugarplum Glow",
+            "finish": "Sugarplum Glow",
+            "tier": "Epic"
+        },
+        {
+            "id": "ginger.diamond-prism",
+            "collection": "ginger",
+            "collectionName": "Ginger",
+            "name": "Ginger · Diamond Prism",
+            "finish": "Diamond Prism",
+            "tier": "Epic"
+        },
+        {
+            "id": "ginger.secret-edition",
+            "collection": "ginger",
+            "collectionName": "Ginger",
+            "name": "Ginger · Stained Sugar",
+            "finish": "Stained Sugar",
+            "tier": "Secret"
+        },
+        {
+            "id": "reiny.clear-jelly",
+            "collection": "reiny",
+            "collectionName": "Reiny",
+            "name": "Reiny · Cranberry Jelly",
+            "finish": "Cranberry Jelly",
+            "tier": "Common"
+        },
+        {
+            "id": "reiny.pearl-jelly",
+            "collection": "reiny",
+            "collectionName": "Reiny",
+            "name": "Reiny · Rose Pearl",
+            "finish": "Rose Pearl",
+            "tier": "Common"
+        },
+        {
+            "id": "reiny.confetti-gel",
+            "collection": "reiny",
+            "collectionName": "Reiny",
+            "name": "Reiny · Holly Confetti",
+            "finish": "Holly Confetti",
+            "tier": "Common"
+        },
+        {
+            "id": "reiny.mochi-foam",
+            "collection": "reiny",
+            "collectionName": "Reiny",
+            "name": "Reiny · Peach Mochi",
+            "finish": "Peach Mochi",
+            "tier": "Common"
+        },
+        {
+            "id": "reiny.velvet-flock",
+            "collection": "reiny",
+            "collectionName": "Reiny",
+            "name": "Reiny · Plum Flock",
+            "finish": "Plum Flock",
+            "tier": "Common"
+        },
+        {
+            "id": "reiny.boucle-plush",
+            "collection": "reiny",
+            "collectionName": "Reiny",
+            "name": "Reiny · Frosted Mint Plush",
+            "finish": "Frosted Mint Plush",
+            "tier": "Common"
+        },
+        {
+            "id": "reiny.matte-vinyl",
+            "collection": "reiny",
+            "collectionName": "Reiny",
+            "name": "Reiny · Classic Reiny",
+            "finish": "Classic Reiny",
+            "tier": "Common"
+        },
+        {
+            "id": "reiny.gloss-vinyl",
+            "collection": "reiny",
+            "collectionName": "Reiny",
+            "name": "Reiny · Blue Ribbon Gloss",
+            "finish": "Blue Ribbon Gloss",
+            "tier": "Common"
+        },
+        {
+            "id": "reiny.signature-matte",
+            "collection": "reiny",
+            "collectionName": "Reiny",
+            "name": "Reiny · Vanilla Antler",
+            "finish": "Vanilla Antler",
+            "tier": "Common"
+        },
+        {
+            "id": "reiny.coated-metallic",
+            "collection": "reiny",
+            "collectionName": "Reiny",
+            "name": "Reiny · Polished Gold",
+            "finish": "Polished Gold",
+            "tier": "Rare"
+        },
+        {
+            "id": "reiny.gilded-leaf",
+            "collection": "reiny",
+            "collectionName": "Reiny",
+            "name": "Reiny · Gilded Leaf",
+            "finish": "Gilded Leaf",
+            "tier": "Rare"
+        },
+        {
+            "id": "reiny.rose-gold",
+            "collection": "reiny",
+            "collectionName": "Reiny",
+            "name": "Reiny · Rose Gold",
+            "finish": "Rose Gold",
+            "tier": "Rare"
+        },
+        {
+            "id": "reiny.glow-jelly",
+            "collection": "reiny",
+            "collectionName": "Reiny",
+            "name": "Reiny · Solstice Glow",
+            "finish": "Solstice Glow",
+            "tier": "Epic"
+        },
+        {
+            "id": "reiny.diamond-prism",
+            "collection": "reiny",
+            "collectionName": "Reiny",
+            "name": "Reiny · Diamond Prism",
+            "finish": "Diamond Prism",
+            "tier": "Epic"
+        },
+        {
+            "id": "reiny.secret-edition",
+            "collection": "reiny",
+            "collectionName": "Reiny",
+            "name": "Reiny · Solstice Spirit",
+            "finish": "Solstice Spirit",
+            "tier": "Secret"
+        },
+        {
+            "id": "guin.clear-jelly",
+            "collection": "guin",
+            "collectionName": "Guin",
+            "name": "Guin · Ice Lagoon Jelly",
+            "finish": "Ice Lagoon Jelly",
+            "tier": "Common"
+        },
+        {
+            "id": "guin.pearl-jelly",
+            "collection": "guin",
+            "collectionName": "Guin",
+            "name": "Guin · Lilac Pearl",
+            "finish": "Lilac Pearl",
+            "tier": "Common"
+        },
+        {
+            "id": "guin.confetti-gel",
+            "collection": "guin",
+            "collectionName": "Guin",
+            "name": "Guin · Coral Confetti",
+            "finish": "Coral Confetti",
+            "tier": "Common"
+        },
+        {
+            "id": "guin.mochi-foam",
+            "collection": "guin",
+            "collectionName": "Guin",
+            "name": "Guin · Lemon Mochi",
+            "finish": "Lemon Mochi",
+            "tier": "Common"
+        },
+        {
+            "id": "guin.velvet-flock",
+            "collection": "guin",
+            "collectionName": "Guin",
+            "name": "Guin · Raspberry Flock",
+            "finish": "Raspberry Flock",
+            "tier": "Common"
+        },
+        {
+            "id": "guin.boucle-plush",
+            "collection": "guin",
+            "collectionName": "Guin",
+            "name": "Guin · Mint Plush",
+            "finish": "Mint Plush",
+            "tier": "Common"
+        },
+        {
+            "id": "guin.matte-vinyl",
+            "collection": "guin",
+            "collectionName": "Guin",
+            "name": "Guin · Classic Guin",
+            "finish": "Classic Guin",
+            "tier": "Common"
+        },
+        {
+            "id": "guin.gloss-vinyl",
+            "collection": "guin",
+            "collectionName": "Guin",
+            "name": "Guin · Violet Gloss",
+            "finish": "Violet Gloss",
+            "tier": "Common"
+        },
+        {
+            "id": "guin.signature-matte",
+            "collection": "guin",
+            "collectionName": "Guin",
+            "name": "Guin · Rose Snow",
+            "finish": "Rose Snow",
+            "tier": "Common"
+        },
+        {
+            "id": "guin.coated-metallic",
+            "collection": "guin",
+            "collectionName": "Guin",
+            "name": "Guin · Polished Gold",
+            "finish": "Polished Gold",
+            "tier": "Rare"
+        },
+        {
+            "id": "guin.gilded-leaf",
+            "collection": "guin",
+            "collectionName": "Guin",
+            "name": "Guin · Gilded Leaf",
+            "finish": "Gilded Leaf",
+            "tier": "Rare"
+        },
+        {
+            "id": "guin.rose-gold",
+            "collection": "guin",
+            "collectionName": "Guin",
+            "name": "Guin · Rose Gold",
+            "finish": "Rose Gold",
+            "tier": "Rare"
+        },
+        {
+            "id": "guin.glow-jelly",
+            "collection": "guin",
+            "collectionName": "Guin",
+            "name": "Guin · Polar Glow",
+            "finish": "Polar Glow",
+            "tier": "Epic"
+        },
+        {
+            "id": "guin.diamond-prism",
+            "collection": "guin",
+            "collectionName": "Guin",
+            "name": "Guin · Diamond Prism",
+            "finish": "Diamond Prism",
+            "tier": "Epic"
+        },
+        {
+            "id": "guin.secret-edition",
+            "collection": "guin",
+            "collectionName": "Guin",
+            "name": "Guin · Polar Night",
+            "finish": "Polar Night",
+            "tier": "Secret"
+        },
+        {
+            "id": "bundy.clear-jelly",
+            "collection": "bundy",
+            "collectionName": "Bundy",
+            "name": "Bundy · Caramel Jelly",
+            "finish": "Caramel Jelly",
+            "tier": "Common"
+        },
+        {
+            "id": "bundy.pearl-jelly",
+            "collection": "bundy",
+            "collectionName": "Bundy",
+            "name": "Bundy · Vanilla Pearl",
+            "finish": "Vanilla Pearl",
+            "tier": "Common"
+        },
+        {
+            "id": "bundy.confetti-gel",
+            "collection": "bundy",
+            "collectionName": "Bundy",
+            "name": "Bundy · Berry Confetti",
+            "finish": "Berry Confetti",
+            "tier": "Common"
+        },
+        {
+            "id": "bundy.mochi-foam",
+            "collection": "bundy",
+            "collectionName": "Bundy",
+            "name": "Bundy · Custard Mochi",
+            "finish": "Custard Mochi",
+            "tier": "Common"
+        },
+        {
+            "id": "bundy.velvet-flock",
+            "collection": "bundy",
+            "collectionName": "Bundy",
+            "name": "Bundy · Holly Flock",
+            "finish": "Holly Flock",
+            "tier": "Common"
+        },
+        {
+            "id": "bundy.boucle-plush",
+            "collection": "bundy",
+            "collectionName": "Bundy",
+            "name": "Bundy · Lavender Plush",
+            "finish": "Lavender Plush",
+            "tier": "Common"
+        },
+        {
+            "id": "bundy.matte-vinyl",
+            "collection": "bundy",
+            "collectionName": "Bundy",
+            "name": "Bundy · Classic Bundy",
+            "finish": "Classic Bundy",
+            "tier": "Common"
+        },
+        {
+            "id": "bundy.gloss-vinyl",
+            "collection": "bundy",
+            "collectionName": "Bundy",
+            "name": "Bundy · Cherry Glaze",
+            "finish": "Cherry Glaze",
+            "tier": "Common"
+        },
+        {
+            "id": "bundy.signature-matte",
+            "collection": "bundy",
+            "collectionName": "Bundy",
+            "name": "Bundy · Blue Sugar",
+            "finish": "Blue Sugar",
+            "tier": "Common"
+        },
+        {
+            "id": "bundy.coated-metallic",
+            "collection": "bundy",
+            "collectionName": "Bundy",
+            "name": "Bundy · Polished Gold",
+            "finish": "Polished Gold",
+            "tier": "Rare"
+        },
+        {
+            "id": "bundy.gilded-leaf",
+            "collection": "bundy",
+            "collectionName": "Bundy",
+            "name": "Bundy · Gilded Leaf",
+            "finish": "Gilded Leaf",
+            "tier": "Rare"
+        },
+        {
+            "id": "bundy.rose-gold",
+            "collection": "bundy",
+            "collectionName": "Bundy",
+            "name": "Bundy · Rose Gold",
+            "finish": "Rose Gold",
+            "tier": "Rare"
+        },
+        {
+            "id": "bundy.glow-jelly",
+            "collection": "bundy",
+            "collectionName": "Bundy",
+            "name": "Bundy · Holly Glow",
+            "finish": "Holly Glow",
+            "tier": "Epic"
+        },
+        {
+            "id": "bundy.diamond-prism",
+            "collection": "bundy",
+            "collectionName": "Bundy",
+            "name": "Bundy · Diamond Prism",
+            "finish": "Diamond Prism",
+            "tier": "Epic"
+        },
+        {
+            "id": "bundy.secret-edition",
+            "collection": "bundy",
+            "collectionName": "Bundy",
+            "name": "Bundy · Sugar Nebula",
+            "finish": "Sugar Nebula",
+            "tier": "Secret"
+        },
+        {
+            "id": "wally.clear-jelly",
+            "collection": "wally",
+            "collectionName": "Wally",
+            "name": "Wally · Lagoon Jelly",
+            "finish": "Lagoon Jelly",
+            "tier": "Common"
+        },
+        {
+            "id": "wally.pearl-jelly",
+            "collection": "wally",
+            "collectionName": "Wally",
+            "name": "Wally · Moon Pearl",
+            "finish": "Moon Pearl",
+            "tier": "Common"
+        },
+        {
+            "id": "wally.confetti-gel",
+            "collection": "wally",
+            "collectionName": "Wally",
+            "name": "Wally · Coral Glitter",
+            "finish": "Coral Glitter",
+            "tier": "Common"
+        },
+        {
+            "id": "wally.mochi-foam",
+            "collection": "wally",
+            "collectionName": "Wally",
+            "name": "Wally · Seafoam Mochi",
+            "finish": "Seafoam Mochi",
+            "tier": "Common"
+        },
+        {
+            "id": "wally.velvet-flock",
+            "collection": "wally",
+            "collectionName": "Wally",
+            "name": "Wally · Lavender Flock",
+            "finish": "Lavender Flock",
+            "tier": "Common"
+        },
+        {
+            "id": "wally.boucle-plush",
+            "collection": "wally",
+            "collectionName": "Wally",
+            "name": "Wally · Cloud Plush",
+            "finish": "Cloud Plush",
+            "tier": "Common"
+        },
+        {
+            "id": "wally.matte-vinyl",
+            "collection": "wally",
+            "collectionName": "Wally",
+            "name": "Wally · Reef Matte",
+            "finish": "Reef Matte",
+            "tier": "Common"
+        },
+        {
+            "id": "wally.gloss-vinyl",
+            "collection": "wally",
+            "collectionName": "Wally",
+            "name": "Wally · Classic Blue",
+            "finish": "Classic Blue",
+            "tier": "Common"
+        },
+        {
+            "id": "wally.kelp-mint",
+            "collection": "wally",
+            "collectionName": "Wally",
+            "name": "Wally · Kelp Mint",
+            "finish": "Kelp Mint",
+            "tier": "Common"
+        },
+        {
+            "id": "wally.coated-metallic",
+            "collection": "wally",
+            "collectionName": "Wally",
+            "name": "Wally · Sunken Gold",
+            "finish": "Sunken Gold",
+            "tier": "Rare"
+        },
+        {
+            "id": "wally.treasure-leaf",
+            "collection": "wally",
+            "collectionName": "Wally",
+            "name": "Wally · Treasure Leaf",
+            "finish": "Treasure Leaf",
+            "tier": "Rare"
+        },
+        {
+            "id": "wally.rose-gold-shell",
+            "collection": "wally",
+            "collectionName": "Wally",
+            "name": "Wally · Rose Gold Shell",
+            "finish": "Rose Gold Shell",
+            "tier": "Rare"
+        },
+        {
+            "id": "wally.glow-jelly",
+            "collection": "wally",
+            "collectionName": "Wally",
+            "name": "Wally · Deep Sea Glow",
+            "finish": "Deep Sea Glow",
+            "tier": "Epic"
+        },
+        {
+            "id": "wally.diamond-frost",
+            "collection": "wally",
+            "collectionName": "Wally",
+            "name": "Wally · Diamond Frost",
+            "finish": "Diamond Frost",
+            "tier": "Epic"
+        },
+        {
+            "id": "wally.molten-abyss",
+            "collection": "wally",
+            "collectionName": "Wally",
+            "name": "Wally · Molten Abyss",
+            "finish": "Molten Abyss",
+            "tier": "Secret"
+        }
+    ]
+}

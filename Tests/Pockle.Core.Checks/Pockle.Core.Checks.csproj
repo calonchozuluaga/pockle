@@ -42,5 +42,6 @@
     <Compile Include="MaterialTouchChecks.cs" />
     <Compile Include="WallyChecks.cs" />
     <Compile Include="RosterRarityChecks.cs" />
+    <Compile Include="FusionSpendChecks.cs" />
   </ItemGroup>
 </Project>

@@ -40,6 +40,7 @@ GingerReactionChecks.Run();
 SnowyReactionChecks.Run();
 WallyChecks.Run();
 RosterRarityChecks.Run();
+FusionSpendChecks.Run();
 AccountProtocolChecks.Run();
 PipFusionStudyChecks.Run();
 PipFaceChecks.Run();

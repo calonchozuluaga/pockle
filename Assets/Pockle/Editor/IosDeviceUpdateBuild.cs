@@ -17,7 +17,7 @@ namespace Pockle.Editor
             {
                 // Update the already installed development app; do not create a second store-ID app with an empty save.
                 PlayerSettings.SetApplicationIdentifier(platform, "studio.pockle.prototype");
-                PlayerSettings.iOS.buildNumber = "5";
+                PlayerSettings.iOS.buildNumber = Environment.GetEnvironmentVariable("POCKLE_IOS_BUILD_NUMBER") ?? "6";
                 PockleAppIcon.Apply();
                 string path = Path.GetFullPath("Builds/iOS-Device-Update");
                 var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions { scenes = new[] { PockleProjectSetup.ScenePath },

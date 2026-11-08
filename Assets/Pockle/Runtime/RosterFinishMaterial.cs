@@ -17,7 +17,7 @@ namespace Pockle.Runtime
             m.SetColor("_EditionColor", tint);
             // Preserve each uploaded Classic's paint; a new matte variety must still accept its new pigment.
             bool classic = toy.FinishId == "matte-vinyl" && !RosterFinishDesign.IsAddition(toy.Id);
-            if (!pip && toy.CharacterId != "fox") m.SetFloat("_TintStrength", classic || toy.Id == ToyCatalog.AxolotlId ? 0 : 1);
+            if (!pip && toy.CharacterId != "fox") m.SetFloat("_TintStrength", (classic && HolidayCatalog.IsCharacter(toy.CharacterId)) || toy.Id == ToyCatalog.AxolotlId ? 0 : 1);
             if (m.HasProperty("_TemperClassic") && toy.CharacterId == "fox") m.SetFloat("_TemperClassic", toy.Id == ToyCatalog.FoxId ? 1 : 0);
             if (!pip && HolidayCatalog.IsCharacter(toy.CharacterId))
             {

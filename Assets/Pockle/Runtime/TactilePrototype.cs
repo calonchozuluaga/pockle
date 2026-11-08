@@ -65,6 +65,7 @@ namespace Pockle.Runtime
         private MysteryBox discoveryBox;
         private float revealLift;
         private AudioSource audioSource;
+        private CollectionVoicePlayer collectionVoice;
         private AudioClip pressClip;
         private AudioClip releaseClip;
         private AudioClip landingClip;
@@ -184,6 +185,8 @@ namespace Pockle.Runtime
             audioSource.playOnAwake = false;
             audioSource.spatialBlend = 0f;
             audioSource.volume = 0.28f * soundVolume;
+            collectionVoice = gameObject.AddComponent<CollectionVoicePlayer>();
+            collectionVoice.SetSettings(soundEnabled, soundVolume);
             pressClip = CreateTone("Soft jelly press", 160f, 0.09f, false);
             releaseClip = CreateTone("Jelly rebound", 390f, 0.18f, false);
             landingClip = CreateTone("Pip soft landing", 95f, .24f, false);
@@ -284,6 +287,8 @@ namespace Pockle.Runtime
                 if(screen.z>0)head=new Vector2(screen.x,screen.y);
             }
             hud.ShowToyExpression(cue,head);ToyReactionStarted?.Invoke(cue,head);RecordToyActivity();
+            if (cue == ReactionCue.Squish || cue == ReactionCue.Hello) collectionVoice?.TryPlay(toy.CollectibleId, CollectionVoiceMood.Happy);
+            else if (cue == ReactionCue.PickUp) collectionVoice?.TryPlay(toy.CollectibleId, CollectionVoiceMood.Curious);
         }
         private bool AnyReactionPlaying => pipReactions.IsPlaying||foxReactions.IsPlaying||axolotlReactions.IsPlaying||firbReactions.IsPlaying||cocoReactions.IsPlaying||gingerReactions.IsPlaying||snowyReactions.IsPlaying||winterReactions.IsPlaying||wallyReactions.IsPlaying;
         private void PlayTapReaction()
@@ -291,7 +296,12 @@ namespace Pockle.Runtime
             if(ToyInputBlocked||AnyReactionPlaying)return;
             if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var wally)&&wally.CharacterId=="wally")wallyReactions.PlayRandom();else if(ToyCatalog.IsFoxCollectible(toy.CollectibleId))foxReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var tapped)&&tapped.CharacterId=="axolotl")axolotlReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var firb)&&firb.CharacterId=="firb")firbReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var coco)&&coco.CharacterId=="coco")cocoReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var ginger)&&ginger.CharacterId=="ginger")gingerReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var snowy)&&snowy.CharacterId=="snowy")snowyReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var winter)&&HolidayCatalog.IsWinterTrio(winter.CharacterId))winterReactions.PlayRandom();else pipReactions.PlayRandom();
             if(AnyReactionPlaying)
+            {
                 SayToyCue(ReactionCue.Poke);
+                CollectionVoiceMood mood = wallyReactions.IsPlaying ? CollectionVoicePolicy.For(wallyReactions.CurrentAction)
+                    : foxReactions.IsPlaying ? CollectionVoicePolicy.For(foxReactions.CurrentAction) : CollectionVoicePolicy.For(pipReactions.CurrentAction);
+                collectionVoice?.TryPlay(toy.CollectibleId, mood);
+            }
         }
         private string PlayHint
         {
@@ -328,6 +338,7 @@ namespace Pockle.Runtime
         public void ResetToy()
         {
             if (toy == null) return;
+            collectionVoice?.Stop();
             ReleasePointer(false);
             pipReactions?.Cancel();foxReactions?.Cancel();axolotlReactions?.Cancel();firbReactions?.Cancel();cocoReactions?.Cancel();gingerReactions?.Cancel();snowyReactions?.Cancel();winterReactions?.Cancel();wallyReactions?.Cancel();
             revealing = false;
@@ -406,12 +417,14 @@ namespace Pockle.Runtime
         {
             soundVolume = Mathf.Clamp01(value);
             if (audioSource != null) audioSource.volume = .28f * soundVolume;
+            collectionVoice?.SetSettings(soundEnabled, soundVolume);
         }
 
         private void SetSound(bool enabled)
         {
             soundEnabled = enabled;
             SaveSetting("sound", enabled);
+            collectionVoice?.SetSettings(soundEnabled, soundVolume);
             if (!enabled && audioSource != null) audioSource.Stop();
         }
 
@@ -557,7 +570,7 @@ namespace Pockle.Runtime
 
         private void OnApplicationPause(bool paused) { if (paused) { ReleasePointer(false); ClearMotion(); } }
         private void OnApplicationFocus(bool focused) { if (!focused) { ReleasePointer(false); ClearMotion(); } }
-        private void OnDisable() { ReleasePointer(false); ClearMotion(); }
+        private void OnDisable() { collectionVoice?.Stop(); ReleasePointer(false); ClearMotion(); }
         private void SelectCollectible(string id) { TryPlayCollectible(id); }
 
         private static RarityTier? CatalogRarityTier(string id)

@@ -292,3 +292,6 @@ Owner-approved direct checkout HUD/contracts/test exception. Collection boxes an
 
 ## November 8 — UX-052 roster rarity rollout (local visual review)
 Owner requests the approved 9 Common / 3 Rare / 2 Epic / 1 Secret ladder across all eleven collections, with collection-specific Secrets rather than mandatory molten. Local catalog now has 165 base finishes; all previous IDs remain. Firb's canopy pigment mask and palettes are separated. Owner authorizes collection HUD/test edits: every slot now shows its tier, including hidden toys. Review: `roster-finish-review/02/index.html`. Status: local implementation/review; live stock/quote reconciliation, design acceptance and phone verification remain before release.
+
+
+November8 playtest follow-up: UX-052 Axolotl Ice Vinyl separation corrected and reviewed natively. Pip/Fox/Wally nine-clip approved sound pilot imported and routed to local reactions. Fusion picker now refuses no-spend preview fallback and reflects permanently consumed local balances. Native70/70; build6 installed/launched on Carlos iPhone with98inventory rows/24fusions preserved. Audio loudness/feel and device visuals await owner review; shared server inventory/paid catalog rollout remain separate.

@@ -24,6 +24,7 @@ namespace Pockle.Runtime
                 case "mochi-foam": m.SetFloat("_Grain", .6f); break;
                 case "velvet-flock": gloss = .04f; m.SetFloat("_Fuzz", 1); break;
                 case "boucle-plush": gloss = .03f; m.SetFloat("_Fuzz", .65f); break;
+                case "matte-vinyl": gloss = .38f; m.SetFloat("_Fuzz", 0); break;
                 case "gloss-vinyl": gloss = .9f; break;
                 case "coated-metallic": gloss = .82f; m.SetFloat("_Metallic", 1); break;
                 case "glow-jelly": gloss = .87f; opacity = .55f; m.SetFloat("_Iridescence", .65f); m.SetFloat("_Glitter", .5f); break;

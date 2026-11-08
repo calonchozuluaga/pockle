@@ -58,7 +58,7 @@ namespace Pockle.Tests
             root = new GameObject("Collection UI test");
             session = root.AddComponent<CollectionSession>(); session.Initialize();
             hud = root.AddComponent<PrototypeHud>();
-            hud.Initialize(_ => { }, _ => { }, _ => { }, value => observedVolume = value); hud.Bind(session);
+            hud.Initialize(_ => { }, _ => { }, _ => { }, value => observedVolume = value); hud.Bind(session); hud.SetFusionService(new LocalFusionService(session));
             hud.SetSettings(true, false, false);
             yield return null;
             Canvas.ForceUpdateCanvases();
@@ -441,7 +441,7 @@ namespace Pockle.Tests
             PlayerPrefs.SetString(SaveKey, JsonUtility.ToJson(save));
             root = new GameObject("Countdown test");
             session = root.AddComponent<CollectionSession>(); session.Initialize();
-            hud = root.AddComponent<PrototypeHud>(); hud.Initialize(_ => { }, _ => { }, _ => { }); hud.Bind(session);
+            hud = root.AddComponent<PrototypeHud>(); hud.Initialize(_ => { }, _ => { }, _ => { }); hud.Bind(session); hud.SetFusionService(new LocalFusionService(session));
             yield return null; yield return null;
             Assert.IsTrue(VisibleText("NEXT BOX") && VisibleText("Mystery box") && VisibleText("A new box arrives in"));
             var countdown = root.GetComponentsInChildren<Text>().First(t => t.name == "Next box countdown");
@@ -552,7 +552,7 @@ namespace Pockle.Tests
             root = new GameObject("Partial collection UI test");
             session = root.AddComponent<CollectionSession>(); session.Initialize();
             Assert.AreEqual(0, session.GetOwnedCount(PipVariants.CollectibleId(PipVariant.MoonJelly)));
-            hud = root.AddComponent<PrototypeHud>(); hud.Initialize(_ => { }, _ => { }, _ => { }); hud.Bind(session);
+            hud = root.AddComponent<PrototypeHud>(); hud.Initialize(_ => { }, _ => { }, _ => { }); hud.Bind(session); hud.SetFusionService(new LocalFusionService(session));
             session.SimulateDailyWalk(); // Ready box; also raises Changed so the HUD refreshes.
             yield return null;
             Assert.IsTrue(ButtonWithText("Open your box").interactable, "Home must offer the ready box as its main action.");
@@ -687,7 +687,7 @@ namespace Pockle.Tests
             Object.Destroy(root); yield return null;
             root = new GameObject("Restarted moments test");
             session = root.AddComponent<CollectionSession>(); session.Initialize();
-            hud = root.AddComponent<PrototypeHud>(); hud.Initialize(_ => { }, _ => { }, _ => { }); hud.Bind(session);
+            hud = root.AddComponent<PrototypeHud>(); hud.Initialize(_ => { }, _ => { }, _ => { }); hud.Bind(session); hud.SetFusionService(new LocalFusionService(session));
             yield return null;
             ButtonWithText("Shelf").onClick.Invoke();
             Assert.IsTrue(VisibleText("2 shelf moments found"), "A restart keeps the moments found.");
@@ -706,7 +706,7 @@ namespace Pockle.Tests
             PlayerPrefs.SetString(SaveKey, JsonUtility.ToJson(save));
             root = new GameObject("Fusion anchor test");
             session = root.AddComponent<CollectionSession>(); session.Initialize();
-            hud = root.AddComponent<PrototypeHud>(); hud.Initialize(_ => { }, _ => { }, _ => { }); hud.Bind(session);
+            hud = root.AddComponent<PrototypeHud>(); hud.Initialize(_ => { }, _ => { }, _ => { }); hud.Bind(session); hud.SetFusionService(new LocalFusionService(session));
             yield return null;
             ButtonWithText("Shelf").onClick.Invoke();
             ButtonNamed("Shelf feature · Fuse").onClick.Invoke();
@@ -751,7 +751,7 @@ namespace Pockle.Tests
             PlayerPrefs.SetString(SaveKey, JsonUtility.ToJson(save));
             root = new GameObject("Fusion repack test");
             session = root.AddComponent<CollectionSession>(); session.Initialize();
-            hud = root.AddComponent<PrototypeHud>(); hud.Initialize(_ => { }, _ => { }, _ => { }); hud.Bind(session);
+            hud = root.AddComponent<PrototypeHud>(); hud.Initialize(_ => { }, _ => { }, _ => { }); hud.Bind(session); hud.SetFusionService(new LocalFusionService(session));
             yield return null;
             ButtonWithText("Shelf").onClick.Invoke();
             ButtonNamed("Shelf feature · Fuse").onClick.Invoke();
@@ -777,7 +777,7 @@ namespace Pockle.Tests
         }
 
         [UnityTest]
-        public IEnumerator FusionPreviewShowsTheResultWithoutUsingSpares()
+        public IEnumerator FusionSavesTheResultAndPermanentlyConsumesSpares()
         {
             Object.Destroy(root); yield return null;
             var save = new CollectionSave { Version = CollectionProgress.SaveVersion, Day = CollectionSession.Today,
@@ -785,9 +785,9 @@ namespace Pockle.Tests
                     new OwnedCollectible(ToyCatalog.PeachId, 2), new OwnedCollectible(ToyCatalog.MoonId, 3),
                     new OwnedCollectible(ToyCatalog.GoldId, 2), new OwnedCollectible(ToyCatalog.MintId, 1) } };
             PlayerPrefs.SetString(SaveKey, JsonUtility.ToJson(save));
-            root = new GameObject("Fusion preview test");
+            root = new GameObject("Fusion spending test");
             session = root.AddComponent<CollectionSession>(); session.Initialize();
-            hud = root.AddComponent<PrototypeHud>(); hud.Initialize(_ => { }, _ => { }, _ => { }); hud.Bind(session);
+            hud = root.AddComponent<PrototypeHud>(); hud.Initialize(_ => { }, _ => { }, _ => { }); hud.Bind(session); hud.SetFusionService(new LocalFusionService(session));
             yield return null;
             var inventory = session.OwnedCounts.ToDictionary(pair => pair.Key, pair => pair.Value);
             ButtonWithText("Shelf").onClick.Invoke();
@@ -816,13 +816,16 @@ namespace Pockle.Tests
             Assert.IsFalse(hud.FusionMomentPlaying);
             Assert.AreEqual(AppPage.FusionReveal, hud.CurrentPage);
             Assert.IsTrue(VisibleText("Dusk Pip"));
-            Assert.IsTrue(VisibleText("Moon blue to peach"));
+            Assert.IsTrue(VisibleText("Peach to moon blue"));
             // Peach (Sunny) + Moon (Dreamy) make the Stargazer hybrid (docs/PERSONALITY_SYSTEM.md section 5).
             Assert.IsTrue(VisibleText("Stargazer"));
             Assert.IsTrue(VisibleText("It's… a Stargazer! Points everyone at the night sky."));
-            Assert.IsTrue(VisibleText("Preview: fusion isn't switched on yet, so your spares weren't used."));
-            Assert.IsFalse(ButtonWithText("Add to shelf").interactable, "A preview can't add a toy to the shelf.");
-            CollectionAssert.AreEquivalent(inventory, session.OwnedCounts, "A fusion preview must never use or grant toys.");
+            Assert.IsFalse(VisibleText("Preview: fusion isn't switched on yet, so your spares weren't used."));
+            Assert.IsTrue(ButtonWithText("View on shelf").interactable);
+            Assert.AreEqual(inventory[ToyCatalog.PeachId] - 1, session.GetOwnedCount(ToyCatalog.PeachId));
+            Assert.AreEqual(inventory[ToyCatalog.MoonId] - 1, session.GetOwnedCount(ToyCatalog.MoonId));
+            Assert.AreEqual(1, session.Progress.FusionCopiesSpent(ToyCatalog.PeachId));
+            Assert.AreEqual(1, session.Progress.FusionCopiesSpent(ToyCatalog.MoonId));
             ButtonWithText("Fuse again").onClick.Invoke();
             Assert.AreEqual(AppPage.Fusion, hud.CurrentPage);
         }
@@ -1029,7 +1032,7 @@ namespace Pockle.Tests
             Object.Destroy(root); yield return null;
             root = new GameObject("Restarted live shelf test");
             session = root.AddComponent<CollectionSession>(); session.Initialize();
-            hud = root.AddComponent<PrototypeHud>(); hud.Initialize(_ => { }, _ => { }, _ => { }); hud.Bind(session);
+            hud = root.AddComponent<PrototypeHud>(); hud.Initialize(_ => { }, _ => { }, _ => { }); hud.Bind(session); hud.SetFusionService(new LocalFusionService(session));
             yield return null;
             ButtonWithText("Shelf").onClick.Invoke();
             Assert.AreEqual(3, hud.LiveShelf.Count);
@@ -1058,7 +1061,7 @@ namespace Pockle.Tests
             Object.Destroy(root); yield return null;
             root = new GameObject("Restarted badge test");
             session = root.AddComponent<CollectionSession>(); session.Initialize();
-            hud = root.AddComponent<PrototypeHud>(); hud.Initialize(_ => { }, _ => { }, _ => { }); hud.Bind(session);
+            hud = root.AddComponent<PrototypeHud>(); hud.Initialize(_ => { }, _ => { }, _ => { }); hud.Bind(session); hud.SetFusionService(new LocalFusionService(session));
             yield return null;
             ButtonWithText("You").onClick.Invoke();
             Assert.IsTrue(VisibleText("1 of 15 earned"));

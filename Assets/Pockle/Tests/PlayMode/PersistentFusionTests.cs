@@ -157,6 +157,49 @@ namespace Pockle.Tests
             finally { RenderTexture.active = old; target.Release(); UnityEngine.Object.Destroy(target); UnityEngine.Object.Destroy(image); }
         }
 
+        [UnityTest] public IEnumerator SparesAreExhaustedPermanentlyAndThePickerDropsThem()
+        {
+            foreach (bool same in new[] { false, true })
+            {
+                string a=ToyCatalog.PeachId,b=same?a:ToyCatalog.MoonId;
+                var state=new CollectionSave {Version=CollectionProgress.SaveVersion,Day=CollectionSession.Today,
+                    Inventory=new List<OwnedCollectible> {new OwnedCollectible(a,same?5:3)} };
+                if(!same)state.Inventory.Add(new OwnedCollectible(b,3));
+                PlayerPrefs.SetString(SaveKey,JsonUtility.ToJson(state));
+                root=new GameObject("Single-use spares");var session=root.AddComponent<CollectionSession>();session.Initialize();
+                var service=new LocalFusionService(session);
+                for(int i=0;i<2;i++)
+                {
+                    Assert.IsTrue(service.TryFuse(a,b));string result=session.Progress.Save.PendingFusionId;
+                    Assert.IsTrue(session.FinishFusion(result));
+                }
+                Assert.AreEqual(1,session.GetOwnedCount(a));Assert.AreEqual(1,session.GetOwnedCount(b));
+                UnityEngine.Object.Destroy(root);root=null;yield return null;
+                root=new GameObject("Spent spares after restart");session=root.AddComponent<CollectionSession>();session.Initialize();
+                Assert.AreEqual(same?4:2,session.Progress.FusionCopiesSpent(a));
+                Assert.IsFalse(new LocalFusionService(session).TryFuse(a,b));Assert.AreEqual(2,session.Progress.FusionsMade);
+                var hud=root.AddComponent<PrototypeHud>();hud.Initialize(_=>{},_=>{},_=>{});hud.Bind(session);hud.SetFusionService(new LocalFusionService(session));
+                Call(hud,"Navigate",AppPage.Fusion);yield return null;
+                Assert.IsFalse(hud.GetComponentsInChildren<Button>().Any(button=>button.name=="Spare · "+a||button.name=="Spare · "+b));
+                string persisted=PlayerPrefs.GetString(SaveKey);
+                Call(hud,"PickSpare",a);Call(hud,"PickSpare",b);Call(hud,"Fuse");
+                Assert.AreEqual(persisted,PlayerPrefs.GetString(SaveKey));Assert.IsFalse(hud.FusionMomentPlaying);
+                UnityEngine.Object.Destroy(root);root=null;yield return null;
+            }
+        }
+        [UnityTest] public IEnumerator UnavailableFusionCannotPretendToSpendOrReveal()
+        {
+            PlayerPrefs.SetString(SaveKey,JsonUtility.ToJson(new CollectionSave {Version=CollectionProgress.SaveVersion,Day=CollectionSession.Today,
+                Inventory=new List<OwnedCollectible>{new OwnedCollectible(ToyCatalog.PeachId,2),new OwnedCollectible(ToyCatalog.MoonId,2)} }));
+            root=new GameObject("Unavailable fusion gate");var session=root.AddComponent<CollectionSession>();session.Initialize();
+            var hud=root.AddComponent<PrototypeHud>();hud.Initialize(_=>{},_=>{},_=>{});hud.Bind(session);hud.SetFusionService(null);
+            Call(hud,"Navigate",AppPage.Fusion);Call(hud,"PickSpare",ToyCatalog.PeachId);Call(hud,"PickSpare",ToyCatalog.MoonId);
+            Assert.IsFalse(hud.GetComponentsInChildren<Button>().Single(b=>b.name=="Fuse" && b.GetComponentInChildren<Text>() != null && b.GetComponentInChildren<Text>().text.StartsWith("Fuse ")).interactable);
+            string before=PlayerPrefs.GetString(SaveKey);Call(hud,"Fuse");yield return null;
+            Assert.IsFalse(hud.FusionMomentPlaying);Assert.AreEqual(AppPage.Fusion,hud.CurrentPage);
+            Assert.AreEqual(before,PlayerPrefs.GetString(SaveKey));Assert.AreEqual(0,session.Progress.FusionsMade);
+        }
+
         [UnityTest] public IEnumerator FailedWriteKeepsParentsAndCreatesNoReceipt()
         {
             root = new GameObject("Failed fusion write"); var session = root.AddComponent<CollectionSession>(); session.Initialize();

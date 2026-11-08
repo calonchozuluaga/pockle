@@ -30,6 +30,8 @@ namespace Pockle.Editor
             foreach (var collection in ToyCatalog.Collections)
             {
                 if (collection.Id == PipFusionStudies.CollectionId) continue;
+                string filter = Environment.GetEnvironmentVariable("POCKLE_ROSTER_COLLECTION");
+                if (!string.IsNullOrEmpty(filter) && collection.Id != filter) continue;
                 foreach (string id in collection.Members)
                 {
                     if (!ToyCatalog.TryGetCollectible(id, out var toy)) throw new InvalidOperationException(id);

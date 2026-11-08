@@ -54,6 +54,19 @@ namespace Pockle.Core
         private readonly Dictionary<string, int> counts = new Dictionary<string, int>(StringComparer.Ordinal);
         public IReadOnlyDictionary<string, int> OwnedCounts { get; }
         public bool CanClaim => Save.Steps >= DailyTarget && !Save.Claimed && Save.PendingRevealId.Length == 0 && string.IsNullOrEmpty(Save.PendingFusionId);
+        /// <summary>Durable spend audit from unique saved fusion receipts; same-parent fusions spend two copies.</summary>
+        public int FusionCopiesSpent(string? id)
+        {
+            if (id == null || Save.Fusions == null) return 0;
+            long spent = 0; var receipts = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var record in Save.Fusions)
+            {
+                if (!FusionCatalog.Valid(record) || !receipts.Add(record.Id)) continue;
+                if (record.First == id) spent++;
+                if (record.Second == id) spent++;
+            }
+            return (int)Math.Min(int.MaxValue, spent);
+        }
         public int GetOwnedCount(string? id) => id != null && counts.TryGetValue(id, out int count) ? count : 0;
 
         public CollectionProgress(CollectionSave? saved, int day)

@@ -41,7 +41,7 @@ namespace Pockle.Runtime
         }
     }
 
-    /// <summary>Until the runtime exists, fusing shows a preview of the result and uses nothing.</summary>
+    /// <summary>Compatibility placeholder for an unavailable fusion service. The HUD must not start a reveal when unavailable.</summary>
     public sealed class PreviewOnlyFusion : IFusionService
     {
         public bool Available => false;

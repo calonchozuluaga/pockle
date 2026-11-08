@@ -1,0 +1,46 @@
+{
+  "date": "2026-11-08",
+  "branch": "codex/toy-playtest-polish",
+  "bundleId": "studio.pockle.prototype",
+  "version": "0.1.0",
+  "build": "6",
+  "nativeTests": {
+    "passed": 70,
+    "failed": 0,
+    "skipped": 0
+  },
+  "coreChecksPassed": true,
+  "sourceChecks": {
+    "files": 287,
+    "profiles": 3,
+    "asmdefs": 5,
+    "assetGuids": 891,
+    "failures": 0
+  },
+  "developmentSigningVerified": true,
+  "installed": true,
+  "launched": true,
+  "savePreservation": {
+    "inventoryRowsPreserved": 98,
+    "fusionRowsPreserved": 24,
+    "copiesPreserved": 99,
+    "saveVersion": 5,
+    "build": "6",
+    "installationVerified": true
+  },
+  "existingPhoneFusionAudit": {
+    "baselineInventoryRows": 76,
+    "baselineFusions": 2,
+    "currentInventoryRows": 98,
+    "currentFusions": 24,
+    "newFusions": 22,
+    "spentCopies": 44,
+    "createdResults": 22,
+    "additionalEarnedWalkingCopies": 1,
+    "balancesExactlyMatchSavedReceiptsAndRewards": true,
+    "remainingSpareCopies": 1
+  },
+  "ownerAudibleAcceptance": "pending",
+  "crossDeviceInventoryLedger": "not_implemented_by_this_change",
+  "livePaidCatalogChanged": false
+}

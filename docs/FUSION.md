@@ -100,3 +100,9 @@ October15 follow-up: Honeydew and Eclipse approved as two additional fixed mater
 Claude authors profile/trait combinations, social pairings, expression direction and UI descriptions; Codex implements separate appearance/personality resolution and local expression/social behavior hooks. Exact inheritance mappings, expression sets and social outcomes remain to be designed and reviewed. All behavior remains authored and local, with no per-touch AI generation.
 
 October17 badge runtime extension: current schema4 adds history/provenance/badge snapshots while preserving saved fusion receipts and pending reveals. Actual fused results have earned origin; non-earned parent extras are consumed first. See BADGE_RUNTIME_API.md. The prior version3 `.before-v3` backup and new `.before-v4` backup are retained.
+
+
+## November 8 — permanent spare consumption (owner clarification)
+A spare is a physical extra copy, never an unlimited finish unlock. Available spares are max(0,ownedCount-1). A completed fusion permanently consumes one spare of each parent, or two spares when both inputs are the same finish, while retaining the last display copy. Commit both reduced balances and one result together before the reveal. Saved Fusions records retain parent IDs and a unique result ID as durable spend receipts; CollectionProgress.FusionCopiesSpent audits them without counting duplicate receipts. Refresh the picker from committed balances. Exhausted finishes disappear; stale clicks, insufficient counts, failed writes and unavailable services cannot reveal a fake result.
+
+Verified locally and after save/reopen, including same-parent fusion. This is a local beta transaction; shared cross-device/server inventory authority remains a release gate and was not deployed by this change.
