@@ -157,7 +157,7 @@ namespace Pockle.Runtime
             var nature = NatureOf(toy.CharacterId);
             if (nature == null) return false;
             string finish = FinishName(toy);
-            Touch touch = touches.TryGetValue(toy.CharacterId + ":" + finish, out var authored) ? authored
+            Touch touch = touches.TryGetValue(toy.Id, out var authored) ? authored
                 : new Touch(Lower(finish) + " charm", "Its own " + Lower(finish) + " charm, on top of the " + nature.Name + " nature.", null, null);
             var reactions = new List<string>(nature.Reactions);
             if (touch.NightReaction != null) { reactions.Add("At night"); reactions.Add(touch.NightReaction); }
@@ -258,34 +258,32 @@ namespace Pockle.Runtime
             return nature;
         }
 
-        /// <summary>Each finish adds one trait (first draft, October 14; the owner may rename any line).</summary>
+        /// <summary>Traits are keyed by persistent toy ID so changing a color or display name cannot change personality.</summary>
         private static readonly Dictionary<string, Touch> touches = new Dictionary<string, Touch>
         {
-            ["fox:Honey"] = new Touch("cuddly", "Sweet and cuddly. Leans into a hug.", PersonalityMotionStyle.Calm, null),
-            ["fox:Pearl"] = new Touch("fancy", "Polite and a little fancy. Sits up straight.", PersonalityMotionStyle.Show, null),
-            ["fox:Rose Quartz"] = new Touch("shy", "Blushes easily and hides behind its tail.", PersonalityMotionStyle.Calm, null),
-            ["fox:Mochi"] = new Touch("sleepy", "Squishy and sleepy. First to nap.", PersonalityMotionStyle.Calm, null),
-            ["fox:Cloud"] = new Touch("daydreaming", "A daydreamer, always looking up.", PersonalityMotionStyle.Dream, null),
-            ["fox:Midnight"] = new Touch("night-owl", "Wide awake when everyone sleeps.", PersonalityMotionStyle.Dream, "Stays up watching"),
-            ["fox:Apricot"] = new Touch("bouncy", "Sunny and bouncy. Can't sit still.", PersonalityMotionStyle.Show, null),
-            ["fox:Classic"] = new Touch("brave", "The brave one. Leads the pack.", PersonalityMotionStyle.Curious, null),
-            ["fox:Copper"] = new Touch("proud", "Proud and shiny. Loves being seen.", PersonalityMotionStyle.Show, null),
-            ["fox:Aurora"] = new Touch("dreamy", "Night owl. Glows under the night lamp and on the night shelf.", PersonalityMotionStyle.Dream, "Glows and stargazes"),
-            ["pip:Starlight Glow"] = new Touch("starry", "Rare and starry. Glows softly in the dark.", PersonalityMotionStyle.Dream, "Glows like a star"),
-            ["pip:Boucle Plush"] = new Touch("snuggly", "Fuzzy and snuggly.", PersonalityMotionStyle.Calm, null),
-            ["pip:Bouclé Plush"] = new Touch("snuggly", "Fuzzy and snuggly.", PersonalityMotionStyle.Calm, null),
-            ["pip:Velvet Flock"] = new Touch("elegant", "Velvety and elegant.", PersonalityMotionStyle.Show, null),
-            ["pip:Gloss Vinyl"] = new Touch("bold", "Shiny and bold.", PersonalityMotionStyle.Show, null),
-            ["pip:Matte Vinyl"] = new Touch("chill", "Laid-back and chill.", PersonalityMotionStyle.Calm, null),
-            ["pip:Coated Metallic"] = new Touch("brave", "Metallic and brave.", PersonalityMotionStyle.Curious, null),
-            ["axolotl:Boucle Plush"] = new Touch("cuddly", "Fuzzy, soft and cuddly.", PersonalityMotionStyle.Calm, null),
+            ["fox.clear-jelly"] = new Touch("cuddly", "Sweet and cuddly. Leans into a hug.", PersonalityMotionStyle.Calm, null),
+            ["fox.pearl-jelly"] = new Touch("fancy", "Polite and a little fancy. Sits up straight.", PersonalityMotionStyle.Show, null),
+            ["fox.confetti-gel"] = new Touch("shy", "Blushes easily and hides behind its tail.", PersonalityMotionStyle.Calm, null),
+            ["fox.mochi-foam"] = new Touch("sleepy", "Squishy and sleepy. First to nap.", PersonalityMotionStyle.Calm, null),
+            ["fox.velvet-flock"] = new Touch("daydreaming", "A daydreamer, always looking up.", PersonalityMotionStyle.Dream, null),
+            ["fox.boucle-plush"] = new Touch("night-owl", "Wide awake when everyone sleeps.", PersonalityMotionStyle.Dream, "Stays up watching"),
+            ["fox.matte-vinyl"] = new Touch("bouncy", "Sunny and bouncy. Can't sit still.", PersonalityMotionStyle.Show, null),
+            ["fox.gloss-vinyl"] = new Touch("brave", "The brave one. Leads the pack.", PersonalityMotionStyle.Curious, null),
+            ["fox.coated-metallic"] = new Touch("proud", "Proud and shiny. Loves being seen.", PersonalityMotionStyle.Show, null),
+            ["fox.glow-jelly"] = new Touch("dreamy", "Night owl. Glows under the night lamp and on the night shelf.", PersonalityMotionStyle.Dream, "Glows and stargazes"),
+            ["pip.glow-jelly"] = new Touch("starry", "Rare and starry. Glows softly in the dark.", PersonalityMotionStyle.Dream, "Glows like a star"),
+            ["pip.boucle-plush"] = new Touch("snuggly", "Fuzzy and snuggly.", PersonalityMotionStyle.Calm, null),
+            ["pip.velvet-flock"] = new Touch("elegant", "Velvety and elegant.", PersonalityMotionStyle.Show, null),
+            ["pip.gloss-vinyl"] = new Touch("bold", "Shiny and bold.", PersonalityMotionStyle.Show, null),
+            ["pip.matte-vinyl"] = new Touch("chill", "Laid-back and chill.", PersonalityMotionStyle.Calm, null),
+            ["pip.coated-metallic"] = new Touch("brave", "Metallic and brave.", PersonalityMotionStyle.Curious, null),
             // First drafts, October 15 (personality system): one toy per temperament the characters don't cover yet.
-            ["axolotl:Blossom Plush"] = new Touch("cuddly", "Fuzzy, soft and cuddly.", PersonalityMotionStyle.Calm, null),
-            ["axolotl:Rose Glitter"] = new Touch("shy", "Shy and sparkly. Hides behind its frills.", PersonalityMotionStyle.Calm, null),
-            ["axolotl:Sky Matte"] = new Touch("grumpy", "Grumpy when woken up. Secretly loves a cuddle.", PersonalityMotionStyle.Calm, null),
-            ["axolotl:Coral Gloss"] = new Touch("cheeky", "Cheeky. Blows bubbles at its neighbours.", PersonalityMotionStyle.Show, null),
-            ["axolotl:Biolume Glow"] = new Touch("glowy", "Glows softly and gazes at the stars.", PersonalityMotionStyle.Dream, "Glows in the dark"),
-            ["snowy:Coated Metallic"] = new Touch("frosty", "Frosty at first. Warms up to its friends.", PersonalityMotionStyle.Calm, null)
+            ["axolotl.boucle-plush"] = new Touch("cuddly", "Fuzzy, soft and cuddly.", PersonalityMotionStyle.Calm, null),
+            ["axolotl.confetti-gel"] = new Touch("shy", "Shy and sparkly. Hides behind its frills.", PersonalityMotionStyle.Calm, null),
+            ["axolotl.matte-vinyl"] = new Touch("grumpy", "Grumpy when woken up. Secretly loves a cuddle.", PersonalityMotionStyle.Calm, null),
+            ["axolotl.gloss-vinyl"] = new Touch("cheeky", "Cheeky. Blows bubbles at its neighbours.", PersonalityMotionStyle.Show, null),
+            ["axolotl.glow-jelly"] = new Touch("glowy", "Glows softly and gazes at the stars.", PersonalityMotionStyle.Dream, "Glows in the dark"),
+            ["snowy.coated-metallic"] = new Touch("frosty", "Frosty at first. Warms up to its friends.", PersonalityMotionStyle.Calm, null)
         };
 
         /// <summary>A finish's name without its rarity suffix ("Aurora · Super rare" is "Aurora").</summary>

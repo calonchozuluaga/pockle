@@ -47,7 +47,7 @@ namespace Pockle.Core
         /// <summary>The character collection; membership does not grant art availability or reward eligibility.</summary>
         public string CollectionId { get; }
         public CatalogColor SwatchColor => FusionCatalog.TryGet(Id, out var fused) ? FusionCatalog.Swatch(fused) : ToyCatalog.FinishSwatch(Id, FinishId);
-        /// <summary>Derived from the character collection's explicit secret identity.</summary>
+        /// <summary>Explicit rarity metadata, independent of discovery, ownership and display names.</summary>
         public ToyTier Tier => RosterFinishDesign.Tier(Id, CharacterId, FinishId, CollectionId);
         public bool IsSecret => ToyCatalog.TryGetCollection(CollectionId, out var collection) && collection.SecretId == Id;
         internal CollectibleDefinition(string id, CharacterDefinition character, FinishDefinition finish,
@@ -163,9 +163,6 @@ namespace Pockle.Core
             foreach (var character in characters) charactersById.Add(character.Id, character);
             foreach (var finish in finishes) finishesById.Add(finish.Id, finish);
             var collectibles = new List<CollectibleDefinition>(characters.Length * finishes.Length);
-            string[] pipLabels = { "Peach Jelly", "Moon Jelly", "Gold Glitter", "Mint Soft" };
-            string[] axolotlLabels = { "Honey Jelly", "Pearl", "Rose Glitter", "Mint Mochi", "Lavender Flock", "Blossom Plush", "Sky Matte", "Coral Gloss", "Copper", "Biolume Glow · Ultra rare" };
-            string[] foxLabels = { "Honey", "Pearl", "Rose Quartz", "Mochi", "Cloud", "Midnight", "Apricot", "Classic", "Copper", "Aurora · Super rare" };
             foreach (var character in characters)
             {
                 for (int index = 0; index < finishes.Length; index++)

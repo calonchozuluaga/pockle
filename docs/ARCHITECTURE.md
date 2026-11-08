@@ -205,3 +205,5 @@ The existing walking tracker now supports iOS through a local CMPedometer Object
 
 ## November 8 — full roster rarity designs (local review branch)
 `RosterFinishDesign` supplies the 15-slot ladder and collection-specific pigments/Secret identities. `RosterFinishMaterial` applies a shared, local `CollectionEdition.cginc` layer over each existing character shader, preserving Wally's separate approved shader. `JellyToy.EditionMotion` provides a local clock that freezes in Calm; edition state resets when Pip changes to an ordinary finish or fusion. Rarity is explicit Core metadata and the collection HUD shows all four tier labels on discovered and undiscovered slots. Existing IDs and fusion references survive; no save-version change. See `ROSTER_RARITY_REFRESH.md` for the boundary between the local 165-finish roster and unchanged live paid stock.
+
+November8 follow-up: PersonalityBook authored touch records now use stable collectible IDs instead of display labels; finish renames do not change traits, motions or reactions. Owner approved this narrow shared-lane correction.

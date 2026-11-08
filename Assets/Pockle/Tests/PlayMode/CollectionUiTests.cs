@@ -269,6 +269,18 @@ namespace Pockle.Tests
             Assert.IsTrue(targets.Any(target => !target.IsCreated()), "Disposal must release native live targets.");
         }
 
+        [Test]
+        public void RenamedFinishesKeepTheirAuthoredPersonality()
+        {
+            string[] ids = { "fox.clear-jelly", "fox.glow-jelly", "pip.gloss-vinyl", "axolotl.confetti-gel", "snowy.coated-metallic" };
+            string[] traits = { "Cuddly", "Dreamy", "Bold", "Shy", "Frosty" };
+            for (int i = 0; i < ids.Length; i++)
+            {
+                Assert.IsTrue(PersonalityBook.TryGet(ids[i], out var personality));
+                Assert.AreEqual(traits[i], personality.TouchTrait, ids[i]);
+            }
+        }
+
         [UnityTest]
         public IEnumerator AllHiddenSlotsDiscloseRarityWithoutRevealingTheToy()
         {

@@ -29,3 +29,7 @@ The review gallery at `roster-finish-review/02/index.html` includes all 165 nati
 This is an isolated local design/runtime branch, not a store rollout. Live purchase catalog/odds and finite supply records still describe the previous lineup. They must be reconciled transactionally with the approved new designs before a paid or walking reward rollout. No new prices, products, draw weights, edition caps or backend grants are introduced by this branch. The checkout continues to disclose the server's eligible outcomes; it must never claim that the new visual lineup has already entered live paid stock.
 
 Existing owned IDs and fusion references remain loadable; there is no save-format change, renaming or deletion of owned IDs. New IDs use existing handling profiles. No new network requests or AI calls occur during tactile play.
+
+## Verification
+
+Final native59/59 UI/material checks passed; full Core and source checks passed. Authored personality records are keyed by stable toy ID, preserving traits across the renamed finishes. Native gallery captures are165/165. Not installed on phones; live stock/odds reconciliation and device performance/visual acceptance remain pending.
