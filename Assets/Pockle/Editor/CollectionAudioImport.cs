@@ -8,10 +8,11 @@ namespace Pockle.Editor
     {
         public static void Configure()
         {
-            foreach(string character in new[]{"pip","fox","wally"})
-            foreach(CollectionVoiceMood mood in Enum.GetValues(typeof(CollectionVoiceMood)))
+            var paths = AssetDatabase.FindAssets("t:AudioClip", new[]{"Assets/Pockle/Resources/Audio/Collections"});
+            int count = 0;
+            foreach (string guid in paths)
             {
-                string path="Assets/Pockle/Resources/"+CollectionVoicePolicy.Resource(character,mood)+".mp3";
+                string path = AssetDatabase.GUIDToAssetPath(guid);
                 var importer=AssetImporter.GetAtPath(path) as AudioImporter;
                 if(importer==null)throw new InvalidOperationException("Audio importer missing: "+path);
                 importer.forceToMono=true;importer.loadInBackground=false;
@@ -19,8 +20,9 @@ namespace Pockle.Editor
                 settings.compressionFormat=AudioCompressionFormat.PCM;importer.defaultSampleSettings=settings;
                 importer.SaveAndReimport();
                 if(AssetDatabase.LoadAssetAtPath<AudioClip>(path)==null)throw new InvalidOperationException("Audio clip missing: "+path);
+                count++;
             }
-            Debug.Log("COLLECTION_AUDIO_IMPORT_OK 9 local PCM mono one-shots");
+            Debug.Log("COLLECTION_AUDIO_IMPORT_OK " + count + " local PCM mono one-shots");
         }
     }
 }

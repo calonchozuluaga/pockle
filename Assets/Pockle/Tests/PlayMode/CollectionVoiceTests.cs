@@ -70,21 +70,50 @@ namespace Pockle.Tests
             yield return null;
         }
         [Test]
-        public void UnreviewedCuesFallBackOnlyWithinTheSameApprovedCollection()
+        public void All143ApprovedActionAndTemperamentClipsDecodeAndRouteIndependently()
         {
-            var root = new GameObject("Staged audition fallback"); var voice = root.AddComponent<CollectionVoicePlayer>();
+            var root = new GameObject("Approved complete voice library"); var voice = root.AddComponent<CollectionVoicePlayer>();
+            var seen = new System.Collections.Generic.HashSet<AudioClip>();
             try
             {
-                Assert.IsTrue(voice.TryPlayAction(ToyCatalog.PeachId, PipAction.Peekaboo, CollectionVoiceMood.Curious));
-                Assert.AreSame(voice.ClipFor(ToyCatalog.PeachId, CollectionVoiceMood.Curious), voice.CurrentClip);
-                voice.Stop();
-                Assert.IsTrue(voice.TryPlayTemperament(ToyCatalog.FoxId, PipTemperament.Grumpy, CollectionVoiceMood.Happy));
-                Assert.AreSame(voice.ClipFor(ToyCatalog.FoxId, CollectionVoiceMood.Happy), voice.CurrentClip);
-                voice.Stop();
+                foreach (string character in new[]{"pip","fox","axolotl","firb","coco","snowy","ginger","reiny","guin","bundy","wally"})
+                {
+                    string id = null;
+                    foreach (var entry in ToyCatalog.Collectibles) if (entry.CharacterId == character) { id = entry.Id; break; }
+                    Assert.IsNotNull(id, character);
+                    System.Type actionType = character == "pip" ? typeof(PipAction) : character == "fox" ? typeof(FoxAction)
+                        : character == "axolotl" ? typeof(AxolotlAction) : character == "firb" ? typeof(FirbAction)
+                        : character == "coco" ? typeof(CocoAction) : character == "snowy" ? typeof(SnowyAction)
+                        : character == "ginger" ? typeof(GingerAction) : character == "wally" ? typeof(WallyAction) : typeof(WinterTrioAction);
+                    foreach (System.Enum action in System.Enum.GetValues(actionType))
+                    {
+                        var clip = voice.ClipForAction(id, action); Validate(clip, seen, character + " " + action);
+                        Assert.IsTrue(voice.TryPlayAction(id, action, CollectionVoiceMood.Happy));
+                        Assert.AreSame(clip, voice.CurrentClip); voice.Stop();
+                    }
+                    foreach (PipTemperament face in System.Enum.GetValues(typeof(PipTemperament)))
+                    {
+                        var clip = voice.ClipForTemperament(id, face); Validate(clip, seen, character + " " + face);
+                        Assert.IsTrue(voice.TryPlayTemperament(id, face, CollectionVoiceMood.Happy));
+                        Assert.AreSame(clip, voice.CurrentClip); voice.Stop();
+                    }
+                }
+                Assert.AreEqual(143, seen.Count);
+                Assert.IsNull(voice.ClipForAction(ToyCatalog.FoxId, PipAction.Hop));
                 Assert.IsFalse(voice.TryPlayAction(ToyCatalog.FoxId, PipAction.Hop, CollectionVoiceMood.Happy));
-                Assert.IsFalse(voice.TryPlayAction(ToyCatalog.AxolotlId, AxolotlAction.HelloWave, CollectionVoiceMood.Happy));
+                Assert.IsNull(voice.ClipForTemperament("unknown", PipTemperament.Calm));
             }
             finally { Object.DestroyImmediate(root); }
+        }
+        private static void Validate(AudioClip clip, System.Collections.Generic.HashSet<AudioClip> seen, string label)
+        {
+            Assert.IsNotNull(clip, label); Assert.IsTrue(seen.Add(clip), "Distinct cue required: " + label);
+            Assert.That(clip.length, Is.InRange(1.9f,3.1f)); Assert.AreEqual(1,clip.channels);
+            var samples = new float[clip.samples * clip.channels]; Assert.IsTrue(clip.GetData(samples,0),label);
+            Assert.IsTrue(System.Array.Exists(samples, x => System.Math.Abs(x) > .001f),label);
+            int count = System.Math.Min(samples.Length, (int)(clip.frequency*.02f)); double sum = 0;
+            for (int i=samples.Length-count; i<samples.Length; i++) sum += samples[i]*samples[i];
+            Assert.Less(System.Math.Sqrt(sum/count),.005,"Quiet natural ending required: "+label);
         }
         [Test]
         public void IceVinylUsesItsOwnBluePigmentAndHasNoPlushPile()

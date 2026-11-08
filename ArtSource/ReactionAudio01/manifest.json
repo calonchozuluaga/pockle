@@ -19,13 +19,15 @@
       "outputCount": 1,
       "promptInfluence": null,
       "credits": 0,
-      "status": "approved-existing",
+      "status": "approved",
       "source": "sources/pip-hop.mp3",
       "reuses": "pip-playful",
       "sha256": "c5c85e8847e9d5952435f482fbd361237a83aabcff383974f1d165dd2e98c603",
       "mpegSha256": "4bf410a052ed6e161985005ffcd023088f7cd531bcd2b5c1baf28ccde9659303",
       "generationId": "mE9pInqhJQ",
-      "promptUse": "New action routing brief; existing approved audio reused, not regenerated from this prompt."
+      "promptUse": "New action routing brief; existing approved audio reused, not regenerated from this prompt.",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/pip/hop"
     },
     {
       "id": "pip-curious-tilt",
@@ -39,13 +41,15 @@
       "outputCount": 1,
       "promptInfluence": null,
       "credits": 0,
-      "status": "approved-existing",
+      "status": "approved",
       "source": "sources/pip-curious-tilt.mp3",
       "reuses": "pip-curious",
       "sha256": "8dffda2945db9849125664aaa432f7c68a95dcb037a4b7f9f0c02e908a101808",
       "mpegSha256": "4fb27eb527635be0a767f508fdc5d24d491af1eea9a4658df5ce0068b4c1d7aa",
       "generationId": "rgVQkBuxtc",
-      "promptUse": "New action routing brief; existing approved audio reused, not regenerated from this prompt."
+      "promptUse": "New action routing brief; existing approved audio reused, not regenerated from this prompt.",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/pip/curious-tilt"
     },
     {
       "id": "pip-happy-wiggle",
@@ -59,13 +63,15 @@
       "outputCount": 1,
       "promptInfluence": null,
       "credits": 0,
-      "status": "approved-existing",
+      "status": "approved",
       "source": "sources/pip-happy-wiggle.mp3",
       "reuses": "pip-happy",
       "sha256": "843560d5d22343438b6e6cfd2aad24b38dcd50cfcd6d82f038dc93e1ce93c45d",
       "mpegSha256": "0de515319235b5a817700ba2501306f432e5054e4409fb5d8400c68faf3e6539",
       "generationId": "IfPMo6WtvE",
-      "promptUse": "New action routing brief; existing approved audio reused, not regenerated from this prompt."
+      "promptUse": "New action routing brief; existing approved audio reused, not regenerated from this prompt.",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/pip/happy-wiggle"
     },
     {
       "id": "pip-peekaboo",
@@ -79,13 +85,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/pip-peekaboo.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840819649.mp3",
       "sha256": "11afd8582ffa18985d660a0a06676f9e2e2f2bf64dd107f5b7fb89772e9dd08c",
       "mpegSha256": "d30be8b004342d0cb325f84aeb4a6c3f47a13a17e18b3536f07d3c1d59860bd1",
-      "creationId": "3840819649"
+      "creationId": "3840819649",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/pip/peekaboo"
     },
     {
       "id": "pip-thank-you-bow",
@@ -99,13 +107,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/pip-thank-you-bow.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840820223.mp3",
       "sha256": "1adfc33da759a76d70fd76ed7940f1735b2e34405ce790c603ae543cb154ff03",
       "mpegSha256": "7c9eeb018f449c323a18cc243282db50fd9f41d26580384e7009b905ae157804",
-      "creationId": "3840820223"
+      "creationId": "3840820223",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/pip/thank-you-bow"
     },
     {
       "id": "pip-temperament-sunny",
@@ -119,13 +129,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/pip-temperament-sunny.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840821134.mp3",
       "sha256": "1120e5ed6badc0c065ec145d70689c6a71e22abf612370a8c0defa030f3bf134",
       "mpegSha256": "85e780785d0da9b08a2dd2af28cc13bec6c3317aa1a5d079c67d7d69f189d435",
-      "creationId": "3840821134"
+      "creationId": "3840821134",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/pip/temperament-sunny"
     },
     {
       "id": "pip-temperament-grumpy",
@@ -139,13 +151,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/pip-temperament-grumpy.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840822980.mp3",
       "sha256": "e866bab949345486dfd1e5578d2331ec00430156cb7766011ae0bd6680e9f73f",
       "mpegSha256": "633cebd20a490771b8033511ab746f4902440f39634f9c6f1b16ee7e3f2c1c26",
-      "creationId": "3840822980"
+      "creationId": "3840822980",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/pip/temperament-grumpy"
     },
     {
       "id": "pip-temperament-shy",
@@ -159,13 +173,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/pip-temperament-shy.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840823051.mp3",
       "sha256": "b3b81a6810f17d672f39cc6fd57deb931c91384edb7f87f87521b19e7aea095b",
       "mpegSha256": "6f93c22fb0b89933aedaad62b450df6820cd239dde2c71630e5cc5eb9b20b700",
-      "creationId": "3840823051"
+      "creationId": "3840823051",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/pip/temperament-shy"
     },
     {
       "id": "pip-temperament-show-off",
@@ -179,13 +195,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/pip-temperament-show-off.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840824909.mp3",
       "sha256": "1c8147202adc88214045ada7807e83066ebae10542e5ecd9b1a7d60052e9e6ec",
       "mpegSha256": "f50772ee94d7b7985e5fd0c54740cd45c57bf6356bc587acd90e31de89721bf2",
-      "creationId": "3840824909"
+      "creationId": "3840824909",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/pip/temperament-show-off"
     },
     {
       "id": "pip-temperament-dreamy",
@@ -199,13 +217,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/pip-temperament-dreamy.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840824975.mp3",
       "sha256": "763efa8f7c381a621ab9bab9fffdaf556233ee88914074132ab2ad7e6ac3314e",
       "mpegSha256": "2a9d024cabacd3441b9c61e123e3b4c6f2ef5be5bc41384dad4061e77cc141c0",
-      "creationId": "3840824975"
+      "creationId": "3840824975",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/pip/temperament-dreamy"
     },
     {
       "id": "pip-temperament-sleepy",
@@ -219,13 +239,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/pip-temperament-sleepy.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840825067.mp3",
       "sha256": "1844082e4360ed4593ac2cf0a51042f7f1efa3b045f793497bd4bea3e8986331",
       "mpegSha256": "68bd735da95dec6b329bf7ad71eedcef07ef6cd8c1f7cd45367102ef1fd22eca",
-      "creationId": "3840825067"
+      "creationId": "3840825067",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/pip/temperament-sleepy"
     },
     {
       "id": "pip-temperament-mischief",
@@ -239,13 +261,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/pip-temperament-mischief.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840825131.mp3",
       "sha256": "d5142c7edf176ab23812ac531b8544bd5013741fd9f2b771ec25ad77ef38b533",
       "mpegSha256": "3df76af7c08050b8882c8a8ff15049434a62068db1d008c48471a17840aa6c9e",
-      "creationId": "3840825131"
+      "creationId": "3840825131",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/pip/temperament-mischief"
     },
     {
       "id": "pip-temperament-calm",
@@ -259,13 +283,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/pip-temperament-calm.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840825189.mp3",
       "sha256": "1a80c368120e40fa545663f942e6eefc833227298e3895207b98b8225dca5dbd",
       "mpegSha256": "04dfe20b870160aa32e5a111ce8d7f52add124da1e77ab3c7b72ca610657d532",
-      "creationId": "3840825189"
+      "creationId": "3840825189",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/pip/temperament-calm"
     },
     {
       "id": "fox-jump",
@@ -279,13 +305,15 @@
       "outputCount": 1,
       "promptInfluence": null,
       "credits": 0,
-      "status": "approved-existing",
+      "status": "approved",
       "source": "sources/fox-jump.mp3",
       "reuses": "fox-playful",
       "sha256": "252d15fc5b74e7e5faaecddfddd4ebf73b1bc030f03a88898ee58fca71ddd81f",
       "mpegSha256": "a5cf4dbe918cbd2ac6307e522f7064f7e4b45aa99e249620a0faa5ed50b14f87",
       "generationId": "rgVQkQ2xtc",
-      "promptUse": "New action routing brief; existing approved audio reused, not regenerated from this prompt."
+      "promptUse": "New action routing brief; existing approved audio reused, not regenerated from this prompt.",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/fox/jump"
     },
     {
       "id": "fox-tail-wag",
@@ -299,13 +327,15 @@
       "outputCount": 1,
       "promptInfluence": null,
       "credits": 0,
-      "status": "approved-existing",
+      "status": "approved",
       "source": "sources/fox-tail-wag.mp3",
       "reuses": "fox-happy",
       "sha256": "78d6a2ac58151b9ed2f5e57b9d9b291c6d592010d32b92c386b624d74fe68e92",
       "mpegSha256": "bf7657e0956d762f97212e814feb73c5d9483b9bfc624669c8c01ebe14caeeb1",
       "generationId": "lJd5Ludgv9",
-      "promptUse": "New action routing brief; existing approved audio reused, not regenerated from this prompt."
+      "promptUse": "New action routing brief; existing approved audio reused, not regenerated from this prompt.",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/fox/tail-wag"
     },
     {
       "id": "fox-curious-tilt",
@@ -319,13 +349,15 @@
       "outputCount": 1,
       "promptInfluence": null,
       "credits": 0,
-      "status": "approved-existing",
+      "status": "approved",
       "source": "sources/fox-curious-tilt.mp3",
       "reuses": "fox-curious",
       "sha256": "5d94f5bf160fd2d59e21055202285eeab0a8e654cb6599f4d83953b1d5226a58",
       "mpegSha256": "fdbedd2b452101ae95e79a44864b2aefa7e9af28df1883b60a0cc26b98d340fd",
       "generationId": "yihsJxXPW9",
-      "promptUse": "New action routing brief; existing approved audio reused, not regenerated from this prompt."
+      "promptUse": "New action routing brief; existing approved audio reused, not regenerated from this prompt.",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/fox/curious-tilt"
     },
     {
       "id": "fox-sleepy-blink",
@@ -339,13 +371,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/fox-sleepy-blink.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840825252.mp3",
       "sha256": "3f4877bf53028cd0f15a33b37cfbe47389e5b54b0d0f776d978742bd90523ba2",
       "mpegSha256": "5a798ac592aed673fc845b42de871fff1b4bb9f8389c4adc695e5a017ad07162",
-      "creationId": "3840825252"
+      "creationId": "3840825252",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/fox/sleepy-blink"
     },
     {
       "id": "fox-greeting-bow",
@@ -359,13 +393,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/fox-greeting-bow.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840825920.mp3",
       "sha256": "d5fdd00726810d4b182dba9c11e9eaf13aee557d5f130c5bba7f467150be7659",
       "mpegSha256": "091e2dabb37da495fa412d8a4e14b2a83b14f56b8c96b210a2fb80021b4610b6",
-      "creationId": "3840825920"
+      "creationId": "3840825920",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/fox/greeting-bow"
     },
     {
       "id": "fox-temperament-sunny",
@@ -379,13 +415,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/fox-temperament-sunny.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840826026.mp3",
       "sha256": "74db66c62eaf98d98f35c01366fe603c1086246c0640f960139e1fcc2a975421",
       "mpegSha256": "afc451270d58b8a811a97bc002de07c4bfae717a655ac78019ec914f12195204",
-      "creationId": "3840826026"
+      "creationId": "3840826026",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/fox/temperament-sunny"
     },
     {
       "id": "fox-temperament-grumpy",
@@ -399,13 +437,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/fox-temperament-grumpy.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840826133.mp3",
       "sha256": "b9667d4ed02c2e19cb8390f6f9ae0606c5fb4fb4bd8d4205d3cdb6be797c2dbd",
       "mpegSha256": "787e795ae6da452012eba63638deb66e2fa9f397f987a411a933803254565781",
-      "creationId": "3840826133"
+      "creationId": "3840826133",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/fox/temperament-grumpy"
     },
     {
       "id": "fox-temperament-shy",
@@ -419,13 +459,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/fox-temperament-shy.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840826198.mp3",
       "sha256": "ff1062ed38bd01c5a9eafec9c8259fe8735af6969ba3e39f936770bddb2b2108",
       "mpegSha256": "add41fd944ff8481c2b69399dd46fe1a53c1be003aa9755124cd88707a2ff965",
-      "creationId": "3840826198"
+      "creationId": "3840826198",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/fox/temperament-shy"
     },
     {
       "id": "fox-temperament-show-off",
@@ -439,13 +481,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/fox-temperament-show-off.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840826270.mp3",
       "sha256": "3b76236ac0cfb1e35048a5fd301d0513956b405baddce8df77ff69b8a40f57c5",
       "mpegSha256": "d699f42253e32db5a538b836427cec7284eadb8a55c75795ee9433e2f347647a",
-      "creationId": "3840826270"
+      "creationId": "3840826270",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/fox/temperament-show-off"
     },
     {
       "id": "fox-temperament-dreamy",
@@ -459,13 +503,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/fox-temperament-dreamy.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840826746.mp3",
       "sha256": "96b0d515c5e234f64ca35590f2dcf468a21e41f3caa3c405a9bd8420c1e451de",
       "mpegSha256": "e22835c866a2710ad6fa76736ec1383de0a7ae1f0a4d692f6d6804f9b761f4b4",
-      "creationId": "3840826746"
+      "creationId": "3840826746",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/fox/temperament-dreamy"
     },
     {
       "id": "fox-temperament-sleepy",
@@ -479,13 +525,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/fox-temperament-sleepy.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840826824.mp3",
       "sha256": "e104421d669ed1f525b76d399953beaedcf20efe34b9e9ceb766539463af7046",
       "mpegSha256": "430c1d31fdc03dd2949b6ccc41609216e9747fd23970f91af35e157164786dc3",
-      "creationId": "3840826824"
+      "creationId": "3840826824",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/fox/temperament-sleepy"
     },
     {
       "id": "fox-temperament-mischief",
@@ -499,13 +547,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/fox-temperament-mischief.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840826887.mp3",
       "sha256": "125bc54fbc0a9a0bcc4a3f963366c0746261b2e87f901a0d51ed4b49fb96178b",
       "mpegSha256": "5e1c8d908c02b68f63c8bbcf5d9ead8114e35f01b117ef14ef1642188f0b396f",
-      "creationId": "3840826887"
+      "creationId": "3840826887",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/fox/temperament-mischief"
     },
     {
       "id": "fox-temperament-calm",
@@ -519,13 +569,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/fox-temperament-calm.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840826956.mp3",
       "sha256": "cb7edb4bfea03005dcf683846dbea33d7bb27ae3c591445b5b363c277c396214",
       "mpegSha256": "5a47043fcc62c83d3793cae43f165c829eea21d0c0f58cd88adbd21fbfbcfc88",
-      "creationId": "3840826956"
+      "creationId": "3840826956",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/fox/temperament-calm"
     },
     {
       "id": "axolotl-hello-wave",
@@ -539,14 +591,16 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/axolotl-hello-wave.mp3",
       "generationId": "ksVAyYb16B",
       "sha256": "08ba3247827eecf230b5277dfa757967a53889135b661c363a4ecde418cf476f",
       "mpegSha256": "b07f3125b8af3b0b4043b2e8c323d648e1078c1c8762f82d9ab84d055a5a6a79",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840795639.mp3",
-      "creationId": "3840795639"
+      "creationId": "3840795639",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/axolotl/hello-wave"
     },
     {
       "id": "axolotl-gill-flutter",
@@ -560,13 +614,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/axolotl-gill-flutter.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840827022.mp3",
       "sha256": "bab4012ab2928abaf7594512bfb5a90d97736c745f671da38c56fc251915b637",
       "mpegSha256": "6a40ed6e42c7c75b9222827ce2c7dabd5c3745d3bb1c514a54bac32c1be4441d",
-      "creationId": "3840827022"
+      "creationId": "3840827022",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/axolotl/gill-flutter"
     },
     {
       "id": "axolotl-wiggle-dance",
@@ -580,13 +636,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/axolotl-wiggle-dance.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840827104.mp3",
       "sha256": "90696e91ac9e495747d3983786e451d86e264f18568cd2a08fba20210358eb1d",
       "mpegSha256": "6c0fcacb737614588023ecb5acaef0c2000d723a8210e1fa50f9d7db2c371d5a",
-      "creationId": "3840827104"
+      "creationId": "3840827104",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/axolotl/wiggle-dance"
     },
     {
       "id": "axolotl-happy-bounce",
@@ -600,13 +658,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/axolotl-happy-bounce.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840827181.mp3",
       "sha256": "9b9eb6b839273f447cebcf934056d1676ff371b345d6407a18160949bfd1d7df",
       "mpegSha256": "2ad2b4edf2881d9e3491c350e266f3c6ed0043eed939998b3c9ffce36455118f",
-      "creationId": "3840827181"
+      "creationId": "3840827181",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/axolotl/happy-bounce"
     },
     {
       "id": "axolotl-sleepy-sway",
@@ -620,13 +680,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/axolotl-sleepy-sway.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840827240.mp3",
       "sha256": "d881064eb1b508963cca67c9c7d7ab766f72dd91b5b7973294cfa2fa7a5fb664",
       "mpegSha256": "786b8753b2b491c5d451a7908143421c3d0c58e73309346a58bb3040981a9dca",
-      "creationId": "3840827240"
+      "creationId": "3840827240",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/axolotl/sleepy-sway"
     },
     {
       "id": "axolotl-temperament-sunny",
@@ -640,13 +702,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/axolotl-temperament-sunny.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840827336.mp3",
       "sha256": "a8c551346cbe88d49123f0064198adaa8f459210dcbad7cb27c94e180a4c97c0",
       "mpegSha256": "4ed5cf4627df8a054ff7c7f6a9c8e86f46345fb64f2a94b4d4439db67cb60869",
-      "creationId": "3840827336"
+      "creationId": "3840827336",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/axolotl/temperament-sunny"
     },
     {
       "id": "axolotl-temperament-grumpy",
@@ -660,13 +724,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/axolotl-temperament-grumpy.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840827409.mp3",
       "sha256": "c57e9960d1180d89f61f3c746a713349ad121cded20490a3707c17ddbb9afb1c",
       "mpegSha256": "9de3faa546ee9911413f9bff0baccbf2e2e0747dc029aa9cae7bbf095230d4c3",
-      "creationId": "3840827409"
+      "creationId": "3840827409",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/axolotl/temperament-grumpy"
     },
     {
       "id": "axolotl-temperament-shy",
@@ -680,13 +746,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/axolotl-temperament-shy.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840827498.mp3",
       "sha256": "2d8d1f1efd94ae47db2e4628d3f7e3ff023af407cb144a1d4994d673eb02a386",
       "mpegSha256": "15510ed07ab2df0edd1d677cdfda2bc5c03ed0f4d746af193437df1cd343143d",
-      "creationId": "3840827498"
+      "creationId": "3840827498",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/axolotl/temperament-shy"
     },
     {
       "id": "axolotl-temperament-show-off",
@@ -700,13 +768,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/axolotl-temperament-show-off.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840827605.mp3",
       "sha256": "29ea0a471dca299c81fda001bffff3d49f5a7f821859e8409ef74367b1ae9082",
       "mpegSha256": "83a4436e0fccd8fb08f35cd384662b0869ebb24f0fd05808c464fd9bd43b79cc",
-      "creationId": "3840827605"
+      "creationId": "3840827605",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/axolotl/temperament-show-off"
     },
     {
       "id": "axolotl-temperament-dreamy",
@@ -720,13 +790,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/axolotl-temperament-dreamy.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840827686.mp3",
       "sha256": "6bd991e4cc2b29b6c761c3b25dc1180447390843529702ae51553c599e129087",
       "mpegSha256": "32da64a7902b9ac402d4229c8f676fa695dff1f7b853fa1dd76db270525751ac",
-      "creationId": "3840827686"
+      "creationId": "3840827686",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/axolotl/temperament-dreamy"
     },
     {
       "id": "axolotl-temperament-sleepy",
@@ -740,13 +812,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/axolotl-temperament-sleepy.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840827768.mp3",
       "sha256": "af92a42a9aeac3aec18ba3840a956c75f7c53c234a45b39a2a3f79772de6d264",
       "mpegSha256": "c8d612fa79e604d2d2d37664763e1ffd4700a314d5fb7fe395911b6016e7dc00",
-      "creationId": "3840827768"
+      "creationId": "3840827768",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/axolotl/temperament-sleepy"
     },
     {
       "id": "axolotl-temperament-mischief",
@@ -760,13 +834,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/axolotl-temperament-mischief.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840827856.mp3",
       "sha256": "daeb98945af7cffa51af7f6bb14114613582d865ebb0badff62202364dea369b",
       "mpegSha256": "fabc53c74a9d55412c9256ce8923e8ff084f236eabe0ce6f61f88f39b7ae714f",
-      "creationId": "3840827856"
+      "creationId": "3840827856",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/axolotl/temperament-mischief"
     },
     {
       "id": "axolotl-temperament-calm",
@@ -780,13 +856,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/axolotl-temperament-calm.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840827955.mp3",
       "sha256": "371d478a1e1d1462c26450c52ad6ef2ebb464633041dadb10f439f5928b94fb6",
       "mpegSha256": "8fad12761b12728604af5ab0e49a4412fd820de7032ffe06e071d95ed568590e",
-      "creationId": "3840827955"
+      "creationId": "3840827955",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/axolotl/temperament-calm"
     },
     {
       "id": "firb-branch-wave",
@@ -800,13 +878,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/firb-branch-wave.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840828031.mp3",
       "sha256": "41dab179d5e62b3e034c773aed15d3abf25c54c41fe4811a1d05b348aa9a257c",
       "mpegSha256": "feba36192ebf2579a79f384fcef6c0d9aa80759380507a4fda3efb0be167bfbf",
-      "creationId": "3840828031"
+      "creationId": "3840828031",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/firb/branch-wave"
     },
     {
       "id": "firb-star-nod",
@@ -820,13 +900,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/firb-star-nod.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840828116.mp3",
       "sha256": "1389fa4ac28813eb0b76a46344a0f94ff51e5592f704b80c9c566989587a8c97",
       "mpegSha256": "803626e2f5ecf4a52c2f7440f02d0efa82a0c1758a4b7a88292094c5ccfaaf6a",
-      "creationId": "3840828116"
+      "creationId": "3840828116",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/firb/star-nod"
     },
     {
       "id": "firb-ornament-shimmy",
@@ -840,13 +922,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/firb-ornament-shimmy.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840828195.mp3",
       "sha256": "6d7aea602856231f0f2435a809570d7a905f03f1e9fe1d6988d53386b5e8eed6",
       "mpegSha256": "6f3ca92dcb1836acbf9689caf7ad7f4adf2b5a7236740f1b2fde9f11b798cb91",
-      "creationId": "3840828195"
+      "creationId": "3840828195",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/firb/ornament-shimmy"
     },
     {
       "id": "firb-happy-hop",
@@ -860,13 +944,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/firb-happy-hop.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840828262.mp3",
       "sha256": "90813569e93c028eb01e1073ca2be2d7a41e5affc63be78322bf54f6c0df5cc6",
       "mpegSha256": "dc0dff0d8c6a9603d759676ca5e8ba63f7ae1d259648fb9a7a889ea8d8af7abc",
-      "creationId": "3840828262"
+      "creationId": "3840828262",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/firb/happy-hop"
     },
     {
       "id": "firb-sleepy-sway",
@@ -880,13 +966,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/firb-sleepy-sway.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840828641.mp3",
       "sha256": "3360035f47ffb3edfd18ad8be7620310f3699378f99f05a47ca5446f579467cc",
       "mpegSha256": "114ab9d5b756f3c735ab9a131f9d5fa6637dca78cad68efae310b122cc15421c",
-      "creationId": "3840828641"
+      "creationId": "3840828641",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/firb/sleepy-sway"
     },
     {
       "id": "firb-temperament-sunny",
@@ -900,13 +988,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/firb-temperament-sunny.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840828725.mp3",
       "sha256": "53a47c6fd5181c3aaf57dde3f30c2c6d058a8c63ff0b6f30e8b5943e64fb4fa8",
       "mpegSha256": "40f85012e613b5032382d26d50404030c3b8b53be3db4128b4b144c85c95a384",
-      "creationId": "3840828725"
+      "creationId": "3840828725",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/firb/temperament-sunny"
     },
     {
       "id": "firb-temperament-grumpy",
@@ -920,13 +1010,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/firb-temperament-grumpy.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840828790.mp3",
       "sha256": "4ba1b2aad4750c30b50e93c887c92b9ca6132c857024e87c1b188c7b93c25bac",
       "mpegSha256": "0cd16d14895cc7013e67f995be6a9299333ba5bfe68984de030dad819298f7ef",
-      "creationId": "3840828790"
+      "creationId": "3840828790",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/firb/temperament-grumpy"
     },
     {
       "id": "firb-temperament-shy",
@@ -940,13 +1032,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/firb-temperament-shy.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840828855.mp3",
       "sha256": "06cc677d255164a8a2260d89cc554561aa8d6251fbd134bdf347fa64c8c475cf",
       "mpegSha256": "e1850ec036897b485b0cf940c39fd5ebeb83b6089573946b64df8239c5f540c3",
-      "creationId": "3840828855"
+      "creationId": "3840828855",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/firb/temperament-shy"
     },
     {
       "id": "firb-temperament-show-off",
@@ -960,13 +1054,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/firb-temperament-show-off.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840828943.mp3",
       "sha256": "bd09cb615dec7099cff89c22e3e24d9d3a560f76bb2b420cc8271ec71b0e8d66",
       "mpegSha256": "9e7a0a5dc9b61d2d140c32eb6c865db6ae6a2b2103345281d0cdd93536442ed6",
-      "creationId": "3840828943"
+      "creationId": "3840828943",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/firb/temperament-show-off"
     },
     {
       "id": "firb-temperament-dreamy",
@@ -980,13 +1076,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/firb-temperament-dreamy.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840829044.mp3",
       "sha256": "c4f56306788460338b41acca99846e70e53d127c18aff8e4c13761e4e43b3098",
       "mpegSha256": "2557a837228a653dcdf07b8a31299443bb30ea762dae5ac7e1845a3acb8236bf",
-      "creationId": "3840829044"
+      "creationId": "3840829044",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/firb/temperament-dreamy"
     },
     {
       "id": "firb-temperament-sleepy",
@@ -1000,13 +1098,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/firb-temperament-sleepy.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840829857.mp3",
       "sha256": "8996c1a9147799f6702024bf333340274a52724d3614902cfdebce978523e619",
       "mpegSha256": "76cbe6316aeecae957db37eafd16f74fe046495fe3e56e0cfdf4836890c92b27",
-      "creationId": "3840829857"
+      "creationId": "3840829857",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/firb/temperament-sleepy"
     },
     {
       "id": "firb-temperament-mischief",
@@ -1020,13 +1120,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/firb-temperament-mischief.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840829919.mp3",
       "sha256": "1e46638816e8a21340bdfbf53d0cfd476982814e721684aaf5ca59626df68c34",
       "mpegSha256": "ac8f08e7d755cce5db470798d55cbb072533618969e8c7de9dcb840fd7fef7a7",
-      "creationId": "3840829919"
+      "creationId": "3840829919",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/firb/temperament-mischief"
     },
     {
       "id": "firb-temperament-calm",
@@ -1040,13 +1142,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/firb-temperament-calm.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840829976.mp3",
       "sha256": "3bf61c94c99f81a17a75717e3ec75249e643888f2f3aa556d23ca446e2f27e14",
       "mpegSha256": "18776dfb6965a20d7451b4fd3eb6939bff7dd508ba10b79651d4441ddef580b9",
-      "creationId": "3840829976"
+      "creationId": "3840829976",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/firb/temperament-calm"
     },
     {
       "id": "coco-handle-hello",
@@ -1060,13 +1164,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/coco-handle-hello.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840830056.mp3",
       "sha256": "62bc02e116caa760e14a8fc2e0df7ca497b378010687ba643cc6b117cd19a462",
       "mpegSha256": "96d29a063ac5256dca07d35c558c6f54c80e626cd558896e91015a6f3d62215f",
-      "creationId": "3840830056"
+      "creationId": "3840830056",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/coco/handle-hello"
     },
     {
       "id": "coco-marshmallow-bounce",
@@ -1080,13 +1186,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/coco-marshmallow-bounce.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840830400.mp3",
       "sha256": "1fd3cce9d44bf22ca2079858231c46dbaabe3fe5b4a40438298b5a4c0e3bccd5",
       "mpegSha256": "b4e3310b0d955df3efe5740de21cc86449c8c429932cc4f141617593485c9c55",
-      "creationId": "3840830400"
+      "creationId": "3840830400",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/coco/marshmallow-bounce"
     },
     {
       "id": "coco-cream-wobble",
@@ -1100,13 +1208,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/coco-cream-wobble.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840831128.mp3",
       "sha256": "4b8533c494ff1339e7e56c02a0d93461fbca5e90ea5d03cb03ccf017f4281d31",
       "mpegSha256": "28f0db62693ee943b53b5b9c21bd2e04167655edb41c0c804d5019b86255070d",
-      "creationId": "3840831128"
+      "creationId": "3840831128",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/coco/cream-wobble"
     },
     {
       "id": "coco-happy-hop",
@@ -1120,13 +1230,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/coco-happy-hop.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840831200.mp3",
       "sha256": "b8d3b3c4bfb3575568f02e48443ed740d78922670fa67040fdf8e9d0dc03cf9d",
       "mpegSha256": "c374bf05af2b121dd709be079ccd49895b83d70c0e9bd76860d2efe04002d868",
-      "creationId": "3840831200"
+      "creationId": "3840831200",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/coco/happy-hop"
     },
     {
       "id": "coco-cozy-sway",
@@ -1140,13 +1252,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/coco-cozy-sway.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840831283.mp3",
       "sha256": "99c7b84a39b136899a033f348f2b9b77ffbef930d5a34d148d1a6d34200f8cd5",
       "mpegSha256": "5cce710dbd9d5bf12480ea37404e0627e5e32a0c54907e139bd92de474baf1c6",
-      "creationId": "3840831283"
+      "creationId": "3840831283",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/coco/cozy-sway"
     },
     {
       "id": "coco-temperament-sunny",
@@ -1160,13 +1274,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/coco-temperament-sunny.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840831344.mp3",
       "sha256": "be81323f633101ba5dc214dba8806c78912fcab944a528b4d50a6ee6d17b60c6",
       "mpegSha256": "fce3edf7d24799bcba4a2a38f933d62478c25f10d3e24b800f7d6d486cf6708d",
-      "creationId": "3840831344"
+      "creationId": "3840831344",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/coco/temperament-sunny"
     },
     {
       "id": "coco-temperament-grumpy",
@@ -1180,13 +1296,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/coco-temperament-grumpy.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840831419.mp3",
       "sha256": "27bc0c7e2d2d8eb72b8c7f700e1ef84bcf71fec99d97caec3beeb589591dac77",
       "mpegSha256": "677b18d0a8a9eebbaefa364d8a4ce03ae7076b1ea9ccd522bbbe95ce32623344",
-      "creationId": "3840831419"
+      "creationId": "3840831419",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/coco/temperament-grumpy"
     },
     {
       "id": "coco-temperament-shy",
@@ -1200,13 +1318,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/coco-temperament-shy.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840831499.mp3",
       "sha256": "e1e8ff26c0f3c077fe51cd4abe459818e3bb41a34cf2c707ce61d8b2d0be2841",
       "mpegSha256": "d0cad244d140d35cb14b3da59b67d74466326983a4a7949254be45ba3ea5a11a",
-      "creationId": "3840831499"
+      "creationId": "3840831499",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/coco/temperament-shy"
     },
     {
       "id": "coco-temperament-show-off",
@@ -1220,13 +1340,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/coco-temperament-show-off.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840831585.mp3",
       "sha256": "bbf01a925b1092332b4342b92b7385bae07626a8849493526711ece3b340322c",
       "mpegSha256": "20ebf2c542370935c93a694ccdd0350eae0fdc6d7b0927af01e36b050ea66384",
-      "creationId": "3840831585"
+      "creationId": "3840831585",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/coco/temperament-show-off"
     },
     {
       "id": "coco-temperament-dreamy",
@@ -1240,13 +1362,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/coco-temperament-dreamy.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840831656.mp3",
       "sha256": "0841349613286d48b5b39afac72d9bb8888b399a0fa19723203726199db7e891",
       "mpegSha256": "5c5c964c96ef64b61a1d3f80dcfd3c2addc696b51251c60b5c614da5beb69499",
-      "creationId": "3840831656"
+      "creationId": "3840831656",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/coco/temperament-dreamy"
     },
     {
       "id": "coco-temperament-sleepy",
@@ -1260,13 +1384,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/coco-temperament-sleepy.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840831736.mp3",
       "sha256": "f1dd766e8fb7cac27d2b8bdffcc8a8de7c041e12927eae3ed88bea9f03a409a9",
       "mpegSha256": "1684c7396cf69b2b52113b98eed24ac0d5af4e91ccb15b6f74ce577cad652371",
-      "creationId": "3840831736"
+      "creationId": "3840831736",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/coco/temperament-sleepy"
     },
     {
       "id": "coco-temperament-mischief",
@@ -1280,13 +1406,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/coco-temperament-mischief.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840831818.mp3",
       "sha256": "9612ee97009d109f1e95062689d9116ce380d9b1784e5ce05ef0773118289f46",
       "mpegSha256": "9f08edc08edc36005feaea91dd98a782dcb33cb743434c014dcfcd38d1814675",
-      "creationId": "3840831818"
+      "creationId": "3840831818",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/coco/temperament-mischief"
     },
     {
       "id": "coco-temperament-calm",
@@ -1300,13 +1428,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/coco-temperament-calm.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840831923.mp3",
       "sha256": "a955318a1312006b6b738e473b522113de4aaa1afddefd8ab26bf31839333d34",
       "mpegSha256": "a8ef9f0f0f865152cb0e3e152339ad9d9c2e6cf08782a466fed964aa702d83db",
-      "creationId": "3840831923"
+      "creationId": "3840831923",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/coco/temperament-calm"
     },
     {
       "id": "snowy-mitten-wave",
@@ -1320,13 +1450,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/snowy-mitten-wave.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840832009.mp3",
       "sha256": "11a2513133b6895e78f4531be9583c99b47ff8a664e54ff4e6104571a407ba92",
       "mpegSha256": "4f863643def268ac38873da85c740cc2722a9e3b6fe25b840120e9e420e1b95c",
-      "creationId": "3840832009"
+      "creationId": "3840832009",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/snowy/mitten-wave"
     },
     {
       "id": "snowy-pom-wobble",
@@ -1340,13 +1472,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/snowy-pom-wobble.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840832438.mp3",
       "sha256": "9faf2abf164fb776534d5a76af6534866dd8ad12d5fb8ec11211df5a1c59d4d9",
       "mpegSha256": "6e5eea06e7ace3ee2b407594ca6aae9dc824fdf9128ad6cf3f50bd4763e42456",
-      "creationId": "3840832438"
+      "creationId": "3840832438",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/snowy/pom-wobble"
     },
     {
       "id": "snowy-frosty-shuffle",
@@ -1360,13 +1494,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/snowy-frosty-shuffle.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840832524.mp3",
       "sha256": "e23657f84eef274e08c6162146f6dac4de705e8441681b1f58f93532eb6b0095",
       "mpegSha256": "f9651e99aa41c513f0b22e827272f2fa54546ad599250949451955fcb55d4074",
-      "creationId": "3840832524"
+      "creationId": "3840832524",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/snowy/frosty-shuffle"
     },
     {
       "id": "snowy-snow-hop",
@@ -1380,13 +1516,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/snowy-snow-hop.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840832594.mp3",
       "sha256": "14d7545089d6d8019afa69369fc2b1862a4635eece5bccd5ca86eacf52184917",
       "mpegSha256": "586e2c01ce494227ef11f91f67f762029a36db495b26d444bce1b47377052a97",
-      "creationId": "3840832594"
+      "creationId": "3840832594",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/snowy/snow-hop"
     },
     {
       "id": "snowy-cozy-nod",
@@ -1400,13 +1538,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/snowy-cozy-nod.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840832663.mp3",
       "sha256": "16c79f6f8f5e9cc269d0d673ae500eb8075202d562434900030a156bdf839530",
       "mpegSha256": "d3462f9c3ab638ea709ae7735cc201c922bf127d50aff18685edfbd5e3099388",
-      "creationId": "3840832663"
+      "creationId": "3840832663",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/snowy/cozy-nod"
     },
     {
       "id": "snowy-temperament-sunny",
@@ -1420,13 +1560,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/snowy-temperament-sunny.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840832739.mp3",
       "sha256": "f4edade3301b2f51a08021824e5fa6b9983e830f6a63a7ba2463b7bd9c7370cb",
       "mpegSha256": "0360b0222a68a10260c36c206a96908d3b3a8f4837ae5f142bd9bad1489227d7",
-      "creationId": "3840832739"
+      "creationId": "3840832739",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/snowy/temperament-sunny"
     },
     {
       "id": "snowy-temperament-grumpy",
@@ -1440,13 +1582,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/snowy-temperament-grumpy.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840832810.mp3",
       "sha256": "99f88db9f2f689aa46b0edeb888637198d54fc8b11edab2d339b8e7604774410",
       "mpegSha256": "69474329f913a9b72f23bcc71b656769b58f14159533d85b979cff0e9667a81d",
-      "creationId": "3840832810"
+      "creationId": "3840832810",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/snowy/temperament-grumpy"
     },
     {
       "id": "snowy-temperament-shy",
@@ -1460,13 +1604,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/snowy-temperament-shy.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840832894.mp3",
       "sha256": "85f0847d36a91f1a116f3123e57184ec868b34de93486493e165e205814a3f7b",
       "mpegSha256": "5d89607f6f8c857c2c3f618e8f1f73acbb3d9ec14c8c038db020528320515946",
-      "creationId": "3840832894"
+      "creationId": "3840832894",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/snowy/temperament-shy"
     },
     {
       "id": "snowy-temperament-show-off",
@@ -1480,13 +1626,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/snowy-temperament-show-off.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840832969.mp3",
       "sha256": "cfc0ec03a18559857419d7e482850c3980c81c0c4a258ed523dd19c91230cb5e",
       "mpegSha256": "483d34f597ede404bfe9018f476fa46b4918dfb442570c8cad81404a82092337",
-      "creationId": "3840832969"
+      "creationId": "3840832969",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/snowy/temperament-show-off"
     },
     {
       "id": "snowy-temperament-dreamy",
@@ -1500,13 +1648,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/snowy-temperament-dreamy.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840833426.mp3",
       "sha256": "564c815107129fe092129c7a2716f331377fb74bf54f1b99be883e17122ddc5d",
       "mpegSha256": "c14dad3b456bb29f79ac8ebb813219d6bf07e878b5807e7abe3a13cae047d189",
-      "creationId": "3840833426"
+      "creationId": "3840833426",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/snowy/temperament-dreamy"
     },
     {
       "id": "snowy-temperament-sleepy",
@@ -1520,13 +1670,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/snowy-temperament-sleepy.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840833535.mp3",
       "sha256": "6f654a893f45ffb120ebe130604dd88a51abc07ab6b87be73b8196cde3fbfd61",
       "mpegSha256": "418434eaeb67e86625736782d3a9193df157da1cbde0de3a5584bd3e105bc941",
-      "creationId": "3840833535"
+      "creationId": "3840833535",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/snowy/temperament-sleepy"
     },
     {
       "id": "snowy-temperament-mischief",
@@ -1540,13 +1692,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/snowy-temperament-mischief.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840833620.mp3",
       "sha256": "14ae0f064d546fee85823107a7bbd9cca28cb93adfd40ee2fb9bd9e1a1cb3c40",
       "mpegSha256": "9cb1b52919333c159fac7071a7a5187b16c7ba4501da650c2061b0211304830b",
-      "creationId": "3840833620"
+      "creationId": "3840833620",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/snowy/temperament-mischief"
     },
     {
       "id": "snowy-temperament-calm",
@@ -1560,13 +1714,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/snowy-temperament-calm.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840833738.mp3",
       "sha256": "50392787e9372617f59ca6bff91c5e26c73a839904b7d4a585dcafdbce417518",
       "mpegSha256": "38293fdf27b8b3922aecfb7f557c942d61972a6ebdf8a85873a5bb440f33e93f",
-      "creationId": "3840833738"
+      "creationId": "3840833738",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/snowy/temperament-calm"
     },
     {
       "id": "ginger-cookie-wave",
@@ -1580,13 +1736,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/ginger-cookie-wave.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840833824.mp3",
       "sha256": "08ce3a6e23716d78c8648b5030e406f227046e48641429153e66055106f06b36",
       "mpegSha256": "7b32a617df27e14f114ce19c26590dc3d21aec4d2eb60021adebbdf376b72e47",
-      "creationId": "3840833824"
+      "creationId": "3840833824",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/ginger/cookie-wave"
     },
     {
       "id": "ginger-ear-wiggle",
@@ -1600,13 +1758,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/ginger-ear-wiggle.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840833907.mp3",
       "sha256": "6f39d0f89e94ed6e67aec12f8baeb6b0bd856a4ad996e2049352419057a28d98",
       "mpegSha256": "869b24c7f868889bb5b421d4ae3fcf59cb6e107cfd14a22547780368f1879930",
-      "creationId": "3840833907"
+      "creationId": "3840833907",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/ginger/ear-wiggle"
     },
     {
       "id": "ginger-button-dance",
@@ -1620,13 +1780,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/ginger-button-dance.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840833986.mp3",
       "sha256": "c0873be84acc20a9335552fcf0532eb922ab0364f88f725338752cf32f32ad4e",
       "mpegSha256": "a4fc22f66ed24f74f460d24c5713c69d08cc5323e9ede2e6e58fede496cb2e1c",
-      "creationId": "3840833986"
+      "creationId": "3840833986",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/ginger/button-dance"
     },
     {
       "id": "ginger-happy-hop",
@@ -1640,13 +1802,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/ginger-happy-hop.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840834064.mp3",
       "sha256": "30bb23557ec3e33b09c3d3ce3cc789312ad6fa4543feb404d3db1ee8352b2969",
       "mpegSha256": "0d2d6391812bec6d6adc1a40afbe630d61af9608022bbca50ba01c3c4bb8bbeb",
-      "creationId": "3840834064"
+      "creationId": "3840834064",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/ginger/happy-hop"
     },
     {
       "id": "ginger-sweet-bow",
@@ -1660,13 +1824,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/ginger-sweet-bow.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840835761.mp3",
       "sha256": "9e9b5964fc90085d6484f160aa6cd551a70cd80b092300babeb8b99427934540",
       "mpegSha256": "4a29ac795f33a54d9d1bd0ad2a10ddfa50b759cb8c9cb50a8ded6412ee3165ae",
-      "creationId": "3840835761"
+      "creationId": "3840835761",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/ginger/sweet-bow"
     },
     {
       "id": "ginger-temperament-sunny",
@@ -1680,13 +1846,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/ginger-temperament-sunny.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840836240.mp3",
       "sha256": "0a6805facbe82f5315a8dbadd8c6b6a97f59d5278d0c8238716071f9dcdc29fe",
       "mpegSha256": "abe2bbc3dc8d8c96514af4c6f54a4725e547b8a4a18cad6602e9ff595b5a945e",
-      "creationId": "3840836240"
+      "creationId": "3840836240",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/ginger/temperament-sunny"
     },
     {
       "id": "ginger-temperament-grumpy",
@@ -1700,13 +1868,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/ginger-temperament-grumpy.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840836321.mp3",
       "sha256": "411becfeb8c0bad15c416fd621ff204178b528c361731342f8ec3f65eef06208",
       "mpegSha256": "b19beba68793e4e4a99f30f386bde6b7bdd261a73fc51d45e08cb43e63836f99",
-      "creationId": "3840836321"
+      "creationId": "3840836321",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/ginger/temperament-grumpy"
     },
     {
       "id": "ginger-temperament-shy",
@@ -1720,13 +1890,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/ginger-temperament-shy.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840836412.mp3",
       "sha256": "4ea51e623416b446e81fe022a5184c38ca547aab51c03f9cda69d5e441d2b531",
       "mpegSha256": "f201a4f6948328a23b3bb4308199c0d98802d55d001bc70cd1e536fa66379313",
-      "creationId": "3840836412"
+      "creationId": "3840836412",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/ginger/temperament-shy"
     },
     {
       "id": "ginger-temperament-show-off",
@@ -1740,13 +1912,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/ginger-temperament-show-off.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840836511.mp3",
       "sha256": "ceb5ff6e1889028d10e85251991c38320db5ff54e8336817c414947e39853bda",
       "mpegSha256": "53001d37f5194c8ac31163b536de8f0e264102890a011302a3028d10ac81fdcc",
-      "creationId": "3840836511"
+      "creationId": "3840836511",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/ginger/temperament-show-off"
     },
     {
       "id": "ginger-temperament-dreamy",
@@ -1760,13 +1934,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/ginger-temperament-dreamy.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840836605.mp3",
       "sha256": "62fdc1bdcdfa6c1fdc65c105fc62b9630d5b2722ca4012d26e766ffd6be10830",
       "mpegSha256": "4b696a8b766ce5f202da9cc9de1ef0dea21a05a652cc8a7ed7c136e0bdc5aaca",
-      "creationId": "3840836605"
+      "creationId": "3840836605",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/ginger/temperament-dreamy"
     },
     {
       "id": "ginger-temperament-sleepy",
@@ -1780,13 +1956,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/ginger-temperament-sleepy.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840836703.mp3",
       "sha256": "b1c0ee2f0c6a2859d25abbbfc18101369733f7ebf7c5da0eec009581a97b321e",
       "mpegSha256": "36d91ae740832fd70ebf271f74b6b2bfcf39ed851b29304dc40b1e705c5f755d",
-      "creationId": "3840836703"
+      "creationId": "3840836703",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/ginger/temperament-sleepy"
     },
     {
       "id": "ginger-temperament-mischief",
@@ -1800,13 +1978,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/ginger-temperament-mischief.mp3",
       "promptUse": "Actual submitted generation prompt",
       "exportName": "creation_3840836784.mp3",
       "sha256": "4c65eea15e507fee757ce8c2100df92ca27ac30eb718093f82b545a2a6f700ec",
       "mpegSha256": "be0c8517c6c4ae0185f6e3176e6518ec5462e4b217822e9f99a81102f9218d20",
-      "creationId": "3840836784"
+      "creationId": "3840836784",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/ginger/temperament-mischief"
     },
     {
       "id": "ginger-temperament-calm",
@@ -1820,13 +2000,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/ginger-temperament-calm.mp3",
       "exportName": "creation_3840836880.mp3",
       "sha256": "be826528408ded245a2e76c69c519c3162231252e4187567aedb239c2bf36c7e",
       "mpegSha256": "d2909bd09c4c06d511fa78fe540210ef0988d0082cac0d5dea5082bdd9b968f8",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840836880"
+      "creationId": "3840836880",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/ginger/temperament-calm"
     },
     {
       "id": "reiny-greeting",
@@ -1840,13 +2022,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/reiny-greeting.mp3",
       "exportName": "creation_3840836972.mp3",
       "sha256": "1880ebe592e8502fa500cd5725f7ea29e67861725763ae44e6365649f3c39b58",
       "mpegSha256": "5b4033c8930403bd1ea5b2caf6bfada70321a8315c681e709f1eff9c4ea3dc1c",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840836972"
+      "creationId": "3840836972",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/reiny/greeting"
     },
     {
       "id": "reiny-feature-wiggle",
@@ -1860,13 +2044,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/reiny-feature-wiggle.mp3",
       "exportName": "creation_3840837044.mp3",
       "sha256": "85ff90ad53979457810804d1544e4870f510a4e0dafacd05ad13c1fac4690cb9",
       "mpegSha256": "bfa52f864d57a54c9ced1c4fa9b97683a6d99d1081c0b283d30d6b8cd766eb4d",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840837044"
+      "creationId": "3840837044",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/reiny/feature-wiggle"
     },
     {
       "id": "reiny-shuffle",
@@ -1880,13 +2066,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/reiny-shuffle.mp3",
       "exportName": "creation_3840837129.mp3",
       "sha256": "4b29e92136b621ab86ee34e5f2180fb101726193e2c97c818f70b7c8e89d2de9",
       "mpegSha256": "cf84da931f570b9c651ab86717ea1de887569f3e4e1badef5d5e7c93e55d237f",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840837129"
+      "creationId": "3840837129",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/reiny/shuffle"
     },
     {
       "id": "reiny-jump",
@@ -1900,13 +2088,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/reiny-jump.mp3",
       "exportName": "creation_3840837226.mp3",
       "sha256": "32201425820484815ebb29ac98dafb907ba8b0d2ce479780c9cf7c2e9d79caf3",
       "mpegSha256": "e615640bc8a2c04744dbc08eaf163b94499f96f43dfe4ef055b9d9cc9c69c85a",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840837226"
+      "creationId": "3840837226",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/reiny/jump"
     },
     {
       "id": "reiny-bow",
@@ -1920,13 +2110,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/reiny-bow.mp3",
       "exportName": "creation_3840837330.mp3",
       "sha256": "7751633f1162ebdae194d87b2b82092d04252ea4809e1e81e937551dfb0a061f",
       "mpegSha256": "2a36e87b1a6ad4a6f960cdb46c38752a5a69c68c337fe2b0950aaa5a87b75eb6",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840837330"
+      "creationId": "3840837330",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/reiny/bow"
     },
     {
       "id": "reiny-temperament-sunny",
@@ -1940,13 +2132,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/reiny-temperament-sunny.mp3",
       "exportName": "creation_3840837421.mp3",
       "sha256": "b5f3f4b6a1f04978f7be9fc88ef34df51decaceee9856e02474260ee44aa3054",
       "mpegSha256": "2736de602bf456d30f7c05cd475d015bf9f79c2727d8096dc8ef08c4cea8c31b",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840837421"
+      "creationId": "3840837421",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/reiny/temperament-sunny"
     },
     {
       "id": "reiny-temperament-grumpy",
@@ -1960,13 +2154,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/reiny-temperament-grumpy.mp3",
       "exportName": "creation_3840837508.mp3",
       "sha256": "6eb4e44056386d3ca54785b441af635a2021185424676a7bc955e0ff2cf83a43",
       "mpegSha256": "8ef53687e0225f88f7e99346c99072cb7ce339b02cb041eb839310775702b86a",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840837508"
+      "creationId": "3840837508",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/reiny/temperament-grumpy"
     },
     {
       "id": "reiny-temperament-shy",
@@ -1980,13 +2176,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/reiny-temperament-shy.mp3",
       "exportName": "creation_3840837573.mp3",
       "sha256": "2c93237028977bf3fddbb7a1e45dc951b7e3bc8439a17da95b82607d7b5e0893",
       "mpegSha256": "2c6aab74d03d91f14a01eabec738dc013913547d7dce041eb78c9572724f662f",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840837573"
+      "creationId": "3840837573",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/reiny/temperament-shy"
     },
     {
       "id": "reiny-temperament-show-off",
@@ -2000,13 +2198,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/reiny-temperament-show-off.mp3",
       "exportName": "creation_3840837672.mp3",
       "sha256": "cf24d961f464ce946bd389151794007897d7e4bd4d92a868dde7d79c4f8b6dbe",
       "mpegSha256": "3e226bd9b2b5162e34af2b40b21e5fc447b40526f122e60565536d91e8e3f601",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840837672"
+      "creationId": "3840837672",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/reiny/temperament-show-off"
     },
     {
       "id": "reiny-temperament-dreamy",
@@ -2020,13 +2220,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/reiny-temperament-dreamy.mp3",
       "exportName": "creation_3840837771.mp3",
       "sha256": "d2e8a162369f4e054764820a9a1576be4e9d9c7a406e6e77fc6b153f4b1e1524",
       "mpegSha256": "56167933d65d78ff90065e8173c2873e2330b630b5a7bdebf8efa0fa0d3a51de",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840837771"
+      "creationId": "3840837771",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/reiny/temperament-dreamy"
     },
     {
       "id": "reiny-temperament-sleepy",
@@ -2040,13 +2242,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/reiny-temperament-sleepy.mp3",
       "exportName": "creation_3840838191.mp3",
       "sha256": "f79140ab42f1139274ebeb84df8e7cb085ec2adf49ea5deb66374bd6f44f1e01",
       "mpegSha256": "b107b706a2de3528c8d672a28200c8d2d27623605064b8cf29f8f9e71f751dff",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840838191"
+      "creationId": "3840838191",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/reiny/temperament-sleepy"
     },
     {
       "id": "reiny-temperament-mischief",
@@ -2060,13 +2264,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/reiny-temperament-mischief.mp3",
       "exportName": "creation_3840838281.mp3",
       "sha256": "6b0be9d2047a365c7d78d8e5a6a6f8fd4202add01f2a7cb3e5e9f6d2b34c5aca",
       "mpegSha256": "79679479e121b261c1521b39a62634326db3a417dc71b14368fab0e17d2930ad",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840838281"
+      "creationId": "3840838281",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/reiny/temperament-mischief"
     },
     {
       "id": "reiny-temperament-calm",
@@ -2080,13 +2286,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/reiny-temperament-calm.mp3",
       "exportName": "creation_3840838358.mp3",
       "sha256": "0e351ce445ef5fbe0c8cc096a2415f03f7a91b6c88f49b7df8ca4eef3a429449",
       "mpegSha256": "84c91a36db83b1fefeaa5dc72a6bead48bb653d70aa92c0a6c0964198970fa38",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840838358"
+      "creationId": "3840838358",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/reiny/temperament-calm"
     },
     {
       "id": "guin-greeting",
@@ -2100,13 +2308,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/guin-greeting.mp3",
       "exportName": "creation_3840838439.mp3",
       "sha256": "fc37e4571e6dba5878648a7f3efe23d9af9701c5a1a639f2e382c09e5eebbc35",
       "mpegSha256": "8dac8d64a5430716b01c2947c24a78b1f0b584a840265ac50e36bd4a3029695c",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840838439"
+      "creationId": "3840838439",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/guin/greeting"
     },
     {
       "id": "guin-feature-wiggle",
@@ -2120,13 +2330,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/guin-feature-wiggle.mp3",
       "exportName": "creation_3840838532.mp3",
       "sha256": "65f9331530ec50d4dde359c7056f7107e2d47238a4c6508a2a2e3d79864c9fb8",
       "mpegSha256": "f5308add0f238fbb568a754f9679ab795405faee35b06c32983a3469054f25f3",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840838532"
+      "creationId": "3840838532",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/guin/feature-wiggle"
     },
     {
       "id": "guin-shuffle",
@@ -2140,13 +2352,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/guin-shuffle.mp3",
       "exportName": "creation_3840838619.mp3",
       "sha256": "ba62c8ecf832792ada6c99147587f01cf9a139d3fb1d489339ca35209ac5b6e2",
       "mpegSha256": "bb851c250f921f3c765a0b6ea90eddd4086f368bae1b1afad03614207811452f",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840838619"
+      "creationId": "3840838619",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/guin/shuffle"
     },
     {
       "id": "guin-jump",
@@ -2160,13 +2374,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/guin-jump.mp3",
       "exportName": "creation_3840838727.mp3",
       "sha256": "74004a232f4a9367db1f78d25e8fa1a91a98be66da8db3424441426d94e1347a",
       "mpegSha256": "6a40c73e96abac9a6c4a7e36c66de4fc43667d83159591779166334f219deda0",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840838727"
+      "creationId": "3840838727",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/guin/jump"
     },
     {
       "id": "guin-bow",
@@ -2180,13 +2396,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/guin-bow.mp3",
       "exportName": "creation_3840838813.mp3",
       "sha256": "08b7245f065f53efd2fe0731f431b36339eb9639849812ddd71476295644e5f5",
       "mpegSha256": "e9d6d0bb74c5ad84b6535ff1e98e95cdb58aed326a06585fdc63d2b8338786bf",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840838813"
+      "creationId": "3840838813",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/guin/bow"
     },
     {
       "id": "guin-temperament-sunny",
@@ -2200,13 +2418,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/guin-temperament-sunny.mp3",
       "exportName": "creation_3840838904.mp3",
       "sha256": "5368d7588e6a36c9d6341cd358e0653229f40178b0752add4449481a00152565",
       "mpegSha256": "029f713e482a462017adef477d1bb87cfa9253f9c6c280f09a5e36483af5b66e",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840838904"
+      "creationId": "3840838904",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/guin/temperament-sunny"
     },
     {
       "id": "guin-temperament-grumpy",
@@ -2220,13 +2440,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/guin-temperament-grumpy.mp3",
       "exportName": "creation_3840838988.mp3",
       "sha256": "13ff3e4be402c4433b51c99a3e2fdf714bb4abf52d8e8df0b6b56dde15a60427",
       "mpegSha256": "4c9ae5cb0b825a2d6f9b59e872f4596d1dcfdacf2206abb5abf2a6f95e45adf6",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840838988"
+      "creationId": "3840838988",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/guin/temperament-grumpy"
     },
     {
       "id": "guin-temperament-shy",
@@ -2240,13 +2462,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/guin-temperament-shy.mp3",
       "exportName": "creation_3840839072.mp3",
       "sha256": "5772de8e9248e086cdf17c833405c65961625c56d3ee06e6cc0bb3440b7c09e2",
       "mpegSha256": "209d4c753ef9e9741d2b95a5aee8ad82c204b04dda95cf92d3874cec9c453498",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840839072"
+      "creationId": "3840839072",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/guin/temperament-shy"
     },
     {
       "id": "guin-temperament-show-off",
@@ -2260,13 +2484,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/guin-temperament-show-off.mp3",
       "exportName": "creation_3840839328.mp3",
       "sha256": "2bf246036494b96ff178c73cb867f6320d319cfe22da3f3161745371e289ad8f",
       "mpegSha256": "3a5253a74e353cc8ea9d502fdf6063b29ee96e836839b842a944d88e500133ab",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840839328"
+      "creationId": "3840839328",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/guin/temperament-show-off"
     },
     {
       "id": "guin-temperament-dreamy",
@@ -2280,13 +2506,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/guin-temperament-dreamy.mp3",
       "exportName": "creation_3840839414.mp3",
       "sha256": "601f70a374376068aae5fdaf53f21d879e6b20a8c26e72aaf9c9ac1f7c9b2576",
       "mpegSha256": "f38d96d4db96996a16c011c1f64f478b45888af9d364a3a13b5b245bc623bd5d",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840839414"
+      "creationId": "3840839414",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/guin/temperament-dreamy"
     },
     {
       "id": "guin-temperament-sleepy",
@@ -2300,13 +2528,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/guin-temperament-sleepy.mp3",
       "exportName": "creation_3840839498.mp3",
       "sha256": "979f93a75748fc79901459b970f5653485b4858c1a93128d45024bf3372eacab",
       "mpegSha256": "80b9db11beb1d15e7319fdc8885173d2fac6ef01f59d01f538b020e8de873cb3",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840839498"
+      "creationId": "3840839498",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/guin/temperament-sleepy"
     },
     {
       "id": "guin-temperament-mischief",
@@ -2320,13 +2550,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/guin-temperament-mischief.mp3",
       "exportName": "creation_3840839574.mp3",
       "sha256": "f0ebc13d8a441e534b477126df0838cad83162326c9a14717bdf6ce661a9b291",
       "mpegSha256": "19069d14c576a80b6188d4e985f4cd5fddb1bdc6f2c470ab7ed3ddd1d3e490f9",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840839574"
+      "creationId": "3840839574",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/guin/temperament-mischief"
     },
     {
       "id": "guin-temperament-calm",
@@ -2340,13 +2572,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/guin-temperament-calm.mp3",
       "exportName": "creation_3840839674.mp3",
       "sha256": "b7257282ffeffa573e12c8f0c6614e68d2d4f315c8c4a58f5f99f6e873f46b53",
       "mpegSha256": "3f12a0963e7cd278695fd55fa244b870e93e8234554ffbaf8f1aa91357a17801",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840839674"
+      "creationId": "3840839674",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/guin/temperament-calm"
     },
     {
       "id": "bundy-greeting",
@@ -2360,13 +2594,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/bundy-greeting.mp3",
       "exportName": "creation_3840839884.mp3",
       "sha256": "6b56266fd53f6c302b9adc4103645d3e9c259fee45d32a578ca07ffeaca6fadc",
       "mpegSha256": "84b3c6bcbd19ced48217635c97eb7af9681320069b08810d155586767f63f8aa",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840839884"
+      "creationId": "3840839884",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/bundy/greeting"
     },
     {
       "id": "bundy-feature-wiggle",
@@ -2380,13 +2616,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/bundy-feature-wiggle.mp3",
       "exportName": "creation_3840839963.mp3",
       "sha256": "79fdc156b8fbbb6f4cca5f8c12051c44a14a01581285f65f24c8f88611f73bc1",
       "mpegSha256": "e4529c609ddaa40728756ffc793071fd9f1dc190e4eae3dd4e8e96af60a4cf82",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840839963"
+      "creationId": "3840839963",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/bundy/feature-wiggle"
     },
     {
       "id": "bundy-shuffle",
@@ -2400,13 +2638,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/bundy-shuffle.mp3",
       "exportName": "creation_3840840055.mp3",
       "sha256": "be44435216c73459ce5c895c84f9926b6861ff4a69b34837bdebe59457fb10c6",
       "mpegSha256": "fabd22f01a1dcbe2e47f3f4939c966292a18acb64d17c11ebb5896681461aefd",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840840055"
+      "creationId": "3840840055",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/bundy/shuffle"
     },
     {
       "id": "bundy-jump",
@@ -2420,13 +2660,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/bundy-jump.mp3",
       "exportName": "creation_3840840497.mp3",
       "sha256": "9b36bd6f995cc372f174fe817b6ad70ff5c05100d9a62e5059e7bacf9b2c7935",
       "mpegSha256": "02f805ac2efe62cd1d56802fe6f0b2a05f430990e6e71a4c2c969d352a29c919",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840840497"
+      "creationId": "3840840497",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/bundy/jump"
     },
     {
       "id": "bundy-bow",
@@ -2440,13 +2682,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/bundy-bow.mp3",
       "exportName": "creation_3840840569.mp3",
       "sha256": "3cf7006e3d34c2275062579b6f1ab58647b3cd95dac3ba3ccdae8b5a98c25b64",
       "mpegSha256": "a99afd5e6c6aae1bd7a37d3c6e0ce2792761534dbc055517f0f8d3c0a231e0fe",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840840569"
+      "creationId": "3840840569",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/bundy/bow"
     },
     {
       "id": "bundy-temperament-sunny",
@@ -2460,13 +2704,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/bundy-temperament-sunny.mp3",
       "exportName": "creation_3840840643.mp3",
       "sha256": "040f6768523eb42c7fdbfe63a016e07b83008c73f6629657385bbd10e2c95276",
       "mpegSha256": "bcf24af986ffdeccf8f1fa49c16cd8929bde807c8fd0292affb7b5c34664fc56",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840840643"
+      "creationId": "3840840643",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/bundy/temperament-sunny"
     },
     {
       "id": "bundy-temperament-grumpy",
@@ -2480,13 +2726,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/bundy-temperament-grumpy.mp3",
       "exportName": "creation_3840840701.mp3",
       "sha256": "0b33646c07ddb820449c9a2e5f8f4ba2529fbb2f560e8871174dc91aefac7c0f",
       "mpegSha256": "f350ade875d8cea360ac7a2febe71669c15f25cb1ab01dcedc65568b26675229",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840840701"
+      "creationId": "3840840701",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/bundy/temperament-grumpy"
     },
     {
       "id": "bundy-temperament-shy",
@@ -2500,13 +2748,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/bundy-temperament-shy.mp3",
       "exportName": "creation_3840840811.mp3",
       "sha256": "a5ffbfb4310d54fdac0471e0ff138f2eafa7b469b1cfabbf9930cd7e71a0f036",
       "mpegSha256": "b10a02a7c37b32a4a1783d4e13ac58e6fcc73eb87e940973fcbed158cfc656ff",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840840811"
+      "creationId": "3840840811",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/bundy/temperament-shy"
     },
     {
       "id": "bundy-temperament-show-off",
@@ -2520,13 +2770,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/bundy-temperament-show-off.mp3",
       "exportName": "creation_3840840910.mp3",
       "sha256": "d8632887906e02fada167f92ab7b1ea0ffaec30cd177d10882220742738c41be",
       "mpegSha256": "d4009d43958a8866aa9f9efe85a89e7b137bd5dad516740aa351f3fd774ad727",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840840910"
+      "creationId": "3840840910",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/bundy/temperament-show-off"
     },
     {
       "id": "bundy-temperament-dreamy",
@@ -2540,13 +2792,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/bundy-temperament-dreamy.mp3",
       "exportName": "creation_3840841007.mp3",
       "sha256": "3f2ec1720be4b50326ea2abeac1d4f2e21eae4568631aa22e4175e0e1f07d74e",
       "mpegSha256": "7c90eb1f948533cb1e2efc3ef502e86da2fb4f792a60a6cc4bed56fe104a890b",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840841007"
+      "creationId": "3840841007",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/bundy/temperament-dreamy"
     },
     {
       "id": "bundy-temperament-sleepy",
@@ -2560,13 +2814,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/bundy-temperament-sleepy.mp3",
       "exportName": "creation_3840841103.mp3",
       "sha256": "50b42c9be31dd5d14e9fcf3249269ada0cc824541fd60cc0abf899b24cf5607c",
       "mpegSha256": "23a9cca4ebbab856a292d75542a51b1e56f3cce2b0fd4b3586bdc8d4b039895f",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840841103"
+      "creationId": "3840841103",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/bundy/temperament-sleepy"
     },
     {
       "id": "bundy-temperament-mischief",
@@ -2580,13 +2836,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/bundy-temperament-mischief.mp3",
       "exportName": "creation_3840841188.mp3",
       "sha256": "92b82ecd1b466dd20f47221f598662d683f57d4533e96e96f73d84c3025190fc",
       "mpegSha256": "2f9a883c2afe4644eb16b886df60a0c51032d56d1751ad6d4c6dc370f07eff69",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840841188"
+      "creationId": "3840841188",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/bundy/temperament-mischief"
     },
     {
       "id": "bundy-temperament-calm",
@@ -2600,13 +2858,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/bundy-temperament-calm.mp3",
       "exportName": "creation_3840841252.mp3",
       "sha256": "f677d307938335846813a57f77d01d57aac360958071cbb4220f6a8631e8c86b",
       "mpegSha256": "540e81e6b8da45dfe0e21d82cdf011980e873850373cd39334a5c7db8ddb24ab",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840841252"
+      "creationId": "3840841252",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/bundy/temperament-calm"
     },
     {
       "id": "wally-breach-jump",
@@ -2620,13 +2880,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/wally-breach-jump.mp3",
       "exportName": "creation_3840841581.mp3",
       "sha256": "df982d74cfd47c495552aad74801a3ca89a47abf0ecb368391882a3a01c92677",
       "mpegSha256": "4e42e40968de3c9f6c5c852497acb2315e1083f4a6cf5102dcdee71e16a99d8c",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840841581"
+      "creationId": "3840841581",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/wally/breach-jump"
     },
     {
       "id": "wally-tail-splash",
@@ -2640,13 +2902,15 @@
       "outputCount": 1,
       "promptInfluence": null,
       "credits": 0,
-      "status": "approved-existing",
+      "status": "approved",
       "source": "sources/wally-tail-splash.mp3",
       "reuses": "wally-playful",
       "sha256": "ab9c4c0f5408d1fb476661bf6d6a274eb9517c92c9b83ba2a247cc05b4e095ec",
       "mpegSha256": "2de39750182c8e70a1b98bb8a8e6c2af54b903ee5b696a9d7fadaf059db3eb6a",
       "generationId": "rgVQ1jyxtc",
-      "promptUse": "New action routing brief; existing approved audio reused, not regenerated from this prompt."
+      "promptUse": "New action routing brief; existing approved audio reused, not regenerated from this prompt.",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/wally/tail-splash"
     },
     {
       "id": "wally-flipper-wave",
@@ -2660,13 +2924,15 @@
       "outputCount": 1,
       "promptInfluence": null,
       "credits": 0,
-      "status": "approved-existing",
+      "status": "approved",
       "source": "sources/wally-flipper-wave.mp3",
       "reuses": "wally-happy",
       "sha256": "3b6b3e688d3e04fa7ab15f60a1d5658c583d824762fa817599c0608ab8be4eaf",
       "mpegSha256": "d531176a2451d2fd3eb9d7c4cf50736648910534d1bb679fa40318b72da51e27",
       "generationId": "jUDHr5ZLD0",
-      "promptUse": "New action routing brief; existing approved audio reused, not regenerated from this prompt."
+      "promptUse": "New action routing brief; existing approved audio reused, not regenerated from this prompt.",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/wally/flipper-wave"
     },
     {
       "id": "wally-curious-roll",
@@ -2680,13 +2946,15 @@
       "outputCount": 1,
       "promptInfluence": null,
       "credits": 0,
-      "status": "approved-existing",
+      "status": "approved",
       "source": "sources/wally-curious-roll.mp3",
       "reuses": "wally-curious",
       "sha256": "82e2e086bdd4e69f6ed8531a756ee34a3d402a28e9f234a044b831b2b0e38ed2",
       "mpegSha256": "c38cff996f81e9bdbc6e280f23f25ddde6aba439c2bcd1ca52c6605e342a82e7",
       "generationId": "tC4D8o3mZJ",
-      "promptUse": "New action routing brief; existing approved audio reused, not regenerated from this prompt."
+      "promptUse": "New action routing brief; existing approved audio reused, not regenerated from this prompt.",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/wally/curious-roll"
     },
     {
       "id": "wally-sleepy-bob",
@@ -2700,13 +2968,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/wally-sleepy-bob.mp3",
       "exportName": "creation_3840841645.mp3",
       "sha256": "25e8a1535e8d1980c1f2ad68d03948ffaef889f9fb969dc8e013c68b80a8c26d",
       "mpegSha256": "f6c8273a297f014cd05cd2f3d676e1315a0730a2a28ff7f18a93d2eeb2c08102",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840841645"
+      "creationId": "3840841645",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/wally/sleepy-bob"
     },
     {
       "id": "wally-temperament-sunny",
@@ -2720,13 +2990,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/wally-temperament-sunny.mp3",
       "exportName": "creation_3840841713.mp3",
       "sha256": "e8a1c92387ad055f0f0d1bc3ebb9d2b494055b24ebb29c563ec3ed02e74171b6",
       "mpegSha256": "fee49d12b513a107e80a02597892642586f55e4814ad09e8664807b4864f30ea",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840841713"
+      "creationId": "3840841713",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/wally/temperament-sunny"
     },
     {
       "id": "wally-temperament-grumpy",
@@ -2740,13 +3012,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/wally-temperament-grumpy.mp3",
       "exportName": "creation_3840841812.mp3",
       "sha256": "e59281d1b140866529f5c1484b3a7d668591f287ec538f8d812554b9365832d1",
       "mpegSha256": "ac99c2b1e4e8a98a09844568b960bf9d968924cb6e00a7523b174ea5f18f925d",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840841812"
+      "creationId": "3840841812",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/wally/temperament-grumpy"
     },
     {
       "id": "wally-temperament-shy",
@@ -2760,13 +3034,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/wally-temperament-shy.mp3",
       "exportName": "creation_3840841888.mp3",
       "sha256": "dd0d3d93ba90eede20224ef5675172a1c7cffbed0677644c849a5ca99585611e",
       "mpegSha256": "6ce477259650d315603c909695d312431e2da6fe4aa4c5b14df2ed7c4879ea01",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840841888"
+      "creationId": "3840841888",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/wally/temperament-shy"
     },
     {
       "id": "wally-temperament-show-off",
@@ -2780,13 +3056,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/wally-temperament-show-off.mp3",
       "exportName": "creation_3840842392.mp3",
       "sha256": "8551e52d2ab836165142f5fc5bb76d05b9379a2944d422cc28a70622e5aa6b63",
       "mpegSha256": "0eb913547a44604df916aa4d662088f084066b001e5b24ade6fe90019683f8a5",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840842392"
+      "creationId": "3840842392",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/wally/temperament-show-off"
     },
     {
       "id": "wally-temperament-dreamy",
@@ -2800,13 +3078,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/wally-temperament-dreamy.mp3",
       "exportName": "creation_3840842481.mp3",
       "sha256": "0ab8731582c3f6b62b1197761dc5cd8b815d26bf4d1462a86ce19cc6bc82f1c1",
       "mpegSha256": "c581d47f26172ea8fa5b7df6d91b3d7f70596f4f60d63a4848e055f9b1f5ed12",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840842481"
+      "creationId": "3840842481",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/wally/temperament-dreamy"
     },
     {
       "id": "wally-temperament-sleepy",
@@ -2820,13 +3100,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/wally-temperament-sleepy.mp3",
       "exportName": "creation_3840842559.mp3",
       "sha256": "47fec1936f59c209cb3bf32fc3f5b4796bd3bd8140af7848c23a0b7e6e31235c",
       "mpegSha256": "26953d89ff22ee58e42318a2f6eb247fca8debd065d7383bab23cdc582757547",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840842559"
+      "creationId": "3840842559",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/wally/temperament-sleepy"
     },
     {
       "id": "wally-temperament-mischief",
@@ -2840,13 +3122,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/wally-temperament-mischief.mp3",
       "exportName": "creation_3840842643.mp3",
       "sha256": "abfe50b6bb3bdc9ddc683df85d0f163b26e0248da0b1a193eb05d25a18a295f5",
       "mpegSha256": "a371e35c507b7904277d23e15a523b07fe6a4855b662a639af4b1029671effe5",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840842643"
+      "creationId": "3840842643",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/wally/temperament-mischief"
     },
     {
       "id": "wally-temperament-calm",
@@ -2860,13 +3144,15 @@
       "outputCount": 1,
       "promptInfluence": 50,
       "credits": 15,
-      "status": "generated",
+      "status": "approved",
       "source": "sources/wally-temperament-calm.mp3",
       "exportName": "creation_3840842725.mp3",
       "sha256": "a584639380b4764ffbfeec05ba98968f5c4742c589b466088502dc047ecccf01",
       "mpegSha256": "94e553619a6cc13744bb9a949bbe204764b8ceb830e4059db4f6eaa5acee938d",
       "promptUse": "Actual submitted generation prompt",
-      "creationId": "3840842725"
+      "creationId": "3840842725",
+      "approvedDate": "2026-11-08",
+      "runtimeResource": "Audio/Collections/wally/temperament-calm"
     }
   ],
   "actualNewCredits": 2010,

@@ -57,7 +57,7 @@ def main():
         (OUT/'clips'/(entry['id']+'.mp3')).write_bytes(data[offset:])
         entry['sha256'] = hashlib.sha256(data).hexdigest()
         entry['mpegSha256'] = hashlib.sha256(data[offset:]).hexdigest()
-        if entry['status'] != 'approved-existing': entry['status'] = 'generated'
+        if entry['status'] not in ('approved-existing','approved'): entry['status'] = 'generated'
         complete += 1
     PLAN.write_text(json.dumps(plan,indent=2)+'\n')
     esc=html.escape
@@ -65,15 +65,18 @@ def main():
     for character in dict.fromkeys(e['character'] for e in plan['entries']):
         body.append(f'<section id="{character}"><h2>{esc(character.title())}</h2><div class="grid">')
         for e in (e for e in plan['entries'] if e['character'] == character):
-            ready = e['status'] in ('generated','approved-existing')
+            ready = e['status'] in ('generated','approved-existing','approved')
             body.append(f'<article data-kind="{e["kind"]}"><small>{esc(e["kind"].title())} · {esc(e["status"])}</small><h3>{esc(e["label"])}</h3>')
             body.append(f'<audio controls preload="none" src="clips/{e["id"]}.mp3"></audio>' if ready else '<p class="pending">Generation pending</p>')
             body.append(f'<details><summary>Sound brief</summary><p>{esc(e["prompt"])}</p></details></article>')
         body.append('</div></section>')
+    all_approved = all(e['status'] == 'approved' for e in plan['entries'])
+    banner = 'Approved · imported locally' if all_approved else 'Audition review · not imported'
+    review_note = 'Owner approved all 143 cues on November 8. Imported into local Unity Resources; phone build pending.' if all_approved else 'These are audition takes; generated does not mean approved.'
     nav=''.join(f'<a href="#{c}">{c.title()}</a>' for c in dict.fromkeys(e['character'] for e in plan['entries']))
     document='''<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pockle reaction sounds · 01</title><style>
     *{box-sizing:border-box}body{margin:0;background:#fff5ed;color:#35243d;font:16px system-ui,sans-serif}main{max-width:1250px;margin:auto;padding:36px 22px}h1{font-size:clamp(30px,5vw,52px);margin:10px 0}h2{font-size:30px;margin:36px 0 16px}p{line-height:1.6}.intro{max-width:850px}nav{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0}nav a{background:#eedfe9;border-radius:25px;padding:10px 16px;color:inherit;text-decoration:none}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:15px}article{background:#fff;border:1px solid #e7d6df;border-radius:20px;padding:20px;min-width:0}small{font-size:12px;color:#70586f}h3{margin:10px 0 18px;font-size:20px}audio{width:100%;height:42px}details{margin-top:14px;font-size:13px}summary{cursor:pointer}.pending{color:#8d718a}header>strong{display:inline-block;background:#f5d6ae;padding:8px 14px;border-radius:20px}footer{padding-top:38px;color:#70586f}
-    </style><main><header><strong>Audition review · not imported</strong><h1>Every Pockle has a voice</h1>'''+f'<p class="intro">{complete} of 143 slots have audio: five action cues and eight temperament cues for each of the eleven collections. Nine approved pilot clips retain their complete original endings. New ElevenLabs clips use your existing Magnific credits; no live AI calls during play.</p><p class="intro">Listen for a consistent character voice, clear differences between actions and emotions, and a natural ending. These are audition takes; generated does not mean approved. Only one preview plays at a time.</p></header><nav>{nav}</nav>'+''.join(body)+'''<footer>Source prompts, hashes and generation settings: ArtSource/ReactionAudio01/manifest.json. Runtime cutoff fixes are tested separately from the approval of these new takes.</footer></main><script>document.addEventListener('play',e=>{if(e.target.tagName==='AUDIO')document.querySelectorAll('audio').forEach(a=>{if(a!==e.target)a.pause()})},true)</script></html>'''
+    </style><main><header><strong>'''+banner+'''</strong><h1>Every Pockle has a voice</h1>'''+f'<p class="intro">{complete} of 143 slots have audio: five action cues and eight temperament cues for each of the eleven collections. Nine approved pilot clips retain their complete original endings. New ElevenLabs clips use your existing Magnific credits; no live AI calls during play.</p><p class="intro">Listen for a consistent character voice, clear differences between actions and emotions, and a natural ending. {review_note} Only one preview plays at a time.</p></header><nav>{nav}</nav>'+''.join(body)+'''<footer>Source prompts, hashes and generation settings: ArtSource/ReactionAudio01/manifest.json. Runtime cutoff fixes are tested separately from the approval of these new takes.</footer></main><script>document.addEventListener('play',e=>{if(e.target.tagName==='AUDIO')document.querySelectorAll('audio').forEach(a=>{if(a!==e.target)a.pause()})},true)</script></html>'''
     (OUT/'index.html').write_text(document)
     print(f'Review ready: {complete}/143 clips; {OUT / "index.html"}')
 

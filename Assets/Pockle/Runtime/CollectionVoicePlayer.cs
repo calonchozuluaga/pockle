@@ -38,19 +38,29 @@ namespace Pockle.Runtime
             if (!clips.TryGetValue(path, out var clip)) { clip = Resources.Load<AudioClip>(path); clips.Add(path, clip); }
             return clip;
         }
+        public AudioClip ClipForAction(string id, System.Enum action)
+        {
+            if (!ToyCatalog.TryGetCollectible(id, out var toy)) return null;
+            return Load(CollectionVoicePolicy.ActionResource(toy.CharacterId, action));
+        }
+        public AudioClip ClipForTemperament(string id, PipTemperament temperament)
+        {
+            if (!ToyCatalog.TryGetCollectible(id, out var toy)) return null;
+            return Load(CollectionVoicePolicy.TemperamentResource(toy.CharacterId, temperament));
+        }
         public bool TryPlayAction(string id, System.Enum action, CollectionVoiceMood fallback)
         {
             if (!ToyCatalog.TryGetCollectible(id, out var toy)) return false;
             string path = CollectionVoicePolicy.ActionResource(toy.CharacterId, action);
             if (path.Length == 0) return false;
-            return Play(Load(path) ?? ClipFor(id, fallback));
+            return Play(ClipForAction(id, action) ?? ClipFor(id, fallback));
         }
         public bool TryPlayTemperament(string id, PipTemperament temperament, CollectionVoiceMood fallback)
         {
             if (!ToyCatalog.TryGetCollectible(id, out var toy)) return false;
             string path = CollectionVoicePolicy.TemperamentResource(toy.CharacterId, temperament);
             if (path.Length == 0) return false;
-            return Play(Load(path) ?? ClipFor(id, fallback));
+            return Play(ClipForTemperament(id, temperament) ?? ClipFor(id, fallback));
         }
         public bool TryPlay(string id, CollectionVoiceMood mood) => Play(ClipFor(id, mood));
         private bool Play(AudioClip clip)
