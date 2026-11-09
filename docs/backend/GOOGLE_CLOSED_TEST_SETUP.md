@@ -67,3 +67,6 @@ Latest Console verification: Ads is Complete, 4/11 tasks done. Sign-in details i
 
 
 Reviewer login diagnostic: server confirms LuckySquish21 claimed, but no reviewer cloud snapshot. Owner is using an older Android installation. Backup/account-link failure is suspected; name-claim UI hides that distinction. No save reset or ownership transfer performed. Android connection required to confirm installed package and account-link state before recovery.
+
+
+Device verified: Pixel7Pro runs Play build4, not development build. Its private save is protected; no local owner marker was read and no data changed. A separate Android user is proposed for clean reviewer setup, pending owner authorization. Do not report the account-conflict hypothesis as proven or delete the personal save.
