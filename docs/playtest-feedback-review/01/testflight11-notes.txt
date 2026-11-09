@@ -1,0 +1,9 @@
+Pockle 1.0 (11) — playtest corrections
+
+Tap a toy: its sound, face and callout should match. Try sleepy/grumpy/happy responses and watch the bubble fade as one shape.
+
+Shelf has plum Walk/Shop/Fuse icon actions and transparent toy portraits. Selected avatars use an outline without shrinking the crop. Home has a neutral walking-box teaser and Change featured toy to choose an owned toy.
+
+Checkout prioritizes pending delivery recovery after payment and preserves uncertain purchases without asking you to pay again. Mystery Mix opens saved boxes in sequence, with Reveal all and a final summary. All results are saved before revealing.
+
+Please test restart, existing collection preservation, avatar selection, feature selection, sounds/expressions and sandbox purchase/recovery. Trading and production payments remain unavailable.

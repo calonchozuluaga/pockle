@@ -1,0 +1,35 @@
+{
+  "build": "1.0 (11)",
+  "bundle": "com.playpockle.app",
+  "sourceCommit": "6a90c37",
+  "branch": "codex/playtest-feedback-11",
+  "unityExport": "succeeded",
+  "archive": "succeeded",
+  "upload": "succeeded",
+  "testFlight": "Apple processing; group assignment pending",
+  "tests": "99 focused native cases and full Core/source checks passed on unchanged source",
+  "publicStoreSubmission": false,
+  "exportLog": "/private/tmp/pockle-testflight-export11.log",
+  "archiveLog": "/private/tmp/pockle-testflight-archive11.log",
+  "archiveSession": 11679,
+  "ownerGrantFlagsDisabledInExport": 8,
+  "packagedOwnerFlags": "all eight encoded TextAsset records disabled in final signed IPA",
+  "nativePickerFrameworks": [
+    "PhotosUI",
+    "UniformTypeIdentifiers",
+    "ImageIO"
+  ],
+  "nativeStatusBarHidden": false,
+  "distributionExport": "succeeded",
+  "strictDeepSignature": "passed using normal Mac trust",
+  "entitlements": {
+    "application-identifier": "736A8S9RK8.com.playpockle.app",
+    "beta-reports-active": true,
+    "get-task-allow": false
+  },
+  "ipa": "Builds/TestFlight-11/Pockle.ipa",
+  "ipaBytes": 538999197,
+  "ipaSha256": "ba7d4bf70b419508ac4e3da0710d58d53cd298699c4c89717930e33b1b915be4",
+  "uploadLog": "/private/tmp/pockle-testflight-upload11.log",
+  "warning": "Existing UnityRuntime.framework dSYM UUID B5BCB31B-E424-3C81-A0EE-2EF2ADFA93D7 missing; upload succeeds, native framework crash symbolication incomplete."
+}

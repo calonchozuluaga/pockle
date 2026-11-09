@@ -1385,3 +1385,23 @@ Owner clarification: the latest TestFlight Mix5 retry worked after a few seconds
 ### November9 — current submission readiness audit
 
 Owner asks what remains before submission. Claim read-only UX-010/011/014/015 and release readiness audit on `codex/playtest-feedback-11`; origin/main and both handoffs reread. Files: RELEASE_READINESS.md and this handoff, no code/store/production mutation. Live Google dashboard10/11tasks complete, listing still incomplete,0closed-test opt-ins and production application disabled;12testers/14continuous days explicitly required. Apple/RevenueCat mappings/prices and successful ownerMix5 remain verified. Source still has sandbox-only production rejection, LocalFusionService and public trading placeholder, so authority/finite inventory/marketplace are real launch blockers, not completed by sandbox receipts. Latest99test feedback corrections are not yet on phones. Updated checkpoint supersedes stale November3/8 incomplete statuses; no tests rerun for docs-only audit, no declaration submitted.
+
+
+### November9 — owner approves UI and requests TestFlight11 delivery
+
+Owner approved the actual Unity UI previews and asks to push then proceed through release list. Claim UX-003/004/010/011/014/015/025 TestFlight delivery on `codex/playtest-feedback-11`; source6a90c37 unchanged. Origin/main and both handoffs checked. Files: release evidence/notes, validation and this handoff; no production payment/trading enablement. Reuse existing team/signing and owner internal TestFlight group only; no new tester invitations or public submission. Prepare build1.0(11), verify exact packaged grants/native bridges, archive/upload and Apple processing/group state. After delivery, continue Google closed-test listing with owner-only declarations/credentials, then authoritative inventory implementation. Do not claim these subsequent gates complete.
+
+
+### November9 — TestFlight11 export verified; existing signing prompt pending
+
+Unity export1.0(11) succeeded with all8owner flags disabled. Actual exported resource records each contain disabled; native photo-picker frameworks and UIStatusBarHiddenfalse verified. Archive runs in session11679, log `/private/tmp/pockle-testflight-archive11.log`, waiting at codesign for existing Apple key. Owner has been asked to allow Keychain prompt; no new signing credentials requested or read. Do not launch a second archive/upload. Incidental tracked Unity importer/ProjectSettings rewrites restored in isolated checkout. Once signing resumes, finish archive, signed IPA verification, upload, processing, owner-only compliance if presented, and assign existing owner internal group. No upload/TestFlight11 availability claimed yet.
+
+
+### November9 — TestFlight11 signed and upload started
+
+Archive and distribution export succeeded. Final IPA `Builds/TestFlight-11/Pockle.ipa`,538999197bytes,SHA256ba7d4bf70b419508ac4e3da0710d58d53cd298699c4c89717930e33b1b915be4. Deep strict signature passes normal trust; com.playpockle.app1.0(11), beta entitlement true/debug entitlement false. Final packaged resources contain all8disabled owner TextAsset records; Security/PhotosUI/UniformTypeIdentifiers/ImageIO linked and status bar visible. Source6a90c37 unchanged, existing99native/Core/source evidence applies. Upload running session79230/log `/private/tmp/pockle-testflight-upload11.log`; do not duplicate. Await upload/processing/compliance/owner-group verification. Older pending Keychain record is superseded; owner input is not currently proven necessary again. Google closed testing stays gated until community billing is safe: sandbox-only grant rejection does not protect community testers from actual charges.
+
+
+### November9 — build11 upload succeeded; Google listing owner review pending
+
+Upload session79230 completed with Uploaded Unity-iPhone/EXPORT SUCCEEDED. Apple processing/group assignment remains pending. Existing dSYM warning unchanged. Google last10/11task is store listing; existing icon/featuregraphic/fourphone screenshots and text are present. Review step is open at AI asset declaration with neither choice selected; owner asked to review per-asset labels and Save personally under standing final-declaration boundary. No final GoogleSave or closed rollout by Codex. Before community rollout, checkout must be disabled for non-licensed testers or correctly restricted to verified test accounts; Google official billing docs explicitly say test-track users can incur actual charges unless license testers. No policy/accountpermissions changed.

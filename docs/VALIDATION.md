@@ -854,3 +854,8 @@ Final local review:16 offline Unity HUD/model captures inspected, including320-p
 ### November9 — Mystery Mix5 end-to-end owner acceptance
 
 On existing TestFlight1.0(10), owner completed a Mystery Mix5 sandbox payment and saw all five box reveals in sequence followed by the summary, after a few seconds of loading. Supabase read-only follow-up confirms five persisted items, revealed5/finishedtrue and the receipt included in the latest cloud-save backup. No manual grant/store/backend change was used. Mix3 purchase and an explicit cold-restart persistence check remain unverified in this session. Prepared playtest-feedback client recovery/clarity changes are still outside this phone build. Evidence: `docs/playtest-feedback-review/01/mix-store-readback.json`. No tests repeated for this documentation-only update.
+
+
+### November9 — approved playtest UI exported/uploaded as TestFlight11
+
+Unchanged source6a90c37 (existing99focusednative/Core/source evidence) exported using pinnedUnity6000.6.5f1 as com.playpockle.app1.0(11). Archive and signed IPA export succeeded; deep strict signature, beta/debug entitlements, native frameworks, visible statusbar and all8disabled test-grant TextAssets verified in actual IPA. Apple upload reports Uploaded Unity-iPhone/EXPORT SUCCEEDED. Apple processing/compliance and group assignment remain pending; no phone availability/acceptance claim. Evidence `docs/playtest-feedback-review/01/distribution.json`. No additional code, grants, production payment setup or public submission. Existing UnityRuntime.framework dSYM warning remains.

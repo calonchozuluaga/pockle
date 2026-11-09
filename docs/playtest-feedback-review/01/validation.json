@@ -40,10 +40,11 @@
   ],
   "portableCore": "passed,143 response bundles plus full existing suite",
   "notVerified": [
-    "Real Mystery Mix store payment",
-    "Physical-device UI/audio acceptance",
-    "Product dashboard readback while Mac is locked",
-    "New phone build/install"
+    "Physical-device acceptance of the new feedback UI/audio fixes",
+    "New Mix 3 purchase",
+    "Explicit cold-restart persistence test after the Mix 5 purchase",
+    "Full hosted CI",
+    "TestFlight 11 upload/assignment pending"
   ],
   "backendReadOnly": {
     "paidFunctionHttp200": 1343,
@@ -77,5 +78,6 @@
     "fixturePreferencesRestored": true,
     "visualReview": "All sixteen scenes inspected, including sleepy eyelids, single translucent bubble silhouette, neutral carton logo, transparent portraits and Reveal all summaries."
   },
-  "browserReview": "Mac locked; HTML asset links checked, actual image layouts inspected directly."
+  "browserReview": "Mac locked; HTML asset links checked, actual image layouts inspected directly.",
+  "laterAcceptance": "Owner verified TestFlight10 Mix5 payment, five sequential reveals and summary; server confirms five saved results and cloud receipt. See mix-store-readback.json for timestamped follow-up."
 }
