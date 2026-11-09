@@ -1,0 +1,48 @@
+{
+  "observed_at_utc": "2026-11-09T22:28:23Z",
+  "method": "Read-only native Chrome UI inspection; no private API, credential entry or purchase",
+  "project": "Pockle",
+  "revenuecat": {
+    "project": "9abea771",
+    "offering": "launch_boxes_v1",
+    "default": true,
+    "package_count": 13,
+    "mixes": [
+      {
+        "package": "mix_3",
+        "product": "pockle.mix.3.v1",
+        "type": "Consumable",
+        "apple_product_record": "prod09fcada320",
+        "sandbox_transactions": "No transactions yet"
+      },
+      {
+        "package": "mix_5",
+        "product": "pockle.mix.5.v1",
+        "type": "Consumable",
+        "apple_product_record": "prod1267706e02",
+        "sandbox_transactions": "No transactions yet"
+      }
+    ],
+    "store_status": "Missing Metadata for both Apple Mix product records"
+  },
+  "apple": {
+    "app": "6830781336",
+    "mixes": [
+      {
+        "id": "6830782958",
+        "product": "pockle.mix.3.v1",
+        "us_price": "$2.49"
+      },
+      {
+        "id": "6830782907",
+        "product": "pockle.mix.5.v1",
+        "us_price": "$3.99"
+      }
+    ],
+    "availability": "All countries or regions selected; Remove from Sale unselected",
+    "type": "Consumable",
+    "status": "Prepare for Submission"
+  },
+  "conclusion": "No package-ID, price or availability mismatch found. Empty RevenueCat transaction history does not prove whether Apple showed a payment sheet or processed an unreported attempt. Actual failure and complete purchase flow remain unverified. Owner asked for payment-sheet timing and exact error.",
+  "changed_external_state": "None beyond dashboard view/navigation; Biotadex untouched"
+}

@@ -1365,3 +1365,13 @@ Final local evidence: **99 distinct native tests pass**, full Core passes143 res
 ### November9 — verified feedback branch pushed
 
 Source/review commit `6a90c37` is pushed on `codex/playtest-feedback-11`. All99 focused native cases and the portable/source checks above are the final local evidence; hostedCI, actual Mystery Mix purchase and physical-phone acceptance remain unverified. Review is mirrored to the owner checkout. Main and TestFlight1.0(10) are unchanged. Remaining diagnosis needs the exact Mix error/payment-sheet timing and owner-unlocked browser for store/RevenueCat readback.
+
+
+### November9 — Mystery Mix dashboard diagnosis resumed
+
+Owner unlocked Mac; continuing UX-010/011 read-only App Store Connect/RevenueCat diagnosis on `codex/playtest-feedback-11` after fetch and both handoffs. Files limited to purchase validation evidence and handoff unless a confirmed runtime defect is found. Existing 13 products/offering are inspected in Pockle only; no credentials, payment, new grants or Biotadex mutation. Exact outcome follows.
+
+
+### November9 — Mystery Mix product readback completed
+
+Read-only Chrome inspection after owner unlock: Pockle RevenueCat default `launch_boxes_v1` contains13packages; `mix_3`/`mix_5` map to Apple `pockle.mix.3.v1`/`pockle.mix.5.v1`, both Consumable. Apple records6830782958/6830782907 have all-country availability selected, Remove from Sale unselected, and current US prices$2.49/$3.99. Both Apple drafts are Prepare for Submission; RevenueCat labels Missing Metadata. Neither Mix has a recorded sandbox transaction in RevenueCat. No concrete product-ID/price/availability mismatch found; metadata status alone is not evidence for this runtime failure. No store edits, payments, credentials, inventory changes or Biotadex mutation. Evidence: `docs/playtest-feedback-review/01/mix-store-readback.json`. Asked owner whether Apple payment sheet appears before the error and for exact text; that reproduction remains required before declaring Mix fixed. Existing99Unity/portable checks unchanged, no code changed or phone build made for this readback.
