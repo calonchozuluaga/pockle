@@ -79,3 +79,7 @@ Latest verified: reviewer LuckySquish21 has1cloudbackup/34rows/0fusions. Sign-in
 
 
 Latest verified: owner created public pockle-beta-testers@googlegroups.com; About confirms public self-join, conversations for members, owner-only posting/member list. Member email visibility tightened to owner-only and reload-verified. Group saved as GoogleGroups eligibility on Alpha, feedback support@playpockle.com. Current group has only its creator; no invitations/posts sent. Public group join: https://groups.google.com/g/pockle-beta-testers. Play opt-in/download remain disabled until the closed release is published. Dashboard8/11 complete; Content rating, Data safety and listing assets remain. IARC Game selected, Terms unchecked pending owner acceptance; no review submission performed.
+
+
+## November 8 — Data safety draft ready; final declaration pending
+Owner approved individual-entry and draft saves. Seven entries completed: name/email/UserIDs, purchase history, optional fitness, gameplay(other actions), installation IDs. AllCollected/notephemeral; purposes verified in expandedpreview. RevenueCatActiveintegrationfilterreturnsnone. Publicdeletionpageverifiedonline with30dayrequestinstructionsandpurchase-recordretention. Draftsavedexplicitly;finalSaveuntouched. PrivacywebsiteomitsRevenueCatandneedscorrectionbeforeownerfinalizes;requestinCodexhandoff. ContentratingalreadyComplete;noappreviewsubmission. Proof:data-safety-draft.png.
