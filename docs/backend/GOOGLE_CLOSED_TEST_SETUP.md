@@ -61,3 +61,6 @@ November 8: Financial features is now verified Complete, with Health and Privacy
 
 
 Owner decision, November8: intended launch audience13+ (13–15,16–17,18+). Google currently blocks the questionnaire until Ads and Sign-in details are complete. AdsNo is prepared for ownerSave; reviewer account is testerpockle@gmail.com, with credentials reserved to owner. No age setting or runtime gate applied yet; align marketing/onboarding with this productdecision, and complete IARC independently. No under13accountflowapproved.
+
+
+Latest Console verification: Ads is Complete, 4/11 tasks done. Sign-in details is still incomplete; Target audience remains locked on that prerequisite. Owner asked to complete both Add and outer Save and establish the dedicated reviewer player profile. No reviewer credentials inspected, no audience ranges applied yet.
