@@ -329,3 +329,6 @@ Owner approved the fixed-bar icons/design and requested implementation on `codex
 | UX-017/018/019/020/036 | Community Feed/Friends/Exchange shell with truthful Coming soon copy and own-profile/Shelf actions | Real feed, relationships, discovery, published shelves, moderation and atomic public spare offers remain unimplemented; the trading launch gate is still open |
 
 No task is marked complete solely from this integration. Native test files now cover the new navigation, Shelf, Community and avatar routes, but this status entry does not claim those runs, a phone installation or any public marketplace functionality. Existing paid-delivery, production edition/ownership, sandbox purchase and social-service launch requirements remain in force.
+
+
+November9 delivery follow-up: approved fixed navigation, flat owned Shelf and private avatar UI is available in **TestFlight1.0(10)** for the existing owner internal group. Native153-case evidence and distribution proof are under `docs/fixed-navigation-build/01`. Device acceptance and the real Community/cloud-avatar/trading service gates remain open.

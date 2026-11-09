@@ -8,7 +8,7 @@
   "ownerGrantFlagsDisabledInExport": 8,
   "archive": "succeeded",
   "upload": "succeeded",
-  "testFlight": "processed; Missing Compliance; owner declaration requested",
+  "testFlight": "Testing",
   "exportLog": "/private/tmp/pockle-testflight-export10.log",
   "archiveLog": "/private/tmp/pockle-testflight-archive10.log",
   "nativePickerFrameworks": [
@@ -35,6 +35,13 @@
   "warning": "Existing UnityRuntime.framework dSYM missing for UUID B5BCB31B-E424-3C81-A0EE-2EF2ADFA93D7; upload succeeds, framework crash symbolication incomplete.",
   "appStoreBuildId": "b1d0eb67-01e1-4341-a90e-777e5db3a4ad",
   "testNotes": "saved; Apple displayed Saved",
-  "group": "Pockle owner internal; assignment blocked by compliance",
-  "buildUrl": "https://appstoreconnect.apple.com/teams/b4649b6e-4146-4a40-a9d6-d1d5a87fb3e2/apps/6830781336/testflight/ios/b1d0eb67-01e1-4341-a90e-777e5db3a4ad"
+  "group": "Pockle owner internal",
+  "buildUrl": "https://appstoreconnect.apple.com/teams/b4649b6e-4146-4a40-a9d6-d1d5a87fb3e2/apps/6830781336/testflight/ios/b1d0eb67-01e1-4341-a90e-777e5db3a4ad",
+  "groupId": "e702b709-d2b1-4d76-9d1a-649edf891e08",
+  "groupTesterCount": 1,
+  "verifiedAt": "2026-11-09T20:52:49.357961+00:00",
+  "compliance": "completed by owner; gate cleared",
+  "proof": "testflight10-testing.png",
+  "phoneAcceptance": "not yet verified",
+  "publicStoreSubmission": false
 }

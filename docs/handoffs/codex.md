@@ -1331,3 +1331,13 @@ Archive and distribution export both succeeded. IPA deep strict signature passes
 ### November 9 — build10 uploaded and processed; owner compliance pending
 
 Owner cleared the second Keychain prompt. Upload succeeded at13:22 MST (session1158 completed, do not duplicate). Apple processed build1.0(10), ID`b1d0eb67-01e1-4341-a90e-777e5db3a4ad`. What-to-test text was saved and Apple displayed Saved. Add Group opens App Encryption Documentation; the blank declaration is left in Chrome for the owner, per the standing legal-entry boundary. After the owner completes it, assign only existing **Pockle owner internal** group`e702b709-d2b1-4d76-9d1a-649edf891e08` and verify its build10 row saysTesting. No new invitations/public submission. Existing UnityRuntime.framework dSYM warning remains (UUID`B5BCB31B-E424-3C81-A0EE-2EF2ADFA93D7`); upload succeeds, some native crash symbolication incomplete. Source remains4bf1161; no tests rerun for these delivery-only changes.
+
+
+### November 9 — final TestFlight10 group assignment claimed
+
+Owner reports export compliance ready. Origin/main and both handoffs reread; continuing unchanged `codex/fixed-navigation-build` delivery. Apple no longer presents the compliance gate; assigning only existing Pockle owner internal and verifying the final Testing state. Files remain delivery evidence/VALIDATION/handoff only; no source, credentials, new testers or public submission.
+
+
+### November 9 — TestFlight10 available to the owner
+
+Owner completed export compliance. Added build1.0(10) only to existing **Pockle owner internal** (one tester); its Builds page now visibly shows **Testing**, expires in90days. Screenshot `docs/fixed-navigation-build/01/testflight10-testing.png` excludes browser tabs/account chrome. Saved notes, production identity and exact artifact checks are in `distribution.json`. No new invitations, public submission, app purchase or source change. The153 distinct native tests and package checks remain the evidence for unchanged source4bf1161; physical-phone acceptance of navigation/avatar/photo/statusbar and Mix purchases remains pending. Branch `codex/fixed-navigation-build` is pushed; main is not merged and full hostedCI is not claimed. Owner runtime checkout preserved.
