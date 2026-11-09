@@ -1,0 +1,20 @@
+{
+  "build": "1.0 (10)",
+  "bundle": "com.playpockle.app",
+  "sourceCommit": "4bf11619faa011d64c2ae42f849e2ebbe2aea009",
+  "branch": "codex/fixed-navigation-build",
+  "sourcePushed": true,
+  "unityExport": "succeeded",
+  "ownerGrantFlagsDisabledInExport": 8,
+  "archive": "waiting for existing signing key approval",
+  "upload": "not started",
+  "testFlight": "not assigned",
+  "exportLog": "/private/tmp/pockle-testflight-export10.log",
+  "archiveLog": "/private/tmp/pockle-testflight-archive10.log",
+  "nativePickerFrameworks": [
+    "PhotosUI",
+    "UniformTypeIdentifiers",
+    "ImageIO"
+  ],
+  "nativeStatusBarHidden": false
+}
