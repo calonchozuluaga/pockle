@@ -58,3 +58,6 @@ November8 finalformhandoff: FinancialfeaturesNonepreparedafterreviewingactualopt
 
 
 November 8: Financial features is now verified Complete, with Health and Privacy policy (3/11 tasks complete). Owner created a dedicated Gmail; its confirmed address, group address and intended launch audience are pending. No reviewer or group credentials are recorded here. The closed release remains a draft.
+
+
+Owner decision, November8: intended launch audience13+ (13–15,16–17,18+). Google currently blocks the questionnaire until Ads and Sign-in details are complete. AdsNo is prepared for ownerSave; reviewer account is testerpockle@gmail.com, with credentials reserved to owner. No age setting or runtime gate applied yet; align marketing/onboarding with this productdecision, and complete IARC independently. No under13accountflowapproved.
