@@ -70,3 +70,6 @@ Reviewer login diagnostic: server confirms LuckySquish21 claimed, but no reviewe
 
 
 Device verified: Pixel7Pro runs Play build4, not development build. Its private save is protected; no local owner marker was read and no data changed. A separate Android user is proposed for clean reviewer setup, pending owner authorization. Do not report the account-conflict hypothesis as proven or delete the personal save.
+
+
+Owner-authorized reviewer recovery: Pixel user10 “Pockle Review” created, existing Play build4 enabled and user10 selected. MainCarlosuser0 retains installed Pockle with a different private data directory. No data clear/transfer/packageupdate. Owner must complete Android setup and Google sign-in on phone; reviewer backup and playable acceptance are still pending. Return to Carlos using Android user switcher. This is isolated test setup, not a fix for the misleading name-check UI.
