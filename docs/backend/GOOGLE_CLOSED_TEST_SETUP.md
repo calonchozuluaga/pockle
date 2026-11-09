@@ -83,3 +83,18 @@ Latest verified: owner created public pockle-beta-testers@googlegroups.com; Abou
 
 ## November 8 — Data safety draft ready; final declaration pending
 Owner approved individual-entry and draft saves. Seven entries completed: name/email/UserIDs, purchase history, optional fitness, gameplay(other actions), installation IDs. AllCollected/notephemeral; purposes verified in expandedpreview. RevenueCatActiveintegrationfilterreturnsnone. Publicdeletionpageverifiedonline with30dayrequestinstructionsandpurchase-recordretention. Draftsavedexplicitly;finalSaveuntouched. PrivacywebsiteomitsRevenueCatandneedscorrectionbeforeownerfinalizes;requestinCodexhandoff. ContentratingalreadyComplete;noappreviewsubmission. Proof:data-safety-draft.png.
+
+
+## November9 — next closed-test execution checkpoint
+
+Owner approved latest UI preview and requested its TestFlight delivery followed by the submission list. New UI source6a90c37 is exported/uploaded as TestFlight1.0(11), awaiting Apple processing. No Android build containing those fixes is published yet.
+
+Live Play dashboard remains10/11setup tasks complete, store listing incomplete, closed test unpublished and0opt-ins. All remaining setup declarations other than the store listing showComplete. Draft listing has approved text, icon, featuregraphic and four actual gameplay screenshots. Review step has an unanswered AI asset declaration; owner has been asked to review the individual labels and Save personally. Nothing was submitted for review. Google's current asset-specific guidance was read: https://support.google.com/googleplay/android-developer/answer/17262077.
+
+Execution order after the owner saves that draft:
+1. Prepare the matching Android community beta from approved UI source. Keep native checkout disabled for general community testers while the server accepts sandbox transactions only; owner payment testers must be explicitly covered by Play license testing before testing purchases. Do not assume GoogleGroup membership grants license-test billing. Existing release8 must not be rolled out unchanged to general testers while it can open real checkout. Google explicitly documents potential actual charges for test-track users without license-tester status: https://developer.android.com/google/play/billing/test.
+2. Verify Google OAuth audience permits newly recruited users; a successful owner/reviewer login alone is not proof of public tester access. Any required publication/security-sensitive audience expansion gets action-time owner approval. Do not create guest accounts.
+3. Validate the new signed AAB and reviewer access, verify group/country selection, then preview the exact closed release and submit/roll out only within the owner's authorized test scope. Owner enters upload-key passwords and completes any legal declarations personally. No community invitations or external posts are authorized.
+4. Provide the existing GoogleGroup join link and actual enabled Play opt-in link after the release is live. Verify actual opt-ins; group membership alone does not start the12tester/14day requirement. Production release remains disabled until its separate gates pass.
+
+No community checkout gate, new Android build, OAuth audience change, closed rollout or opt-in is claimed complete by this checkpoint.

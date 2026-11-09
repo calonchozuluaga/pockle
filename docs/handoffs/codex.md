@@ -1405,3 +1405,13 @@ Archive and distribution export succeeded. Final IPA `Builds/TestFlight-11/Pockl
 ### November9 — build11 upload succeeded; Google listing owner review pending
 
 Upload session79230 completed with Uploaded Unity-iPhone/EXPORT SUCCEEDED. Apple processing/group assignment remains pending. Existing dSYM warning unchanged. Google last10/11task is store listing; existing icon/featuregraphic/fourphone screenshots and text are present. Review step is open at AI asset declaration with neither choice selected; owner asked to review per-asset labels and Save personally under standing final-declaration boundary. No final GoogleSave or closed rollout by Codex. Before community rollout, checkout must be disabled for non-licensed testers or correctly restricted to verified test accounts; Google official billing docs explicitly say test-track users can incur actual charges unless license testers. No policy/accountpermissions changed.
+
+
+### November9 — Google closed-test sequence prepared while Apple processes
+
+Expanded GOOGLE_CLOSED_TEST_SETUP.md with the current10/11listing gate, owner-only AI asset declaration, safe community-checkout prerequisite, new-tester GoogleOAuth audience check, matching Android/signing and rollout/opt-in sequence. No gate or Android build is implemented by that documentation. Apple upload11 remains Processing at the latest visible read; source/release artifact unchanged. Google review form is preserved and finalSave still awaits owner.
+
+
+### November9 — TestFlight11 processed; owner declaration is final delivery gate
+
+Apple processed build1.0(11), ID`a30b74af-5839-43c5-9bc8-d6544375e2b4`. What-to-test notes saved; Apple displayedSaved. Provide Export Compliance Information opens blank App Encryption Documentation; no algorithm selected. Owner asked to review/Save personally. Current page is that Apple form; Google listing AI declaration is preserved in its other tab, also awaiting owner review/Save. Groups(0), so build11 is not yet available to the owner. After Apple clears, add only existing Pockle owner internal group e702b709-d2b1-4d76-9d1a-649edf891e08 and verifyTesting; do not re-upload or send invitations. Both forms are ready for concrete owner action under standing final-legal boundary; no runtime/trading/production checkout changes performed. Exact signed IPA/tests are in distribution.json and validation.json.

@@ -6,7 +6,7 @@
   "unityExport": "succeeded",
   "archive": "succeeded",
   "upload": "succeeded",
-  "testFlight": "Apple processing; group assignment pending",
+  "testFlight": "processed; Missing Compliance",
   "tests": "99 focused native cases and full Core/source checks passed on unchanged source",
   "publicStoreSubmission": false,
   "exportLog": "/private/tmp/pockle-testflight-export11.log",
@@ -31,5 +31,12 @@
   "ipaBytes": 538999197,
   "ipaSha256": "ba7d4bf70b419508ac4e3da0710d58d53cd298699c4c89717930e33b1b915be4",
   "uploadLog": "/private/tmp/pockle-testflight-upload11.log",
-  "warning": "Existing UnityRuntime.framework dSYM UUID B5BCB31B-E424-3C81-A0EE-2EF2ADFA93D7 missing; upload succeeds, native framework crash symbolication incomplete."
+  "warning": "Existing UnityRuntime.framework dSYM UUID B5BCB31B-E424-3C81-A0EE-2EF2ADFA93D7 missing; upload succeeds, native framework crash symbolication incomplete.",
+  "appStoreBuildId": "a30b74af-5839-43c5-9bc8-d6544375e2b4",
+  "buildUrl": "https://appstoreconnect.apple.com/teams/b4649b6e-4146-4a40-a9d6-d1d5a87fb3e2/apps/6830781336/testflight/ios/a30b74af-5839-43c5-9bc8-d6544375e2b4",
+  "testNotes": "saved; Apple displayed Saved",
+  "compliance": "blank declaration open for owner; no algorithm selected by Codex",
+  "group": "Pockle owner internal",
+  "groupId": "e702b709-d2b1-4d76-9d1a-649edf891e08",
+  "groupAssignment": "pending compliance; Groups (0)"
 }
