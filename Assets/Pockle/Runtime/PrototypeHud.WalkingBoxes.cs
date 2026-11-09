@@ -19,7 +19,7 @@ namespace Pockle.Runtime
         private RectTransform homeBankRow, walkRules;
         private readonly RawImage[] homeBankSlots = new RawImage[WalkingBoxView.MaxBankedDefault];
         private readonly Image[] homeDayDots = new Image[WalkingBoxView.MaxPerDayDefault];
-        private Text homeBankCaption, walkRulesText;
+        private Text homeBankCaption, walkRulesText, walkMystery;
         private CountdownText homeStatusClock, walkStatusClock;
         private Button walkOdds;
         private Texture localWalkTexture;
@@ -29,10 +29,11 @@ namespace Pockle.Runtime
         private void RestoreLocalWalkArt()
         {
             if (walkStatusClock != null) walkStatusClock.enabled = false;
+            if (walkMystery != null) walkMystery.gameObject.SetActive(false);
             if (rewardNote != null && homeBankRow != null)
                 rewardNote.GetComponent<Text>().text = "Daily boxes reset at midnight UTC. Steps count while Pockle is open; keep it open on your walk for now.";
             if (localWalkTexture == null || walkArt == null) return;
-            var art = walkArt.GetComponent<RawImage>(); art.texture = localWalkTexture; art.uvRect = localWalkUv; art.color = Color.white;
+            var art = walkArt.GetComponent<RawImage>(); art.texture = localWalkTexture; art.uvRect = localWalkUv; art.color = Color.white; art.enabled = true;
         }
 
         /// <summary>True when a server snapshot drives the box cards.</summary>
@@ -149,6 +150,9 @@ namespace Pockle.Runtime
             homeWalk.onClick.RemoveAllListeners();
             homeWalk.onClick.AddListener(() => { if (ServerBoxes && (boxView.BankFull || boxView.DayDone)) ShowBoxRules(); else Navigate(AppPage.Rewards); });
             var localArt = walkArt.GetComponent<RawImage>(); localWalkTexture = localArt.texture; localWalkUv = localArt.uvRect;
+            walkMystery = Label("?", walkArt, 44, PockleTheme.JellyInk, FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
+            walkMystery.gameObject.name = "Unknown walking collection";
+            Stretch(walkMystery.rectTransform); walkMystery.raycastTarget = false;
             openDaily.onClick.RemoveAllListeners(); openDaily.onClick.AddListener(OpenWalkingBox);
         }
 
@@ -208,7 +212,8 @@ namespace Pockle.Runtime
             string first = v.Banked > 0 ? v.BankedCollectionIds[0] : null;
             var art = walkArt.GetComponent<RawImage>();
             var picture = BoxPicture(first ?? v.NextCollectionId);
-            if (picture != null) { art.texture = picture; art.uvRect = new Rect(0, 0, 1, 1); art.enabled = true; }
+            art.texture = picture; art.uvRect = new Rect(0, 0, 1, 1); art.enabled = picture != null;
+            walkMystery.gameObject.SetActive(picture == null);
             art.color = first != null ? Color.white : new Color(1, 1, 1, .45f);
             walkTitle.text = v.Banked == 0 ? "Walking boxes" : v.Banked == 1 ? BoxName(first) + " is ready" : v.Banked + " boxes ready · " + BoxName(first) + " first";
             walkProgress.text = Mathf.Clamp(v.StepCredit, 0, v.StepsPerBox).ToString("N0") + " of " + v.StepsPerBox.ToString("N0") + " steps · " + v.EarnedToday + " of " + v.MaxPerDay + " today";

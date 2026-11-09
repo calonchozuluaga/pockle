@@ -19,15 +19,19 @@ namespace Pockle.Runtime
         public RectTransform[] Bits = new RectTransform[0];
         public Vector2[] BitTargets = new Vector2[0];
         public Action Finished;
+        /// <summary>Once when the saved child first appears, including a user skip.</summary>
+        public Action Arrived;
 
         private float start = -1;
         private bool secretRecipe;
+        private bool arrived;
 
         public bool Playing => start >= 0;
 
         public void Play(bool secret)
         {
             secretRecipe = secret;
+            arrived = false;
             start = Time.unscaledTime;
             gameObject.SetActive(true);
             Apply(0);
@@ -37,6 +41,7 @@ namespace Pockle.Runtime
         public void Skip()
         {
             if (start < 0) return;
+            SignalArrival();
             start = -1;
             gameObject.SetActive(false);
             Finished?.Invoke();
@@ -48,7 +53,10 @@ namespace Pockle.Runtime
             float p = (Time.unscaledTime - start) / Duration;
             if (p >= 1.08f) { Skip(); return; } // a short hold on the landed toy, then the reveal
             Apply(Mathf.Clamp01(p));
+            if (p >= .76f) SignalArrival();
         }
+
+        private void SignalArrival() { if (arrived) return; arrived = true; Arrived?.Invoke(); }
 
         private static float Seg(float p, float a, float b) => Mathf.Clamp01((p - a) / Mathf.Max(.0001f, b - a));
         private static float EaseOut(float t) => 1 - (1 - t) * (1 - t);

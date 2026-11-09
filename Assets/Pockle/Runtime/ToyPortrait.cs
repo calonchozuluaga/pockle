@@ -18,7 +18,11 @@ namespace Pockle.Runtime
             RenderTexture texture = null;
             try
             {
-                root.transform.position = new Vector3(1000, 0, 0);
+                // Live shelf actors occupy x=1000..1030 on the same unlit layer.
+                // A still can be requested before those actors are hidden during a
+                // screen transition. Keep its stage separate so it cannot photograph
+                // a live shelf toy on top of the requested model.
+                root.transform.position = new Vector3(-1000, 0, 0);
                 var toyObject = new GameObject("Shelf toy"); toyObject.transform.SetParent(root.transform, false);
                 var toy = toyObject.AddComponent<JellyToy>(); toy.Initialize();
                 if (PipVariants.TryFromCollectibleId(id, out var choice)) toy.SetVariant(choice);

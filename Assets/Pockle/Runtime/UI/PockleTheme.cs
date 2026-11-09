@@ -9,19 +9,22 @@ namespace Pockle.Runtime
     public static class PockleTheme
     {
         // Ground and ink.
-        public static readonly Color Milk = Hex(0xFBF8F5);
-        public static readonly Color Plum = Hex(0x2A1430);
-        public static readonly Color PlumSoft = Hex(0x6E5A72);
-        public static readonly Color OnPlum = Hex(0xFBF8F5);
+        public static readonly Color Page = Hex(0xF8DFCC);
+        public static readonly Color Milk = Hex(0xFFECE0);
+        public static readonly Color Plum = Hex(0x3C2039);
+        public static readonly Color PlumSoft = Hex(0x775467);
+        public static readonly Color OnPlum = Hex(0xFFF4E6);
         public static readonly Color OnPlumMuted = Hex(0xE8DCE6);
         /// <summary>Neutral fill for rows, chips, inputs, and secondary buttons.</summary>
-        public static readonly Color Fill = Hex(0xF1ECEF);
-        public static readonly Color FillDeep = Hex(0xE2D8DE);
-        public static readonly Color Mystery = Hex(0xEFE9EC);
+        public static readonly Color Fill = Hex(0xF1D3C4);
+        public static readonly Color FillDeep = Hex(0xE4BEB3);
+        public static readonly Color Mystery = Hex(0xECD0CB);
+        public static readonly Color FusionGround = Hex(0xEED2DF);
+        public static readonly Color FusionGlow = Hex(0xFAE8CE);
 
         // Brand and toy colour fields.
-        public static readonly Color Jelly = Hex(0xFFC6D6);
-        public static readonly Color JellyInk = Hex(0x7A2A4E);
+        public static readonly Color Jelly = Hex(0xFFD2C6);
+        public static readonly Color JellyInk = Hex(0x823D58);
         public static readonly Color FieldPeach = Hex(0xFFD8C4);
         public static readonly Color FieldMoon = Hex(0xD8DDFF);
         public static readonly Color FieldGold = Hex(0xFFE3A3);

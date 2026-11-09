@@ -142,6 +142,26 @@ namespace Pockle.Tests
         }
 
         [UnityTest]
+        public IEnumerator PaintedCollectionProductsKeepOriginalArtAndLargeContentsAndPriceActions()
+        {
+            hud.SetCheckoutCatalog(Catalog()); yield return null;
+            var product = Named("View contents · " + Wally);
+            var art = product.GetComponentsInChildren<RawImage>().Single(r => r.name == "Collection offer painting");
+            ToyCatalog.TryGetCollection(wally, out var collection);
+            Assert.AreSame(CollectionLook.Banner(collection), art.texture);
+            Assert.IsNotNull(art.texture);
+            Assert.AreEqual(Color.white, art.color, "Do not flatten the approved collection painting with a blanket tint.");
+            var buy = Named("Buy · " + Wally);
+            var contents = Named("Contents button · " + Wally);
+            Assert.That(buy.GetComponent<RectTransform>().rect.height, Is.GreaterThanOrEqualTo(44));
+            Assert.That(contents.GetComponent<RectTransform>().rect.height, Is.GreaterThanOrEqualTo(44));
+            Assert.AreEqual("0,99 €", buy.GetComponentInChildren<Text>().text, "Artwork must not bake in a price.");
+            contents.onClick.Invoke(); yield return null;
+            Assert.That(quotes, Is.EqualTo(new[] { ("single." + wally, wally) }));
+            Assert.That(confirmed, Is.Empty, "The contents action never buys or awards a toy.");
+        }
+
+        [UnityTest]
         public IEnumerator LoadingAndUnavailableCataloguesSellNothing()
         {
             hud.SetCheckoutCatalog(new CheckoutCatalog { Status = CheckoutCatalogStatus.Loading }); yield return null;

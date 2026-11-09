@@ -52,6 +52,7 @@ IosPedometerChecks.Run();
 MaterialTouchChecks.Run();
             PaidDeliveryChecks.Run();
             WalkingDeliveryChecks.Run();
+            MomentAudioChecks.Run();
             return 0;
         }
         catch (Exception exception)

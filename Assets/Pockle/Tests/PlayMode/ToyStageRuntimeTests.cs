@@ -98,6 +98,9 @@ namespace Pockle.Tests
                     PrototypeStage.SetLight(camera,StageLight.Day);
                     Assert.That(toy.BodyRenderer.sharedMaterial.GetFloat("_StageEmission"),Is.EqualTo(0));
                     Assert.That(toy.BodyRenderer.sharedMaterial.GetColor("_StageTint"),Is.EqualTo(Color.white));
+                    Assert.That(PrototypeStage.SetLight(camera,StageLight.Golden),Is.True);
+                    Assert.That(camera.GetComponent<ToyStageEnvironment>().Lighting,Is.EqualTo(StageLight.Day),"Retired saved Golden Hour must render as Daylight.");
+                    Assert.That(toy.BodyRenderer.sharedMaterial.GetColor("_StageTint"),Is.EqualTo(Color.white));
                 }
                 Assert.That(PrototypeStage.SetLight(camera,(StageLight)99),Is.False);
             }

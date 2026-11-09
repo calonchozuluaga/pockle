@@ -7,16 +7,15 @@ using UnityEngine.UI;
 namespace Pockle.Runtime
 {
     /// <summary>
-    /// Toy stage (canvas row "Play screen: side rail"): collection pill in the header, series/number eyebrow, rarity badge,
-    /// and a rail of four round buttons on the right (World, Light, Collection, About). The toy gets the whole screen; a
-    /// rail button opens a small floating card at the bottom, and the toy's area shrinks above it (owner, October 15).
+    /// Toy stage with four named controls and a compact optional bottom sheet.
+    /// The Pockles sheet switches directly between owned toys across the roster, including saved fusions.
     /// </summary>
     public sealed partial class PrototypeHud
     {
         public event Action<StageWorld> WorldChanged;
         public event Action<StageLight> LightChanged;
         /// <summary>
-        /// The part of the screen the toy and its plate may use on the play page, in screen pixels (origin bottom-left, like
+        /// The part of the screen the toy may use on the play page, in screen pixels (origin bottom-left, like
         /// <see cref="Camera.pixelRect"/>): below the title block and above the tray, or above the open panel. Raised whenever it
         /// changes, including when a tray tab opens or closes, so the stage can frame the toy clear of the HUD.
         /// </summary>
@@ -32,18 +31,16 @@ namespace Pockle.Runtime
         public StageLight CurrentLight => stageLight;
 
         private const int TrayClosed = -1;
-        private static readonly string[] TrayTabNames = { "Collection", "World", "Light", "About" };
+        private static readonly string[] TrayTabNames = { "Pockles", "Backdrop", "Light", "About" };
         private const int AboutTab = 3;
         private Button stageCollectionPill;
-        private Text stageCollectionText, stageEyebrow, stageRarityText, stageCount, stageCollectionTitle, stageWorldNote, stageLightNote;
+        private Text stageCollectionText, stageEyebrow, stageRarityText, stageWorldNote, stageLightNote;
         private RectTransform stageRarity, stageTray, stagePanel, stageRail;
         private Image stageRarityFace, stageRarityRing;
         private RawImage stageRarityIcon;
         private const float RarityHeight = 26;
-        // Rail order top to bottom, and each button's icon (Resources/UI/Icons).
-        private static readonly int[] RailOrder = { 1, 2, 0, 3 };
-        private static readonly string[] RailIcons = { "Collection", "World", "Light", "About" };
-        private const float RailButton = 52, RailGap = 10, CardHeader = 44;
+        private static readonly int[] RailOrder = { 0, 1, 2, 3 };
+        private const float RailButton = 48, RailGap = 6, CardHeader = 44;
         private Text stageTrayTitle, stageTrayNote;
         private Button stageTrayClose;
         private RectTransform stageShade;
@@ -57,13 +54,10 @@ namespace Pockle.Runtime
         private readonly List<Image> finishDotFaces = new List<Image>();
         private readonly List<Image> finishDotRings = new List<Image>();
         private readonly List<string> finishDotIds = new List<string>();
-        // The Collection tab shows small pictures of the toys (owner, October 14), not colour dots: found toys as still
-        // portraits you can tap to play, the rest as silhouettes. The row scrolls sideways.
+        // The optional Pockles sheet shows owned playable finishes and fusions. It never offers locked toys.
         private readonly List<RawImage> finishPictures = new List<RawImage>();
-        private readonly List<CharacterSilhouetteGraphic> finishOutlines = new List<CharacterSilhouetteGraphic>();
         private RectTransform finishViewport, finishContent;
-        private const float FinishTileWidth = 58, FinishTileHeight = 66, FinishTileRadius = 15;
-        private Button stageFindMore;
+        private const float FinishTileHeight = 116, FinishTileRadius = 15;
         // World tray: Studio plus the collection's own worlds (five each), scrolling sideways.
         private sealed class WorldTile { public Button Button; public Image Face, Ring; public RawImage Art, Shade; public Text Caption; }
         private struct WorldChoice { public string Key, Label, EnvironmentId; public StageWorld World; public Texture2D Art; public Color Swatch; }
@@ -80,8 +74,8 @@ namespace Pockle.Runtime
         private readonly Text[] aboutChipTexts = new Text[3];
         private readonly RectTransform[] aboutCards = new RectTransform[3];
         private readonly Text[] aboutWhen = new Text[3], aboutDoes = new Text[3];
-        private readonly Button[] lightTiles = new Button[3];
-        private readonly Image[] lightFaces = new Image[3];
+        private readonly Button[] lightTiles = new Button[StageLook.Lights.Length];
+        private readonly Image[] lightFaces = new Image[StageLook.Lights.Length];
         private int trayTab = TrayClosed;
         private StageWorld stageWorld = StageWorld.Studio;
         private StageLight stageLight = StageLight.Day;
@@ -93,7 +87,9 @@ namespace Pockle.Runtime
         {
             // Studio (the toy's own colour field) until the player picks a world.
             stageWorld = (StageWorld)Mathf.Clamp(PlayerPrefs.GetInt(StageLook.WorldKey, (int)StageWorld.Studio), 0, StageLook.Worlds.Length - 1);
-            stageLight = (StageLight)Mathf.Clamp(PlayerPrefs.GetInt(StageLook.LightKey, 0), 0, StageLook.Lights.Length - 1);
+            int savedLight = PlayerPrefs.GetInt(StageLook.LightKey, (int)StageLight.Day);
+            stageLight = StageLook.NormalizeLight((StageLight)savedLight);
+            if (savedLight != (int)stageLight) { PlayerPrefs.SetInt(StageLook.LightKey, (int)stageLight); PlayerPrefs.Save(); }
 
             stageCollectionPill = CreateButton("Collection", safeRoot, Vector2.zero, new Vector2(200, 40), new Color(1, 1, 1, .6f),
                 OpenStageCollection, out _, PockleTheme.CaptionSize);
@@ -131,7 +127,7 @@ namespace Pockle.Runtime
             stageTrayClose.name = "Stage tray close";
             IconOnly(stageTrayClose, "Close", 14);
 
-            // The rail: round glass buttons on the right, low enough for a thumb.
+            // Explicit labels keep the four play controls understandable without guessing at icons.
             stageRail = Rect("Stage rail", safeRoot);
             foreach (int i in RailOrder)
             {
@@ -139,20 +135,9 @@ namespace Pockle.Runtime
                 stageTabs[i] = CreateButton(TrayTabNames[i], stageRail, Vector2.zero, new Vector2(RailButton, RailButton), new Color(1, 1, 1, .8f),
                     () => SetTrayTab(trayTab == tab ? TrayClosed : tab), out stageTabFaces[i], PockleTheme.SmallSize);
                 stageTabs[i].name = "Stage tab · " + TrayTabNames[i];
-                IconOnly(stageTabs[i], RailIcons[i], 24);
             }
             stagePanel = Rect("Stage panel", stageTray);
             for (int i = 0; i < TrayTabNames.Length; i++) stagePanels[i] = Rect(TrayTabNames[i] + " panel", stagePanel);
-
-            // Collection: the members as dots, then the way to find the rest.
-            var collectionPanel = stagePanels[0];
-            // Its title and count show in the card header (kept as hidden labels for the header to copy).
-            stageCollectionTitle = Label("", collectionPanel, PockleTheme.BodySize, Ink, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, new Vector2(200, 24));
-            stageCount = Label("", collectionPanel, PockleTheme.SmallSize, MutedInk, FontStyle.Normal, TextAnchor.MiddleRight, Vector2.zero, new Vector2(120, 24));
-            stageCollectionTitle.enabled = false; stageCount.enabled = false;
-            stageFindMore = CreateButton("Find the rest in boxes", collectionPanel, Vector2.zero, new Vector2(300, 44), Primary,
-                () => Navigate(AppPage.Boxes), out _, PockleTheme.CaptionSize + 1);
-            stageFindMore.name = "Stage find more";
 
             // World: a sideways-scrolling row of painted thumbnails (tiles are created as a collection needs them).
             worldViewport = Rect("World row", stagePanels[1]);
@@ -165,8 +150,8 @@ namespace Pockle.Runtime
             stageWorldNote = Label("", stagePanels[1], PockleTheme.SmallSize - 1, MutedInk, FontStyle.Normal, TextAnchor.MiddleCenter, Vector2.zero, new Vector2(300, 20));
             stageWorldNote.enabled = false; // the card header says how many worlds there are
 
-            // Light: three moods.
-            for (int i = 0; i < 3; i++)
+            // Light: two clear choices, while the saved legacy enum values remain stable.
+            for (int i = 0; i < StageLook.Lights.Length; i++)
             {
                 var light = StageLook.Lights[i];
                 lightTiles[i] = CreateButton(StageLook.Name(light), stagePanels[2], Vector2.zero, new Vector2(100, 56), Quiet,
@@ -230,6 +215,7 @@ namespace Pockle.Runtime
         private void SetTrayTab(int tab)
         {
             trayTab = tab;
+            if (tab == 0) RefreshPocklePicker();
             for (int i = 0; i < TrayTabNames.Length; i++)
             {
                 bool on = i == tab;
@@ -244,16 +230,16 @@ namespace Pockle.Runtime
             if (lastLayoutSize.x > 0 && page == AppPage.Play) AdaptLayout();
         }
 
-        /// <summary>The open card's title and note: "Worlds · 5 Pip worlds", "Pip collection · 10 of 10", ...</summary>
+        /// <summary>The open sheet's title and its count or collection context.</summary>
         private void RefreshTrayHeader()
         {
             if (stageTrayTitle == null) return;
             bool known = StageSelection(out var toy, out var collection);
             switch (trayTab)
             {
-                case 0: stageTrayTitle.text = known ? collection.DisplayName + " collection" : "Collection"; stageTrayNote.text = stageCount.text; break;
+                case 0: stageTrayTitle.text = "Your Pockles"; stageTrayNote.text = finishDotIds.Count + " ready to play"; break;
                 case 1:
-                    stageTrayTitle.text = "Worlds";
+                    stageTrayTitle.text = "Backdrop";
                     stageTrayNote.text = known && collection.Worlds.Count > 0 ? collection.Worlds.Count + " " + collection.DisplayName + " worlds" : "";
                     break;
                 case 2: stageTrayTitle.text = "Light"; stageTrayNote.text = ""; break;
@@ -272,6 +258,7 @@ namespace Pockle.Runtime
             for (int i = 0; i < stageTabs.Length; i++)
             {
                 stageTabFaces[i].color = new Color(1, 1, 1, .8f);
+                stageTabs[i].GetComponentInChildren<Text>(true).color = Ink;
                 foreach (var icon in stageTabs[i].GetComponentsInChildren<RawImage>(true)) icon.color = Ink;
             }
         }
@@ -354,8 +341,8 @@ namespace Pockle.Runtime
 
         private void SetStageLight(StageLight light)
         {
-            stageLight = light; PlayerPrefs.SetInt(StageLook.LightKey, (int)light);
-            RefreshStage(); LightChanged?.Invoke(light); BackdropChanged?.Invoke(StageBackdrop);
+            stageLight = StageLook.NormalizeLight(light); PlayerPrefs.SetInt(StageLook.LightKey, (int)stageLight);
+            RefreshStage(); LightChanged?.Invoke(stageLight); BackdropChanged?.Invoke(StageBackdrop);
         }
 
         /// <summary>Rebuilds the dots when the collection changes; recolours everything else.</summary>
@@ -404,33 +391,8 @@ namespace Pockle.Runtime
 
             int found = FoundCount(collection);
             stageCollectionText.text = collection.DisplayName + " collection · " + found + " of " + collection.Members.Count;
-            stageCollectionTitle.text = collection.DisplayName + (collection.SeriesNumber > 0 ? " · Series " + collection.SeriesNumber : " collection");
-            stageCount.text = found + " of " + collection.Members.Count + " found";
-            int missing = collection.Members.Count - found;
-            bool offers = false;
-            foreach (var offer in BoxCatalog.Offers) if (offer.CollectionId == collection.Id) offers = true;
-            stageFindMore.GetComponentInChildren<Text>().text = missing == 0 ? "You found all " + collection.Members.Count
-                : offers ? "Find the other " + missing + " in boxes" : "More " + collection.DisplayName + " boxes coming soon";
-            stageFindMore.interactable = missing > 0 && offers;
-
-            if (stageCollectionId != collection.Id) { RebuildFinishDots(collection); BuildWorldChoices(toy, collection); RestoreCollectionWorld(collection); }
-            for (int i = 0; i < finishDots.Count; i++)
-            {
-                string id = finishDotIds[i];
-                bool owned = session != null && session.GetOwnedCount(id) > 0;
-                bool playable = session != null && session.IsOwnedAndPlayable(id);
-                bool secret = collection.SecretId == id;
-                finishDots[i].interactable = playable;
-                finishDotFaces[i].color = owned ? PockleTheme.FieldFor(id) : PockleTheme.Mystery;
-                var picture = owned ? StillPortrait(id) : null;
-                finishPictures[i].texture = picture; finishPictures[i].enabled = picture != null;
-                // A missing toy shows only its character's outline; the secret's stays hidden.
-                finishOutlines[i].enabled = !owned;
-                if (!owned) finishOutlines[i].Configure(collection.CharacterId, secret);
-                finishDotRings[i].gameObject.SetActive(id == selectedCollectibleId);
-                string label = ToyCatalog.TryGetCollectible(id, out var member) && owned ? FinishName(member) : "Not found yet";
-                finishDots[i].name = "Stage finish · " + id + " · " + label;
-            }
+            if (stageCollectionId != collection.Id) { stageCollectionId = collection.Id; BuildWorldChoices(toy, collection); RestoreCollectionWorld(collection); }
+            if (trayTab == 0) RefreshPocklePicker();
 
             string currentKey = ChoiceKey(stageWorld, stageEnvironment);
             for (int i = 0; i < worldTiles.Count; i++)
@@ -473,7 +435,7 @@ namespace Pockle.Runtime
                 }
                 aboutMeet.GetComponentInChildren<Text>().text = "Meet " + PersonalityBook.ShortName(toy.Id);
             }
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < StageLook.Lights.Length; i++)
             {
                 bool on = StageLook.Lights[i] == stageLight;
                 lightFaces[i].color = on ? Primary : Quiet;
@@ -483,47 +445,107 @@ namespace Pockle.Runtime
             RefreshTrayHeader();
         }
 
-        private void RebuildFinishDots(CollectionDefinition collection)
+        private void RefreshPocklePicker()
+        {
+            var owned = new List<string>();
+            if (session != null)
+                foreach (var entry in session.OwnedCounts)
+                    if (entry.Value > 0 && session.IsOwnedAndPlayable(entry.Key)) owned.Add(entry.Key);
+            owned.Sort(StringComparer.Ordinal);
+            bool changed = owned.Count != finishDotIds.Count;
+            if (!changed) for (int i = 0; i < owned.Count; i++) if (owned[i] != finishDotIds[i]) { changed = true; break; }
+            bool rebuilt = changed || finishViewport == null;
+            if (rebuilt) RebuildPocklePicker(owned);
+            for (int i = 0; i < finishDots.Count; i++)
+            {
+                string id = finishDotIds[i];
+                finishDots[i].interactable = session != null && session.IsOwnedAndPlayable(id);
+                finishDotFaces[i].color = PockleTheme.FieldFor(id);
+                finishDotRings[i].gameObject.SetActive(id == selectedCollectibleId);
+            }
+            if (!rebuilt) RefreshVisiblePocklePortraits(); // New tile positions are assigned by LayoutPocklePicker first.
+        }
+
+        private void RebuildPocklePicker(List<string> owned)
         {
             if (finishViewport == null)
             {
-                finishViewport = Rect("Finish row", stagePanels[0]);
+                finishViewport = Rect("Pockle picker", stagePanels[0]);
                 finishViewport.gameObject.AddComponent<RectMask2D>();
                 var hit = finishViewport.gameObject.AddComponent<Image>(); hit.color = Color.clear;
-                var scroll = finishViewport.gameObject.AddComponent<ScrollRect>(); scroll.vertical = false; scroll.movementType = ScrollRect.MovementType.Clamped;
-                finishContent = Rect("Finish tiles", finishViewport);
+                var scroll = finishViewport.gameObject.AddComponent<ScrollRect>();
+                scroll.horizontal = false; scroll.vertical = true; scroll.movementType = ScrollRect.MovementType.Clamped;
+                finishContent = Rect("Owned Pockles", finishViewport);
                 finishContent.anchorMin = finishContent.anchorMax = finishContent.pivot = new Vector2(0, 1);
                 scroll.content = finishContent; scroll.viewport = finishViewport;
+                scroll.onValueChanged.AddListener(_ => RefreshVisiblePocklePortraits());
             }
-            foreach (var dot in finishDots) Destroy(dot.gameObject);
-            foreach (var ring in finishDotRings) Destroy(ring.gameObject);
-            finishDots.Clear(); finishDotFaces.Clear(); finishDotRings.Clear(); finishDotIds.Clear(); finishPictures.Clear(); finishOutlines.Clear();
-            stageCollectionId = collection.Id;
-            for (int i = 0; i < collection.Members.Count; i++)
+            foreach (var dot in finishDots) { dot.gameObject.SetActive(false); Destroy(dot.gameObject); }
+            foreach (var ring in finishDotRings) { ring.gameObject.SetActive(false); Destroy(ring.gameObject); }
+            finishDots.Clear(); finishDotFaces.Clear(); finishDotRings.Clear(); finishDotIds.Clear(); finishPictures.Clear();
+            foreach (string id in owned)
             {
-                string id = collection.Members[i];
-                float x = 3 + i * (FinishTileWidth + 8);
-                // The ring sits behind the tile, 3 px larger with a 3 px larger radius, so the selected corners stay round.
-                var ringRect = Rect("Finish ring", finishContent);
+                ToyCatalog.TryGetCollectible(id, out var toy);
+                ToyCatalog.TryGetCollection(toy.CollectionId, out var collection);
+                var ringRect = Rect("Pockle selection", finishContent);
                 finishDotRings.Add(Surface(ringRect, Ink, FinishTileRadius + 3));
-                LeftLabel(ringRect, new Vector2(x - 3, 0), new Vector2(FinishTileWidth + 6, FinishTileHeight + 6));
-                var tile = CreateButton("", finishContent, Vector2.zero, new Vector2(FinishTileWidth, FinishTileHeight), PockleTheme.Mystery,
-                    () => { if (selectedCollectibleId != id) ShowToy(id); }, out var face, PockleTheme.SmallSize, false);
+                var tile = CreateButton("", finishContent, Vector2.zero, new Vector2(84, FinishTileHeight), PockleTheme.FieldFor(id),
+                    () =>
+                    {
+                        if (session == null || !session.IsOwnedAndPlayable(id)) return;
+                        SetTrayTab(TrayClosed);
+                        if (selectedCollectibleId != id) ShowToy(id);
+                    }, out var face, 12, false);
+                tile.name = "Stage pockle · " + id;
                 SetRadius(face, FinishTileRadius);
-                tile.gameObject.AddComponent<Mask>().showMaskGraphic = true; // portraits take the tile's rounded corners
-                var colours = tile.colors; colours.disabledColor = Color.white; tile.colors = colours;
-                LeftLabel(tile.GetComponent<RectTransform>(), new Vector2(x, -3), new Vector2(FinishTileWidth, FinishTileHeight));
-                var outline = Rect("Outline", tile.transform);
-                outline.anchorMin = new Vector2(.14f, .1f); outline.anchorMax = new Vector2(.86f, .9f); outline.offsetMin = outline.offsetMax = Vector2.zero;
-                var shape = outline.gameObject.AddComponent<CharacterSilhouetteGraphic>();
-                shape.color = new Color(PockleTheme.PlumSoft.r, PockleTheme.PlumSoft.g, PockleTheme.PlumSoft.b, .45f);
-                shape.Configure(collection.CharacterId);
-                var picture = Rect("Portrait", tile.transform); Stretch(picture);
+                tile.gameObject.AddComponent<Mask>().showMaskGraphic = true;
+                var picture = Rect("Portrait", tile.transform);
+                picture.anchorMin = new Vector2(0, 1); picture.anchorMax = new Vector2(1, 1);
+                picture.offsetMin = new Vector2(3, -78); picture.offsetMax = new Vector2(-3, -3);
                 var image = picture.gameObject.AddComponent<RawImage>(); image.raycastTarget = false; image.enabled = false;
                 TintMirror.Follow(tile, image);
-                finishDots.Add(tile); finishDotFaces.Add(face); finishDotIds.Add(id); finishPictures.Add(image); finishOutlines.Add(shape);
+                var caption = tile.GetComponentInChildren<Text>();
+                caption.text = (collection != null ? collection.DisplayName : toy.CharacterId) + "\n" + FinishName(toy);
+                caption.alignment = TextAnchor.MiddleCenter; caption.raycastTarget = false;
+                caption.resizeTextForBestFit = true; caption.resizeTextMinSize = 10; caption.resizeTextMaxSize = 12;
+                caption.rectTransform.anchorMin = new Vector2(0, 0); caption.rectTransform.anchorMax = new Vector2(1, 0);
+                caption.rectTransform.offsetMin = new Vector2(3, 3); caption.rectTransform.offsetMax = new Vector2(-3, 36);
+                finishDots.Add(tile); finishDotFaces.Add(face); finishDotIds.Add(id); finishPictures.Add(image);
             }
-            finishContent.sizeDelta = new Vector2(collection.Members.Count * (FinishTileWidth + 8) + 6, FinishTileHeight + 6);
+            finishContent.anchoredPosition = Vector2.zero;
+        }
+
+        private void LayoutPocklePicker(float row, float height)
+        {
+            if (finishViewport == null) return;
+            LeftLabel(finishViewport, new Vector2(5, 0), new Vector2(row + 6, height));
+            int columns = Mathf.Clamp(Mathf.FloorToInt((row + 8) / 80), 2, 4);
+            float tileWidth = (row - (columns - 1) * 8) / columns;
+            for (int i = 0; i < finishDots.Count; i++)
+            {
+                float x = i % columns * (tileWidth + 8), y = i / columns * (FinishTileHeight + 8);
+                LeftLabel(finishDotRings[i].rectTransform, new Vector2(x, -y), new Vector2(tileWidth + 6, FinishTileHeight + 6));
+                LeftLabel(finishDots[i].GetComponent<RectTransform>(), new Vector2(x + 3, -y - 3), new Vector2(tileWidth, FinishTileHeight));
+            }
+            int rows = (finishDots.Count + columns - 1) / columns;
+            finishContent.sizeDelta = new Vector2(row + 6, Mathf.Max(height, rows * (FinishTileHeight + 8)));
+            RefreshVisiblePocklePortraits();
+        }
+
+        private void RefreshVisiblePocklePortraits()
+        {
+            if (trayTab != 0 || finishViewport == null || !finishViewport.gameObject.activeInHierarchy) return;
+            float top = Mathf.Max(0, finishContent.anchoredPosition.y);
+            float bottom = top + finishViewport.rect.height;
+            for (int i = 0; i < finishDots.Count; i++)
+            {
+                var tile = finishDots[i].GetComponent<RectTransform>();
+                float tileTop = -tile.anchoredPosition.y;
+                if (tileTop > bottom || tileTop + tile.rect.height < top || finishPictures[i].texture != null) continue;
+                // Portraits are cached, but their first render is real work. Render only the rows in this compact sheet.
+                var picture = StillPortrait(finishDotIds[i]);
+                finishPictures[i].texture = picture; finishPictures[i].enabled = picture != null;
+            }
         }
 
         // Keep the title, eyebrow and personality lines over a consistent scrim, then fade below them.
@@ -579,35 +601,39 @@ namespace Pockle.Runtime
             // The card: header row, then the open button's panel. Only one is open at a time.
             float trayWidth = Mathf.Min(size.x - 24, 400);
             float inner = trayWidth - 16;
-            float panelHeight = trayTab == 0 ? 130 : trayTab == 1 ? 116 : trayTab == 2 ? 100 : trayTab == AboutTab ? 196 : 0;
+            float pickerHeight = Mathf.Clamp(size.y * .27f, 172, 244);
+            float panelHeight = trayTab == 0 ? pickerHeight : trayTab == 1 ? 116 : trayTab == 2 ? 100 : trayTab == AboutTab ? 196 : 0;
             bool open = trayTab != TrayClosed;
             float trayHeight = open ? 12 + CardHeader + panelHeight + 8 : 0;
             stageTray.anchorMin = stageTray.anchorMax = stageTray.pivot = new Vector2(.5f, 0);
-            stageTray.anchoredPosition = new Vector2(0, 16); stageTray.sizeDelta = new Vector2(trayWidth, trayHeight);
+            float controlsTop = 16 + RailButton;
+            stageTray.anchoredPosition = new Vector2(0, controlsTop + 12); stageTray.sizeDelta = new Vector2(trayWidth, trayHeight);
             LeftLabel(stageTrayTitle.rectTransform, new Vector2(16, -14), new Vector2(inner * .6f, 30));
             LeftLabel(stageTrayClose.GetComponent<RectTransform>(), new Vector2(trayWidth - 10 - 44, -7), new Vector2(44, 44)); // 44 px: easy to hit
             LeftLabel(stageTrayNote.rectTransform, new Vector2(trayWidth - 10 - 44 - 8 - 150, -14), new Vector2(150, 30));
             LeftLabel(stagePanel, new Vector2(8, -(12 + CardHeader)), new Vector2(inner, panelHeight));
             foreach (var panel in stagePanels) LeftLabel(panel, Vector2.zero, new Vector2(inner, panelHeight));
-            float cardTop = open ? 16 + trayHeight : 0;
+            float cardTop = open ? controlsTop + 12 + trayHeight : 0;
 
-            // The rail sits on the right, just above the hint, or just above the open card.
-            float hintTop = 20 + (playHint.preferredWidth + 32 > Mathf.Min(width - RailButton - 12, playHint.preferredWidth + 32) ? 50 : 32);
-            float railHeight = RailButton * 4 + RailGap * 3;
-            stageRail.anchorMin = stageRail.anchorMax = stageRail.pivot = new Vector2(1, 0);
-            stageRail.anchoredPosition = new Vector2(-Mathf.Max(12, left - 6), open ? cardTop + 12 : hintTop + 24);
-            stageRail.sizeDelta = new Vector2(RailButton, railHeight);
+            // The named controls stay in a single thumb-friendly row below the optional sheet.
+            float hintTop = controlsTop + 12 + (playHint.preferredWidth + 32 > width ? 50 : 32);
+            // Landscape has less vertical room. The optional gesture reminder yields before it crowds out
+            // the toy and its speech bubble; all four labeled controls remain available.
+            bool showHint = !open && size.y - titleBottom - hintTop - 16 >= 120;
+            stageRail.anchorMin = stageRail.anchorMax = stageRail.pivot = new Vector2(.5f, 0);
+            stageRail.anchoredPosition = new Vector2(0, 16);
+            stageRail.sizeDelta = new Vector2(trayWidth, RailButton);
+            float controlWidth = (trayWidth - RailGap * 3) / 4;
             for (int r = 0; r < RailOrder.Length; r++)
-                LeftLabel(stageTabs[RailOrder[r]].GetComponent<RectTransform>(), new Vector2(0, -r * (RailButton + RailGap)), new Vector2(RailButton, RailButton));
+                LeftLabel(stageTabs[RailOrder[r]].GetComponent<RectTransform>(), new Vector2(r * (controlWidth + RailGap), 0), new Vector2(controlWidth, RailButton));
 
             float pad = 8, row = inner - pad * 2;
-            if (finishViewport != null) LeftLabel(finishViewport, new Vector2(pad - 3, 0), new Vector2(row + 6, FinishTileHeight + 8));
-            LeftLabel(stageFindMore.GetComponent<RectTransform>(), new Vector2(pad, -82), new Vector2(row, 44));
+            LayoutPocklePicker(row, pickerHeight);
 
             LeftLabel(worldViewport, new Vector2(pad - 3, -2), new Vector2(row + 6, WorldTileHeight + 8));
             LeftLabel(stageWorldNote.rectTransform, new Vector2(pad, -116), new Vector2(row, 20));
-            float lightWidth = (row - 16) / 3;
-            for (int i = 0; i < 3; i++) LeftLabel(lightTiles[i].GetComponent<RectTransform>(), new Vector2(pad + i * (lightWidth + 8), -6), new Vector2(lightWidth, 56));
+            float lightWidth = (row - 8) / StageLook.Lights.Length;
+            for (int i = 0; i < StageLook.Lights.Length; i++) LeftLabel(lightTiles[i].GetComponent<RectTransform>(), new Vector2(pad + i * (lightWidth + 8), -6), new Vector2(lightWidth, 56));
             LeftLabel(stageLightNote.rectTransform, new Vector2(pad, -72), new Vector2(row, 20));
 
             // About: summary and voice, trait chips, three reactions, then Meet.
@@ -631,20 +657,18 @@ namespace Pockle.Runtime
             }
             LeftLabel(aboutMeet.GetComponent<RectTransform>(), new Vector2(pad, -148), new Vector2(row, 44));
 
-            // The ways-to-play hint sits at the bottom while nothing is open. The toy's area is the space between the title and
-            // the hint (or the open card), kept clear of the rail on both sides so the toy stays centred.
+            // The ways-to-play hint sits above the controls while nothing is open. The toy remains above the hint or sheet.
             playHintPill.anchorMin = playHintPill.anchorMax = playHintPill.pivot = new Vector2(.5f, 0);
-            playHintPill.anchoredPosition = new Vector2(0, 20);
+            playHintPill.anchoredPosition = new Vector2(0, controlsTop + 12);
             // The runtime hint can be long ("Tap Pip to play · Drag to turn · ..."), so it may wrap onto a second line.
-            float hintWidth = Mathf.Min(width - RailButton - 12, playHint.preferredWidth + 32);
+            float hintWidth = Mathf.Min(width, playHint.preferredWidth + 32);
             playHint.horizontalOverflow = HorizontalWrapMode.Wrap;
             playHintPill.sizeDelta = new Vector2(hintWidth, 32);
             float hintHeight = playHint.preferredWidth + 32 > hintWidth ? 50 : 32;
             playHintPill.sizeDelta = new Vector2(hintWidth, hintHeight);
-            playHintPill.gameObject.SetActive(!open);
-            float bottom = open ? cardTop + 8 : hintTop + 8;
-            // Full width: the toy renders behind the rail buttons (owner, October 16: no box around the toy). The rail sits
-            // symmetrically on both sides, so the toy stays centred; touches on the buttons never reach the toy.
+            playHintPill.gameObject.SetActive(showHint);
+            float bottom = open ? cardTop + 8 : showHint ? hintTop + 8 : controlsTop + 8;
+            // The toy uses the full width between its title and the controls or open sheet.
             float side = 0;
             stageViewportRect.anchorMin = new Vector2(0, 0); stageViewportRect.anchorMax = new Vector2(1, 1);
             stageViewportRect.offsetMin = new Vector2(side, bottom); stageViewportRect.offsetMax = new Vector2(-side, -(titleBottom + 8));

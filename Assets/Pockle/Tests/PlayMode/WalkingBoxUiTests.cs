@@ -62,6 +62,28 @@ namespace Pockle.Tests
         }
 
         [UnityTest]
+        public IEnumerator UnknownCollectionClearsThePreviousBoxPictureUntilTheServerAssignsOne()
+        {
+            hud.SetWalkingBoxes(View("wally"));
+            Button("Boxes").onClick.Invoke(); yield return null;
+            var card = root.GetComponentsInChildren<Transform>(true).First(t => t.name == "Daily walking box");
+            var art = card.Find("Closed box").GetComponent<RawImage>();
+            var assigned = art.texture;
+            Assert.That(art.enabled && assigned != null, Is.True);
+            hud.SetWalkingBoxes(View()); yield return null;
+            Assert.That(art.enabled, Is.False, "An unknown collection must not retain Wally or the legacy Pip carton.");
+            Assert.That(art.texture, Is.Null);
+            Assert.That(Visible("Unknown walking collection"), Is.True);
+            hud.SetWalkingBoxes(View("fox")); yield return null;
+            Assert.That(art.enabled && art.texture != null, Is.True);
+            Assert.That(art.texture, Is.Not.SameAs(assigned), "The next saved collection gets its own carton.");
+            Assert.That(Visible("Unknown walking collection"), Is.False);
+            hud.ClearWalkingBoxes(); yield return null;
+            Assert.That(art.enabled && art.texture != null, Is.True, "Leaving server mode restores the local preview.");
+            Assert.That(Visible("Unknown walking collection"), Is.False);
+        }
+
+        [UnityTest]
         public IEnumerator OfflineAndReconnectingShowSavedBoxesButNeverOpen()
         {
             foreach (var state in new[] { WalkingBoxConnection.Offline, WalkingBoxConnection.Reconnecting })

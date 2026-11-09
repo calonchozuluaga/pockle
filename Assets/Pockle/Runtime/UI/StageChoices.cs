@@ -7,7 +7,7 @@ namespace Pockle.Runtime
     public enum StageWorld { Home, Studio, Garden, Midnight }
 
     /// <summary>The stage's lighting mood.</summary>
-    public enum StageLight { Day, Golden, Night }
+    public enum StageLight { Day = 0, Golden = 1, Night = 2 }
 
     /// <summary>
     /// Names and fallback colours for the stage tray. The 3D stage owns the real scenery and lights; until it
@@ -19,7 +19,9 @@ namespace Pockle.Runtime
         public const string LightKey = "pockle.stage.light.v1";
 
         public static readonly StageWorld[] Worlds = { StageWorld.Home, StageWorld.Studio, StageWorld.Garden, StageWorld.Midnight };
-        public static readonly StageLight[] Lights = { StageLight.Day, StageLight.Golden, StageLight.Night };
+        public static readonly StageLight[] Lights = { StageLight.Day, StageLight.Night };
+        /// <summary>Golden retains its saved numeric value for compatibility but now uses Daylight.</summary>
+        public static StageLight NormalizeLight(StageLight light) => light == StageLight.Night ? StageLight.Night : StageLight.Day;
 
         /// <summary>The collection's own world name. Placeholder names until each collection's world is approved.</summary>
         public static string HomeWorldName(string characterId)
@@ -44,19 +46,17 @@ namespace Pockle.Runtime
 
         public static string Name(StageLight light)
         {
-            switch (light)
+            switch (NormalizeLight(light))
             {
-                case StageLight.Golden: return "Golden hour";
-                case StageLight.Night: return "Night lamp";
+                case StageLight.Night: return "Night";
                 default: return "Daylight";
             }
         }
 
         public static string Note(StageLight light, bool glows)
         {
-            switch (light)
+            switch (NormalizeLight(light))
             {
-                case StageLight.Golden: return "Warm and low, with long shadows.";
                 case StageLight.Night: return glows ? "This finish glows in the dark." : "One warm lamp on your toy.";
                 default: return "Soft, even light.";
             }
@@ -78,9 +78,8 @@ namespace Pockle.Runtime
         public static Color Backdrop(StageWorld world, StageLight light, string characterId, Color toyField)
         {
             Color colour = Swatch(world, characterId, toyField);
-            switch (light)
+            switch (NormalizeLight(light))
             {
-                case StageLight.Golden: return new Color(colour.r, colour.g * .93f, colour.b * .82f, 1f);
                 case StageLight.Night: return Color.Lerp(colour, new Color(.15f, .13f, .34f), .55f);
                 default: return colour;
             }

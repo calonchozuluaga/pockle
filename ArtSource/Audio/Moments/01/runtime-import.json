@@ -1,0 +1,98 @@
+{
+  "method": "Full 3-second CoreAudio mono PCM decode, constant gain to active 20ms-window RMS 0.09 with peak ceiling 0.75; no trimming, fades, compression or tail replacement. Original MP3s unchanged. Runtime master adds further headroom.",
+  "clips": [
+    {
+      "id": "fusion-complete",
+      "sourceSha256": "0246b97fc5538591787f64bd5330afd0ab5cab5d520b5ed2a9d4f74c7158a62c",
+      "wavSha256": "ffe0543c1ee5e6b7f4305d8abdd7f3f053b1dcf2d49e2d670e0bc4338465c6a0",
+      "frames": 132300,
+      "rate": 44100,
+      "seconds": 3.0,
+      "gain": 1.9674138217090256,
+      "sourceActiveRms": 0.04574533278505691,
+      "peak": 0.421600341796875,
+      "tail20msRms": 0.0005449732217873408,
+      "nearFullScaleSamples": 0
+    },
+    {
+      "id": "box-reveal",
+      "sourceSha256": "69372f5d4b0b784b7a24f2c170e501dc72ad44557978d8969cb622e99def9394",
+      "wavSha256": "3c8c59e0d35cb2245cd64c0d11dfaee9d1dd9f6be8b77242a7e51783de104dc2",
+      "frames": 132300,
+      "rate": 44100,
+      "seconds": 3.0,
+      "gain": 2.41628158489824,
+      "sourceActiveRms": 0.022620084716260695,
+      "peak": 0.75,
+      "tail20msRms": 0.00026116717139999904,
+      "nearFullScaleSamples": 0
+    },
+    {
+      "id": "special-reveal",
+      "sourceSha256": "20f96bb9cd491e64b95c145cf760d0fe7f1753897caa34f9633087b9d7f481d1",
+      "wavSha256": "679d113d914efbe0ee0f8df08db793ef19753c711d5d7399447b7c38cf8d6ab2",
+      "frames": 132300,
+      "rate": 44100,
+      "seconds": 3.0,
+      "gain": 1.3414158858031735,
+      "sourceActiveRms": 0.0670932862451621,
+      "peak": 0.64520263671875,
+      "tail20msRms": 0.00045163995662911093,
+      "nearFullScaleSamples": 0
+    },
+    {
+      "id": "steps-1000",
+      "sourceSha256": "2361480b874abd2c6c2c9c3150a667720df223fd7748354ffbcc5d9cc482c75a",
+      "wavSha256": "d713a2ea9676ecf846deca7a21ce38206935f1f10fdf205de7a58cb7170a7de7",
+      "frames": 132300,
+      "rate": 44100,
+      "seconds": 3.0,
+      "gain": 0.7641225054680321,
+      "sourceActiveRms": 0.11778216104873677,
+      "peak": 0.727142333984375,
+      "tail20msRms": 4.26291043058054e-05,
+      "nearFullScaleSamples": 0
+    },
+    {
+      "id": "walking-box-ready",
+      "sourceSha256": "71add874d6acea4f6e117caea5160c20c9ae328e4f29741a0ab61cb341e63b57",
+      "wavSha256": "eb6785b37b88ba018fa6e52ff33c0aaff38d115b866565d232552d8fcbb1e53e",
+      "frames": 132300,
+      "rate": 44100,
+      "seconds": 3.0,
+      "gain": 1.8270703461431175,
+      "sourceActiveRms": 0.04925918708602922,
+      "peak": 0.66412353515625,
+      "tail20msRms": 0.0005812227122545531,
+      "nearFullScaleSamples": 0
+    },
+    {
+      "id": "trade-complete",
+      "sourceSha256": "651850f115a13d33465de4d9fea69cb84f2203962707fe56b71793376ce841d6",
+      "wavSha256": "682ed99a27ed227c5b4209ef025aeb2bedbf65c177e33db16073ee15d475bc5a",
+      "frames": 132300,
+      "rate": 44100,
+      "seconds": 3.0,
+      "gain": 0.8884068972996422,
+      "sourceActiveRms": 0.09685320758577194,
+      "peak": 0.75,
+      "tail20msRms": 0.00012426501073307264,
+      "nearFullScaleSamples": 0
+    },
+    {
+      "id": "purchase-saved",
+      "sourceSha256": "4f181bb4a88d713c000f40f9821971f45c1d1c12a4353f1a566e8c1f3b8256f4",
+      "wavSha256": "c573cfcadbf4b1c7681826abd6f70f844e6cb88b3aa428af7a116f527629f77d",
+      "frames": 132300,
+      "rate": 44100,
+      "seconds": 3.0,
+      "gain": 1.8047003537030144,
+      "sourceActiveRms": 0.049869774677736116,
+      "peak": 0.7099609375,
+      "tail20msRms": 0.00011717569921795487,
+      "nearFullScaleSamples": 0
+    }
+  ],
+  "date": "2026-11-08",
+  "importSettings": "Mono 44.1 kHz 16-bit WAV; Unity PCM, preload audio, no importer normalization; all 132300 samples retained."
+}

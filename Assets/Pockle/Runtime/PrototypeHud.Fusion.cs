@@ -50,7 +50,7 @@ namespace Pockle.Runtime
         private readonly List<RectTransform> revealSparkles = new List<RectTransform>();
         private RawImage revealPicture, revealParentA, revealParentB;
         private Image revealParentFaceA, revealParentFaceB;
-        private Text revealName, revealPersonalityLine, revealParentsLine, revealFootnote, revealPreviewNote;
+        private Text revealName, revealPersonalityLine, revealParentsLine, revealFootnote, revealPreviewNote, revealSavedLabel;
         private readonly Text[] revealTraitValues = new Text[4];
         private Button revealAdd, revealAgain;
         private PersonalityMotion revealMotion;
@@ -399,9 +399,11 @@ namespace Pockle.Runtime
             var chipStar = Rect("Star", revealChip);
             var chipStarImage = chipStar.gameObject.AddComponent<RawImage>(); chipStarImage.texture = UiShapes.Sparkle; chipStarImage.color = Ink; chipStarImage.raycastTarget = false;
             LeftLabel(chipStar, new Vector2(14, -8), new Vector2(14, 14));
-            var chipText = Label("One of a kind", revealChip, PockleTheme.SmallSize, Ink, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
-            Stretch(chipText.rectTransform); chipText.rectTransform.offsetMin = new Vector2(34, 0);
-            revealDisc = Rect("Glow", fusionRevealRoot); Surface(revealDisc, new Color32(0x3C, 0x37, 0x72, 0xFF), 150);
+            revealSavedLabel = Label("Saved to your collection", revealChip, PockleTheme.SmallSize, Ink, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
+            Stretch(revealSavedLabel.rectTransform); revealSavedLabel.rectTransform.offsetMin = new Vector2(34, 0);
+            revealDisc = Rect("Glow", fusionRevealRoot);
+            var resultGlow = revealDisc.gameObject.AddComponent<RawImage>(); resultGlow.texture = UiShapes.Glow;
+            resultGlow.color = PockleTheme.FusionGlow; resultGlow.raycastTarget = false;
             revealSparkles.Add(Sparkle(fusionRevealRoot, PockleTheme.FieldGold, 0f));
             revealSparkles.Add(Sparkle(fusionRevealRoot, PockleTheme.Jelly, .5f));
             revealSparkles.Add(Sparkle(fusionRevealRoot, PockleTheme.FieldMoon, 1f));
@@ -432,7 +434,7 @@ namespace Pockle.Runtime
                 LeftLabel(name.rectTransform, new Vector2(12, -10), new Vector2(140, 16));
                 revealTraitValues[i] = Label("", tile, PockleTheme.BodySize, Ink, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
             }
-            revealFootnote = Label("Lives in Fusions on your shelf. Yours to keep: fused toys can't be traded or sold.", revealSheet, PockleTheme.SmallSize,
+            revealFootnote = Label("Your two spares were used once. This new toy is saved in Fusions on your shelf; it can't be traded or sold.", revealSheet, PockleTheme.SmallSize,
                 MutedInk, FontStyle.Normal, TextAnchor.UpperLeft, Vector2.zero, new Vector2(300, 36));
             revealPreviewNote = Label("Preview: fusion isn't switched on yet, so your spares weren't used.", revealSheet, PockleTheme.SmallSize,
                 PockleTheme.JellyInk, FontStyle.Bold, TextAnchor.UpperLeft, Vector2.zero, new Vector2(300, 36));
@@ -474,6 +476,8 @@ namespace Pockle.Runtime
             revealTraitValues[2].text = saved != null ? saved.Material : outcome.Material; revealTraitValues[3].text = saved != null ? saved.Personality : outcome.Personality;
             revealPreviewNote.gameObject.SetActive(lastFusionWasPreview);
             revealAdd.interactable = !lastFusionWasPreview && saved != null && session != null && session.IsOwnedAndPlayable(saved.Id);
+            revealAdd.GetComponentInChildren<Text>().text = saved != null ? "Play with " + saved.Name : "Play";
+            revealSavedLabel.text = lastFusionWasPreview ? "Fusion preview" : "Saved to your collection";
             if (PersonalityBook.TryGet(fuseFirst, out var personality)) revealMotion.SetStyle(personality.Motion == PersonalityMotionStyle.Show
                 ? PersonalityMotionStyle.Show : PersonalityMotionStyle.Calm);
             revealPicture.texture = saved != null ? CutoutPortrait(saved.Id) : FusedPicture(fuseFirst, fuseSecond); // clear background, no square behind the toy
@@ -513,21 +517,23 @@ namespace Pockle.Runtime
         {
             const float gutter = 22f;
             float inner = Mathf.Min(width - gutter * 2, 440f), left = (width - inner) / 2;
-            float chipWidth = 148;
-            LeftLabel(revealChip, new Vector2(width / 2 - chipWidth / 2, -40), new Vector2(chipWidth, 30));
-            LeftLabel(revealDisc, new Vector2(width / 2 - 150, -100), new Vector2(300, 300));
-            LeftLabel(revealSparkles[0], new Vector2(width / 2 - 139, -132), new Vector2(24, 24));
-            LeftLabel(revealSparkles[1], new Vector2(width / 2 + 107, -170), new Vector2(16, 16));
-            LeftLabel(revealSparkles[2], new Vector2(width / 2 + 87, -330), new Vector2(12, 12));
-            LeftLabel(revealToy, new Vector2(width / 2 - 110, -150), new Vector2(220, 220));
-            const float sheetTop = 420f;
-            float y = 24;
-            LeftLabel(revealName.rectTransform, new Vector2(left, -y), new Vector2(inner, 38)); y += 42;
-            // "It's… Secretly Sweet! Grumpy on the outside, soft on the inside." Up to two lines.
-            LeftLabel(revealPersonalityLine.rectTransform, new Vector2(left, -y), new Vector2(inner, 44)); y += 44 + 8;
-            LeftLabel(revealParents, new Vector2(left, -y), new Vector2(inner, 30));
-            LeftLabel(revealParentsLine.rectTransform, new Vector2(88, 0), new Vector2(inner - 88, 30));
-            y += 30 + 16;
+            const float chipWidth = 224;
+            LeftLabel(revealChip, new Vector2(width / 2 - chipWidth / 2, -30), new Vector2(chipWidth, 30));
+            float portrait = Mathf.Min(286, width - 36);
+            LeftLabel(revealDisc, new Vector2(width / 2 - 210, -34), new Vector2(420, 360));
+            LeftLabel(revealSparkles[0], new Vector2(width / 2 - 144, -122), new Vector2(24, 24));
+            LeftLabel(revealSparkles[1], new Vector2(width / 2 + 116, -186), new Vector2(16, 16));
+            LeftLabel(revealSparkles[2], new Vector2(width / 2 + 97, -302), new Vector2(12, 12));
+            LeftLabel(revealToy, new Vector2((width - portrait) / 2, -72), new Vector2(portrait, portrait));
+            const float sheetTop = 354f;
+            float y = 22;
+            LeftLabel(revealName.rectTransform, new Vector2(left, -y), new Vector2(inner, 40)); y += 44;
+            LeftLabel(revealPersonalityLine.rectTransform, new Vector2(left, -y), new Vector2(inner, 48)); y += 56;
+            // The saved result's primary action is above all detailed traits, reachable without a long scroll.
+            LeftLabel(revealAdd.GetComponent<RectTransform>(), new Vector2(left, -y), new Vector2(inner, 56)); y += 66;
+            LeftLabel(revealAgain.GetComponent<RectTransform>(), new Vector2(left, -y), new Vector2(inner, 48)); y += 66;
+            LeftLabel(revealParents, new Vector2(left, -y), new Vector2(inner, 36));
+            LeftLabel(revealParentsLine.rectTransform, new Vector2(88, 0), new Vector2(inner - 88, 36)); y += 48;
             LeftLabel(revealTraits, new Vector2(left, -y), new Vector2(inner, 130));
             float half = (inner - 8) / 2;
             for (int i = 0; i < revealTraitValues.Length; i++)
@@ -536,15 +542,10 @@ namespace Pockle.Runtime
                 LeftLabel(tile, new Vector2(i % 2 * (half + 8), -(i / 2) * 66), new Vector2(half, 58));
                 LeftLabel(revealTraitValues[i].rectTransform, new Vector2(12, -26), new Vector2(half - 20, 24));
             }
-            y += 132 + 10;
-            LeftLabel(revealFootnote.rectTransform, new Vector2(left, -y), new Vector2(inner, 36)); y += 36;
-            if (revealPreviewNote.gameObject.activeSelf) { LeftLabel(revealPreviewNote.rectTransform, new Vector2(left, -y), new Vector2(inner, 36)); y += 36; }
-            y += 8;
-            float again = 130;
-            LeftLabel(revealAdd.GetComponent<RectTransform>(), new Vector2(left, -y), new Vector2(inner - again - 10, 54));
-            LeftLabel(revealAgain.GetComponent<RectTransform>(), new Vector2(left + inner - again, -y), new Vector2(again, 54));
-            y += 54 + 28;
-            LeftLabel(revealSheet, new Vector2(0, -sheetTop), new Vector2(width, y + 400));
+            y += 142;
+            LeftLabel(revealFootnote.rectTransform, new Vector2(left, -y), new Vector2(inner, 54)); y += 62;
+            if (revealPreviewNote.gameObject.activeSelf) { LeftLabel(revealPreviewNote.rectTransform, new Vector2(left, -y), new Vector2(inner, 36)); y += 44; }
+            LeftLabel(revealSheet, new Vector2(0, -sheetTop), new Vector2(width, y + 250));
             float height = sheetTop + y;
             TopCentered(fusionRevealRoot, Vector2.zero, new Vector2(width, height));
             return height;

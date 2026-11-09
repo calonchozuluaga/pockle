@@ -389,6 +389,29 @@ namespace Pockle.Tests
         }
 
         [UnityTest]
+        public IEnumerator WarmHomeHeroPlaysAnOwnedToyWithoutChangingInventory()
+        {
+            var before = session.OwnedCounts.ToDictionary(pair => pair.Key, pair => pair.Value);
+            string played = null;
+            hud.VariantChanged += value => played = PipVariants.CollectibleId(value);
+            hud.CollectibleChanged += value => played = value;
+            var hero = root.GetComponentsInChildren<RectTransform>().Single(r => r.name == "Home toy world");
+            var painting = hero.GetComponentsInChildren<RawImage>().Single(r => r.name == "Home world painting");
+            var toy = hero.GetComponentsInChildren<RawImage>().Single(r => r.name == "Home owned toy");
+            Assert.IsNotNull(painting.texture, "The owned toy brings its collection world to Home.");
+            Assert.AreEqual(Color.white, painting.color, "The approved painting keeps its original brightness.");
+            Assert.IsNotNull(toy.texture);
+            var play = ButtonNamed("Home play owned toy");
+            Assert.IsTrue(play.interactable);
+            Assert.That(play.GetComponent<RectTransform>().rect.height, Is.GreaterThanOrEqualTo(54));
+            play.onClick.Invoke(); yield return null;
+            Assert.AreEqual(AppPage.Play, hud.CurrentPage);
+            Assert.IsNotNull(played);
+            Assert.That(before[played], Is.GreaterThan(0), "A decorative hero cannot select an unowned toy.");
+            CollectionAssert.AreEquivalent(before, session.OwnedCounts);
+        }
+
+        [UnityTest]
         public IEnumerator PaintedHomeAndArrangeFeaturesLoadAndNavigate()
         {
             foreach (string word in new[] { "Play", "Fuse", "Boxes", "Badges" })
@@ -557,7 +580,8 @@ namespace Pockle.Tests
             yield return null;
             Assert.IsTrue(ButtonWithText("Open your box").interactable, "Home must offer the ready box as its main action.");
             Assert.IsTrue(VisibleText("Your box is ready!"), "Rewards tile must reflect today's ready box.");
-            Assert.IsTrue(VisibleText("3 of 4 finishes · 5 toys on your shelf"));
+            int catalogFinishes = ToyCatalog.Collectibles.Count(toy => toy.Available && toy.CollectionId != PipFusionStudies.CollectionId);
+            Assert.IsTrue(VisibleText("3 of " + catalogFinishes + " finishes · 5 toys on your shelf"));
             ButtonWithText("See all").onClick.Invoke();
             yield return null; Canvas.ForceUpdateCanvases();
             Assert.IsTrue(VisibleText("3/15"), "The Pip card counts the toys found.");
@@ -707,6 +731,9 @@ namespace Pockle.Tests
             session = root.AddComponent<CollectionSession>(); session.Initialize();
             hud = root.AddComponent<PrototypeHud>(); hud.Initialize(_ => { }, _ => { }, _ => { }); hud.Bind(session); hud.SetFusionService(new LocalFusionService(session));
             yield return null;
+            int catalogFinishes = ToyCatalog.Collectibles.Count(toy => toy.Available && toy.CollectionId != PipFusionStudies.CollectionId);
+            Assert.IsTrue(VisibleText("3 of " + catalogFinishes + " finishes · 8 toys on your shelf"),
+                "Home counts owned finishes across collections; the fusion study adds to toys, not boxed finishes.");
             ButtonWithText("Shelf").onClick.Invoke();
             ButtonNamed("Shelf feature · Fuse").onClick.Invoke();
             ButtonNamed("Spare · " + ToyCatalog.PeachId).onClick.Invoke();
@@ -821,6 +848,10 @@ namespace Pockle.Tests
             Assert.IsTrue(VisibleText("It's… a Stargazer! Points everyone at the night sky."));
             Assert.IsFalse(VisibleText("Preview: fusion isn't switched on yet, so your spares weren't used."));
             Assert.IsTrue(ButtonNamed("Play fused toy").interactable);
+            var resultSheet = root.GetComponentsInChildren<RectTransform>().Single(r => r.name == "Fusion sheet");
+            var traitGrid = resultSheet.Find("Traits").GetComponent<RectTransform>();
+            Assert.That(ButtonNamed("Play fused toy").GetComponent<RectTransform>().anchoredPosition.y,
+                Is.GreaterThan(traitGrid.anchoredPosition.y), "Play is above the detailed traits, not at the end of a long result page.");
             Assert.AreEqual(inventory[ToyCatalog.PeachId] - 1, session.GetOwnedCount(ToyCatalog.PeachId));
             Assert.AreEqual(inventory[ToyCatalog.MoonId] - 1, session.GetOwnedCount(ToyCatalog.MoonId));
             Assert.AreEqual(1, session.Progress.FusionCopiesSpent(ToyCatalog.PeachId));
@@ -926,7 +957,7 @@ namespace Pockle.Tests
         {
             Assert.IsTrue(hud.ShowToy(ToyCatalog.MoonId));
             yield return null;
-            ButtonNamed("Stage tab · World").onClick.Invoke();
+            ButtonNamed("Stage tab · Backdrop").onClick.Invoke();
             root.GetComponentsInChildren<Button>().First(b => b.name.StartsWith("Stage world · pip-")).onClick.Invoke();
             Canvas.ForceUpdateCanvases();
             var shade = root.GetComponentsInChildren<RawImage>().Single(i => i.name == "Stage title shade");
@@ -965,11 +996,11 @@ namespace Pockle.Tests
             Assert.IsTrue(root.GetComponentsInChildren<Text>().Any(text => text.enabled && text.text.Contains("NO. ")), "The eyebrow numbers the toy within its collection.");
             var closedArea = hud.StageViewport;
             Assert.That(closedArea.height, Is.GreaterThan(0), "The stage reports the free area between the title and the tray.");
-            ButtonNamed("Stage tab · Collection").onClick.Invoke();
-            Assert.IsTrue(root.GetComponentsInChildren<Button>().Any(button => button.name.StartsWith("Stage finish · ")), "The collection tab lists every member.");
+            ButtonNamed("Stage tab · Pockles").onClick.Invoke();
+            Assert.IsTrue(root.GetComponentsInChildren<Button>().Any(button => button.name.StartsWith("Stage pockle · ")), "The Pockles tray lists owned toys.");
             Assert.That(hud.StageViewport.height, Is.LessThan(closedArea.height), "An open panel shrinks the toy's area instead of covering it.");
 
-            ButtonNamed("Stage tab · World").onClick.Invoke();
+            ButtonNamed("Stage tab · Backdrop").onClick.Invoke();
             var worldTiles = root.GetComponentsInChildren<Button>().Where(button => button.name.StartsWith("Stage world · ")).ToArray();
             Assert.AreEqual(1 + 5, worldTiles.Length, "Studio plus the Pip collection's five worlds.");
             var environments = new System.Collections.Generic.List<string>(); hud.EnvironmentChanged += environments.Add;
@@ -987,7 +1018,7 @@ namespace Pockle.Tests
             ButtonNamed("Stage light · Night").onClick.Invoke();
             Assert.AreEqual(StageLight.Night, hud.CurrentLight);
             CollectionAssert.AreEqual(new[] { StageLight.Night }, lights);
-            Assert.IsTrue(VisibleText("Night lamp"));
+            Assert.IsTrue(VisibleText("Night"));
             Assert.IsTrue(hud.GoBack());
             Assert.AreEqual(AppPage.Play, hud.CurrentPage, "The phone's Back closes the open card before leaving the toy.");
             Assert.IsFalse(ButtonNamed("Stage tray close", true).gameObject.activeInHierarchy);

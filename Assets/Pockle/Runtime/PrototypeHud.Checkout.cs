@@ -15,7 +15,7 @@ namespace Pockle.Runtime
     /// </summary>
     public sealed partial class PrototypeHud
     {
-        private const float CheckoutTileHeight = 200, CheckoutMixHeight = 118;
+        private const float CheckoutTileHeight = 286, CheckoutMixHeight = 138;
 
         private CheckoutCatalog checkoutCatalog;
         private RectTransform launchShop, pendingBanner;
@@ -176,10 +176,9 @@ namespace Pockle.Runtime
             if (singles.Count > 0)
             {
                 y = ShopHeading("Pick a collection", "One box, one random toy from the collection you pick.", w, y);
-                float tileW = (w - 12) / 2;
                 for (int i = 0; i < singles.Count; i++)
-                    BuildCollectionTile(singles[i], new Vector2(i % 2 * (tileW + 12), -(y + i / 2 * (CheckoutTileHeight + 12))), new Vector2(tileW, CheckoutTileHeight));
-                y += Mathf.CeilToInt(singles.Count / 2f) * (CheckoutTileHeight + 12) + 14;
+                    BuildCollectionTile(singles[i], new Vector2(0, -(y + i * (CheckoutTileHeight + 16))), new Vector2(w, CheckoutTileHeight));
+                y += singles.Count * (CheckoutTileHeight + 16) + 10;
             }
             if (mixes.Count > 0)
             {
@@ -207,28 +206,49 @@ namespace Pockle.Runtime
         private void BuildCollectionTile(CheckoutOffer offer, Vector2 position, Vector2 size)
         {
             ToyCatalog.TryGetCollection(offer.CollectionId, out var collection);
-            Color field = PockleTheme.CollectionField(offer.CollectionId, out Color ink, out _);
-            var tile = Rect(collection.DisplayName + " · offer", launchShop); LeftLabel(tile, position, size); Card(tile, field);
-            var tap = tile.gameObject.AddComponent<Button>(); tap.transition = Selectable.Transition.None; tap.interactable = offer.Buyable && !offer.ComingSoon;
+            bool buyable = offer.Buyable && !offer.ComingSoon;
+            var tile = Rect(collection.DisplayName + " · offer", launchShop); LeftLabel(tile, position, size); Card(tile, Paper);
+            tile.gameObject.AddComponent<Mask>().showMaskGraphic = true;
+            var tap = tile.gameObject.AddComponent<Button>(); tap.transition = Selectable.Transition.None; tap.interactable = buyable;
             tap.onClick.AddListener(() => OpenCheckout(offer)); tap.name = "View contents · " + collection.DisplayName;
-            var art = Rect("Box", tile); art.anchorMin = art.anchorMax = art.pivot = new Vector2(.5f, 1);
+
+            // Bright approved cover painting, a localized shade for readable words, then the real carton on top.
+            const float artHeight = 158;
+            var scene = Rect("Collection offer world", tile); LeftLabel(scene, Vector2.zero, new Vector2(size.x, artHeight));
+            Surface(scene, CatalogUnityColor(collection.FieldColor), 0);
+            var cover = Rect("Collection offer painting", scene); Stretch(cover);
+            var painting = cover.gameObject.AddComponent<RawImage>(); painting.texture = CollectionLook.Banner(collection);
+            painting.enabled = painting.texture != null; painting.raycastTarget = false;
+            painting.uvRect = CollectionLook.Cover(painting.texture, size.x / artHeight, .5f, .5f);
+            var fade = Rect("Collection offer title shade", scene); Stretch(fade); fade.anchorMax = new Vector2(.76f, 1);
+            var shade = fade.gameObject.AddComponent<RawImage>(); shade.texture = UiShapes.FadeRight;
+            shade.color = new Color(Ink.r, Ink.g, Ink.b, .65f); shade.raycastTarget = false;
+            var eyebrow = Label("COLLECTION BOX", scene, 11, PockleTheme.OnPlum, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
+            LeftLabel(eyebrow.rectTransform, new Vector2(18, -20), new Vector2(size.x - 36, 18));
+            var name = Label(collection.DisplayName, scene, 30, PockleTheme.OnPlum, FontStyle.Bold, TextAnchor.UpperLeft, Vector2.zero, Vector2.zero);
+            LeftLabel(name.rectTransform, new Vector2(18, -43), new Vector2(size.x * .55f, 42));
+            var art = Rect("Box", tile); art.anchorMin = art.anchorMax = art.pivot = new Vector2(1, 1);
             var texture = CollectionLook.Box(collection, out float aspect);
             var raw = art.gameObject.AddComponent<RawImage>(); raw.texture = texture; raw.raycastTarget = false; raw.color = texture != null ? Color.white : Color.clear;
-            float ah = 92; art.sizeDelta = new Vector2(Mathf.Min(size.x - 24, ah * Mathf.Max(.4f, aspect)), ah); art.anchoredPosition = new Vector2(0, -12);
-            if (texture != null && offer.Available) BoxHype.Add(raw, Color.white, position.x * .01f);
-            var name = Label(collection.DisplayName, tile, PockleTheme.BodySize + 1, ink, FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
-            LeftLabel(name.rectTransform, new Vector2(8, -110), new Vector2(size.x - 16, 24));
-            string label = offer.ComingSoon ? "Coming soon" : offer.Buyable ? offer.LocalizedPrice : !offer.Available ? (string.IsNullOrEmpty(offer.UnavailableReason) ? "Sold out" : offer.UnavailableReason) : "Price unavailable";
-            Color button = ink == PockleTheme.OnPlum ? PockleTheme.Jelly : PockleTheme.Plum;
-            var buy = CreateButton(label, tile, new Vector2(14, size.y - 14 - 44), new Vector2(size.x - 28, 44), offer.Buyable ? button : new Color(1, 1, 1, .45f),
-                () => OpenCheckout(offer), out _, PockleTheme.BodySize);
-            buy.name = "Buy · " + collection.DisplayName; buy.interactable = offer.Buyable && !offer.ComingSoon;
-            if (!buy.interactable) buy.GetComponentInChildren<Text>().color = ink;
-            if (!offer.Available && !offer.ComingSoon)
-            {
-                var traded = Label("Still tradable", tile, PockleTheme.SmallSize, ink, FontStyle.Normal, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
-                LeftLabel(traded.rectTransform, new Vector2(8, -134), new Vector2(size.x - 16, 18));
-            }
+            float ah = Mathf.Min(148, size.x * .44f); art.sizeDelta = new Vector2(ah * Mathf.Max(.4f, aspect), ah);
+            art.anchoredPosition = new Vector2(-4, -28);
+            if (texture != null && offer.Available) BoxHype.Add(raw, Color.white, position.y * .001f);
+
+            var description = Label("One random " + collection.DisplayName, tile, PockleTheme.BodySize + 1, Ink, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
+            LeftLabel(description.rectTransform, new Vector2(18, -177), new Vector2(size.x - 158, 24));
+            var detail = Label(!offer.Available && !offer.ComingSoon ? "Still tradable" : "A little surprise inside", tile, PockleTheme.SmallSize, MutedInk, FontStyle.Normal, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
+            LeftLabel(detail.rectTransform, new Vector2(18, -202), new Vector2(size.x - 158, 20));
+            string label = offer.ComingSoon ? "Coming soon" : offer.Buyable ? offer.LocalizedPrice : !offer.Available
+                ? (string.IsNullOrEmpty(offer.UnavailableReason) ? "Sold out" : offer.UnavailableReason) : "Price unavailable";
+            var buy = CreateButton(label, tile, Vector2.zero, new Vector2(120, 48), buyable ? Primary : Quiet,
+                () => OpenCheckout(offer), out _, PockleTheme.ButtonSize);
+            buy.name = "Buy · " + collection.DisplayName; buy.interactable = buyable;
+            LeftLabel((RectTransform)buy.transform, new Vector2(size.x - 138, -177), new Vector2(120, 48));
+            if (!buyable) buy.GetComponentInChildren<Text>().color = Ink;
+            var contents = CreateButton("View contents & probabilities  ›", tile, Vector2.zero, new Vector2(size.x - 36, 44), Quiet,
+                () => OpenCheckout(offer), out _, PockleTheme.CaptionSize);
+            contents.name = "Contents button · " + collection.DisplayName; contents.interactable = buyable;
+            LeftLabel((RectTransform)contents.transform, new Vector2(18, -234), new Vector2(size.x - 36, 44));
         }
 
         private void BuildMixCard(CheckoutOffer offer, Vector2 position, Vector2 size)
@@ -251,10 +271,10 @@ namespace Pockle.Runtime
                 box.sizeDelta = new Vector2(96, 96); box.anchoredPosition = new Vector2(-6 - i * 38, (i - 1) * 6); box.localEulerAngles = new Vector3(0, 0, (i - 1) * 8);
             }
             var title = Label("Mystery Mix · " + count + " boxes", card, PockleTheme.BodySize + 2, Ink, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
-            LeftLabel(title.rectTransform, new Vector2(16, -14), new Vector2(size.x - 170, 26));
+            LeftLabel(title.rectTransform, new Vector2(16, -14), new Vector2(size.x - 170, 42));
             string sub = string.IsNullOrEmpty(offer.SavingsNote) ? count + " random toys" : count + " random toys · " + offer.SavingsNote;
             var line = Label(sub, card, PockleTheme.SmallSize, PockleTheme.PlumSoft, FontStyle.Normal, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
-            LeftLabel(line.rectTransform, new Vector2(16, -40), new Vector2(size.x - 170, 20));
+            LeftLabel(line.rectTransform, new Vector2(16, -58), new Vector2(size.x - 170, 20));
             string label = offer.ComingSoon ? "Coming soon" : offer.Buyable ? offer.LocalizedPrice : !offer.Available ? (string.IsNullOrEmpty(offer.UnavailableReason) ? "Unavailable" : offer.UnavailableReason) : "Price unavailable";
             var buy = CreateButton(label, card, new Vector2(16, size.y - 14 - 44), new Vector2(124, 44), offer.Buyable ? PockleTheme.Plum : new Color(1, 1, 1, .6f),
                 () => OpenCheckout(offer), out _, PockleTheme.BodySize);

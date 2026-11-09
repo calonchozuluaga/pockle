@@ -300,3 +300,7 @@ November8 playtest follow-up: UX-052 Axolotl Ice Vinyl separation corrected and 
 UX-010/011/014: repaired stale paid catalog (all11collections×15finishes), connected server walking receipts in place of the scene's Pip-only local route, and changed the owner-approved cooldown to1hour with1,000steps,4/day,2banked. UX-038: direct Play selects the saved fusion. Collection detail now opens its own real checkout/odds sheet, with safe unavailable states. Verification and deployment are tracked in VALIDATION.md and codex handoff; no phone acceptance claimed here.
 
 UI redesign/product art and trading-room direction remain review-only at `docs/ui-direction-review/01/index.html`. Seven generated moment sounds remain review-only at `docs/moment-audio-review/01/index.html`. No redesign or audition sound has entered Resources. Real trading awaits authoritative ownership/reservation integration and the selected room design.
+
+## November 8 — approved warm UI and explanatory play controls
+
+UX-002/003/025/038/042 follow-up: owner approved the warm UI and moment auditions for implementation. Warm Home and collection-art shop cards, collection checkout entry, direct fusion Play, four labeled play controls, all-owned toy/fusion chooser, and Daylight/Night are implemented on `codex/approved-ui-phone`. Portrait captures are in `docs/approved-ui-build/01`. Public offers trading remains a separate backend/runtime implementation and must not be represented as live. Final native and TestFlight evidence is recorded in VALIDATION.md and the Codex handoff.

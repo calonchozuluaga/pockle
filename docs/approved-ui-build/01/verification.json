@@ -1,0 +1,98 @@
+{
+  "unity": "6000.6.5f1",
+  "native": {
+    "total": "113",
+    "passed": "113",
+    "failed": "0",
+    "skipped": "0",
+    "duration": "197.890789"
+  },
+  "suites": {
+    "AccountRefreshRuntimeTests": {
+      "total": "6",
+      "passed": "6",
+      "failed": "0",
+      "duration": "0.028281"
+    },
+    "BoxRevealUiTests": {
+      "total": "11",
+      "passed": "11",
+      "failed": "0",
+      "duration": "31.747470"
+    },
+    "CheckoutUiTests": {
+      "total": "18",
+      "passed": "18",
+      "failed": "0",
+      "duration": "48.033889"
+    },
+    "CollectionUiTests": {
+      "total": "30",
+      "passed": "30",
+      "failed": "0",
+      "duration": "47.925104"
+    },
+    "CollectionVoiceTests": {
+      "total": "5",
+      "passed": "5",
+      "failed": "0",
+      "duration": "2.688157"
+    },
+    "MomentAudioTests": {
+      "total": "5",
+      "passed": "5",
+      "failed": "0",
+      "duration": "4.071566"
+    },
+    "PaidDeliveryRuntimeTests": {
+      "total": "3",
+      "passed": "3",
+      "failed": "0",
+      "duration": "0.024643"
+    },
+    "PersistentFusionTests": {
+      "total": "8",
+      "passed": "8",
+      "failed": "0",
+      "duration": "9.331346"
+    },
+    "PlayControlsUiTests": {
+      "total": "6",
+      "passed": "6",
+      "failed": "0",
+      "duration": "21.279087"
+    },
+    "ToyPortraitIsolationTests": {
+      "total": "3",
+      "passed": "3",
+      "failed": "0",
+      "duration": "0.190010"
+    },
+    "ToyStageRuntimeTests": {
+      "total": "3",
+      "passed": "3",
+      "failed": "0",
+      "duration": "1.423122"
+    },
+    "WalkingBoxUiTests": {
+      "total": "11",
+      "passed": "11",
+      "failed": "0",
+      "duration": "31.071781"
+    },
+    "WalkingDeliveryRuntimeTests": {
+      "total": "4",
+      "passed": "4",
+      "failed": "0",
+      "duration": "0.028507"
+    }
+  },
+  "captures": {
+    "count": 10,
+    "width": 1080,
+    "height": 2340,
+    "offlineFixture": true,
+    "preferencesRestored": true
+  },
+  "phoneAcceptance": false
+}

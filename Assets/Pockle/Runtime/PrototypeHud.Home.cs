@@ -13,6 +13,11 @@ namespace Pockle.Runtime
     public sealed partial class PrototypeHud
     {
         private const float HomeMaxWidth = 480f;
+        private RectTransform homeHero;
+        private RawImage homeHeroWorld, homeHeroToy;
+        private Button homeHeroPlay;
+        private Text homeHeroCaption;
+        private string homeHeroId;
         // Today's box.
         private RectTransform homeBox, homeSteps, homeTrack;
         private RawImage homeBoxArt;
@@ -64,6 +69,20 @@ namespace Pockle.Runtime
         {
             activityFeed = new LocalActivityFeed();
             homeScope = (ActivityScope)Mathf.Clamp(PlayerPrefs.GetInt(HomeScopeKey, (int)ActivityScope.Friends), 0, 2);
+
+            // The collection's painted world and an actual owned toy lead Home. The button uses the existing play route.
+            homeHero = Rect("Home toy world", homeRoot); Surface(homeHero, PockleTheme.FieldPeach, 32);
+            homeHero.gameObject.AddComponent<Mask>().showMaskGraphic = true;
+            homeHeroWorld = ArtImage("Home world painting", homeHero); Stretch(homeHeroWorld.rectTransform);
+            var heroFade = ArtImage("Home world fade", homeHero); Stretch(heroFade.rectTransform);
+            heroFade.texture = UiShapes.FadeDown; heroFade.color = new Color(PockleTheme.Page.r, PockleTheme.Page.g, PockleTheme.Page.b, .9f);
+            homeHeroCaption = Label("A LITTLE TIME TO PLAY", homeHero, 12, Ink, FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
+            var captionPill = Rect("Home world caption", homeHero); Surface(captionPill, new Color(1f, .94f, .84f, .9f), 14);
+            homeHeroCaption.transform.SetParent(captionPill, false); Stretch(homeHeroCaption.rectTransform);
+            homeHeroToy = ArtImage("Home owned toy", homeHero);
+            homeHeroPlay = CreateButton("Play", homeHero, Vector2.zero, new Vector2(260, 54), Primary,
+                () => { if (!string.IsNullOrEmpty(homeHeroId)) ShowToy(homeHeroId); }, out _, 19);
+            homeHeroPlay.name = "Home play owned toy";
 
             // Today's box: label, name, the box itself, then steps or one clear action.
             homeBox = Rect("Today's box", homeRoot); homeBoxFace = Surface(homeBox, PockleTheme.Jelly, 30);
@@ -205,7 +224,7 @@ namespace Pockle.Runtime
         private ActivityCard BuildActivityCard()
         {
             var card = new ActivityCard();
-            card.Root = Rect("Activity card", homeActivityContent); Surface(card.Root, Color.white, 24);
+            card.Root = Rect("Activity card", homeActivityContent); Surface(card.Root, Paper, 24);
             var avatar = Rect("Avatar", card.Root); card.AvatarFace = Surface(avatar, PockleTheme.FieldPeach, 16);
             avatar.gameObject.AddComponent<Mask>().showMaskGraphic = true;
             LeftLabel(avatar, new Vector2(12, -12), new Vector2(32, 32));
@@ -340,6 +359,17 @@ namespace Pockle.Runtime
             float w = Mathf.Min(width, HomeMaxWidth);
             float left = (width - w) / 2;
             float y = 4;
+
+            float heroHeight = Mathf.Clamp(w * .88f, 280, 348);
+            LeftLabel(homeHero, new Vector2(left, -y), new Vector2(w, heroHeight));
+            homeHeroWorld.uvRect = CollectionLook.Cover(homeHeroWorld.texture, w / heroHeight, .5f, .55f);
+            TopCentered((RectTransform)homeHeroCaption.transform.parent, new Vector2(0, -14), new Vector2(184, 28));
+            float heroToySize = heroHeight - 48;
+            TopCentered(homeHeroToy.rectTransform, new Vector2(0, -18), new Vector2(heroToySize, heroToySize));
+            var heroAction = (RectTransform)homeHeroPlay.transform;
+            heroAction.anchorMin = heroAction.anchorMax = heroAction.pivot = new Vector2(.5f, 0);
+            heroAction.anchoredPosition = new Vector2(0, 18); heroAction.sizeDelta = new Vector2(Mathf.Min(w - 48, 300), 54);
+            y += heroHeight + 16;
 
             // Today's box.
             float boxHeight = HomeBoxHeight; // taller with server walking boxes (UX-052)
@@ -480,8 +510,18 @@ namespace Pockle.Runtime
         private string HomeLine()
         {
             if (session == null) return "Your little shelf is waiting.";
-            CollectionTotals(out int distinct, out int total);
-            return distinct + " of " + PipVariants.Count + " finishes · " + total + (total == 1 ? " toy" : " toys") + " on your shelf";
+            int distinct = 0, available = 0, total = 0;
+            foreach (var toy in ToyCatalog.Collectibles)
+            {
+                // Fusion studies and saved fusions live on the shelf, but are not boxed collection finishes.
+                if (!toy.Available || toy.CollectionId == PipFusionStudies.CollectionId) continue;
+                available++;
+                if (session.GetOwnedCount(toy.Id) > 0) distinct++;
+            }
+            foreach (var entry in session.OwnedCounts)
+                if (entry.Value > 0 && ToyCatalog.TryGetCollectible(entry.Key, out var toy) && toy.Available)
+                    total += entry.Value;
+            return distinct + " of " + available + " finishes · " + total + (total == 1 ? " toy" : " toys") + " on your shelf";
         }
 
         private void BuildRewards()
@@ -510,6 +550,7 @@ namespace Pockle.Runtime
         private void RefreshHome()
         {
             if (session == null || homeStepCount == null) return;
+            RefreshHomeHero();
             var saved = session.Progress.Save;
             int target = CollectionProgress.DailyTarget;
             bool today = saved.Day == CollectionSession.Today;
@@ -567,6 +608,27 @@ namespace Pockle.Runtime
             RefreshHomeActivity();
             RefreshHomeCollections();
             if (page == AppPage.Home && subtitle != null) subtitle.text = HomeLine();
+        }
+
+        private void RefreshHomeHero()
+        {
+            if (page != AppPage.Home || homeHero == null || session == null) return;
+            string id = session.IsOwnedAndPlayable(profile.FavoriteId) ? profile.FavoriteId : null;
+            if (id == null) foreach (var entry in session.OwnedCounts)
+                if (entry.Value > 0 && session.IsOwnedAndPlayable(entry.Key)) { id = entry.Key; break; }
+            homeHeroPlay.interactable = id != null;
+            homeHeroCaption.text = id != null ? "A LITTLE TIME TO PLAY" : "YOUR LITTLE WORLD AWAITS";
+            homeHeroPlay.GetComponentInChildren<Text>().text = id != null ? "Play with " + PersonalityBook.ShortName(id) : "Find your first toy";
+            if (id == homeHeroId && homeHeroToy.texture != null) return;
+            homeHeroId = id;
+            SetPicture(homeHeroToy, id != null ? CutoutPortrait(id) : null);
+            Texture background = null;
+            if (id != null && ToyCatalog.TryGetCollectible(id, out var toy) && ToyCatalog.TryGetCollection(toy.CollectionId, out var c))
+            {
+                if (c.Worlds.Count > 0) background = Resources.Load<PaintedWorldAsset>(c.Worlds[0].EnvironmentArt)?.Background;
+                if (background == null) background = CollectionLook.Banner(c);
+            }
+            SetPicture(homeHeroWorld, background);
         }
 
         private void RefreshHomeActivity()

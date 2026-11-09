@@ -19,6 +19,19 @@ namespace Pockle.Runtime
         private RawImage momentOrbSwirl;
         private Texture2D momentSwirlTexture;
         private readonly Image[] momentBits = new Image[16];
+        private string momentSavedFusionId;
+        private bool momentArrivalSent;
+        /// <summary>Presentation event for a committed fusion only; never a preview or refresh.</summary>
+        public event System.Action<string> FusionResultArrived;
+
+        private void SignalSavedFusionArrival()
+        {
+            if (momentArrivalSent || string.IsNullOrEmpty(momentSavedFusionId) || session == null ||
+                session.Progress.Save.PendingFusionId != momentSavedFusionId ||
+                !session.IsOwnedAndAvailable(momentSavedFusionId)) return;
+            momentArrivalSent = true;
+            FusionResultArrived?.Invoke(momentSavedFusionId);
+        }
 
         /// <summary>True while the fusion moment is on screen (tests and Back use it).</summary>
         public bool FusionMomentPlaying => moment != null && moment.Playing;
@@ -91,6 +104,7 @@ namespace Pockle.Runtime
             moment.Orb = orb; moment.OrbSwirl = swirl; moment.OrbGlow = orbGlow; moment.BadgeA = badgeA; moment.BadgeB = badgeB;
             moment.Say = say; moment.Secret = secret; moment.Ring = ring; moment.Child = childSpot; moment.Title = title; moment.Dim = dim;
             moment.Flash = flashImage; moment.Bits = bits; moment.BitTargets = targets;
+            moment.Arrived = SignalSavedFusionArrival;
             moment.Finished = () => { momentRoot.gameObject.SetActive(false); Navigate(AppPage.FusionReveal); }; // ApplyPage refreshes the reveal
             momentRoot.gameObject.SetActive(false);
         }
@@ -124,7 +138,9 @@ namespace Pockle.Runtime
         /// <summary>Fills the moment for the current pair and plays it (or goes straight to the reveal with calm motion).</summary>
         private void StartFusionMoment()
         {
-            if (reducedMotionEnabled || canvas == null) { Navigate(AppPage.FusionReveal); return; }
+            momentSavedFusionId = !lastFusionWasPreview ? lastFusedId : null;
+            momentArrivalSent = false;
+            if (reducedMotionEnabled || canvas == null) { Navigate(AppPage.FusionReveal); SignalSavedFusionArrival(); return; }
             if (momentRoot == null) BuildFusionMoment();
             var outcome = PersonalityBook.DescribeFusion(fuseFirst, fuseSecond);
             Color a = ToyColour(fuseFirst), b = ToyColour(fuseSecond);

@@ -217,3 +217,9 @@ November8 — approved local voices use CollectionVoicePolicy + CollectionVoiceP
 The paid server catalog is generated/tested against the actual165-finish Core roster. Updating catalog tiers leaves historical purchase result snapshots and reveal progress intact. These are beta/sandbox receipts: finite production edition allocation and server-authoritative fusion/trade ownership remain separate release requirements.
 
 Account refresh is a single account-owned coroutine shared by backup, checkout and walking. Each operation captures the account/session; late completion cannot replace a newer one. Signing out releases external waiters and cancels the refresh before clearing the local session. The second-phone walking fallback retrieves saved boxes without replacing the earning phone’s counter.
+
+## Approved moment audio and play chooser — November 8
+
+`MomentAudioPlayer` plays bundled, approved moment clips separately from `CollectionVoicePlayer`. Engine-free `MomentAudioPolicy`, `MomentCueQueue` and `WalkingMomentGate` determine priorities and foreground edge suppression. Fusion hooks fire only for the committed saved fusion; box reveal uses the saved outcome tier. Walking presentation observes successful server snapshots without changing rewards. Startup/account switches/resume establish silent baselines. The global Sound/volume controls and box-ready notification preference gate passive walking cues. Purchase/trade cue assets are available, but are not tied to speculative or duplicate events. No network or AI call is used for playback.
+
+The play Pockles sheet enumerates owned playable IDs, including registered saved fusions, and renders only visible thumbnail rows. Selection uses the existing owned-play path and closes the sheet. Still portraits are staged at x=-1000 on layer30, separate from live shelf actors at x=1000. Lighting serial values remain Day=0, retired Golden=1, Night=2; legacy Golden settings normalize to Daylight.

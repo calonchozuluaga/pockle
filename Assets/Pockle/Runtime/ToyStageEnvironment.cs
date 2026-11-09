@@ -146,19 +146,19 @@ namespace Pockle.Runtime
         public bool SetLight(StageLight light)
         {
             if (!Enum.IsDefined(typeof(StageLight),light)) return false;
-            Lighting=light; ApplyLighting(); return true;
+            Lighting=StageLook.NormalizeLight(light); ApplyLighting(); return true;
         }
 
         private void ApplyLighting()
         {
             if (key == null) return;
-            bool night=Lighting==StageLight.Night, golden=Lighting==StageLight.Golden;
-            key.transform.rotation=Quaternion.Euler(night?48:golden?68:38,golden?-65:-32,0);
-            key.color=night?new Color(.90f,.82f,1):golden?new Color(1,.77f,.51f):new Color(1,.955f,.905f);
-            key.intensity=night?.55f:golden?.95f:1.05f;
+            bool night=Lighting==StageLight.Night;
+            key.transform.rotation=Quaternion.Euler(night?48:38,-32,0);
+            key.color=night?new Color(.90f,.82f,1):new Color(1,.955f,.905f);
+            key.intensity=night?.55f:1.05f;
             fill.color=night?new Color(.48f,.56f,.90f):new Color(.9f,.935f,1);
             fill.intensity=night?.18f:.34f;
-            RenderSettings.ambientLight=night?new Color(.28f,.27f,.41f):golden?new Color(.72f,.58f,.48f):new Color(.69f,.65f,.66f);
+            RenderSettings.ambientLight=night?new Color(.28f,.27f,.41f):new Color(.69f,.65f,.66f);
             if(gradient!=null)
             {
                 Color field=viewer.backgroundColor;
@@ -166,9 +166,9 @@ namespace Pockle.Runtime
                 Color upper=Color.Lerp(field,night?new Color(.11f,.10f,.24f):new Color(.85f,.76f,.82f),night?.23f:.16f);
                 gradient.colors=new[]{lower,lower,upper,upper};
             }
-            if(backgroundMaterial!=null)backgroundMaterial.SetColor("_Tint",night&&World!=StageWorld.Midnight?new Color(.48f,.54f,.70f):golden?new Color(1,.90f,.75f):Color.white);
+            if(backgroundMaterial!=null)backgroundMaterial.SetColor("_Tint",night&&World!=StageWorld.Midnight?new Color(.48f,.54f,.70f):Color.white);
             if(glowAura!=null)glowAura.Configure(collectibleId,Lighting);
-            Color tint=night?new Color(.53f,.56f,.75f):golden?new Color(1,.86f,.68f):Color.white;
+            Color tint=night?new Color(.53f,.56f,.75f):Color.white;
             bool glow=ToyCatalog.TryGetCollectible(collectibleId,out var item)&&(item.FinishId=="glow-jelly"||item.Tier==ToyTier.Secret||WallyCatalog.EmitsLight(collectibleId));
             foreach(var renderer in toyMount.GetComponentsInChildren<Renderer>(true))
                 foreach(var material in renderer.sharedMaterials)

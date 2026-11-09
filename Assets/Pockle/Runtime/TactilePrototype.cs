@@ -66,10 +66,11 @@ namespace Pockle.Runtime
         private float revealLift;
         private AudioSource audioSource;
         private CollectionVoicePlayer collectionVoice;
+        private MomentAudioPlayer momentAudio;
+        private ServerWalkingBoxService walkingBoxService;
         private AudioClip pressClip;
         private AudioClip releaseClip;
         private AudioClip landingClip;
-        private AudioClip revealClip;
         private float contactX;
         private float contactZ;
         private bool soundEnabled;
@@ -175,7 +176,8 @@ namespace Pockle.Runtime
             var accountService=gameObject.AddComponent<SupabaseAccountService>();
             hud.SetAccountService(accountService);
             gameObject.AddComponent<PaidBoxCheckoutService>().Initialize(hud,collection,accountService);
-            gameObject.AddComponent<ServerWalkingBoxService>().Initialize(hud,collection,accountService);
+            walkingBoxService = gameObject.AddComponent<ServerWalkingBoxService>();
+            walkingBoxService.Initialize(hud,collection,accountService);
             accountService.Initialize(collection,()=>hud.StartOnboardingIfNeeded()); // UX-050 (Claude): first-run sign-up and tutorial
             hud.ResumeSavedFusion();
             if (Application.isEditor || Debug.isDebugBuild) Debug.Log("Pockle fusion ready: persistent same-character fusion, save v" + collection.Progress.Save.Version);
@@ -187,10 +189,17 @@ namespace Pockle.Runtime
             audioSource.volume = 0.28f * soundVolume;
             collectionVoice = gameObject.AddComponent<CollectionVoicePlayer>();
             collectionVoice.SetSettings(soundEnabled, soundVolume);
+            momentAudio = gameObject.AddComponent<MomentAudioPlayer>();
+            momentAudio.VoiceBusy = () => collectionVoice != null && collectionVoice.IsBusy;
+            momentAudio.PassiveAllowed = () => NotificationPrefs.IsOn(NotificationPrefs.BoxReady) && hud != null && !hud.OnboardingVisible && !hud.BoxRevealVisible &&
+                !hud.CheckoutVisible && !hud.FusionMomentPlaying && string.IsNullOrEmpty(collection.Progress.Save.PendingFusionId);
+            momentAudio.SetSettings(soundEnabled, soundVolume);
+            hud.BoxRevealOpened += PlayBoxMoment;
+            hud.FusionResultArrived += momentAudio.FusionArrived;
+            walkingBoxService.SnapshotReceived += momentAudio.ObserveWalking;
             pressClip = CreateTone("Soft jelly press", 160f, 0.09f, false);
             releaseClip = CreateTone("Jelly rebound", 390f, 0.18f, false);
             landingClip = CreateTone("Pip soft landing", 95f, .24f, false);
-            revealClip = CreateTone("Pip reveal", 620f, 0.45f, true);
             ResetToy();
             StoreVisibilityChanged(true);
             if (collection.Progress.Save.PendingReveal >= 0)
@@ -287,7 +296,7 @@ namespace Pockle.Runtime
                 if(screen.z>0)head=new Vector2(screen.x,screen.y);
             }
             hud.ShowToyExpression(cue,head);ToyReactionStarted?.Invoke(cue,head);RecordToyActivity();
-            if (cue == ReactionCue.Squish || cue == ReactionCue.Hello || cue == ReactionCue.PickUp)
+            if ((momentAudio == null || !momentAudio.IsBusy) && (cue == ReactionCue.Squish || cue == ReactionCue.Hello || cue == ReactionCue.PickUp))
             {
                 var face = toy.GetComponentInChildren<ToyTemperamentDriver>(true);
                 var fallback = cue == ReactionCue.PickUp ? CollectionVoiceMood.Curious : CollectionVoiceMood.Happy;
@@ -313,7 +322,7 @@ namespace Pockle.Runtime
                     : snowyReactions.IsPlaying ? snowyReactions.CurrentAction
                     : gingerReactions.IsPlaying ? gingerReactions.CurrentAction
                     : winterReactions.IsPlaying ? winterReactions.CurrentAction : pipReactions.CurrentAction;
-                collectionVoice?.TryPlayAction(toy.CollectibleId, action, mood);
+                if (momentAudio == null || !momentAudio.IsBusy) collectionVoice?.TryPlayAction(toy.CollectibleId, action, mood);
             }
         }
         private string PlayHint
@@ -400,7 +409,7 @@ namespace Pockle.Runtime
             {
                 toy.gameObject.SetActive(true);
                 toyMount.localScale = Vector3.one * pose.ToyScale;
-                if (!revealChimePlayed) { Play(revealClip); Vibrate(); revealChimePlayed = true; }
+                if (!revealChimePlayed) { PlayBoxMoment(CatalogRarityTier(toy.CollectibleId) ?? RarityTier.Common); Vibrate(); revealChimePlayed = true; }
             }
             if (pose.Finished)
             {
@@ -431,6 +440,7 @@ namespace Pockle.Runtime
             soundVolume = Mathf.Clamp01(value);
             if (audioSource != null) audioSource.volume = .28f * soundVolume;
             collectionVoice?.SetSettings(soundEnabled, soundVolume);
+            momentAudio?.SetSettings(soundEnabled, soundVolume);
         }
 
         private void SetSound(bool enabled)
@@ -438,6 +448,7 @@ namespace Pockle.Runtime
             soundEnabled = enabled;
             SaveSetting("sound", enabled);
             collectionVoice?.SetSettings(soundEnabled, soundVolume);
+            momentAudio?.SetSettings(soundEnabled, soundVolume);
             if (!enabled && audioSource != null) audioSource.Stop();
         }
 
@@ -468,7 +479,7 @@ namespace Pockle.Runtime
                 PrototypeStage.SetWorld(viewCamera, hud.CurrentWorld, toy.CollectibleId);
             PrototypeStage.SetLight(viewCamera, hud.CurrentLight);
             viewCamera.GetComponent<ToyStageEnvironment>().Calm = reducedMotion;
-            shadowRestColor = new Color(.54f, .36f, .43f, hud.CurrentLight == StageLight.Night ? .12f : hud.CurrentLight == StageLight.Golden ? .27f : .20f);
+            shadowRestColor = new Color(.54f, .36f, .43f, hud.CurrentLight == StageLight.Night ? .12f : .20f);
         }
 
         private void ConfigureHandling()
@@ -579,8 +590,13 @@ namespace Pockle.Runtime
 
         private void OnApplicationPause(bool paused) { if (paused) { ReleasePointer(false); ClearMotion(); } }
         private void OnApplicationFocus(bool focused) { if (!focused) { ReleasePointer(false); ClearMotion(); } }
-        private void OnDisable() { collectionVoice?.Stop(); ReleasePointer(false); ClearMotion(); }
+        private void OnDisable() { collectionVoice?.Stop(); momentAudio?.Stop(); ReleasePointer(false); ClearMotion(); }
         private void SelectCollectible(string id) { TryPlayCollectible(id); }
+
+        private void PlayBoxMoment(RarityTier tier)
+        {
+            momentAudio?.Request(tier == RarityTier.Common ? MomentCue.BoxReveal : MomentCue.SpecialReveal);
+        }
 
         private static RarityTier? CatalogRarityTier(string id)
         {
@@ -597,11 +613,13 @@ namespace Pockle.Runtime
             if (hud != null) hud.BackdropChanged -= SetBackdrop;
             if (hud != null) hud.WorldChanged -= SetWorld;
             if (hud != null) hud.LightChanged -= SetLight;
+            if (hud != null) hud.BoxRevealOpened -= PlayBoxMoment;
+            if (hud != null && momentAudio != null) hud.FusionResultArrived -= momentAudio.FusionArrived;
+            if (walkingBoxService != null && momentAudio != null) walkingBoxService.SnapshotReceived -= momentAudio.ObserveWalking;
             if (hud != null) Destroy(hud.gameObject);
             if (pressClip != null) Destroy(pressClip);
             if (releaseClip != null) Destroy(releaseClip);
             if (landingClip != null) Destroy(landingClip);
-            if (revealClip != null) Destroy(revealClip);
             if (boxRoot != null) Destroy(boxRoot.gameObject);
             if (viewCamera != null) Destroy(viewCamera.transform.parent.gameObject);
         }

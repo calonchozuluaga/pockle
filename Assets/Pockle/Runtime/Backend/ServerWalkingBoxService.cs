@@ -30,6 +30,8 @@ namespace Pockle.Runtime
         private float retryAt;
         private Snapshot snapshot;
         private readonly Dictionary<string,Delivery> saved = new Dictionary<string,Delivery>();
+        /// <summary>Validated server progress, for in-memory presentation edges; never a local earning signal.</summary>
+        public event Action<WalkingMomentSnapshot> SnapshotReceived;
         private string Key => "pockle.walking.server.v1." + owner;
         private string ProgressKey(string id) => Key + ".reveal." + id;
 
@@ -118,7 +120,12 @@ namespace Pockle.Runtime
             }
             busy=false;retryAt=Time.unscaledTime+30;
             Bind(WalkingBoxConnection.Online,failedSave?"A saved reward is waiting to sync. Please try again.":null);
-            if(hud.BoxRevealVisible||hud.CheckoutVisible||!string.IsNullOrEmpty(collection.Progress.Save.PendingFusionId))yield break;
+            var bankedIds = new string[next.boxes.Length];
+            for (int i = 0; i < bankedIds.Length; i++) bankedIds[i] = next.boxes[i].id;
+            var serverDay = DateTimeOffset.Parse(next.server_time,CultureInfo.InvariantCulture).UtcDateTime.Date;
+            SnapshotReceived?.Invoke(new WalkingMomentSnapshot(requestingOwner,
+                (int)(serverDay - new DateTime(1970,1,1)).TotalDays,next.earned_today,next.step_credit,bankedIds));
+            if(hud.OnboardingVisible||hud.BoxRevealVisible||hud.CheckoutVisible||!string.IsNullOrEmpty(collection.Progress.Save.PendingFusionId))yield break;
             foreach(var d in next.deliveries)
             {
                 if(!saved.ContainsKey(d.box_id)||d.finished||PlayerPrefs.GetInt(ProgressKey(d.box_id),0)<0)continue;

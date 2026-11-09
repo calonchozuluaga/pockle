@@ -75,9 +75,9 @@ namespace Pockle.Runtime
             canvas = root.GetComponent<Canvas>(); canvas.renderMode = RenderMode.ScreenSpaceOverlay; canvas.sortingOrder = 20;
             scaler = root.GetComponent<CanvasScaler>(); scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(390, 844); scaler.matchWidthOrHeight = 1;
-            // Menus sit on a milk ground; toy play shows the 3D stage instead.
+            // Approved peach/plum browsing ground; readable cards stay cream and play shows the 3D stage.
             pageGround = Rect("Page ground", root.transform); Stretch(pageGround);
-            groundImage = pageGround.gameObject.AddComponent<Image>(); groundImage.color = Paper; groundImage.raycastTarget = false;
+            groundImage = pageGround.gameObject.AddComponent<Image>(); groundImage.color = PockleTheme.Page; groundImage.raycastTarget = false;
             safeRoot = Rect("Safe area", root.transform); Stretch(safeRoot);
             brand = BuildWordmark(safeRoot);
             avatarButton = BuildAvatarButton(safeRoot);
@@ -265,7 +265,7 @@ namespace Pockle.Runtime
             // On the toy's stage and full-bleed colour fields, header buttons are translucent milk; elsewhere the neutral fill.
             backButton.GetComponent<Image>().color = play || fullBleed ? new Color(1, 1, 1, .6f) : Quiet;
             groundImage.color = page == AppPage.Personality ? PockleTheme.FieldFor(personalityId)
-                : page == AppPage.FusionReveal ? PockleTheme.Midnight : Paper;
+                : page == AppPage.FusionReveal ? PockleTheme.FusionGround : PockleTheme.Page;
             collectionsPill.gameObject.SetActive(page == AppPage.Shelf);
             brand.gameObject.SetActive(page == AppPage.Home);
             avatarButton.gameObject.SetActive(page == AppPage.Home);

@@ -154,12 +154,12 @@ namespace Pockle.Runtime
             heroTitle = Label("", collectionHero, 44, PockleTheme.OnPlum, FontStyle.Bold, TextAnchor.LowerLeft, Vector2.zero, new Vector2(200, 52));
             heroTitle.resizeTextMinSize = 28;
             // Progress card in the collection's accent, tucked under the banner.
-            progressCard = Rect("Collection progress", collectionRoot); Surface(progressCard, Primary, 26);
-            heroCount = Label("", progressCard, 22, PockleTheme.OnPlum, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, new Vector2(200, 30));
-            heroNote = Label("", progressCard, PockleTheme.SmallSize, PockleTheme.OnPlum, FontStyle.Bold, TextAnchor.MiddleRight, Vector2.zero, new Vector2(150, 30));
-            var track2 = Rect("Collection progress track", progressCard); Surface(track2, new Color(1, 1, 1, .3f), 7);
-            heroFill = ProgressFill(track2, Color.white);
-            halfwayTick = Rect("Halfway", track2); Surface(halfwayTick, Color.white, 2);
+            progressCard = Rect("Collection progress", collectionRoot); Surface(progressCard, Paper, 26);
+            heroCount = Label("", progressCard, 22, Ink, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, new Vector2(200, 30));
+            heroNote = Label("", progressCard, PockleTheme.SmallSize, MutedInk, FontStyle.Bold, TextAnchor.MiddleRight, Vector2.zero, new Vector2(150, 30));
+            var track2 = Rect("Collection progress track", progressCard); Surface(track2, Quiet, 7);
+            heroFill = ProgressFill(track2, PockleTheme.Heart);
+            halfwayTick = Rect("Halfway", track2); Surface(halfwayTick, Paper, 2);
             lineupHeading = Heading("Who's inside", collectionRoot);
             secretCard = Rect("Secret card", collectionRoot); Surface(secretCard, Primary, 24);
             var secretArt = Rect("Secret silhouette", secretCard);
@@ -176,7 +176,7 @@ namespace Pockle.Runtime
             collectionProgress = Label("", collectionRoot, PockleTheme.HeadingSize, Ink, FontStyle.Bold,
                 TextAnchor.MiddleLeft, Vector2.zero, new Vector2(300, 32));
             collectionProgress.gameObject.SetActive(false);
-            collectionNote = Label("", collectionRoot, PockleTheme.BodySize, MutedInk, FontStyle.Normal,
+            collectionNote = Label("", collectionRoot, PockleTheme.SmallSize, MutedInk, FontStyle.Normal,
                 TextAnchor.UpperLeft, Vector2.zero, new Vector2(300, 60));
             collectionBoxes = CreateButton("Boxes coming soon", collectionRoot, Vector2.zero, new Vector2(300, 56), Primary,
                 OpenCollectionCheckout, out _);
@@ -315,7 +315,9 @@ namespace Pockle.Runtime
             heroTitle.text = selected.DisplayName;
             heroCaption.text = (selected.SeriesNumber > 0 ? "Series " + selected.SeriesNumber + " · " : "") + selectedTotal + " to find" + (selected.HasSecret ? " · 1 Secret" : "");
             heroCaption.text = heroCaption.text.ToUpperInvariant();
-            progressCard.GetComponent<Image>().color = accent;
+            progressCard.GetComponent<Image>().color = Paper;
+            heroCount.color = deep; heroNote.color = MutedInk;
+            heroFill.color = deep;
             heroCount.text = selectedFound + " of " + selectedTotal + " found";
             int missing = selectedTotal - selectedFound;
             heroNote.text = missing == 0 ? "Complete!" : missing == 1 ? "1 more to find" : missing + " more to find";
@@ -358,7 +360,7 @@ namespace Pockle.Runtime
                 badge.gameObject.SetActive(ladder);
                 if (ladder)
                 {
-                    badge.color = tier.Tier == RarityTier.Common ? new Color(.91f, .88f, .85f) : tier.Fill;
+                    badge.color = tier.Tier == RarityTier.Common ? PockleTheme.FillDeep : tier.Fill;
                     var words = badge.GetComponentInChildren<Text>(); words.text = tier.Tier == RarityTier.Common ? "Common" : RarityLook.Words(tier.Tier); words.color = tier.Tier == RarityTier.Common ? Ink : tier.Ink;
                 }
                 lineupNames[i].color = playable ? deep : Ink;
@@ -395,12 +397,12 @@ namespace Pockle.Runtime
             // Banner with the box over it and the title on the art; the accent progress card tucks under it.
             // Full-bleed: the painting runs edge to edge from the top, under the back button. The hero starts above the
             // viewport so only its bottom corners are rounded; everything below keeps the usual gutters.
-            const float heroHeight = 330, overhang = 40;
+            const float heroHeight = 268, overhang = 40;
             float g = PockleTheme.Gutter, full = width;
             width = full - g * 2;
             LeftLabel(collectionHero, new Vector2(0, overhang), new Vector2(full, heroHeight + overhang));
             heroBanner.uvRect = CollectionLook.Cover(heroBanner.texture, full / (heroHeight + overhang), .4f, .5f);
-            float boxHeight = Mathf.Min(186, full * .5f / Mathf.Max(.5f, heroBoxAspect));
+            float boxHeight = Mathf.Min(170, full * .5f / Mathf.Max(.5f, heroBoxAspect));
             var boxRect = (RectTransform)heroBox.rectTransform.parent;
             boxRect.anchorMin = boxRect.anchorMax = boxRect.pivot = new Vector2(1, 0);
             boxRect.anchoredPosition = new Vector2(-g + 8, 36); boxRect.sizeDelta = new Vector2(boxHeight * heroBoxAspect, boxHeight);
@@ -411,20 +413,20 @@ namespace Pockle.Runtime
             heroTitle.rectTransform.anchoredPosition = new Vector2(g + 4, 40); heroTitle.rectTransform.sizeDelta = new Vector2(text, 52);
             heroCaption.rectTransform.anchorMin = heroCaption.rectTransform.anchorMax = heroCaption.rectTransform.pivot = new Vector2(0, 0);
             heroCaption.rectTransform.anchoredPosition = new Vector2(g + 4, 94); heroCaption.rectTransform.sizeDelta = new Vector2(text, 18);
-            const float cardHeight = 92;
+            const float cardHeight = 84;
             LeftLabel(progressCard, new Vector2(g, -(heroHeight - 22)), new Vector2(width, cardHeight));
             float inner = width - 36;
             LeftLabel(heroCount.rectTransform, new Vector2(18, -12), new Vector2(inner * .6f, 30));
             LeftLabel(heroNote.rectTransform, new Vector2(18 + inner * .6f, -12), new Vector2(inner * .4f, 30));
             var progressTrack = heroFill.rectTransform.parent as RectTransform;
-            LeftLabel(progressTrack, new Vector2(18, -56), new Vector2(inner, 14));
+            LeftLabel(progressTrack, new Vector2(18, -54), new Vector2(inner, 12));
             LeftLabel(halfwayTick, new Vector2(inner * .5f - 2, 3), new Vector2(4, 20));
             float y = heroHeight - 22 + cardHeight + 22;
             // A collection's own box is reachable before the long lineup, with its real store price and quote sheet.
-            LeftLabel(collectionBoxes.GetComponent<RectTransform>(), new Vector2(g, -y), new Vector2(width, 56)); y += 72;
+            LeftLabel(collectionBoxes.GetComponent<RectTransform>(), new Vector2(g, -y), new Vector2(width, 56)); y += 62;
+            LeftLabel(collectionNote.rectTransform, new Vector2(g + 4, -y), new Vector2(width - 8, 34)); y += 42;
+            collectionNote.gameObject.SetActive(true);
             LeftLabel(lineupHeading, new Vector2(g, -y), new Vector2(width, 30)); y += 40;
-            LeftLabel(collectionNote.rectTransform, new Vector2(g, -y), new Vector2(width, 0));
-            collectionNote.gameObject.SetActive(false);
             int columns = width >= 450 ? 4 : width >= 300 ? 3 : 2;
             const float gap = 10;
             float tileWidth = (width - (columns - 1) * gap) / columns;
