@@ -13,7 +13,7 @@ namespace Pockle.Runtime
     /// </summary>
     public sealed partial class PrototypeHud
     {
-        private RectTransform talkTraits, talkWarning, talkBubble, talkBubbleTail;
+        private RectTransform talkTraits, talkWarning, talkBubble;
         private Image talkTemperamentFace, talkWarningFace;
         private Text talkTemperamentText, talkWarningText, talkBubbleText;
         private readonly Image[] talkTraitFaces = new Image[2];
@@ -64,11 +64,9 @@ namespace Pockle.Runtime
             // The bubble: white, rounded, with a little tail pointing at the toy.
             talkBubble = Rect("Toy bubble", safeRoot);
             talkBubble.anchorMin = talkBubble.anchorMax = new Vector2(.5f, .5f); talkBubble.pivot = new Vector2(.5f, 0);
-            talkBubbleTail = Rect("Tail", talkBubble); Surface(talkBubbleTail, Color.white, 3);
-            talkBubbleTail.anchorMin = talkBubbleTail.anchorMax = new Vector2(.5f, 0); talkBubbleTail.pivot = new Vector2(.5f, .5f);
-            talkBubbleTail.sizeDelta = new Vector2(16, 16); talkBubbleTail.anchoredPosition = new Vector2(0, 2); talkBubbleTail.localRotation = Quaternion.Euler(0, 0, 45);
-            var face = Rect("Bubble face", talkBubble); Stretch(face); Surface(face, Color.white, 20);
-            var shadow = face.gameObject.AddComponent<Shadow>(); shadow.effectColor = new Color(.16f, .08f, .19f, .16f); shadow.effectDistance = new Vector2(0, -3);
+            var silhouette = talkBubble.gameObject.AddComponent<SpeechBubbleGraphic>();
+            silhouette.color = Color.white; silhouette.raycastTarget = false;
+            var face = talkBubble;
             talkBubbleText = Label("", face, 20, Ink, FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
             talkBubbleText.horizontalOverflow = HorizontalWrapMode.Overflow; talkBubbleText.resizeTextForBestFit = false;
             var sticker = Rect("Bubble sticker", face);
@@ -192,8 +190,14 @@ namespace Pockle.Runtime
         {
             if (talkBubble == null || page != AppPage.Play || string.IsNullOrEmpty(talkToyId)) return default;
             var expression = expressionPicker.Next(talkToyId, cue, StageLook.IsDark(stageWorld, stageLight));
-            if (expression.IsEmpty) return expression;
+            return ShowToyResponse(expression, headScreen, delay);
+        }
 
+        /// <summary>Present the exact response chosen with the matching face and local voice.</summary>
+        public ToyExpression ShowToyResponse(ToyExpression expression, Vector2? headScreen = null, float delay = 0, float duration = 0)
+        {
+            if (expression.IsEmpty || talkBubble == null || page != AppPage.Play) return expression;
+            talkHelloPending = false;
             talkBubbleText.text = expression.Sound;
             var sticker = StickerTexture(expression.Sticker);
             talkBubbleSticker.texture = sticker;
@@ -229,7 +233,7 @@ namespace Pockle.Runtime
                 talkBubble.anchoredPosition = new Vector2(Mathf.Clamp(local.x, -half, half), y);
             }
             talkBubble.SetAsLastSibling();
-            talkPop.Play(delay, reducedMotionEnabled);
+            talkPop.Play(delay, reducedMotionEnabled, duration);
             return expression;
         }
 

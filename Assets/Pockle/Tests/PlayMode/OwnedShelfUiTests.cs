@@ -157,6 +157,22 @@ namespace Pockle.Tests
         }
 
         [UnityTest]
+        public IEnumerator HomeFeatureChooserUsesOwnedToysAndPreservesInventory()
+        {
+            BuildHud();
+            root.GetComponentsInChildren<Button>(true).Single(b=>b.GetComponentInChildren<Text>()?.text=="Home").onClick.Invoke();
+            yield return null;
+            var before=session.OwnedCounts.ToDictionary(p=>p.Key,p=>p.Value);
+            string selected=before.Keys.First(id=>id.StartsWith("fox.")&&session.IsOwnedAndPlayable(id));
+            var choose=root.GetComponentsInChildren<Button>(true).Single(b=>b.name=="Change featured toy");choose.onClick.Invoke();yield return null;
+            Assert.That(hud.CurrentPage,Is.EqualTo(AppPage.Shelf));
+            root.GetComponentsInChildren<Button>(true).Single(b=>b.name=="Owned toy · "+selected).onClick.Invoke();yield return null;
+            Assert.That(hud.CurrentPage,Is.EqualTo(AppPage.Home));
+            Assert.That(new GuestProfile().FavoriteId,Is.EqualTo(selected));
+            Assert.That(root.GetComponentsInChildren<Text>(true).Any(t=>t.text=="Play with "+PersonalityBook.ShortName(selected)),Is.True);
+            CollectionAssert.AreEquivalent(before,session.OwnedCounts);
+        }
+        [UnityTest]
         public IEnumerator LargeRosterRendersOnlyVisibleStillPortraitsAndKeepsTheLastRowReachable()
         {
             var save = JsonUtility.FromJson<CollectionSave>(PlayerPrefs.GetString(SaveKey));

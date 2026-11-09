@@ -228,11 +228,13 @@ namespace Pockle.Runtime
         }
         private void Navigate(AppPage next)
         {
+            if (next != AppPage.Shelf) choosingHomeFeature = false;
             bool blocked = StoreVisible; SavePage();
             if (navigator.Push(next)) ApplyPage(blocked);
         }
         private void SelectTab(AppPage next)
         {
+            choosingHomeFeature = false;
             // Feature cards may still open these secondary pages through this shared shortcut.
             // Only the five approved destinations clear navigation history as a main tab.
             if (!MenuNavigation.IsMainTab(next)) { Navigate(next); return; }

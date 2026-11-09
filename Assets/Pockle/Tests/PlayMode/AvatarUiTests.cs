@@ -71,6 +71,18 @@ namespace Pockle.Tests
             Assert.That(Field<Text>("profileName"), Is.Not.Null);
             Assert.That(Field<RectTransform>("profileIdentity").GetComponentInChildren<InputField>(), Is.Null);
         }
+        [Test] public void SelectionUsesABorderWithoutResizingTheAvatarCrop()
+        {
+            Bind(First); var choices=Field<Button[]>("profileAvatarChoices");
+            var picture=choices[0].GetComponentInChildren<RawImage>();
+            Vector2 min=picture.rectTransform.offsetMin,max=picture.rectTransform.offsetMax;Rect uv=picture.uvRect;
+            Named("Avatar · pip-peach").onClick.Invoke();
+            Assert.That(picture.rectTransform.offsetMin,Is.EqualTo(min));Assert.That(picture.rectTransform.offsetMax,Is.EqualTo(max));
+            Assert.That(picture.uvRect,Is.EqualTo(uv));Assert.That(choices[0].GetComponentInChildren<AvatarSelectionRing>(true).enabled,Is.True);
+            Named("Avatar · fox").onClick.Invoke();
+            Assert.That(choices[0].GetComponentInChildren<AvatarSelectionRing>(true).enabled,Is.False);
+            Assert.That(picture.rectTransform.offsetMin,Is.EqualTo(min));
+        }
         [Test] public void CropPreviewPanZoomSaveAndCancelUseTheSamePixels()
         {
             Bind(First); service.SelectPreset("wally"); Photo(); Assert.That(hud.AvatarOverlayVisible, Is.True);

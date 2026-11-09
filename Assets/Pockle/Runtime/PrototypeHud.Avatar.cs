@@ -79,6 +79,9 @@ namespace Pockle.Runtime
                 choices[i].gameObject.AddComponent<Mask>().showMaskGraphic = true;
                 AvatarImage(choices[i].transform, Resources.Load<Texture2D>(AvatarCatalog.Resource(id)));
                 SetRadius(face, 36);
+                var ring = Rect("Selected avatar border", choices[i].transform); Stretch(ring);
+                var outline = ring.gameObject.AddComponent<AvatarSelectionRing>(); outline.color = Ink;
+                outline.raycastTarget = false; outline.enabled = false;
             }
             return choices;
         }
@@ -97,9 +100,10 @@ namespace Pockle.Runtime
                 choices[i].interactable = editable;
                 bool drafting = choices == avatarSignupChoices && avatarRegistrationPreset != null;
                 bool selected = avatarService != null && avatarService.CanEdit && (drafting ? avatarRegistrationPreset == AvatarCatalog.Ids[i] : !avatarService.HasPhoto && avatarService.PresetId == AvatarCatalog.Ids[i]);
-                choices[i].GetComponent<Image>().color = selected ? Ink : Quiet;
+                choices[i].GetComponent<Image>().color = Quiet;
+                choices[i].GetComponentInChildren<AvatarSelectionRing>(true).enabled = selected;
                 var image = choices[i].GetComponentInChildren<RawImage>().rectTransform;
-                image.offsetMin = Vector2.one * (selected ? 4 : 2); image.offsetMax = -image.offsetMin;
+                image.offsetMin = image.offsetMax = Vector2.zero;
             }
         }
         private float LayoutAvatarChoices(Button[] choices, float width)

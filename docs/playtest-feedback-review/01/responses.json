@@ -1,0 +1,26 @@
+[
+  {
+    "label": "Fox \u00b7 sleepy blink",
+    "audio": "fox/sleepy-blink",
+    "callout": "*yawn*",
+    "face": "Sleepy"
+  },
+  {
+    "label": "Fox \u00b7 grumpy",
+    "audio": "fox/temperament-grumpy",
+    "callout": "hmph!",
+    "face": "Grumpy"
+  },
+  {
+    "label": "Pip \u00b7 happy",
+    "audio": "pip/temperament-sunny",
+    "callout": "chirp!",
+    "face": "Sunny"
+  },
+  {
+    "label": "Pip \u00b7 grumpy",
+    "audio": "pip/temperament-grumpy",
+    "callout": "hmph!",
+    "face": "Grumpy"
+  }
+]

@@ -1,0 +1,81 @@
+{
+  "unity": "6000.6.5f1",
+  "distinctNativePassed": 99,
+  "runs": [
+    {
+      "file": "feedback11-focused.xml",
+      "total": "89",
+      "passed": "88",
+      "failed": "1",
+      "duration": "130.9359637"
+    },
+    {
+      "file": "feedback11-feature-choice.xml",
+      "total": "1",
+      "passed": "1",
+      "failed": "0",
+      "duration": "3.1461886"
+    },
+    {
+      "file": "feedback11-response-final.xml",
+      "total": "11",
+      "passed": "11",
+      "failed": "0",
+      "duration": "0.1502345"
+    },
+    {
+      "file": "feedback11-pack-final.xml",
+      "total": "11",
+      "passed": "11",
+      "failed": "0",
+      "duration": "27.3115859"
+    },
+    {
+      "file": "feedback11-checkout-final.xml",
+      "total": "6",
+      "passed": "6",
+      "failed": "0",
+      "duration": "0.0450514"
+    }
+  ],
+  "portableCore": "passed,143 response bundles plus full existing suite",
+  "notVerified": [
+    "Real Mystery Mix store payment",
+    "Physical-device UI/audio acceptance",
+    "Product dashboard readback while Mac is locked",
+    "New phone build/install"
+  ],
+  "backendReadOnly": {
+    "paidFunctionHttp200": 1343,
+    "http401": 2,
+    "maximumDurationMs": 4407,
+    "completedMixDeliveries": 0,
+    "liveMutation": false
+  },
+  "securityAdvisors": "Existing private-schema RLS/no-policy informational entries and OAuth password advisory unchanged; no schema or permissions changed.",
+  "sourceChecks": {
+    "files": 324,
+    "symbolProfiles": 3,
+    "asmdefs": 5,
+    "assetGuids": 1141,
+    "failures": 0
+  },
+  "captures": {
+    "count": 16,
+    "sizes": [
+      [
+        1080,
+        2340
+      ],
+      [
+        960,
+        1704
+      ]
+    ],
+    "actualUnityHudAndModels": true,
+    "offline": true,
+    "fixturePreferencesRestored": true,
+    "visualReview": "All sixteen scenes inspected, including sleepy eyelids, single translucent bubble silhouette, neutral carton logo, transparent portraits and Reveal all summaries."
+  },
+  "browserReview": "Mac locked; HTML asset links checked, actual image layouts inspected directly."
+}

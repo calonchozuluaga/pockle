@@ -22,6 +22,7 @@ internal static class Program
             ManipulationChecks.Run();
             RevealChecks.Run();
             CollectionChecks.Run();
+            ReactionResponseChecks.Run();
             WeightChecks.Run();
             MenuChecks.Run();
             CatalogChecks.Run();

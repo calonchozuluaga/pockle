@@ -74,7 +74,7 @@ namespace Pockle.Tests
             Assert.That(ShownTexts, Has.Member("New!"));
             Assert.That(opened, Is.EqualTo(new[] { RarityTier.Common }), "one cue at the pop");
             Assert.That(progress, Is.EqualTo(new[] { 1 }));
-            Assert.That(Shown("Skip"), Is.False, "a single box has no Skip");
+            Assert.That(Shown("Reveal all"), Is.False, "a single box has no Skip");
             RevealButton("Keep").onClick.Invoke(); yield return null;
             Assert.That(hud.BoxRevealVisible, Is.False);
             Assert.That(finished, Is.EqualTo(new[] { "r1" }));
@@ -101,14 +101,14 @@ namespace Pockle.Tests
             hud.ShowBoxReveal(View("pack", Item(WallyCatalog.KelpId), Item(WallyCatalog.LeafId), Item(WallyCatalog.DiamondId, false),
                 Item(WallyCatalog.KelpId, false), Item(WallyCatalog.SpecialId))); yield return null;
             Assert.That(ShownTexts, Has.Member("Box 1 of 5"));
-            Assert.That(Shown("Skip"), Is.True);
+            Assert.That(Shown("Reveal all"), Is.True);
             hud.CompleteBoxRevealStep(); yield return null;
             Assert.That(Shown("Next box"), Is.True);
             Assert.That(Shown("Play"), Is.True, "any toy can be played straight away");
             RevealButton("Next box").onClick.Invoke(); yield return null;
             Assert.That(ShownTexts, Has.Member("Box 2 of 5"));
             Assert.That(hud.BoxRevealWaitingForTap, Is.True);
-            RevealButton("Skip").onClick.Invoke(); yield return null;
+            RevealButton("Reveal all").onClick.Invoke(); yield return null;
             Assert.That(hud.BoxRevealSummaryVisible, Is.True);
             Assert.That(progress.Last(), Is.EqualTo(5), "skipping counts everything as revealed so a restart won't replay it");
             Assert.That(opened, Is.EqualTo(new[] { RarityTier.Common, RarityTier.Secret }), "one cue for the skipped boxes, at the best tier among them");

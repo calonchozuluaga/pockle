@@ -67,6 +67,19 @@ namespace Pockle.Runtime
                 : (ToyCatalog.TryGetCollection(collectionId, out var c) ? c.DisplayName : collectionId) + " box";
         }
 
+        private void BuildMysteryCarton(Text placeholder)
+        {
+            placeholder.text = "";
+            var art = Rect("Surprise collection box", placeholder.transform); Stretch(art);
+            art.gameObject.AddComponent<MysteryCartonGraphic>().raycastTarget = false;
+            var logo = Rect("Pockle box brand", art);
+            logo.anchorMin = new Vector2(.20f,.51f); logo.anchorMax = new Vector2(.64f,.65f); logo.offsetMin = logo.offsetMax = Vector2.zero;
+            var wordmark = logo.gameObject.AddComponent<RawImage>();
+            wordmark.texture = Resources.Load<Texture2D>("UI/PockleWordmark"); wordmark.color = Color.white; wordmark.raycastTarget = false;
+            var question = Label("?", art, 24, PockleTheme.Plum, FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
+            question.rectTransform.anchorMin = new Vector2(.20f,.18f); question.rectTransform.anchorMax = new Vector2(.64f,.53f);
+            question.rectTransform.offsetMin = question.rectTransform.offsetMax = Vector2.zero; question.raycastTarget = false;
+        }
         private static Texture BoxPicture(string collectionId) => string.IsNullOrEmpty(collectionId) ? null : CollectionLook.Box(collectionId, out _);
 
         private static string WalkingRuleFrequency(WalkingBoxView view)
@@ -153,6 +166,7 @@ namespace Pockle.Runtime
             walkMystery = Label("?", walkArt, 44, PockleTheme.JellyInk, FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
             walkMystery.gameObject.name = "Unknown walking collection";
             Stretch(walkMystery.rectTransform); walkMystery.raycastTarget = false;
+            BuildMysteryCarton(walkMystery);
             openDaily.onClick.RemoveAllListeners(); openDaily.onClick.AddListener(OpenWalkingBox);
         }
 

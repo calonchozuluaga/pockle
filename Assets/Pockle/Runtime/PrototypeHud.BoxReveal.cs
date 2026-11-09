@@ -85,7 +85,7 @@ namespace Pockle.Runtime
             unboxEyebrow = Label("", unboxSafe, PockleTheme.SmallSize - 1, UnboxMuted, FontStyle.Bold, TextAnchor.MiddleCenter, new Vector2(0, -22), new Vector2(260, 18));
             unboxProgress = Label("", unboxSafe, PockleTheme.CaptionSize, PockleTheme.OnPlum, FontStyle.Bold, TextAnchor.MiddleCenter, new Vector2(0, -42), new Vector2(200, 20));
             unboxDots = Rect("Pack progress", unboxSafe); TopCentered(unboxDots, new Vector2(0, -68), new Vector2(120, 8));
-            unboxSkip = CreateButton("Skip", unboxSafe, Vector2.zero, new Vector2(84, 40), UnboxGlass, SkipBoxReveal, out _, PockleTheme.CaptionSize);
+            unboxSkip = CreateButton("Reveal all", unboxSafe, Vector2.zero, new Vector2(96, 44), UnboxGlass, SkipBoxReveal, out _, PockleTheme.CaptionSize);
             var skipRect = (RectTransform)unboxSkip.transform;
             skipRect.anchorMin = skipRect.anchorMax = skipRect.pivot = new Vector2(1, 1); skipRect.anchoredPosition = new Vector2(-16, -14);
             unboxSkip.GetComponentInChildren<Text>().color = PockleTheme.OnPlum;
@@ -220,6 +220,12 @@ namespace Pockle.Runtime
             unboxStage.gameObject.SetActive(true);
             unboxBackground.color = look.Tier == RarityTier.Secret ? UnboxObsidian : UnboxNight;
             unboxEyebrow.text = UnboxSourceLine(collectionId);
+            if(unboxView.IsPack)
+            {
+                LeftLabel(unboxEyebrow.rectTransform,new Vector2(16,-22),new Vector2(160,20));
+                unboxEyebrow.alignment=TextAnchor.MiddleLeft;
+            }
+            else { TopCentered(unboxEyebrow.rectTransform,new Vector2(0,-22),new Vector2(260,18));unboxEyebrow.alignment=TextAnchor.MiddleCenter; }
             unboxProgress.text = unboxView.IsPack ? "Box " + (unboxIndex + 1) + " of " + unboxView.Count : "";
             unboxSkip.gameObject.SetActive(unboxView.IsPack);
             RefreshUnboxDots();
@@ -360,6 +366,7 @@ namespace Pockle.Runtime
             bool secret = false;
             foreach (var item in unboxView.Items) if (UnboxLook(item).Tier == RarityTier.Secret) secret = true;
             unboxBackground.color = secret ? UnboxObsidian : UnboxNight;
+            TopCentered(unboxEyebrow.rectTransform,new Vector2(0,-22),new Vector2(260,18));unboxEyebrow.alignment=TextAnchor.MiddleCenter;
             unboxEyebrow.text = unboxView.Source == BoxRevealSource.MysteryMix ? "MYSTERY MIX" : "YOUR BOXES";
             unboxProgress.text = "";
             RefreshUnboxDots();

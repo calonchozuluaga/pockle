@@ -15,7 +15,7 @@ namespace Pockle.Runtime
         private const float HomeMaxWidth = 480f;
         private RectTransform homeHero;
         private RawImage homeHeroWorld, homeHeroToy;
-        private Button homeHeroPlay;
+        private Button homeHeroPlay, homeHeroChange;
         private Text homeHeroCaption;
         private string homeHeroId;
         // Today's box.
@@ -83,6 +83,7 @@ namespace Pockle.Runtime
             homeHeroPlay = CreateButton("Play", homeHero, Vector2.zero, new Vector2(260, 54), Primary,
                 () => { if (!string.IsNullOrEmpty(homeHeroId)) ShowToy(homeHeroId); }, out _, 19);
             homeHeroPlay.name = "Home play owned toy";
+            homeHeroChange = CreateButton("Change featured toy", homeHero, Vector2.zero, new Vector2(152,44), Paper, BeginHomeFeatureChoice, out _, 13);
 
             // Today's box: label, name, the box itself, then steps or one clear action.
             homeBox = Rect("Today's box", homeRoot); homeBoxFace = Surface(homeBox, PockleTheme.Jelly, 30);
@@ -109,6 +110,7 @@ namespace Pockle.Runtime
             // After today's box is opened: tomorrow's box as a mystery silhouette with a "?" and a live countdown.
             homeMystery = Label("?", homeBox, 54, PockleTheme.FieldGold, FontStyle.Bold, TextAnchor.MiddleCenter, Vector2.zero, new Vector2(80, 70));
             homeMystery.name = "Mystery mark";
+            BuildMysteryCarton(homeMystery);
             homeCountdown = Label("", homeBox, 36, PockleTheme.FieldGold, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, new Vector2(180, 44));
             homeCountdown.name = "Next box countdown"; homeCountdown.horizontalOverflow = HorizontalWrapMode.Overflow; homeCountdown.resizeTextForBestFit = false;
             homeCountdown.gameObject.AddComponent<CountdownText>().Target = homeCountdown;
@@ -369,6 +371,9 @@ namespace Pockle.Runtime
             var heroAction = (RectTransform)homeHeroPlay.transform;
             heroAction.anchorMin = heroAction.anchorMax = heroAction.pivot = new Vector2(.5f, 0);
             heroAction.anchoredPosition = new Vector2(0, 18); heroAction.sizeDelta = new Vector2(Mathf.Min(w - 48, 300), 54);
+            var choose = homeHeroChange.GetComponent<RectTransform>();
+            choose.anchorMin = choose.anchorMax = choose.pivot = new Vector2(1,1);
+            choose.anchoredPosition = new Vector2(-10,-48); choose.sizeDelta = new Vector2(150,44);
             y += heroHeight + 16;
 
             // Today's box.
@@ -617,6 +622,7 @@ namespace Pockle.Runtime
             if (id == null) foreach (var entry in session.OwnedCounts)
                 if (entry.Value > 0 && session.IsOwnedAndPlayable(entry.Key)) { id = entry.Key; break; }
             homeHeroPlay.interactable = id != null;
+            homeHeroChange.interactable = id != null;
             homeHeroCaption.text = id != null ? "A LITTLE TIME TO PLAY" : "YOUR LITTLE WORLD AWAITS";
             homeHeroPlay.GetComponentInChildren<Text>().text = id != null ? "Play with " + PersonalityBook.ShortName(id) : "Find your first toy";
             if (id == homeHeroId && homeHeroToy.texture != null) return;

@@ -332,3 +332,6 @@ No task is marked complete solely from this integration. Native test files now c
 
 
 November9 delivery follow-up: approved fixed navigation, flat owned Shelf and private avatar UI is available in **TestFlight1.0(10)** for the existing owner internal group. Native153-case evidence and distribution proof are under `docs/fixed-navigation-build/01`. Device acceptance and the real Community/cloud-avatar/trading service gates remain open.
+
+
+November9 playtest follow-up on `codex/playtest-feedback-11`: UX-025 coherent face/audio/callout bundles and single bubble silhouette; UX-003/004 transparent owned portraits, icon actions, featured-toy choice and neutral walking teaser; UX-015 avatar selection border; UX-014 foreground checkout queue/immediate pending recovery and reviewable pack flow. Native99 distinct cases pass; review artifacts under `docs/playtest-feedback-review/01`. Actual Mystery Mix purchase diagnosis remains open pending owner error timing and dashboard access; no new phone release is claimed.

@@ -13,7 +13,7 @@ namespace Pockle.Runtime
         private CanvasGroup group;
         private RectTransform rect;
         private Vector2 home;
-        private float start = -1, delay;
+        private float start = -1, delay, hold = Hold;
         private bool calm;
 
         public bool Showing => start >= 0;
@@ -21,10 +21,11 @@ namespace Pockle.Runtime
         private void Awake() { group = GetComponent<CanvasGroup>(); rect = (RectTransform)transform; group.alpha = 0; group.blocksRaycasts = false; }
 
         /// <summary>Shows the bubble at its current anchored position after <paramref name="wait"/> seconds.</summary>
-        public void Play(float wait, bool calmMotion)
+        public void Play(float wait, bool calmMotion, float duration = 0)
         {
             if (group == null) Awake();
             home = rect.anchoredPosition; delay = Mathf.Max(0, wait); calm = calmMotion;
+            hold = Mathf.Max(Hold, duration - In - Out);
             start = Time.unscaledTime; group.alpha = 0; rect.localScale = Vector3.one;
             gameObject.SetActive(true);
         }
@@ -36,7 +37,7 @@ namespace Pockle.Runtime
             if (start < 0) return;
             float t = Time.unscaledTime - start - delay;
             if (t < 0) { group.alpha = 0; return; }
-            if (t > In + Hold + Out) { Hide(); rect.anchoredPosition = home; return; }
+            if (t > In + hold + Out) { Hide(); rect.anchoredPosition = home; return; }
             if (t < In)
             {
                 float k = t / In;
@@ -45,10 +46,10 @@ namespace Pockle.Runtime
                 rect.localScale = calm ? Vector3.one : Vector3.one * Mathf.LerpUnclamped(.6f, 1f, 1f + 2.7f * Mathf.Pow(k - 1f, 3) + 1.7f * Mathf.Pow(k - 1f, 2));
                 rect.anchoredPosition = home;
             }
-            else if (t < In + Hold) { group.alpha = 1; rect.localScale = Vector3.one; rect.anchoredPosition = home; }
+            else if (t < In + hold) { group.alpha = 1; rect.localScale = Vector3.one; rect.anchoredPosition = home; }
             else
             {
-                float k = (t - In - Hold) / Out;
+                float k = (t - In - hold) / Out;
                 group.alpha = 1 - k;
                 rect.anchoredPosition = home + new Vector2(0, calm ? 0 : 10 * k);
             }

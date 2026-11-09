@@ -62,6 +62,8 @@ namespace Pockle.Runtime
             if (path.Length == 0) return false;
             return Play(ClipForTemperament(id, temperament) ?? ClipFor(id, fallback));
         }
+        public AudioClip ClipForResponse(ToyReactionResponse response) => Load(response.AudioResource);
+        public bool TryPlayResponse(ToyReactionResponse response) => Play(ClipForResponse(response));
         public bool TryPlay(string id, CollectionVoiceMood mood) => Play(ClipFor(id, mood));
         private bool Play(AudioClip clip)
         {

@@ -4,7 +4,7 @@ namespace Pockle.Runtime
 {
     /// <summary>Local face paint for approved Pip. Temperament never changes finish or saved inventory.</summary>
     [DefaultExecutionOrder(200)]
-    public sealed class ToyTemperamentDriver : MonoBehaviour
+    public sealed class ToyTemperamentDriver : MonoBehaviour, IToyResponseFace
     {
         private Material material;
         private double elapsed;
@@ -14,6 +14,18 @@ namespace Pockle.Runtime
         private bool reacting;
         private PeachExpressionPose motionFace;
         private int testTap=-1;
+        private float responseUntil, responseStarted, responseDuration;
+        private PipTemperament responseFace;
+        private bool responseMotion;
+        public bool HasResponse => Time.unscaledTime < responseUntil;
+        public PipTemperament DisplayTemperament => HasResponse ? responseFace : CurrentTemperament;
+        public void BeginResponse(ToyReactionResponse response, float duration)
+        {
+            responseFace = response.Face; responseMotion = response.AllowsMotionExpression;
+            responseDuration = Mathf.Clamp(duration, .3f, 10); responseStarted = Time.unscaledTime;
+            responseUntil = responseStarted + responseDuration;
+        }
+        public void ClearResponse() { responseUntil = 0; }
         public PipTemperament CurrentTemperament { get; private set; }
         public bool CycleEnabled { get; private set; }
         private static readonly int Blink=Shader.PropertyToID("_TemperBlink");
@@ -33,7 +45,7 @@ namespace Pockle.Runtime
         private static readonly int MouthScale=Shader.PropertyToID("_TemperMouthScale");
         public void Initialize(Material target,string collectibleId=null)
         {
-            material=target;
+            material=target; ClearResponse();
             var resource=(Application.isEditor||Debug.isDebugBuild)?Resources.Load<TextAsset>("PipTemperamentOwnerTest"):null;
             CycleEnabled=resource!=null&&resource.text.Trim()=="enabled"&&!FusionCatalog.TryGet(collectibleId,out _);
             CurrentTemperament=CycleEnabled?PipTemperament.Sunny:Assigned(collectibleId);
@@ -55,6 +67,7 @@ namespace Pockle.Runtime
         }
         public void SetCollectible(string id)
         {
+            ClearResponse();
             var resource=(Application.isEditor||Debug.isDebugBuild)?Resources.Load<TextAsset>("PipTemperamentOwnerTest"):null;
             CycleEnabled=resource!=null&&resource.text.Trim()=="enabled"&&!FusionCatalog.TryGet(id,out _);
             if(!CycleEnabled)CurrentTemperament=Assigned(id);
@@ -74,6 +87,11 @@ namespace Pockle.Runtime
         }
         private void ApplyWithMotion(PipFacePose p,PeachExpressionPose motion)
         {
+            if (HasResponse)
+            {
+                p = ToyReactionResponses.FacePose(new ToyReactionResponse("", "", responseFace), Mathf.Clamp01((Time.unscaledTime - responseStarted) / responseDuration));
+                if (!responseMotion) motion = default;
+            }
             ApplyFace(p);
             if(material==null)return;
             material.SetFloat(Blink,Mathf.Max(p.Blink,motion.Blink));
@@ -121,8 +139,8 @@ namespace Pockle.Runtime
             else Apply(motion);
         }
         public bool IsReacting => reacting;
-        private void OnDisable(){CancelTap();}
-        private void OnApplicationFocus(bool value){if(!value)CancelTap();}
-        private void OnApplicationPause(bool value){paused=value;if(value)CancelTap();}
+        private void OnDisable(){ClearResponse();CancelTap();}
+        private void OnApplicationFocus(bool value){if(!value){ClearResponse();CancelTap();}}
+        private void OnApplicationPause(bool value){paused=value;if(value){ClearResponse();CancelTap();}}
     }
 }

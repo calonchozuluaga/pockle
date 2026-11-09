@@ -299,25 +299,41 @@ namespace Pockle.Runtime
                 var screen=viewCamera.WorldToScreenPoint(b.center+viewCamera.transform.up*b.extents.y*.55f);
                 if(screen.z>0)head=new Vector2(screen.x,screen.y);
             }
-            hud.ShowToyExpression(cue,head);ToyReactionStarted?.Invoke(cue,head);RecordToyActivity();
-            if ((momentAudio == null || !momentAudio.IsBusy) && (cue == ReactionCue.Squish || cue == ReactionCue.Hello || cue == ReactionCue.PickUp))
+            var face = ResponseFace();
+            if (face != null && ToyCatalog.TryGetCollectible(toy.CollectibleId, out var selected))
             {
-                var face = toy.GetComponentInChildren<ToyTemperamentDriver>(true);
-                var fallback = cue == ReactionCue.PickUp ? CollectionVoiceMood.Curious : CollectionVoiceMood.Happy;
-                if (face != null) collectionVoice?.TryPlayTemperament(toy.CollectibleId, face.CurrentTemperament, fallback);
-                else collectionVoice?.TryPlay(toy.CollectibleId, fallback);
+                var temperament = cue == ReactionCue.Night || cue == ReactionCue.LeftAlone ? PipTemperament.Sleepy : face.CurrentTemperament;
+                PresentToyResponse(ToyReactionResponses.Temperament(selected.CharacterId, temperament), cue, face);
             }
+            else { hud.ShowToyExpression(cue, head); ToyReactionStarted?.Invoke(cue, head); RecordToyActivity(); }
+        }
+        private IToyResponseFace ResponseFace()
+        {
+            IToyResponseFace face = toy.GetComponentInChildren<ToyTemperamentDriver>(true);
+            return face ?? toy.GetComponentInChildren<PeachExpressionDriver>(true);
+        }
+        private void PresentToyResponse(ToyReactionResponse response, ReactionCue cue, IToyResponseFace face)
+        {
+            if (string.IsNullOrEmpty(response.Text) || collectionVoice != null && collectionVoice.IsBusy) return;
+            float duration = Mathf.Max(2, collectionVoice?.ClipForResponse(response)?.length ?? 0);
+            face?.BeginResponse(response, duration);
+            Vector2? head = null;
+            if(toy.BodyRenderer!=null && viewCamera!=null)
+            {
+                var b=toy.BodyRenderer.bounds;var screen=viewCamera.WorldToScreenPoint(b.center+viewCamera.transform.up*b.extents.y*.55f);
+                if(screen.z>0)head=new Vector2(screen.x,screen.y);
+            }
+            hud.ShowToyResponse(new ToyExpression(response.Text), head, 0, duration);
+            ToyReactionStarted?.Invoke(cue, head); RecordToyActivity();
+            if (momentAudio == null || !momentAudio.IsBusy) collectionVoice?.TryPlayResponse(response);
         }
         private bool AnyReactionPlaying => pipReactions.IsPlaying||foxReactions.IsPlaying||axolotlReactions.IsPlaying||firbReactions.IsPlaying||cocoReactions.IsPlaying||gingerReactions.IsPlaying||snowyReactions.IsPlaying||winterReactions.IsPlaying||wallyReactions.IsPlaying;
         private void PlayTapReaction()
         {
-            if(ToyInputBlocked||AnyReactionPlaying||(collectionVoice != null && collectionVoice.IsBusy))return;
+            if(ToyInputBlocked||AnyReactionPlaying||(collectionVoice != null && collectionVoice.IsBusy)||(momentAudio != null && momentAudio.IsBusy))return;
             if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var wally)&&wally.CharacterId=="wally")wallyReactions.PlayRandom();else if(ToyCatalog.IsFoxCollectible(toy.CollectibleId))foxReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var tapped)&&tapped.CharacterId=="axolotl")axolotlReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var firb)&&firb.CharacterId=="firb")firbReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var coco)&&coco.CharacterId=="coco")cocoReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var ginger)&&ginger.CharacterId=="ginger")gingerReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var snowy)&&snowy.CharacterId=="snowy")snowyReactions.PlayRandom();else if(ToyCatalog.TryGetCollectible(toy.CollectibleId,out var winter)&&HolidayCatalog.IsWinterTrio(winter.CharacterId))winterReactions.PlayRandom();else pipReactions.PlayRandom();
             if(AnyReactionPlaying)
             {
-                SayToyCue(ReactionCue.Poke);
-                CollectionVoiceMood mood = wallyReactions.IsPlaying ? CollectionVoicePolicy.For(wallyReactions.CurrentAction)
-                    : foxReactions.IsPlaying ? CollectionVoicePolicy.For(foxReactions.CurrentAction) : CollectionVoicePolicy.For(pipReactions.CurrentAction);
                 System.Enum action = wallyReactions.IsPlaying ? (System.Enum)wallyReactions.CurrentAction
                     : foxReactions.IsPlaying ? foxReactions.CurrentAction
                     : axolotlReactions.IsPlaying ? axolotlReactions.CurrentAction
@@ -326,7 +342,16 @@ namespace Pockle.Runtime
                     : snowyReactions.IsPlaying ? snowyReactions.CurrentAction
                     : gingerReactions.IsPlaying ? gingerReactions.CurrentAction
                     : winterReactions.IsPlaying ? winterReactions.CurrentAction : pipReactions.CurrentAction;
-                if (momentAudio == null || !momentAudio.IsBusy) collectionVoice?.TryPlayAction(toy.CollectibleId, action, mood);
+                if (ToyCatalog.TryGetCollectible(toy.CollectibleId, out var selected))
+                {
+                    var face = ResponseFace();
+                    // A personality response uses its own matching recording; action responses use the action recording.
+                    // The selected response is shared by every output, rather than randomly picked again by the HUD.
+                    var response = face != null && (face.CycleEnabled || Random.Range(0, 3) == 0)
+                        ? ToyReactionResponses.Temperament(selected.CharacterId, face.CurrentTemperament)
+                        : ToyReactionResponses.Action(selected.CharacterId, action);
+                    PresentToyResponse(response, ReactionCue.Poke, face);
+                }
             }
         }
         private string PlayHint

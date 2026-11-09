@@ -29,7 +29,7 @@ namespace Pockle.Runtime
         private readonly Vector3[] ownedShelfCorners = new Vector3[4];
         private const int OwnedShelfPortraitLimit = 36;
         private OwnedShelfFilter ownedShelfFilter;
-        private bool ownedShelfLiveView;
+        private bool ownedShelfLiveView, choosingHomeFeature;
         private string ownedShelfKeys = "";
         private int ownedShelfRenderedFrame = -1;
 
@@ -37,9 +37,9 @@ namespace Pockle.Runtime
         {
             ownedShelfRoot = Rect("Owned shelf", shelfRoot);
             ownedShelfSummary = Label("", ownedShelfRoot, 14, MutedInk, FontStyle.Normal, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
-            ownedShelfWalk = OwnedShelfAction("Go for a walk", "Earn your next box", "Owned shelf · Walk", PockleTheme.FieldMint,
+            ownedShelfWalk = OwnedShelfAction("Go for a walk", "Earn your next box", "Owned shelf · Walk", Primary,
                 () => SelectTab(AppPage.Rewards));
-            ownedShelfShop = OwnedShelfAction("Find a new friend", "Explore the shop", "Owned shelf · Shop", PockleTheme.FieldPeach,
+            ownedShelfShop = OwnedShelfAction("Find a new friend", "Explore the shop", "Owned shelf · Shop", Primary,
                 () => SelectTab(AppPage.Boxes));
             var search = Rect("Search your shelf", ownedShelfRoot);
             var face = Surface(search, new Color(1, 1, 1, .8f), 18); face.raycastTarget = true;
@@ -63,7 +63,7 @@ namespace Pockle.Runtime
             }
             ownedShelfGrid = Rect("Owned toy grid", ownedShelfRoot);
             ownedShelfEmpty = Label("", ownedShelfRoot, 17, MutedInk, FontStyle.Normal, TextAnchor.MiddleCenter, Vector2.zero, Vector2.zero);
-            ownedShelfFuse = OwnedShelfAction("Make something new", "Fuse two spares of the same character", "Owned shelf · Fuse", PockleTheme.FieldMoon,
+            ownedShelfFuse = OwnedShelfAction("Make something new", "Fuse two spares of the same character", "Owned shelf · Fuse", Primary,
                 () => Navigate(AppPage.Fusion));
             ownedShelfLive = CreateButton("Live shelf", ownedShelfRoot, Vector2.zero, Vector2.zero, Quiet, OpenLivingShelfView, out _, 15);
             ownedShelfLive.name = "Owned shelf · Live shelf";
@@ -76,16 +76,28 @@ namespace Pockle.Runtime
         {
             var button = CreateButton(title, ownedShelfRoot, Vector2.zero, Vector2.zero, color, action, out _, 15);
             button.name = name;
+            SetRadius(button.GetComponent<Image>(), 20);
+            string glyph = name.EndsWith("Walk") ? "sneaker-move" : name.EndsWith("Shop") ? "storefront" : "squares-four";
+            var iconRect = Rect("Shelf action icon", button.transform);
+            LeftLabel(iconRect, new Vector2(12, -12), new Vector2(25, 25));
+            var icon = iconRect.gameObject.AddComponent<RawImage>();
+            icon.texture = name.EndsWith("Fuse") ? PockleTheme.Icon("Fuse") : Resources.Load<Texture2D>("UI/Navigation/" + glyph); icon.color = PockleTheme.Jelly; icon.raycastTarget = false;
             var words = button.GetComponentInChildren<Text>(); words.alignment = TextAnchor.MiddleLeft;
-            words.rectTransform.anchorMin = new Vector2(0, .48f); words.rectTransform.anchorMax = new Vector2(1, 1);
-            words.rectTransform.offsetMin = new Vector2(12, 0); words.rectTransform.offsetMax = new Vector2(-12, -8);
-            var sub = Label(caption, button.transform, 12, MutedInk, FontStyle.Normal, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
-            sub.rectTransform.anchorMin = Vector2.zero; sub.rectTransform.anchorMax = new Vector2(1, .48f);
+            words.color = PockleTheme.OnPlum;
+            words.rectTransform.anchorMin = new Vector2(0, .32f); words.rectTransform.anchorMax = new Vector2(1, 1);
+            words.rectTransform.offsetMin = new Vector2(46, 0); words.rectTransform.offsetMax = new Vector2(-10, -5);
+            var sub = Label(caption, button.transform, 12, PockleTheme.OnPlumMuted, FontStyle.Normal, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
+            sub.rectTransform.anchorMin = Vector2.zero; sub.rectTransform.anchorMax = new Vector2(1, .32f);
             sub.rectTransform.offsetMin = new Vector2(12, 8); sub.rectTransform.offsetMax = new Vector2(-12, 0);
             return button;
         }
 
-        private void ResetOwnedShelfView() { ownedShelfLiveView = false; }
+        private void ResetOwnedShelfView() { ownedShelfLiveView = false; choosingHomeFeature = false; }
+        private void BeginHomeFeatureChoice()
+        {
+            ownedShelfLiveView = false; ownedShelfFilter = OwnedShelfFilter.All; ownedShelfSearch.SetTextWithoutNotify("");
+            choosingHomeFeature = true; Navigate(AppPage.Shelf); content.anchoredPosition = Vector2.zero; AdaptLayout();
+        }
         private void OpenLivingShelfView()
         {
             ownedShelfLiveView = true;
@@ -123,7 +135,7 @@ namespace Pockle.Runtime
                 tile.Count.text = count > 1 ? "+" + (count - 1) + (count == 2 ? " extra" : " extras") : tile.Fusion ? "Fused" : "Owned";
                 tile.Button.interactable = session.IsOwnedAndPlayable(tile.Id);
             }
-            ownedShelfSummary.text = ids.Count + (ids.Count == 1 ? " little friend" : " little friends") + " · " + extras + (extras == 1 ? " extra copy" : " extra copies");
+            ownedShelfSummary.text = choosingHomeFeature ? "Tap a Pockle to feature it on Home." : ids.Count + (ids.Count == 1 ? " little friend" : " little friends") + " · " + extras + (extras == 1 ? " extra copy" : " extra copies");
         }
 
         private void BuildOwnedShelfTile(string id)
@@ -136,11 +148,15 @@ namespace Pockle.Runtime
             tile.Button = CreateButton("", ownedShelfGrid, Vector2.zero, Vector2.zero, Color.clear, () =>
             {
                 // Recheck current inventory at the point of use, including after a fusion spends an extra copy.
-                if (session != null && session.IsOwnedAndPlayable(id)) ShowToy(id);
+                if (session == null || !session.IsOwnedAndPlayable(id)) return;
+                if (choosingHomeFeature)
+                {
+                    if (profile.SetFavorite(id)) { choosingHomeFeature = false; Navigate(AppPage.Home); }
+                }
+                else ShowToy(id);
             }, out _, 14);
             tile.Button.name = "Owned toy · " + id;
-            tile.Picture = Rect("Toy portrait field", tile.Button.transform); Surface(tile.Picture, PockleTheme.FieldFor(id), 18);
-            tile.Picture.gameObject.AddComponent<Mask>().showMaskGraphic = true;
+            tile.Picture = Rect("Toy portrait field", tile.Button.transform); Surface(tile.Picture, Color.clear, 18);
             var image = Rect("Owned portrait", tile.Picture); Stretch(image);
             tile.Portrait = image.gameObject.AddComponent<RawImage>(); tile.Portrait.raycastTarget = false;
             tile.Portrait.enabled = false;
@@ -173,8 +189,8 @@ namespace Pockle.Runtime
             float y = 0;
             LeftLabel(ownedShelfSummary.rectTransform, new Vector2(0, -y), new Vector2(width, 24)); y += 34;
             float half = (width - 10) / 2;
-            LeftLabel(ownedShelfWalk.GetComponent<RectTransform>(), new Vector2(0, -y), new Vector2(half, 74));
-            LeftLabel(ownedShelfShop.GetComponent<RectTransform>(), new Vector2(half + 10, -y), new Vector2(half, 74)); y += 88;
+            LeftLabel(ownedShelfWalk.GetComponent<RectTransform>(), new Vector2(0, -y), new Vector2(half, 98));
+            LeftLabel(ownedShelfShop.GetComponent<RectTransform>(), new Vector2(half + 10, -y), new Vector2(half, 98)); y += 112;
             LeftLabel(ownedShelfSearch.GetComponent<RectTransform>(), new Vector2(0, -y), new Vector2(width, 46)); y += 58;
             LeftLabel(ownedShelfFilters, new Vector2(0, -y), new Vector2(width, 44));
             float chip = (width - 16) / 3;
@@ -210,7 +226,7 @@ namespace Pockle.Runtime
                 : "No extra copies yet.\nYour first copy always stays on your shelf.";
             LeftLabel(ownedShelfEmpty.rectTransform, new Vector2(8, -y), new Vector2(width - 16, 100));
             y += shown == 0 ? 112 : gridHeight + 8;
-            LeftLabel(ownedShelfFuse.GetComponent<RectTransform>(), new Vector2(0, -y), new Vector2(width, 76)); y += 88;
+            LeftLabel(ownedShelfFuse.GetComponent<RectTransform>(), new Vector2(0, -y), new Vector2(width, 76)); y += 112;
             LeftLabel(ownedShelfLive.GetComponent<RectTransform>(), new Vector2(0, -y), new Vector2(width, 44)); y += 56;
             LeftLabel(ownedShelfRoot, Vector2.zero, new Vector2(width, y));
             return y;
@@ -237,17 +253,17 @@ namespace Pockle.Runtime
                 }
                 if (rendered) continue;
                 rendered = true; ownedShelfRenderedFrame = Time.frameCount;
-                Texture2D picture = null; RenderTexture source = null, small = null; var previous = RenderTexture.active;
+                Texture2D picture = null, cutout = null; RenderTexture small = null; var previous = RenderTexture.active;
                 try
                 {
-                    source = ToyPortrait.Render(tile.Id, PockleTheme.FieldFor(tile.Id));
+                    cutout = PortraitCutout.Render(tile.Id, out _);
                     small = RenderTexture.GetTemporary(256, 256, 0, RenderTextureFormat.ARGB32);
-                    Graphics.Blit(source, small); RenderTexture.active = small;
+                    Graphics.Blit(cutout, small); RenderTexture.active = small;
                     picture = new Texture2D(256, 256, TextureFormat.RGBA32, false) { name = "Owned shelf · " + tile.Id, filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Clamp };
                     picture.ReadPixels(new Rect(0, 0, 256, 256), 0, 0); picture.Apply(false, true);
                 }
                 catch (Exception error) { if (picture != null) Destroy(picture); picture = null; Debug.LogWarning("Pockle owned portrait: " + error.Message); }
-                finally { RenderTexture.active = previous; if (small != null) RenderTexture.ReleaseTemporary(small); if (source != null) { source.Release(); Destroy(source); } }
+                finally { RenderTexture.active = previous; if (small != null) RenderTexture.ReleaseTemporary(small); if (cutout != null) Destroy(cutout); }
                 ownedShelfPortraits[tile.Id] = picture; ownedShelfPortraitOrder.AddLast(tile.Id);
                 tile.Portrait.texture = picture; tile.Portrait.enabled = picture != null;
                 while (ownedShelfPortraits.Count > OwnedShelfPortraitLimit)

@@ -28,6 +28,10 @@ namespace Pockle.Runtime
         private Config config;
         private string user,configuredUser,quoteId,quoteProduct;
         private bool working,storeOpen,stopped;
+        private string queuedQuote, queuedConfirmation;
+        private bool recoverSoon;
+        private float recoveryAt;
+        private int recoveryAttempts;
         private float retryAt;
         private readonly Dictionary<string,Purchases.Package> packages = new Dictionary<string,Purchases.Package>();
         private readonly Dictionary<string,Delivery> deliveries = new Dictionary<string,Delivery>();
@@ -53,10 +57,16 @@ namespace Pockle.Runtime
             string current=account.UserId;
             if(current!=user)
             {
-                user=current;quoteId=null;quoteProduct=null;packages.Clear();deliveries.Clear();
+                user=current;quoteId=null;quoteProduct=null;queuedQuote=null;queuedConfirmation=null;
+                recoverSoon=false;recoveryAttempts=0;packages.Clear();deliveries.Clear();
                 hud.SetCheckoutCatalog(null);hud.SetPendingDeliveries(0);retryAt=0;
             }
-            if(Application.isEditor||string.IsNullOrEmpty(user)||working||storeOpen||Time.unscaledTime<retryAt)return;
+            if(Application.isEditor||string.IsNullOrEmpty(user)||working||storeOpen)return;
+            if(queuedQuote!=null){string requested=queuedQuote;queuedQuote=null;StartCoroutine(LoadQuote(requested));return;}
+            if(queuedConfirmation!=null){string requested=queuedConfirmation;queuedConfirmation=null;Confirm(requested);return;}
+            if(recoverSoon && Time.unscaledTime>=recoveryAt && purchases!=null)
+            {StartCoroutine(RecoverImmediately(user));return;}
+            if(hud.CheckoutVisible||Time.unscaledTime<retryAt)return;
             retryAt=Time.unscaledTime+30;StartCoroutine(Refresh());
         }
         private IEnumerator Refresh()
@@ -120,8 +130,10 @@ namespace Pockle.Runtime
         private void RequestQuote(string offer,string collectionId)
         {
             var product=PaidBoxProducts.Find(offer);
-            if(working||storeOpen||product==null||!product.MatchesCollection(collectionId)||!packages.ContainsKey(offer)||PlayerPrefs.HasKey(PendingKey))
+            if(PlayerPrefs.HasKey(PendingKey)){ShowPendingCheckout();return;}
+            if(storeOpen||product==null||!product.MatchesCollection(collectionId)||!packages.ContainsKey(offer))
             {hud.SetCheckoutState(null,CheckoutState.Failed);return;}
+            if(working){queuedQuote=offer;return;}
             StartCoroutine(LoadQuote(offer));
         }
         private IEnumerator LoadQuote(string product)
@@ -129,8 +141,9 @@ namespace Pockle.Runtime
             working=true;string owner=user;quoteId=null;quoteProduct=null;string raw=null;bool ok=false;
             yield return Request("quote",JsonUtility.ToJson(new ProductPayload{product_id=product}),(r,s)=>{raw=r;ok=s;});
             var view=ok&&owner==account.UserId&&packages.TryGetValue(product,out var package)?DecodeQuote(raw,product,package.StoreProduct.PriceString):null;
-            if(owner!=account.UserId||view==null)
-            {hud.SetCheckoutState(null,CheckoutState.Failed);working=false;yield break;}
+            if(owner!=account.UserId){working=false;yield break;}
+            if(view==null)
+            {hud.SetCheckoutState(null,CheckoutState.Failed,"We couldn't check this box's contents. Please try again. No payment was started.");working=false;yield break;}
             quoteId=view.QuoteId;quoteProduct=product;hud.ShowCheckoutQuote(view);
             working=false;
         }
@@ -162,7 +175,10 @@ namespace Pockle.Runtime
         }
         private void Confirm(string id)
         {
-            if(working||storeOpen||id!=quoteId||user!=account.UserId||!packages.TryGetValue(quoteProduct??"",out var package))return;
+            if(id!=quoteId||user!=account.UserId)return;
+            if(PlayerPrefs.HasKey(PendingKey)){ShowPendingCheckout();return;}
+            if(storeOpen||!packages.TryGetValue(quoteProduct??"",out var package))return;
+            if(working){queuedConfirmation=id;return;}
             storeOpen=true;
             var pending=new Pending{state="waiting",product=quoteProduct,before=new List<string>(collection.Progress.Save.PaidDeliveryIds??new List<string>())};
             PlayerPrefs.SetString(PendingKey,JsonUtility.ToJson(pending));PlayerPrefs.Save();
@@ -177,10 +193,27 @@ namespace Pockle.Runtime
                 PlayerPrefs.SetString(PendingKey,JsonUtility.ToJson(pending));PlayerPrefs.Save();
                 hud.SetCheckoutState(id,result.Error==null?CheckoutState.DeliveryPending:CheckoutState.PaymentPending);
                 if(result.Error==null)hud.SetPendingDeliveries(PaidBoxProducts.Find(quoteProduct)?.Count??1);
-                retryAt=0;
+                recoverSoon=true; recoveryAt=Time.unscaledTime; recoveryAttempts=0;
             });
         }
-        private void RecoverRequested(){if(!working&&!storeOpen&&!string.IsNullOrEmpty(user)){retryAt=0;}}
+        private void ShowPendingCheckout()
+        {
+            hud.SetCheckoutState(null,CheckoutState.PaymentPending,"We're checking your previous purchase. Please don't buy again while your toys are being saved.");
+            recoverSoon=true;recoveryAt=0;
+        }
+        private void RecoverRequested(){if(!storeOpen&&!string.IsNullOrEmpty(user)){recoverSoon=true;recoveryAt=0;}}
+        private IEnumerator RecoverImmediately(string owner)
+        {
+            working=true;
+            yield return Recover(owner);
+            if(owner==account.UserId)
+            {
+                recoverSoon=PlayerPrefs.HasKey(PendingKey);
+                recoveryAt=Time.unscaledTime+Mathf.Min(15, 2*Mathf.Pow(2, Mathf.Min(3,recoveryAttempts++)));
+                BindCatalog();
+            }
+            working=false;
+        }
         private IEnumerator Recover(string owner)
         {
             string raw=null;bool ok=false;

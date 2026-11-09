@@ -840,3 +840,12 @@ Unchanged source `4bf1161` archived after the owner approved existing-key access
 Upload follow-up: Apple accepted build10 at13:22 MST and completed processing. Saved test notes verified in App Store Connect. Internal group assignment awaits the owner's export-compliance declaration; TestFlight availability is not yet claimed. Existing UnityRuntime.framework dSYM warning remains, affecting some framework crash detail. No source/test changes for this delivery step.
 
 Final distribution confirmation: owner completed compliance; Apple shows1.0(10) **Testing** in Pockle owner internal, one existing tester. Group-page screenshot and final state are in `docs/fixed-navigation-build/01`. Phone installation/acceptance remains unverified; no public submission or new tester invitation.
+
+
+## November9 — TestFlight10 playtest corrections prepared
+
+`codex/playtest-feedback-11` passes99 distinct native Unity6000.6.5f1 cases after targeted reruns; the exact XML counts, failed initial assumptions and latest passing results are in `docs/playtest-feedback-review/01/validation.json`. Full Core passes, including143 cross-roster response bundles and closed-eye yawn constraints. Tests cover approved recording paths, grumpy facial overrides independent of finish, unchanged avatar crop geometry, owned Home-feature choice, queued checkout work, uncertain-payment recovery, saved pack progress/summary and atomic receipt persistence.
+
+No backend mutation or store purchase was made. Read-only Supabase aggregates show successful singles but no completed Mix delivery. Current server logs do not establish the client/StoreKit failure. Product readback is blocked by the locked Mac; payment-sheet timing/error details are requested. Real phone acceptance, new Mix3/5 sandbox transactions/restart, hostedCI and a new device build remain unverified.
+
+Final local review:16 offline Unity HUD/model captures inspected, including320-point Shelf, Home teaser/chooser, selected avatar border, full/fading single bubble, matched sleepy/grumpy/happy faces, Mix3 sequential cards and3/5-toy summaries. Fixture preferences restored; all image/audio links resolve. Final source scan passes324C#/3profiles/5asmdefs/1141GUIDs. Incidental Unity settings/importer reserialization restored. Browser interaction remains unverified while the Mac is locked; no new phone build or real purchase was made.
