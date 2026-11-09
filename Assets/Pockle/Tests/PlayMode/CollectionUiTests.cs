@@ -626,9 +626,8 @@ namespace Pockle.Tests
                 ButtonNamed("Collection · wally").onClick.Invoke();
                 Assert.AreEqual(AppPage.Collection, hud.CurrentPage);
                 Assert.IsFalse(root.GetComponentsInChildren<Button>().Any(button => button.name.StartsWith("Collectible · ") && button.interactable));
-                // No box offer of its own: the page points to today's boxes and the free walking box, never a greyed "coming soon" (owner, October 21).
-                Assert.AreEqual("See today's boxes", ButtonNamed("Collection boxes").GetComponentInChildren<Text>().text, "An unapproved collection reward pool offers no box of its own.");
-                Assert.IsFalse(VisibleText("Wally boxes are coming soon"));
+                Assert.AreEqual("Boxes coming soon", ButtonNamed("Collection boxes").GetComponentInChildren<Text>().text, "No product or price is invented before a real checkout catalog is bound.");
+                Assert.IsFalse(ButtonNamed("Collection boxes").interactable);
                 Assert.IsTrue(ButtonWithText("Walk for a free box").interactable);
                 Assert.AreEqual(0, scroll.content.anchoredPosition.y, .1f, "A different series should start at its top.");
                 Assert.IsFalse(hud.ShowToy("moss.velvet-flock"));
@@ -821,7 +820,7 @@ namespace Pockle.Tests
             Assert.IsTrue(VisibleText("Stargazer"));
             Assert.IsTrue(VisibleText("It's… a Stargazer! Points everyone at the night sky."));
             Assert.IsFalse(VisibleText("Preview: fusion isn't switched on yet, so your spares weren't used."));
-            Assert.IsTrue(ButtonWithText("View on shelf").interactable);
+            Assert.IsTrue(ButtonNamed("Play fused toy").interactable);
             Assert.AreEqual(inventory[ToyCatalog.PeachId] - 1, session.GetOwnedCount(ToyCatalog.PeachId));
             Assert.AreEqual(inventory[ToyCatalog.MoonId] - 1, session.GetOwnedCount(ToyCatalog.MoonId));
             Assert.AreEqual(1, session.Progress.FusionCopiesSpent(ToyCatalog.PeachId));

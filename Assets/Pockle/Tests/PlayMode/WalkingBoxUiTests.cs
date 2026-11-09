@@ -106,6 +106,23 @@ namespace Pockle.Tests
         }
 
         [UnityTest]
+        public IEnumerator WalkingRulesUseTheOneHourDefaultAndRefreshFromTheServerSnapshot()
+        {
+            hud.SetWalkingBoxes(View());
+            Button("Boxes").onClick.Invoke(); yield return null;
+            Assert.That(Text("Walking box rules"), Does.Contain("1,000 steps earns a box · one every hour · up to 4 a day · 2 can wait"));
+            Button("Rules & odds").onClick.Invoke();
+            Assert.That(root.GetComponentsInChildren<Text>().Any(t => t.text.Contains("Every 1,000 steps earns a box, one every hour, up to 4 a day. Up to 2 can wait for you")), Is.True);
+            hud.GoBack();
+            var changed = View(); changed.CooldownHours = 2; changed.StepsPerBox = 2000; changed.MaxPerDay = 3; changed.MaxBanked = 1;
+            hud.SetWalkingBoxes(changed); yield return null;
+            Assert.That(Text("Walking box rules"), Does.Contain("2,000 steps earns a box · one every 2 hours · up to 3 a day · 1 can wait"));
+            Button("Rules & odds").onClick.Invoke();
+            Assert.That(root.GetComponentsInChildren<Text>().Any(t => t.text.Contains("Every 2,000 steps earns a box, one every 2 hours, up to 3 a day. Up to 1 can wait for you")), Is.True);
+            Assert.That(opened, Is.Zero, "Rule copy never awards or opens a box.");
+        }
+
+        [UnityTest]
         public IEnumerator CountdownRepairsTextOverwrittenDuringTheSameSecond()
         {
             var node = new GameObject("Countdown regression", typeof(RectTransform), typeof(Text));
@@ -181,7 +198,7 @@ namespace Pockle.Tests
             Assert.That(Badge(Pockle.Core.WallyCatalog.DiamondId), Is.EqualTo("Epic"));
             Assert.That(Badge(Pockle.Core.WallyCatalog.GlowId), Is.EqualTo("Epic"), "Deep Sea Glow moved to Epic");
             Assert.That(Badge(Pockle.Core.WallyCatalog.LeafId), Is.EqualTo("Rare"));
-            Assert.That(Badge(Pockle.Core.WallyCatalog.ClassicId), Is.EqualTo(""), "commons carry no badge");
+            Assert.That(Badge(Pockle.Core.WallyCatalog.ClassicId), Is.EqualTo("Common"), "Every slot shows its rarity, including hidden Common toys.");
         }
 
         private sealed class SignedOut : IAccountService

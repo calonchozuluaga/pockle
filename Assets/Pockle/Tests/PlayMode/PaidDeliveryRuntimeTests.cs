@@ -13,7 +13,7 @@ namespace Pockle.Tests
         private readonly Dictionary<string,string> before=new Dictionary<string,string>();
         private GameObject root;
         private CollectionSession session;
-        private static readonly string[] Keys={Key,Key+".backup",Key+".before-v2",Key+".before-v3",Key+".before-v4",Key+".before-v5"};
+        private static readonly string[] Keys={Key,Key+".backup",Key+".before-v2",Key+".before-v3",Key+".before-v4",Key+".before-v5",Key+".before-v6"};
         [SetUp] public void Setup()
         {
             foreach(string key in Keys){if(PlayerPrefs.HasKey(key))before[key]=PlayerPrefs.GetString(key);PlayerPrefs.DeleteKey(key);}
@@ -49,7 +49,7 @@ namespace Pockle.Tests
         }
         [Test] public void V4BackupIsRetainedBeforeTheAdditiveReceiptMigration()
         {
-            Assert.That(session.Progress.Save.Version,Is.EqualTo(5));
+            Assert.That(session.Progress.Save.Version,Is.EqualTo(CollectionProgress.SaveVersion));
             var backup=JsonUtility.FromJson<CollectionSave>(PlayerPrefs.GetString(Key+".before-v5"));
             Assert.That(backup.Version,Is.EqualTo(4));Assert.That(backup.Inventory.Count,Is.EqualTo(2));
         }

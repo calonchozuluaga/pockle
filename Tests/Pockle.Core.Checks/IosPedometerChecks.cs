@@ -27,6 +27,18 @@ internal static class IosPedometerChecks
         Require(p.DailyWalkingSteps == 5, "Daily counter reset must count new steps once.");
         p.ObserveSteps(1001, 9999, double.NaN, 12346);
         Require(p.DailyWalkingSteps == 5 && p.Save.SensorTotal == 7, "Invalid native snapshots must not alter the baseline.");
-        Console.WriteLine("PASS: iOS cumulative pedometer baseline, duplicate snapshots, save/reopen history, reboot, midnight and malformed snapshot handling.");
+        // Local midnight can happen within the same UTC reward day. Today's first reading
+        // may already exceed yesterday's last reading after the phone was offline overnight.
+        p.ObserveSteps(1001, 1500, 36450, 13786);
+        Require(p.DailyWalkingSteps == 5 && p.Save.SensorTotal == 1500,
+            "A changed Core Motion query window must baseline even when its total increased and UTC day did not change.");
+        p.ObserveSteps(1001, 1510, 36460, 13786);
+        Require(p.DailyWalkingSteps == 15, "Only new steps within the new local-day query window count.");
+        // Moving time zones changes the start-of-day instant without necessarily changing either date.
+        p.ObserveSteps(1001, 2000, 37060, 13726);
+        Require(p.DailyWalkingSteps == 15, "Time-zone query-window changes must also reset the baseline.");
+        p.ObserveSteps(1001, 2005, 37065, 13726);
+        Require(p.DailyWalkingSteps == 20, "Counting resumes after a time-zone query-window reset.");
+        Console.WriteLine("PASS: iOS cumulative pedometer baseline, duplicate snapshots, save/reopen history, reboot, local/UTC midnight, time-zone query windows and malformed snapshots.");
     }
 }

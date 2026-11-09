@@ -19,18 +19,28 @@ namespace Pockle.Runtime
         [Serializable] private sealed class TokenRequest { public string auth_code="",code_verifier="",refresh_token=""; }
         [Serializable] private sealed class NamePayload { public string username=""; }
         [Serializable] private sealed class SnapshotPayload { public string source_id="",save_json=""; }
+        private sealed class RefreshFlight
+        {
+            public Stored owner; public Session session; public Coroutine runner; public bool done;
+        }
         private Config config;private Stored stored=new Stored();private Profile profile;private CollectionSession collection;
         private bool busy,exchanging,ready;private Action<AccountResult> signInDone;
+        private bool ending,stopped;
+        private RefreshFlight refresh;
+        // Private seams let coroutine tests exercise cancellation and late responses without network or Keychain access.
+        private Func<string,string,bool,Action<string,bool>,IEnumerator> sendOverride;
+        private Action<string> secureWriteOverride;
         private string lastDigest="";private float backupAt=-1;
         public string LastError { get;private set; }
         public bool IsSignedIn=>ready&&stored.session!=null;
         public string UserId => IsSignedIn ? stored.session.user.id : null;
-        // Checkout uses the same verified account/session; tokens never leave this service.
+        // Reward and checkout services share this verified account/session; tokens never leave this service.
         public IEnumerator AuthorizedRequest(string function, string body, Action<string,bool> done)
         {
-            if (function != "pockle-paid-boxes" || !IsSignedIn) { done(null,false); yield break; }
+            if ((function != "pockle-paid-boxes" && function != "pockle-api") || !IsSignedIn) { done(null,false); yield break; }
+            string requestingUser = UserId;
             yield return RefreshIfNeeded();
-            if (!IsSignedIn) { done(null,false); yield break; }
+            if (!IsSignedIn || UserId != requestingUser) { done(null,false); yield break; }
             yield return Send("/functions/v1/" + function, body, true, done);
         }
         public string Username=>IsSignedIn?profile?.username:null;
@@ -52,6 +62,7 @@ namespace Pockle.Runtime
             if(config==null||!AccountProtocol.Publishable(config.publishableKey)||!OnboardingState.AgeConfirmed||OnboardingState.AgeLocked)
             {done(new AccountResult(AccountStatus.Failed,"Complete the age check before signing in."));return;}
             if(provider!=AccountProvider.Apple&&provider!=AccountProvider.Google){done(new AccountResult(AccountStatus.Failed,"Choose Apple or Google."));return;}
+            CancelRefresh();ending=false;
             busy=true;ready=false;signInDone=done;stored=new Stored{verifier=AccountProtocol.RandomToken(),request=AccountProtocol.RandomToken(),started=Now};
             if(!SaveSecure()){FinishSignIn(false,"Secure session storage is unavailable.");return;}
             string redirect=AccountProtocol.Redirect+"?request="+stored.request;
@@ -118,24 +129,70 @@ namespace Pockle.Runtime
             PlayerPrefs.SetString("pockle.legacy.owner.v1",stored.session.user.id);PlayerPrefs.SetString("pockle.legacy.receipt.v1",receipt.receipt_id);PlayerPrefs.SetString("pockle.legacy.digest.v1",digest);PlayerPrefs.Save();
             lastDigest=digest;ready=true;
         }
-        public void SignOut(Action done) {StopAllCoroutines();exchanging=false;var pending=signInDone;signInDone=null;pending?.Invoke(new AccountResult(AccountStatus.Cancelled));busy=true;StartCoroutine(EndSession(false,_=>done()));}
+        public void SignOut(Action done)
+        {
+            // Release external walking/checkout waiters before stopping account-owned coroutines.
+            // Logout is best effort with the current access token; never rotate a cancelled refresh token again.
+            ready=false;ending=true;CancelRefresh();StopAllCoroutines();exchanging=false;
+            var pending=signInDone;signInDone=null;pending?.Invoke(new AccountResult(AccountStatus.Cancelled));
+            busy=true;StartCoroutine(EndSession(false,_=>done()));
+        }
         public void RequestDeletion(Action<bool> done) {if(busy||stored.session==null){done(false);return;}busy=true;StartCoroutine(EndSession(true,done));}
         private IEnumerator EndSession(bool deletion,Action<bool> done)
         {
-            yield return RefreshIfNeeded();bool ok=false;
+            Stored owner=stored;
+            if(deletion)yield return RefreshIfNeeded();
+            if(!ReferenceEquals(stored,owner)){if(stored.session==null)busy=false;done(false);yield break;}
+            bool ok=false;
             if(stored.session!=null)yield return Api(deletion?"delete_request":"sign_out","{}",(_,s)=>ok=s);
+            if(!ReferenceEquals(stored,owner)){done(false);yield break;}
             if(deletion&&!ok){busy=false;done(false);yield break;}
-            ready=false;profile=null;stored=new Stored();SaveSecure();lastDigest="";busy=false;done(true);
+            CancelRefresh();ready=false;profile=null;stored=new Stored();SaveSecure();lastDigest="";busy=false;ending=false;done(true);
         }
         private IEnumerator RefreshIfNeeded()
         {
-            if(stored.session==null||stored.session.expires_at>Now+60)yield break;
-            string reply=null;bool ok=false;yield return Send("/auth/v1/token?grant_type=refresh_token",JsonUtility.ToJson(new TokenRequest{refresh_token=stored.session.refresh_token}),false,(r,s)=>{reply=r;ok=s;});
-            if(!ok||!AcceptToken(reply)){ready=false;stored=new Stored();SaveSecure();LastError="Sign in again to reconnect your cloud save.";}
+            Stored owner=stored;Session session=owner.session;
+            if(stopped||ending||session==null||session.expires_at>Now+60)yield break;
+            var flight=refresh;
+            if(flight==null||!ReferenceEquals(flight.owner,owner)||!ReferenceEquals(flight.session,session))
+            {
+                CancelRefresh();
+                flight=new RefreshFlight{owner=owner,session=session};refresh=flight;
+                // Always account-owned, even when walking/checkout started the waiting enumerator.
+                flight.runner=StartCoroutine(RefreshSession(flight));
+            }
+            while(!flight.done&&!stopped&&!ending&&ReferenceEquals(stored,owner))yield return null;
         }
-        private bool AcceptToken(string json)
+        private IEnumerator RefreshSession(RefreshFlight flight)
         {
-            var token=Parse<Session>(json);if(token==null||token.user==null||string.IsNullOrEmpty(token.access_token)||string.IsNullOrEmpty(token.refresh_token))return false;
+            try
+            {
+                string reply=null;bool ok=false;
+                yield return Send("/auth/v1/token?grant_type=refresh_token",
+                    JsonUtility.ToJson(new TokenRequest{refresh_token=flight.session.refresh_token}),false,(r,s)=>{reply=r;ok=s;});
+                // A late success or failure must never replace or clear a newer account/session.
+                if(stopped||ending||!ReferenceEquals(refresh,flight)||!ReferenceEquals(stored,flight.owner)
+                    ||!ReferenceEquals(stored.session,flight.session))yield break;
+                if(!ok||!AcceptToken(reply,flight.session.user?.id))
+                {ready=false;stored=new Stored();SaveSecure();LastError="Sign in again to reconnect your cloud save.";}
+            }
+            finally
+            {
+                flight.done=true;
+                if(ReferenceEquals(refresh,flight))refresh=null;
+            }
+        }
+        private void CancelRefresh()
+        {
+            var flight=refresh;if(flight==null)return;
+            refresh=null;flight.done=true;
+            if(flight.runner!=null)StopCoroutine(flight.runner);
+        }
+        private bool AcceptToken(string json,string expectedUser=null)
+        {
+            var token=Parse<Session>(json);if(token==null||token.user==null||string.IsNullOrEmpty(token.user.id)
+                ||string.IsNullOrEmpty(token.access_token)||string.IsNullOrEmpty(token.refresh_token)
+                ||(expectedUser!=null&&token.user.id!=expectedUser))return false;
             if(token.expires_at==0)token.expires_at=Now+token.expires_in;stored.session=token;return SaveSecure();
         }
         private IEnumerator Api(string action,string payload,Action<string,bool> done)
@@ -145,6 +202,7 @@ namespace Pockle.Runtime
         }
         private IEnumerator Send(string path,string body,bool authorized,Action<string,bool> done)
         {
+            if(sendOverride!=null){yield return sendOverride(path,body,authorized,done);yield break;}
             if(config==null||authorized&&stored.session==null){done(null,false);yield break;}
             using(var request=new UnityWebRequest(config.url+path,"POST"))
             {
@@ -154,7 +212,7 @@ namespace Pockle.Runtime
                 yield return request.SendWebRequest();done(request.downloadHandler.text,request.result==UnityWebRequest.Result.Success);
             }
         }
-        private bool SaveSecure(){try{AccountTokenStore.Write(JsonUtility.ToJson(stored));return true;}catch{ready=false;return false;}}
+        private bool SaveSecure(){try{string json=JsonUtility.ToJson(stored);if(secureWriteOverride!=null)secureWriteOverride(json);else AccountTokenStore.Write(json);return true;}catch{ready=false;return false;}}
         private static T Parse<T>(string json) where T:class {try{return string.IsNullOrEmpty(json)?null:JsonUtility.FromJson<T>(json);}catch{return null;}}
         private void FinishSignIn(bool ok,string message){busy=false;var done=signInDone;signInDone=null;done?.Invoke(new AccountResult(ok?AccountStatus.SignedIn:AccountStatus.Failed,message??"",ok&&!string.IsNullOrEmpty(profile?.username)));}
         private void CollectionChanged(){if(IsSignedIn&&backupAt<0)backupAt=Time.unscaledTime+60;}
@@ -164,6 +222,6 @@ namespace Pockle.Runtime
             if(backupAt>0&&Time.unscaledTime>=backupAt&&!busy&&IsSignedIn){backupAt=-1;busy=true;StartCoroutine(BackupChanged());}
         }
         private IEnumerator BackupChanged(){yield return RefreshIfNeeded();yield return Backup();busy=false;}
-        private void OnDestroy(){Application.deepLinkActivated-=OnDeepLink;if(collection!=null)collection.Changed-=CollectionChanged;}
+        private void OnDestroy(){stopped=true;CancelRefresh();Application.deepLinkActivated-=OnDeepLink;if(collection!=null)collection.Changed-=CollectionChanged;}
     }
 }

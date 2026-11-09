@@ -68,6 +68,7 @@ namespace Pockle.Runtime
         public void SetCheckoutCatalog(CheckoutCatalog catalog)
         {
             checkoutCatalog = catalog;
+            RefreshCollectionCheckout();
             if (boxesRoot == null) return;
             BuildLaunchShop();
             if (CheckoutVisible && checkoutOffer != null && !(checkoutState == CheckoutState.WaitingForStore || checkoutState == CheckoutState.DeliveryPending || checkoutState == CheckoutState.PaymentPending))
@@ -92,6 +93,37 @@ namespace Pockle.Runtime
             if (checkoutCatalog?.Offers == null) return null;
             foreach (var offer in checkoutCatalog.Offers) if (offer != null && offer.OfferId == offerId) return offer;
             return null;
+        }
+
+        private CheckoutOffer FindCollectionCheckoutOffer()
+        {
+            if (checkoutCatalog?.Status != CheckoutCatalogStatus.Ready || checkoutCatalog.Offers == null) return null;
+            foreach (var offer in checkoutCatalog.Offers)
+                if (offer != null && offer.Kind == CheckoutOfferKind.CollectionBox && offer.CollectionId == selectedCollectionId
+                    && !string.IsNullOrEmpty(offer.OfferId)) return offer;
+            return null;
+        }
+
+        private void RefreshCollectionCheckout()
+        {
+            if (collectionBoxes == null) return;
+            var offer = FindCollectionCheckoutOffer();
+            collectionBoxes.interactable = offer != null && offer.Buyable && !offer.ComingSoon;
+            var label = collectionBoxes.GetComponentInChildren<Text>();
+            label.color = PockleTheme.OnPlum;
+            label.text = collectionBoxes.interactable ? "Buy a " + SelectedCollection.DisplayName + " box · " + offer.LocalizedPrice
+                : checkoutCatalog?.Status == CheckoutCatalogStatus.Loading ? "Loading prices…"
+                : checkoutCatalog?.Status == CheckoutCatalogStatus.Unavailable ? "Boxes unavailable"
+                : offer == null || offer.ComingSoon ? "Boxes coming soon"
+                : !offer.Available ? (string.IsNullOrEmpty(offer.UnavailableReason) ? "Sold out" : offer.UnavailableReason)
+                : "Price unavailable";
+        }
+
+        private void OpenCollectionCheckout()
+        {
+            // Resolve again at tap time: an offer can disappear or sell out while the collection is open.
+            var offer = FindCollectionCheckoutOffer();
+            if (offer != null) OpenCheckout(offer);
         }
 
         private void BuildLaunchShop()

@@ -22,6 +22,7 @@ namespace Pockle.Core
         public string PendingFusionId = "";
         public BadgeRuntimeSave? BadgeState;
         public List<string>? PaidDeliveryIds;
+        public List<string>? WalkingDeliveryIds;
         // Version-1 compatibility projections. ID inventory is authoritative in version 2.
         public int[] Counts = new int[4];
         public List<OwnedCollectible>? Inventory;
@@ -50,7 +51,7 @@ namespace Pockle.Core
                 return receipts.Count;
             }
         }
-        public const int SaveVersion = 5;
+        public const int SaveVersion = 6;
         private readonly Dictionary<string, int> counts = new Dictionary<string, int>(StringComparer.Ordinal);
         public IReadOnlyDictionary<string, int> OwnedCounts { get; }
         public bool CanClaim => Save.Steps >= DailyTarget && !Save.Claimed && Save.PendingRevealId.Length == 0 && string.IsNullOrEmpty(Save.PendingFusionId);

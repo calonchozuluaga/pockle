@@ -13,7 +13,7 @@ namespace Pockle.Runtime
     /// <summary>One server snapshot of the player's walking boxes.</summary>
     public sealed class WalkingBoxView
     {
-        public const int StepsPerBoxDefault = 1000, MaxBankedDefault = 2, MaxPerDayDefault = 4;
+        public const int StepsPerBoxDefault = 1000, MaxBankedDefault = 2, MaxPerDayDefault = 4, CooldownHoursDefault = 1;
 
         /// <summary>Earned, unopened boxes in the order they will open, each as its server-saved collection ID (0 to 2).</summary>
         public IReadOnlyList<string> BankedCollectionIds = Array.Empty<string>();
@@ -24,7 +24,9 @@ namespace Pockle.Runtime
         /// <summary>Steps counted toward the next box (0 to StepsPerBox).</summary>
         public int StepCredit;
         public int StepsPerBox = StepsPerBoxDefault;
-        /// <summary>Server seconds until the next box can be earned (the six-hour window), or null when nothing is counting
+        /// <summary>Server-configured cooldown, for rule copy only. Eligibility always comes from the server.</summary>
+        public int CooldownHours = CooldownHoursDefault;
+        /// <summary>Server seconds until the next box can be earned, or null when nothing is counting
         /// down: earning is open, the bank is full, or the day's four are used.</summary>
         public double? SecondsUntilNextBox;
         /// <summary>Collection the next earned box will come from, if the server has already saved it (else null: a mystery).</summary>

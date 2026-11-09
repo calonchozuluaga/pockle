@@ -295,3 +295,8 @@ Owner requests the approved 9 Common / 3 Rare / 2 Epic / 1 Secret ladder across 
 
 
 November8 playtest follow-up: UX-052 Axolotl Ice Vinyl separation corrected and reviewed natively. Pip/Fox/Wally nine-clip approved sound pilot imported and routed to local reactions. Fusion picker now refuses no-spend preview fallback and reflects permanently consumed local balances. Native70/70; build6 installed/launched on Carlos iPhone with98inventory rows/24fusions preserved. Audio loudness/feel and device visuals await owner review; shared server inventory/paid catalog rollout remain separate.
+
+## November8 — playtest follow-up (codex/release-feedback)
+UX-010/011/014: repaired stale paid catalog (all11collections×15finishes), connected server walking receipts in place of the scene's Pip-only local route, and changed the owner-approved cooldown to1hour with1,000steps,4/day,2banked. UX-038: direct Play selects the saved fusion. Collection detail now opens its own real checkout/odds sheet, with safe unavailable states. Verification and deployment are tracked in VALIDATION.md and codex handoff; no phone acceptance claimed here.
+
+UI redesign/product art and trading-room direction remain review-only at `docs/ui-direction-review/01/index.html`. Seven generated moment sounds remain review-only at `docs/moment-audio-review/01/index.html`. No redesign or audition sound has entered Resources. Real trading awaits authoritative ownership/reservation integration and the selected room design.

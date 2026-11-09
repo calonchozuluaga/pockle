@@ -170,12 +170,12 @@ namespace Pockle.Runtime
             hud.StageViewportChanged += SetStageViewport;
             SetStageViewport(hud.StageViewport);
             ApplyStage();
-            hud.DailyBoxRequested += OpenDailyBox;
             hud.Bind(collection);
             hud.SetFusionService(new LocalFusionService(collection));
             var accountService=gameObject.AddComponent<SupabaseAccountService>();
             hud.SetAccountService(accountService);
             gameObject.AddComponent<PaidBoxCheckoutService>().Initialize(hud,collection,accountService);
+            gameObject.AddComponent<ServerWalkingBoxService>().Initialize(hud,collection,accountService);
             accountService.Initialize(collection,()=>hud.StartOnboardingIfNeeded()); // UX-050 (Claude): first-run sign-up and tutorial
             hud.ResumeSavedFusion();
             if (Application.isEditor || Debug.isDebugBuild) Debug.Log("Pockle fusion ready: persistent same-character fusion, save v" + collection.Progress.Save.Version);
@@ -541,13 +541,6 @@ namespace Pockle.Runtime
             turntable.gameObject.SetActive(!visible);
         }
 
-        private void OpenDailyBox()
-        {
-            if (!collection.ClaimDaily(out PipVariant choice)) return;
-            hud.ShowToy(choice);
-            Reveal();
-        }
-
         private void SetHaptics(bool enabled) { hapticsEnabled = enabled; SaveSetting("haptics", enabled); }
         private void SetReducedMotion(bool enabled)
         {
@@ -604,7 +597,6 @@ namespace Pockle.Runtime
             if (hud != null) hud.BackdropChanged -= SetBackdrop;
             if (hud != null) hud.WorldChanged -= SetWorld;
             if (hud != null) hud.LightChanged -= SetLight;
-            if (hud != null) hud.DailyBoxRequested -= OpenDailyBox;
             if (hud != null) Destroy(hud.gameObject);
             if (pressClip != null) Destroy(pressClip);
             if (releaseClip != null) Destroy(releaseClip);

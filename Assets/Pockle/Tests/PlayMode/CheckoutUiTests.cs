@@ -61,6 +61,14 @@ namespace Pockle.Tests
         private string Wally => ToyCatalog.TryGetCollection(wally, out var c) ? c.DisplayName : wally;
         private string Other => ToyCatalog.TryGetCollection(other, out var c) ? c.DisplayName : other;
 
+        private void OpenCollection(string collectionId)
+        {
+            ButtonWithText("Shelf").onClick.Invoke();
+            Named("All collections").onClick.Invoke();
+            Named("Collection · " + collectionId).onClick.Invoke();
+            Assert.That(hud.CurrentPage, Is.EqualTo(AppPage.Collection));
+        }
+
         private CheckoutCatalog Catalog(bool otherSoldOut = false) => new CheckoutCatalog
         {
             Status = CheckoutCatalogStatus.Ready,
@@ -144,6 +152,64 @@ namespace Pockle.Tests
             var noPrice = Catalog(); ((CheckoutOffer)noPrice.Offers[0]).LocalizedPrice = null;
             hud.SetCheckoutCatalog(noPrice); yield return null;
             Assert.That(Named("Buy · " + Wally).interactable, Is.False, "no store price, no checkout");
+        }
+
+        [UnityTest]
+        public IEnumerator ACollectionOffersItsOwnBoxAndReviewsTheQuoteBeforeAnyPayment()
+        {
+            hud.SetCheckoutCatalog(Catalog());
+            OpenCollection(wally); yield return null;
+            var buy = Named("Collection boxes");
+            Assert.That(buy.interactable, Is.True);
+            Assert.That(buy.GetComponentInChildren<Text>().text, Is.EqualTo("Buy a " + Wally + " box · 0,99 €"));
+            var firstToy = root.GetComponentsInChildren<Button>().First(b => b.name.StartsWith("Collectible · "));
+            Assert.That(buy.GetComponent<RectTransform>().anchoredPosition.y,
+                Is.GreaterThan(firstToy.GetComponent<RectTransform>().anchoredPosition.y), "The box action appears before the long variant grid.");
+            buy.onClick.Invoke(); yield return null;
+            Assert.That(hud.CurrentPage, Is.EqualTo(AppPage.Collection));
+            Assert.That(hud.CheckoutVisible, Is.True);
+            Assert.That(hud.CheckoutCurrentState, Is.EqualTo(CheckoutState.LoadingQuote));
+            Assert.That(quotes, Is.EqualTo(new[] { ("single." + wally, wally) }));
+            Assert.That(confirmed, Is.Empty, "A collection button requests odds, never charges directly.");
+            Assert.That(Named("Buy for 0,99 €").interactable, Is.False);
+            Assert.That(hud.GoBack(), Is.True);
+            Assert.That(hud.CurrentPage, Is.EqualTo(AppPage.Collection));
+            Assert.That(hud.CheckoutVisible, Is.False);
+        }
+
+        [UnityTest]
+        public IEnumerator CollectionPurchaseReflectsCatalogChangesAndNeverUsesTestOffers()
+        {
+            OpenCollection(other); yield return null;
+            var buy = Named("Collection boxes");
+            Assert.That(buy.GetComponentInChildren<Text>().text, Is.EqualTo("Boxes coming soon"));
+            Assert.That(buy.interactable, Is.False);
+            buy.onClick.Invoke(); Assert.That(quotes, Is.Empty);
+
+            hud.SetCheckoutCatalog(new CheckoutCatalog { Status = CheckoutCatalogStatus.Loading });
+            Assert.That(buy.GetComponentInChildren<Text>().text, Is.EqualTo("Loading prices…"));
+            Assert.That(buy.interactable, Is.False);
+            hud.SetCheckoutCatalog(new CheckoutCatalog { Status = CheckoutCatalogStatus.Unavailable });
+            Assert.That(buy.GetComponentInChildren<Text>().text, Is.EqualTo("Boxes unavailable"));
+            Assert.That(buy.interactable, Is.False);
+            hud.SetCheckoutCatalog(Catalog());
+            Assert.That(buy.interactable, Is.True);
+            Assert.That(buy.GetComponentInChildren<Text>().text, Is.EqualTo("Buy a " + Other + " box · 0,99 €"));
+
+            hud.SetCheckoutCatalog(Catalog(otherSoldOut: true));
+            Assert.That(buy.GetComponentInChildren<Text>().text, Is.EqualTo("Sold out"));
+            Assert.That(buy.interactable, Is.False);
+            buy.onClick.Invoke(); Assert.That(quotes, Is.Empty, "A stale collection button cannot open a sold-out offer.");
+            var noPrice = Catalog(); noPrice.Offers[1].LocalizedPrice = null;
+            hud.SetCheckoutCatalog(noPrice);
+            Assert.That(buy.GetComponentInChildren<Text>().text, Is.EqualTo("Price unavailable"));
+            Assert.That(buy.interactable, Is.False);
+            buy.onClick.Invoke(); Assert.That(quotes, Is.Empty);
+            hud.SetCheckoutCatalog(new CheckoutCatalog { Status = CheckoutCatalogStatus.Ready });
+            Assert.That(buy.GetComponentInChildren<Text>().text, Is.EqualTo("Boxes coming soon"));
+            Assert.That(buy.interactable, Is.False);
+            buy.onClick.Invoke(); Assert.That(quotes, Is.Empty, "Missing products never fall back to BoxCatalog test offers.");
+            Assert.That(hud.CheckoutVisible, Is.False);
         }
 
         [UnityTest]

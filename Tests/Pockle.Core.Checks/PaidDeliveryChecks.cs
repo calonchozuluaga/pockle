@@ -12,7 +12,7 @@ internal static class PaidDeliveryChecks
         foreach(var p in PaidBoxProducts.All){Assert(ids.Add(p.Id)&&packages.Add(p.Package),"Duplicate product or package.");Assert(p.Count==(p.CollectionId==null?p.Id.Contains(".3.")?3:5:1),"Product grant count changed.");}
         var original=new CollectionSave{Version=4,Day=123,Inventory=new List<OwnedCollectible>{new OwnedCollectible(ToyCatalog.PeachId,3),new OwnedCollectible(ToyCatalog.MoonId,2)}};
         var progress=new CollectionProgress(original,123);
-        Assert(progress.Save.Version==5&&progress.GetOwnedCount(ToyCatalog.PeachId)==3,"v4 inventory migration lost ownership.");
+        Assert(progress.Save.Version==CollectionProgress.SaveVersion&&progress.GetOwnedCount(ToyCatalog.PeachId)==3,"v4 inventory migration lost ownership.");
         string receipt=Guid.NewGuid().ToString();
         Assert(progress.ApplyPaidDelivery(receipt,"pockle.box.pip.v1",new[]{ToyCatalog.PeachId}),"Valid delivery rejected.");
         Assert(progress.GetOwnedCount(ToyCatalog.PeachId)==4,"Single purchase must add one copy.");

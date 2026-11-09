@@ -7,7 +7,7 @@ The first Apple/Google release includes paid boxes, walking rewards, toy play, c
 
 ## October21 collecting and identity update
 
-Owner supersedes the daily-box/guest-account proposals below: Apple or Google sign-in only behind an on-device13+ gate; preserve existing beta saves as tagged legacy cloud backups. The target free loop is a server-owned six-hour box cadence,1000steps per box, max4/day with2 banked and a saved per-box collection rotation. First backend/account implementation and verification limits are in [backend foundation](backend/FOUNDATION.md); real account/phone cutover and production rewards remain pending. The older daily beta behavior below describes the existing phone loop.
+Owner supersedes the daily-box/guest-account proposals below: Apple or Google sign-in only behind an on-device13+ gate; preserve existing beta saves as tagged legacy cloud backups. November8 playtest decision: the free loop uses a server-owned **one-hour** box cadence,1,000steps per box,max4/day with2 banked. Each earned box chooses a uniformly random enabled collection and saves that choice; reconnecting cannot reroll it. The daily supply ceiling is unchanged. First backend/account implementation and verification limits are in [backend foundation](backend/FOUNDATION.md); production edition allocation remains separate from beta rewards. The older daily beta behavior below is historical.
 
 
 ## Concept

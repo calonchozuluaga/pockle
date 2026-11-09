@@ -1,7 +1,6 @@
 #import <Foundation/Foundation.h>
 #import <CoreMotion/CoreMotion.h>
 #import <mach/mach_time.h>
-#import <sys/sysctl.h>
 
 // All state mutations are on Unity's main thread; Core Motion callbacks hop back to it.
 @interface PocklePedometer : NSObject
@@ -57,6 +56,12 @@ extern "C" {
  }
  int64_t PockleStepsTotal() { return PockleStepsService().total; }
  double PockleStepsUptime() { mach_timebase_info_data_t scale; mach_timebase_info(&scale); return (double)mach_continuous_time()*scale.numer/scale.denom/1e9; }
- int PockleStepsBoot() { struct timeval boot; size_t length=sizeof(boot); int mib[2]={CTL_KERN,KERN_BOOTTIME}; return sysctl(mib,2,&boot,&length,NULL,0)==0?(int)boot.tv_sec:-1; }
+ // The cumulative counter belongs to the Core Motion query window, not the OS boot.
+ // Local midnight/time-zone changes can reset it while the device stays running.
+ // Minutes retain the start-of-day instant (including DST offsets) within the int ABI.
+ int PockleStepsBoot() {
+  NSDate* day=PockleStepsService().day;
+  return day?(int)([day timeIntervalSince1970]/60.0):-1;
+ }
  void PockleStepsStop() { [PockleStepsService() stop]; PockleStepsService().state=0; }
 }

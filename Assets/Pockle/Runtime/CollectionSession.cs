@@ -69,6 +69,8 @@ namespace Pockle.Runtime
                     && !PlayerPrefs.HasKey(SaveKey + ".before-v4")) PlayerPrefs.SetString(SaveKey + ".before-v4", json);
                 if (!readOnlySave && saved != null && saved.Version >= 1 && saved.Version < 5
                     && !PlayerPrefs.HasKey(SaveKey + ".before-v5")) PlayerPrefs.SetString(SaveKey + ".before-v5", json);
+                if (!readOnlySave && saved != null && saved.Version >= 1 && saved.Version < 6
+                    && !PlayerPrefs.HasKey(SaveKey + ".before-v6")) PlayerPrefs.SetString(SaveKey + ".before-v6", json);
                 if (saved != null && (saved.Version < 1 || saved.Version > CollectionProgress.SaveVersion))
                 {
                     // Do not overwrite a newer schema. Show its legacy snapshot without allowing rewards.
@@ -95,6 +97,26 @@ namespace Pockle.Runtime
             string before = JsonUtility.ToJson(Progress.Save);
             var candidate = new CollectionProgress(JsonUtility.FromJson<CollectionSave>(before), Today);
             if (!candidate.ApplyPaidDelivery(receipt, product, toys)) return false;
+            try
+            {
+                string json = JsonUtility.ToJson(candidate.Save);
+                if (saveCandidate != null) saveCandidate(json);
+                else { PlayerPrefs.SetString(SaveKey, json); PlayerPrefs.Save(); }
+            }
+            catch (Exception)
+            {
+                PlayerPrefs.SetString(SaveKey, before);
+                return false;
+            }
+            Progress = candidate; dirty = false; Changed?.Invoke(); return true;
+        }
+
+        internal bool CommitWalkingDelivery(string receipt, string collectionId, string toyId, int earnedDay, Action<string> saveCandidate = null)
+        {
+            if (readOnlySave || Progress == null) return false;
+            string before = JsonUtility.ToJson(Progress.Save);
+            var candidate = new CollectionProgress(JsonUtility.FromJson<CollectionSave>(before), Today);
+            if (!candidate.ApplyWalkingDelivery(receipt, collectionId, toyId, earnedDay)) return false;
             try
             {
                 string json = JsonUtility.ToJson(candidate.Save);

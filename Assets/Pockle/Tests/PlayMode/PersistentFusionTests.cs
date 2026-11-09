@@ -235,12 +235,14 @@ namespace Pockle.Tests
             hud = (PrototypeHud)Field(runtime, "hud"); session = root.GetComponent<CollectionSession>();
             Assert.That(hud.CurrentPage, Is.EqualTo(AppPage.FusionReveal), "Interrupted reveals recover the committed toy.");
             Assert.That(session.GetOwnedCount(ToyCatalog.FoxId), Is.EqualTo(2));
-            var add = hud.GetComponentsInChildren<Button>().Single(b => b.GetComponentInChildren<Text>()?.text == "View on shelf"); add.onClick.Invoke();
+            var inventoryBeforePlay = session.OwnedCounts.ToDictionary(pair => pair.Key, pair => pair.Value);
+            var play = hud.GetComponentsInChildren<Button>().Single(b => b.name == "Play fused toy");
+            Assert.That(play.interactable, Is.True); play.onClick.Invoke();
             yield return null; Canvas.ForceUpdateCanvases();
-            var saved = hud.GetComponentsInChildren<Button>().Single(b => b.name == "Saved fusion · " + id); saved.onClick.Invoke();
-            Assert.That(hud.CurrentPage, Is.EqualTo(AppPage.Play));
+            Assert.That(hud.CurrentPage, Is.EqualTo(AppPage.Play), "The reveal opens the saved toy in one tap, without a shelf/About detour.");
             Assert.That(((JellyToy)Field(runtime, "toy")).CollectibleId, Is.EqualTo(id));
             Assert.That(session.Progress.Save.PendingFusionId, Is.Empty);
+            CollectionAssert.AreEquivalent(inventoryBeforePlay, session.OwnedCounts, "Playing never spends another spare or grants a second result.");
             var candidates = (List<string>)typeof(PrototypeHud).GetMethod("ShelfCandidates", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(hud, null);
             CollectionAssert.Contains(candidates, id, "Saved fusions can join the live shelf and its social moments.");
         }

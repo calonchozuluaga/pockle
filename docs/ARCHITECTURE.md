@@ -178,7 +178,7 @@ October20 Ui29 refinement: approved complete feature illustrations replace the U
 
 
 ## October21 — account/server-clock foundation
-The Supabase Edge boundary verifies Apple/Google identities and a live Auth session before service-only invoker RPCs access a private RLS schema. Unity implements IAccountService with PKCE and device-bound credential storage; exact local JSON is uploaded only as a tagged legacy snapshot and acknowledged by SHA256/count receipt. No production copies are minted from client saves. A server-owned six-hour/1000-step/max4/day/bank2 reservation clock stores rotation choices atomically. Notification scheduling/presentation must use NotificationGate. Adding the built-in UnityWebRequest1.0.0 module is the only package change; no ProjectSettings/engine/render changes. See [backend foundation](backend/FOUNDATION.md) for deployment boundaries, pending HUD/account cutover and actual checks.
+The Supabase Edge boundary verifies Apple/Google identities and a live Auth session before service-only invoker RPCs access a private RLS schema. Unity implements IAccountService with PKCE and device-bound credential storage; exact local JSON is uploaded only as a tagged legacy snapshot and acknowledged by SHA256/count receipt. No production copies are minted from client saves. The November8 reward update changes the reservation clock to one hour/1000steps/max4/day/bank2 and stores a uniformly random enabled collection at earning. Notification scheduling/presentation must use NotificationGate. Adding the built-in UnityWebRequest1.0.0 module is the only package change; no ProjectSettings/engine/render changes. See [backend foundation](backend/FOUNDATION.md) for deployment boundaries and actual checks.
 
 
 ## October21 — Wally fifteen-member rarity pilot
@@ -210,3 +210,10 @@ November8 follow-up: PersonalityBook authored touch records now use stable colle
 
 
 November8 — approved local voices use CollectionVoicePolicy + CollectionVoicePlayer (dedicated source, bounded clip cache, clip-duration gate, Sound/volume/background stop). TactilePrototype routes accepted action moods; no per-touch external calls. Fusion still commits Inventory and Fusions receipts atomically before a reveal, with a derived per-finish spend audit. Unavailable fusion services now fail closed instead of showing no-spend mock reveals. See COLLECTION_AUDIO_PILOT.md and FUSION.md.
+
+## November8 — walking receipt integration and catalog parity
+`ServerWalkingBoxService` replaces the scene's local Pip-only daily claim route. It submits cumulative sensor counters through the existing verified account service, binds server bank/rules/odds to `WalkingBoxView`, and opens only immutable server reservations. Save v6 adds `WalkingDeliveryIds`; `CollectionSession.CommitWalkingDelivery` saves the full private candidate before observers or the reveal. The exact pre-v6 JSON remains backed up. All server results, including completed reveals, are recoverable; replaying a recorded receipt never refills a copy already consumed by fusion. Reveal acknowledgements are retried from a local per-account marker.
+
+The paid server catalog is generated/tested against the actual165-finish Core roster. Updating catalog tiers leaves historical purchase result snapshots and reveal progress intact. These are beta/sandbox receipts: finite production edition allocation and server-authoritative fusion/trade ownership remain separate release requirements.
+
+Account refresh is a single account-owned coroutine shared by backup, checkout and walking. Each operation captures the account/session; late completion cannot replace a newer one. Signing out releases external waiters and cancels the refresh before clearing the local session. The second-phone walking fallback retrieves saved boxes without replacing the earning phone’s counter.

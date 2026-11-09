@@ -23,3 +23,24 @@ Deno.test('Reject revoked sessions and unknown actions; delete requests revoke a
  calls=0;const revoked:typeof fetch=async()=>++calls===1?Response.json({id:uid,identities:[{provider:'google'}]}):Response.json({message:'invalid_session'},{status:400});
  assert((await handle(req(),env,revoked)).status===401);
 });
+Deno.test('Walking report/open/finish use verified identity and the box RPC',async()=>{
+ for(const action of ['boxes','walking_report','box_open','box_finish']){
+  let calls=0;const payload={box_id:'33333333-3333-4333-8333-333333333333'};
+  const mock:typeof fetch=async(input,init)=>{
+   if(++calls===1)return Response.json({id:uid,identities:[{provider:'google'}]});
+   assert(String(input).endsWith('/rpc/pockle_box_api'));
+   const body=JSON.parse(String(init?.body));
+   assert(body.actor===uid&&body.session_id===sid&&body.action===action&&body.payload.box_id===payload.box_id);
+   return Response.json({boxes:[],deliveries:[],cooldown_seconds:3600});
+  };
+  const r=await handle(req(action,payload),env,mock);
+  assert(r.status===200&&calls===2&&(await r.json()).cooldown_seconds===3600);
+ }
+});
+Deno.test('Finishing an unopened walking box returns the server rejection without granting',async()=>{
+ let calls=0;const mock:typeof fetch=async()=>++calls===1
+  ?Response.json({id:uid,identities:[{provider:'google'}]})
+  :Response.json({message:'box_not_opened'},{status:400});
+ const r=await handle(req('box_finish'),env,mock);
+ assert(r.status===400&&(await r.json()).error==='box_not_opened'&&calls===2);
+});

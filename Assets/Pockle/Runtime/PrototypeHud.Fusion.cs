@@ -436,8 +436,16 @@ namespace Pockle.Runtime
                 MutedInk, FontStyle.Normal, TextAnchor.UpperLeft, Vector2.zero, new Vector2(300, 36));
             revealPreviewNote = Label("Preview: fusion isn't switched on yet, so your spares weren't used.", revealSheet, PockleTheme.SmallSize,
                 PockleTheme.JellyInk, FontStyle.Bold, TextAnchor.UpperLeft, Vector2.zero, new Vector2(300, 36));
-            revealAdd = CreateButton("Add to shelf", revealSheet, Vector2.zero, new Vector2(200, 54), PockleTheme.Plum, () => { LeaveSavedFusion(); SelectTab(AppPage.Shelf); }, out _);
+            revealAdd = CreateButton("Play", revealSheet, Vector2.zero, new Vector2(200, 54), PockleTheme.Plum, PlaySavedFusion, out _);
+            revealAdd.name = "Play fused toy";
             revealAgain = CreateButton("Fuse again", revealSheet, Vector2.zero, new Vector2(130, 54), Quiet, () => GoBack(), out _, PockleTheme.BodySize);
+        }
+
+        private void PlaySavedFusion()
+        {
+            // The result was committed before its reveal. Opening it only selects that saved ID: no second fusion/grant.
+            if (lastFusionWasPreview || string.IsNullOrEmpty(lastFusedId)) return;
+            if (ShowToy(lastFusedId)) LeaveSavedFusion();
         }
 
         private RawImage ParentBubble(RectTransform parent, float x, out Image face)
@@ -465,8 +473,7 @@ namespace Pockle.Runtime
             revealTraitValues[0].text = outcome.Body; revealTraitValues[1].text = outcome.Colour;
             revealTraitValues[2].text = saved != null ? saved.Material : outcome.Material; revealTraitValues[3].text = saved != null ? saved.Personality : outcome.Personality;
             revealPreviewNote.gameObject.SetActive(lastFusionWasPreview);
-            revealAdd.interactable = !lastFusionWasPreview;
-            revealAdd.GetComponentInChildren<Text>().text = lastFusionWasPreview ? "Add to shelf" : "View on shelf";
+            revealAdd.interactable = !lastFusionWasPreview && saved != null && session != null && session.IsOwnedAndPlayable(saved.Id);
             if (PersonalityBook.TryGet(fuseFirst, out var personality)) revealMotion.SetStyle(personality.Motion == PersonalityMotionStyle.Show
                 ? PersonalityMotionStyle.Show : PersonalityMotionStyle.Calm);
             revealPicture.texture = saved != null ? CutoutPortrait(saved.Id) : FusedPicture(fuseFirst, fuseSecond); // clear background, no square behind the toy

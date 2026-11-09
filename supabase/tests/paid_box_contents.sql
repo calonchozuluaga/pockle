@@ -11,6 +11,11 @@ do $$
 declare x record; q jsonb; product record; g jsonb; total numeric; conditional numeric; actual numeric; r jsonb; before_count bigint;
 begin
  select * into x from pockle_paid_test_ids;
+ assert (select count(*) from pockle_private.paid_box_finishes)=165,'Launch roster must have 165 finishes';
+ assert (select count(distinct collection_id) from pockle_private.paid_box_finishes)=11,'Launch roster must have 11 collections';
+ assert not exists(select collection_id from pockle_private.paid_box_finishes group by collection_id
+  having count(*) filter(where tier=0)<>9 or count(*) filter(where tier=1)<>3
+   or count(*) filter(where tier=2)<>2 or count(*) filter(where tier=3)<>1),'Rarity roster mismatch';
  update pockle_private.paid_box_policy set sandbox_enabled=true where singleton;
  select count(*) into before_count from pockle_private.paid_box_deliveries;
  for product in select * from pockle_private.paid_box_products loop
@@ -18,6 +23,8 @@ begin
   total:=0;
   for g in select value from jsonb_array_elements(q->'odds') loop
    assert jsonb_array_length(g->'contents')=(select count(*) from pockle_private.paid_box_finishes where collection_id=g->>'collection_id'),'Incomplete contents';
+   assert jsonb_array_length(g->'contents')=15,'Every launch collection needs 15 finishes';
+   assert (select jsonb_agg(odds_row->'percent' order by (odds_row->>'tier')::int) from jsonb_array_elements(g->'rows') odds_row)='[88,8,3,1]'::jsonb,'Launch odds changed';
    select sum((i->>'percent')::numeric),sum((i->>'within_collection_percent')::numeric)
     into actual,conditional from jsonb_array_elements(g->'contents') i;
    total:=total+actual;assert abs(conditional-100)<.00001,'Conditional total changed';
@@ -34,4 +41,4 @@ begin
  assert not has_function_privilege('authenticated','public.pockle_paid_box_quote(uuid,uuid,text,jsonb)','execute');
 end $$;
 rollback;
-select 'PASS: all13products disclose complete per-finish contents, exact tier/collection/per-box totals, no grants, real session enforcement and private RPC. Fixtures rolled back.' result;
+select 'PASS: all13products disclose the 165-finish roster, 9/3/2/1 counts, 88/8/3/1 odds, exact tier/collection/per-box totals, no grants, real session enforcement and private RPC. Fixtures rolled back.' result;

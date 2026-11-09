@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace Pockle.Runtime
 {
     /// <summary>
-    /// UX-052 server walking boxes on Home and Boxes (owner, October 21): 1,000 steps earns a box, one per six-hour window,
+    /// UX-052 server walking boxes on Home and Boxes (owner, November 8): 1,000 steps earns a box, one per hour,
     /// up to four a day, and up to two wait unopened. Shows the banked boxes with their server-saved collection (no picking,
     /// no reroll), today's count, step progress, a server-based countdown, and offline/reconnecting states in which saved
     /// boxes are shown but can't be opened. With no server snapshot (signed out, test builds) the local beta card is
@@ -68,6 +68,17 @@ namespace Pockle.Runtime
 
         private static Texture BoxPicture(string collectionId) => string.IsNullOrEmpty(collectionId) ? null : CollectionLook.Box(collectionId, out _);
 
+        private static string WalkingRuleFrequency(WalkingBoxView view)
+        {
+            int hours = Mathf.Max(1, view?.CooldownHours ?? WalkingBoxView.CooldownHoursDefault);
+            return hours == 1 ? "one every hour" : "one every " + hours + " hours";
+        }
+
+        private static string WalkingRuleSummary(WalkingBoxView view) => "Every "
+            + (view?.StepsPerBox ?? WalkingBoxView.StepsPerBoxDefault).ToString("N0") + " steps earns a box, "
+            + WalkingRuleFrequency(view) + ", up to " + (view?.MaxPerDay ?? WalkingBoxView.MaxPerDayDefault)
+            + " a day. Up to " + (view?.MaxBanked ?? WalkingBoxView.MaxBankedDefault) + " can wait for you";
+
         /// <summary>The one status line both cards share, highest priority first.</summary>
         private string ServerBoxStatus(out bool counting, bool compact = false)
         {
@@ -95,8 +106,8 @@ namespace Pockle.Runtime
             var v = boxView;
             string odds = v?.Odds == null || v.Odds.Count == 0 ? "The odds for each box are shown here before you open it."
                 : "Odds for this box: " + string.Join(", ", System.Linq.Enumerable.Select(v.Odds, o => RarityLook.Words(o.Tier) is var w && w.Length > 0 ? w + " " + TierOdds.Format(o.Chance) : "Common " + TierOdds.Format(o.Chance))) + ".";
-            ShowDialog("Walking boxes", "Every " + (v?.StepsPerBox ?? 1000).ToString("N0") + " steps earns a box, one every 6 hours, up to "
-                + (v?.MaxPerDay ?? 4) + " a day. Up to " + (v?.MaxBanked ?? 2) + " can wait for you, so you don't have to open them right away. Each box's collection is picked when you earn it.\n\n" + odds);
+            ShowDialog("Walking boxes", WalkingRuleSummary(v)
+                + ", so you don't have to open them right away. Each box's collection is picked when you earn it.\n\n" + odds);
         }
 
         // ----- Build (once, on the first snapshot) -----
@@ -128,7 +139,7 @@ namespace Pockle.Runtime
             walkStatusClock = walkStatus.gameObject.AddComponent<CountdownText>(); walkStatusClock.Target = walkStatus; walkStatusClock.Source = ServerTimeLeft;
             walkStatusClock.Prefix = "Next box in "; walkStatusClock.enabled = false;
             walkRules = Rect("Walking box rules", boxesRoot);
-            walkRulesText = Label("1,000 steps earns a box · one every 6 hours · up to 4 a day · 2 can wait", walkRules, PockleTheme.SmallSize, MutedInk,
+            walkRulesText = Label("", walkRules, PockleTheme.SmallSize, MutedInk,
                 FontStyle.Normal, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
             Place(walkRulesText.rectTransform, 0, 0, 1, 1, 0, 0, 96, 0);
             walkOdds = CreateButton("Rules & odds", walkRules, Vector2.zero, new Vector2(92, 32), Quiet, ShowBoxRules, out _, PockleTheme.SmallSize);
@@ -207,7 +218,9 @@ namespace Pockle.Runtime
             walkStatusClock.enabled = counting && v.Online;
             bool walking = WalkingOn;
             if (enableWalking.gameObject.activeSelf == walking) { enableWalking.gameObject.SetActive(!walking); AdaptLayout(); }
-            if (rewardNote != null) rewardNote.GetComponent<Text>().text = "Every 1,000 steps earns a box, one every 6 hours, up to 4 a day. Up to 2 wait for you. Steps count while Pockle is open.";
+            walkRulesText.text = v.StepsPerBox.ToString("N0") + " steps earns a box · " + WalkingRuleFrequency(v)
+                + " · up to " + v.MaxPerDay + " a day · " + v.MaxBanked + " can wait";
+            if (rewardNote != null) rewardNote.GetComponent<Text>().text = WalkingRuleSummary(v) + ". Steps count while Pockle is open.";
             openDaily.interactable = v.OpenEnabled;
             openDaily.GetComponentInChildren<Text>().text = v.Banked == 0 ? "Walk to earn" : v.Busy ? "Opening…" : !v.Online ? "Opens when online" : "Open " + BoxName(first);
         }

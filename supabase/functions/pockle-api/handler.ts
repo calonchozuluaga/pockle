@@ -1,7 +1,7 @@
 export type Env = { url: string; anon: string; service: string };
 type Json = Record<string, unknown>;
 const headers = { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' };
-const actions = new Set(['profile','username','legacy_upload','legacy_latest','delete_request','sign_out','boxes','walking_report','box_open']);
+const actions = new Set(['profile','username','legacy_upload','legacy_latest','delete_request','sign_out','boxes','walking_report','box_open','box_finish']);
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 function response(body: unknown, status = 200) { return new Response(JSON.stringify(body), { status, headers }); }
 export async function readBody(req: Request): Promise<Json> {
@@ -35,11 +35,11 @@ export async function handle(req: Request, env: Env, request: typeof fetch = fet
     const rpc=async(name: string, action: string, payload: unknown) => await request(env.url+'/rest/v1/rpc/'+name,{
       method:'POST',headers:{apikey:env.service,Authorization:'Bearer '+env.service,'Content-Type':'application/json'},
       body:JSON.stringify({actor:user.id,session_id:sid,action,payload})});
-    const isBox=['boxes','walking_report','box_open'].includes(action);
+    const isBox=['boxes','walking_report','box_open','box_finish'].includes(action);
     const result=await rpc(isBox?'pockle_box_api':'pockle_account_api',action==='sign_out'?'profile':action,body.payload??{});
     if (!result.ok) {
       const failure=await result.json().catch(()=>({}));
-      const known=['invalid_session','account_disabled','invalid_snapshot','snapshot_limit','username_required','walking_device_change_requires_review','invalid_counter','stale_counter','counter_rate_rejected','box_not_owned','box_policy_unconfigured'];
+      const known=['invalid_session','account_disabled','invalid_snapshot','snapshot_limit','username_required','walking_device_change_requires_review','invalid_counter','stale_counter','counter_rate_rejected','box_not_owned','box_not_opened','box_policy_unconfigured'];
       const error=known.find(e=>failure.message===e)??'request_failed';
       return response({error},['invalid_session','account_disabled'].includes(error)?401:400);
     }

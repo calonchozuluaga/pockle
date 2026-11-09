@@ -51,6 +51,7 @@ BadgeRuntimeChecks.Run();
 IosPedometerChecks.Run();
 MaterialTouchChecks.Run();
             PaidDeliveryChecks.Run();
+            WalkingDeliveryChecks.Run();
             return 0;
         }
         catch (Exception exception)

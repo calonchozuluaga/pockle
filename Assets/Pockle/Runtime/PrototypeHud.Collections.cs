@@ -178,8 +178,8 @@ namespace Pockle.Runtime
             collectionProgress.gameObject.SetActive(false);
             collectionNote = Label("", collectionRoot, PockleTheme.BodySize, MutedInk, FontStyle.Normal,
                 TextAnchor.UpperLeft, Vector2.zero, new Vector2(300, 60));
-            collectionBoxes = CreateButton("View boxes", collectionRoot, Vector2.zero, new Vector2(300, 56), Primary,
-                () => Navigate(AppPage.Boxes), out _);
+            collectionBoxes = CreateButton("Boxes coming soon", collectionRoot, Vector2.zero, new Vector2(300, 56), Primary,
+                OpenCollectionCheckout, out _);
             collectionBoxes.name = "Collection boxes";
             collectionWalking = CreateButton("Walk for one", collectionRoot, Vector2.zero, new Vector2(300, 48), Quiet,
                 () => Navigate(AppPage.Rewards), out _);
@@ -333,20 +333,11 @@ namespace Pockle.Runtime
                 secretTitle.text = foundSecret ? "You found " + secretName : "A secret hides here";
                 secretBody.text = foundSecret ? "It's the rarest one in " + selected.DisplayName + "." : "It turns up rarely. Keep opening " + selected.DisplayName + " boxes.";
             }
-            bool offers = false;
-            foreach (var offer in BoxCatalog.Offers) if (offer.CollectionId == selected.Id) offers = true;
-            // Never a greyed-out "coming soon": a collection without its own box offer still points to today's boxes and the walk.
-            collectionBoxes.interactable = true;
             collectionBoxes.GetComponent<Image>().color = deep;
-            string price = "";
-            foreach (var offer in BoxCatalog.Offers) if (offer.CollectionId == selected.Id && price.Length == 0) price = offer.ProposedPrice;
-            var ctaLabel = collectionBoxes.GetComponentInChildren<Text>();
-            ctaLabel.text = offers ? "Open a " + selected.DisplayName + " box" + (price.Length > 0 ? ", " + price : "") : ServerBoxes ? "See your boxes" : "See today's boxes";
-            ctaLabel.color = PockleTheme.OnPlum;
+            RefreshCollectionCheckout();
             collectionWalking.interactable = true;
             collectionWalking.GetComponentInChildren<Text>().text = "Walk for a free box";
-            collectionNote.text = offers ? "More varieties are on the way. Explore today's boxes to see what you can find."
-                : "This character is coming later. Your collection will be waiting here.";
+            collectionNote.text = "See every possible toy and its odds before you buy.";
             for (int i = 0; i < lineupTiles.Count; i++)
             {
                 string id = selected.Members[i];
@@ -429,6 +420,8 @@ namespace Pockle.Runtime
             LeftLabel(progressTrack, new Vector2(18, -56), new Vector2(inner, 14));
             LeftLabel(halfwayTick, new Vector2(inner * .5f - 2, 3), new Vector2(4, 20));
             float y = heroHeight - 22 + cardHeight + 22;
+            // A collection's own box is reachable before the long lineup, with its real store price and quote sheet.
+            LeftLabel(collectionBoxes.GetComponent<RectTransform>(), new Vector2(g, -y), new Vector2(width, 56)); y += 72;
             LeftLabel(lineupHeading, new Vector2(g, -y), new Vector2(width, 30)); y += 40;
             LeftLabel(collectionNote.rectTransform, new Vector2(g, -y), new Vector2(width, 0));
             collectionNote.gameObject.SetActive(false);
@@ -454,7 +447,6 @@ namespace Pockle.Runtime
             int rows = (lineupTiles.Count + columns - 1) / columns;
             y += rows * (tileHeight + gap) + 4;
             if (secretCard.gameObject.activeSelf) { LeftLabel(secretCard, new Vector2(g, -y), new Vector2(width, 104)); y += 116; }
-            LeftLabel(collectionBoxes.GetComponent<RectTransform>(), new Vector2(g, -y), new Vector2(width, 56)); y += 68;
             LeftLabel(collectionWalking.GetComponent<RectTransform>(), new Vector2(g, -y), new Vector2(width, 48)); y += 60;
             TopCentered(collectionRoot, Vector2.zero, new Vector2(full, y));
             return y;
