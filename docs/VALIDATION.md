@@ -804,3 +804,16 @@ Seven approved moment WAVs were imported with reproducible constant gain and com
 ## November 9 — iOS 1.0 (9) signed and uploaded
 
 Unchanged source `21d2d18` archived and exported successfully after retrying existing-key signing. Exported IPA identity: `com.playpockle.app`, 1.0 (9). Apple upload succeeded at 09:19 MST and processing started. The existing UnityRuntime.framework dSYM warning remains. The owner completed export compliance, and the existing Pockle owner internal group now shows build 1.0 (9) as Testing; phone acceptance has not been run. See `docs/approved-ui-build/01/distribution.json` for archive, export and upload evidence. No new code or rerun claims; the recorded 113/113 focused Unity tests apply to this unchanged source.
+
+
+## November 9 — Mystery Mix fix and social/navigation review
+
+Branch `codex/mystery-social-review`, isolated `/private/tmp/pockle-ios-20261108`, based on verified TestFlight9 release tip `9728443`. Native Unity6000.6.5f1 passes **85 distinct tests**: initial81/81 across checkout18, collection30, box reveal11, quote19 and avatar3; final26/26 covers quote20 and revised avatar6. Exact native evidence proves explicit JSON null decodes to an empty string while omission decodes to C# null. Full SQL-generated Mix3/5 quotes pass the installed build9 equality guard after the compatibility omission. Evidence: [validation records](mystery-social-validation/01/native-final-26.json).
+
+Portable Core checks, source checks (308 C# files /3 symbol profiles /5 asmdefs /1,100 GUIDs), four local SQL suites/catalog parity and Deno8/8 pass. Android avatar JavaAPI36 and iOS arm64/iOS13 native sources compile (iOS SDK libc++ minimum-platform warning only). Both status-bar helpers compile against actual pinned Unity platform/editor APIs. Diff check is clean after restoring only incidental Unity importer/ProjectSettings reserialization. No engine/package/committed ProjectSettings changes.
+
+`pockle-paid-boxes` v4 is ACTIVE with exact source readback and preserved authentication; unauthenticated Mix requests return401. No transaction, player mutation, catalog policy or inventory grant was made. [Deployment record](mystery-social-validation/01/mystery-mix-deployment.json).
+
+Browser review via a self-contained localhost page verifies Shelf filtering, Community Exchange layout and unavailable-spare guard, all12 avatar images, selection, crop zoom/application and four/five equal-tab navigation. Screenshots and checks are in [UI direction02](ui-direction-review/02/index.html). All examples are clearly labeled sample data; no actual upload, purchase, friend request or trade is sent.
+
+Not verified: a real sandbox purchase on the owner's phone, actual system status-bar contrast/safe areas, native photo pickers on devices, account/HUD/avatar cloud wiring/deletion, live social/trading or a new phone build. Source removal of About's synthetic button is covered by the native UI suites, but phone listening remains untested. UI/avatar art still awaits owner design review.

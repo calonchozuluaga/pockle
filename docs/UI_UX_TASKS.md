@@ -304,3 +304,10 @@ UI redesign/product art and trading-room direction remain review-only at `docs/u
 ## November 8 — approved warm UI and explanatory play controls
 
 UX-002/003/025/038/042 follow-up: owner approved the warm UI and moment auditions for implementation. Warm Home and collection-art shop cards, collection checkout entry, direct fusion Play, four labeled play controls, all-owned toy/fusion chooser, and Daylight/Night are implemented on `codex/approved-ui-phone`. Portrait captures are in `docs/approved-ui-build/01`. Public offers trading remains a separate backend/runtime implementation and must not be represented as live. Final native and TestFlight evidence is recorded in VALIDATION.md and the Codex handoff.
+
+
+### November 9 — Mystery Mix and social/navigation follow-up
+
+UX-014: confirmed native JSON-null parsing failure for Mystery Mix3/5. Deployed a narrow backwards-compatible quote response fix; both packs pass the installed build9 guard in native tests. Actual sandbox payment/restart acceptance remains open. UX-025: obsolete About sound button removed and visible native status bars prepared for the next build; physical-device verification remains.
+
+UX-015/031/017/019: [UI direction02](ui-direction-review/02/index.html) proposes a flat owned Shelf, Walk/Shop actions, equal labeled navigation and a Community home for Feed/Friends/public Exchange. Twelve avatar images and photo/crop concepts are ready for owner review. Local native avatar foundation is tested but unwired; cloud uploads, real friends/feed/trading, HUD integration and phone acceptance remain incomplete. Existing task acceptance checkboxes stay open.

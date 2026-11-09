@@ -1,0 +1,131 @@
+{
+  "date": "2026-11-09",
+  "scope": "HTML review only",
+  "javascriptSyntax": "preview.js and avatars.js: passed",
+  "logicFixtures": {
+    "all": 12,
+    "fusions": 1,
+    "extras": 5,
+    "extraCopies": 6,
+    "wallySearch": 2,
+    "navOptionASlots": 5,
+    "navOptionBSlots": 4,
+    "noFuseNavigation": true,
+    "uniqueAvatarChoices": 12,
+    "sixDestinationRenderers": "passed",
+    "communityTabPreviewLabels": "passed",
+    "unmatchedExchangeFilter": "honest empty state",
+    "renderedImageReferencesChecked": 56,
+    "zeroSpareOffer": "Fox offer: agreement disabled, first-copy protection copy, acceptance disabled",
+    "availableSpareOffer": "Moon offer: confirmation available after explicit agreement",
+    "firstRegistration": {
+      "presets": 12,
+      "default": "pip-peach",
+      "draftBeforeContinue": "existing profile avatar remains unchanged",
+      "continue": "applies chosen preset to preview only",
+      "skip": "uses Peach Pip without a required selection",
+      "cancel": "preserves the existing profile avatar",
+      "cropping": "shared local crop editor returns into registration draft; explicit Continue applies it",
+      "networkOrStorage": "none",
+      "browserInspection": "Entry button visibly loaded in native Chrome. Dialog not visually verified: opening attempts were interrupted by user activity; no further browser attempts made."
+    }
+  },
+  "localUpload": "FileReader only; no network or persistent browser storage API",
+  "browserRendering": {
+    "surface": "Native Chrome, narrowly scoped localhost server; root agent inspection",
+    "screens": [
+      "Shelf",
+      "Exchange",
+      "Profile"
+    ],
+    "observed": "Shelf, Exchange, Profile and all twelve circular avatars inspected; no overflow or overlap except intentional content scrolling under the fixed inset navigation, with bottom content reachable",
+    "interactions": [
+      "Fusions filter shows only Sorbet",
+      "Fox avatar selection updates all three phone frames",
+      "Crop editor applies 202% zoom with Use in preview",
+      "Zero-spare Fox offer visibly disables the agreement and acceptance controls and protects the first copy",
+      "Option B changes all three phone frames to four tabs; option A restored to five tabs"
+    ],
+    "laterZeroSpareGuardRecheck": "passed in native Chrome; root agent inspection",
+    "screenshots": [
+      {
+        "file": "shelf-community-profile-browser.png",
+        "sourceDimensions": [
+          3456,
+          2026
+        ],
+        "cropRectangle": [
+          0,
+          242,
+          3456,
+          2026
+        ],
+        "dimensions": [
+          3456,
+          1784
+        ],
+        "sourceSha256": "f6d4fc9aa42c1bba7bf18b678513692daa31c39fb4576848202ffd5e7e4edbe8",
+        "sha256": "93788cbbd26cae410669c81bd954aaf6ba042c193fd7b4d9beb06091b2aa1701"
+      },
+      {
+        "file": "zero-spares-browser.png",
+        "sourceDimensions": [
+          3456,
+          2026
+        ],
+        "cropRectangle": [
+          0,
+          242,
+          3456,
+          2026
+        ],
+        "dimensions": [
+          3456,
+          1784
+        ],
+        "sourceSha256": "7cbc219a66693eaba04257b51a358c94d844e15d9540d89b7ddd77a6b8ca6fbf",
+        "sha256": "603092e338107b78cf10f5c158c9b9f0efb278d82ce43144a14c709efb6f8be2"
+      },
+      {
+        "file": "navigation-browser.png",
+        "sourceDimensions": [
+          3456,
+          2026
+        ],
+        "cropRectangle": [
+          0,
+          242,
+          3456,
+          2026
+        ],
+        "dimensions": [
+          3456,
+          1784
+        ],
+        "sourceSha256": "504812ff44346f34a155a6b9ce08bb2ea283979e27c70cdebdd73807b7d81551",
+        "sha256": "92053d0ac37293d634657046b9d18ba62d15f110c55a3700829d9de1a6ca4ba8"
+      }
+    ],
+    "technicalProofPreparation": "Browser chrome removed with a deterministic crop only; original art files unchanged. Full raw screenshots retained outside the repository for local audit.",
+    "compactPreview": {
+      "file": "preview-hero.jpg",
+      "source": "shelf-community-profile-browser.png raw capture",
+      "rawCropRectangle": [
+        640,
+        400,
+        2810,
+        1815
+      ],
+      "dimensions": [
+        1440,
+        939
+      ],
+      "processing": "crop and proportional Lanczos downscale; no generated or retouched screen content"
+    },
+    "firstRegistrationEntry": "New entry button observed after reload; chooser dialog and its interactions have static/VM checks only."
+  },
+  "unityOrPhone": "not run; no runtime files changed",
+  "assetOriginalByteMatches": 34,
+  "htmlAndCssLocalLinks": "passed; self-contained review directory",
+  "realPhotoUploadOrPublication": "not performed; public upload service not implemented"
+}
