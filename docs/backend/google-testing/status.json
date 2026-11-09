@@ -1,0 +1,26 @@
+{
+  "groupEmail": "pockle-beta-testers@googlegroups.com",
+  "publicGroupUrl": "https://groups.google.com/g/pockle-beta-testers",
+  "ownerAccount": "carlos@zulapp.com",
+  "publicJoinVerified": true,
+  "posting": "owners",
+  "memberList": "owners",
+  "memberEmails": "owners",
+  "groupMembersObserved": 1,
+  "closedTrack": "Alpha",
+  "closedTrackId": "4700851388204598089",
+  "groupBoundAndSaved": true,
+  "feedbackEmail": "support@playpockle.com",
+  "appSetupCompleted": 8,
+  "appSetupTotal": 11,
+  "closedReleasePublished": false,
+  "playOptInLinkEnabled": false,
+  "remaining": [
+    "Content rating",
+    "Data safety",
+    "Store listing assets"
+  ],
+  "reviewerBackupVerified": true,
+  "reviewerInventoryRows": 34,
+  "reviewerFusionRows": 0
+}
