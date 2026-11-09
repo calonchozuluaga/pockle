@@ -42,7 +42,7 @@ namespace Pockle.Tests
             ToyCatalog.TryGetCollectible(WallyCatalog.KelpId, out var kelp); wally = kelp.CollectionId;
             other = ToyCatalog.Collections.First(c => c.Id != wally).Id;
             yield return null;
-            ButtonWithText("Boxes").onClick.Invoke();
+            ButtonWithText("Shop").onClick.Invoke();
             yield return null;
         }
 

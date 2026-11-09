@@ -267,6 +267,13 @@ namespace Pockle.Runtime
 
         // ----- Layout and refresh -----
 
+        private void SetLivingShelfVisible(bool visible)
+        {
+            foreach (var rect in new[] { timeSwitch, scene, momentsCard }) if (rect != null) rect.gameObject.SetActive(visible);
+            if (editShelf != null) editShelf.gameObject.SetActive(visible);
+            if (fuseRow != null) fuseRow.gameObject.SetActive(visible);
+        }
+
         /// <summary>Lays out the switch, scene, moments card and fuse row from <paramref name="y"/>; returns the new y.</summary>
         private float LayoutLivingShelf(float width, float y)
         {
@@ -322,7 +329,7 @@ namespace Pockle.Runtime
         {
             if (scene == null) return;
             SyncLiveShelf();
-            if (page == AppPage.Shelf && shelfArrangeFeature != null && shelfFuseFeature != null)
+            if (page == AppPage.Shelf && ownedShelfLiveView && shelfArrangeFeature != null && shelfFuseFeature != null)
                 foreach (var feature in new[] { shelfArrangeFeature, shelfFuseFeature })
                     if (feature.Art.texture == null)
                         SetPicture(feature.Art, Resources.Load<Texture2D>("UI/Features/" + feature.ArtName) ?? CollectionLook.Banner(feature.FallbackCover));
@@ -363,7 +370,7 @@ namespace Pockle.Runtime
 
             // Neighbours on the open shelf count a day together; friendship deepens at 1, 3 and 7 days and never drops.
             bool befriended = false;
-            if (page == AppPage.Shelf)
+            if (page == AppPage.Shelf && ownedShelfLiveView)
                 for (int row = 0; row < 2; row++)
                     for (int pair = 0; pair < ShelfColumns - 1; pair++)
                     {
@@ -390,7 +397,7 @@ namespace Pockle.Runtime
                 TopCentered(chips[row], new Vector2(0, -(shelfY - sceneSlot * 1.12f - 34)), new Vector2(chipWidth, 30));
                 chips[row].GetComponent<Image>().color = shelfNight ? new Color(1, 1, 1, .16f) : Color.white;
                 chipLabels[row].color = shelfNight ? PockleTheme.OnPlum : Ink;
-                if (page == AppPage.Shelf && foundMoments.Add(moment.Id)) changed = true;
+                if (page == AppPage.Shelf && ownedShelfLiveView && foundMoments.Add(moment.Id)) changed = true;
             }
             sceneHeart.gameObject.SetActive(!shelfNight && chips[1].gameObject.activeSelf);
             if (changed) { PlayerPrefs.SetString(MomentsKey, string.Join(",", foundMoments)); PlayerPrefs.Save(); }
@@ -412,6 +419,7 @@ namespace Pockle.Runtime
 
         private void ReleaseScenePortraits()
         {
+            ReleaseOwnedShelfPortraits();
             foreach (var texture in scenePortraits.Values) if (texture != null) Destroy(texture);
             scenePortraits.Clear();
         }

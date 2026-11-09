@@ -19,7 +19,7 @@ namespace Pockle.Runtime
         private AppPage page => navigator.Current;
         public AppPage CurrentPage => page;
         private GuestProfile profile;
-        public bool StoreVisible => page != AppPage.Play || modal != null && modal.gameObject.activeSelf;
+        public bool StoreVisible => page != AppPage.Play || modal != null && modal.gameObject.activeSelf || AvatarOverlayVisible;
         public event Action<PipVariant> VariantChanged;
         public event Action<string> CollectibleChanged;
         private string selectedCollectibleId = ToyCatalog.PeachId;
@@ -35,7 +35,6 @@ namespace Pockle.Runtime
         private RawImage favoriteGlyph;
         private Text heading, subtitle, playHint, modalTitle, modalText;
         private Button settingsButton, backButton;
-        private Image homeTab, shelfTab, fuseTab, boxesTab, youTab;
         private RectTransform backIcon;
         private RectTransform shelfRoot, boxesRoot, homeRoot, rewardsRoot, socialRoot, profileRoot, settingsRoot, collectionsRoot, collectionRoot;
         private RectTransform personalityRoot, fusionRoot, fusionRevealRoot;
@@ -115,15 +114,10 @@ namespace Pockle.Runtime
             BuildPersonality(); BuildFusion(); BuildShelfPick(); BuildBadges();
             // The Shelf tab's header link to every collection.
             collectionsPill = CreateButton("All collections", safeRoot, Vector2.zero, new Vector2(140, 44), Quiet, () => Navigate(AppPage.Collections), out _, 15);
-            navigation = Rect("Navigation", safeRoot); Surface(navigation, Primary, 38);
-            BuildTab("Home", "Home", () => SelectTab(AppPage.Home), out homeTab);
-            BuildTab("Shelf", "Shelf", () => SelectTab(AppPage.Shelf), out shelfTab);
-            BuildTab("Fuse", "Fuse", () => SelectTab(AppPage.Fusion), out fuseTab); // owner, October 19: kids couldn't find Fuse
-            BuildTab("Boxes", "Box", () => SelectTab(AppPage.Boxes), out boxesTab);
-            BuildTab("You", "You", () => SelectTab(AppPage.Profile), out youTab);
+            BuildNavigation();
             shelfPreviews.SetOcclusion(navigation);
             // Header buttons stay above full-bleed pages, whose content starts at the top of the screen.
-            backButton.transform.SetAsLastSibling(); favoriteToggle.transform.SetAsLastSibling(); collectionsPill.transform.SetAsLastSibling();
+            backButton.transform.SetAsLastSibling(); favoriteToggle.transform.SetAsLastSibling(); collectionsPill.transform.SetAsLastSibling(); avatarButton.SetAsLastSibling();
             // Play hint: a soft milk pill near the bottom, over the toy's stage.
             playHintPill = Rect("Ways to play", safeRoot); Surface(playHintPill, new Color(1, 1, 1, .55f), 20);
             playHintPill.anchorMin = playHintPill.anchorMax = playHintPill.pivot = new Vector2(.5f, 0);
@@ -208,6 +202,7 @@ namespace Pockle.Runtime
         public bool GoBack()
         {
             if (modal.gameObject.activeSelf) { CloseModal(); return true; }
+            if (CloseAvatarOverlayForBack()) return true;
             if (ConfirmVisible) { CloseConfirm(); return true; }
             if (BoxRevealVisible) { BoxRevealBack(); return true; } // on top of everything but dialogs; Back never leaves a reveal half-seen
             if (CheckoutVisible) { CheckoutBack(); return true; } // closes the sheet, except while the store window is open
@@ -238,7 +233,11 @@ namespace Pockle.Runtime
         }
         private void SelectTab(AppPage next)
         {
-            if (page == next) return;
+            // Feature cards may still open these secondary pages through this shared shortcut.
+            // Only the five approved destinations clear navigation history as a main tab.
+            if (!MenuNavigation.IsMainTab(next)) { Navigate(next); return; }
+            if (next == AppPage.Shelf) ResetOwnedShelfView();
+            if (page == next) { if (next == AppPage.Shelf) ApplyPage(StoreVisible); return; }
             bool blocked = StoreVisible; SavePage();
             // Shelf is a real tab root; switching tabs clears the old collection history.
             navigator.SelectTab(next);
@@ -256,10 +255,10 @@ namespace Pockle.Runtime
             bool play = page == AppPage.Play;
             browsing.gameObject.SetActive(!play);
             pageGround.gameObject.SetActive(!play);
-            // Tab pages show the tab bar; pages reached from them show a back button instead.
-            bool tabRoot = page == AppPage.Home || page == AppPage.Shelf || page == AppPage.Fusion || page == AppPage.Boxes || page == AppPage.Profile;
+            // Main destinations have no Back arrow; secondary pages preserve their entry point.
+            bool tabRoot = MenuNavigation.IsMainTab(page);
             bool fullBleed = FullBleed;
-            // Personality and the fusion reveal are focused moments without the tab bar. Fuse is a tab now (October 19), so it keeps it.
+            // Personality and the fusion reveal remain focused moments without the main bar.
             navigation.gameObject.SetActive(!play && (!fullBleed || page == AppPage.Collection));
             playHintPill.gameObject.SetActive(play);
             // On the toy's stage and full-bleed colour fields, header buttons are translucent milk; elsewhere the neutral fill.
@@ -268,7 +267,8 @@ namespace Pockle.Runtime
                 : page == AppPage.FusionReveal ? PockleTheme.FusionGround : PockleTheme.Page;
             collectionsPill.gameObject.SetActive(page == AppPage.Shelf);
             brand.gameObject.SetActive(page == AppPage.Home);
-            avatarButton.gameObject.SetActive(page == AppPage.Home);
+            avatarButton.gameObject.SetActive(!play && page != AppPage.Profile && page != AppPage.Settings
+                && page != AppPage.Badges && page != AppPage.Personality && page != AppPage.FusionReveal);
             settingsButton.gameObject.SetActive(page == AppPage.Profile);
             favoriteToggle.gameObject.SetActive(play);
             backButton.gameObject.SetActive(!tabRoot);
@@ -291,25 +291,19 @@ namespace Pockle.Runtime
                 case AppPage.Fusion:
                     heading.text = "Fuse spares";
                     subtitle.text = "Put two spares together to make a one-of-a-kind toy. It's yours to keep, and it can't be traded."; break;
-                case AppPage.Rewards: heading.text = "Rewards"; subtitle.text = "Walk 1,000 steps for a free box every day."; break;
-                case AppPage.Social: heading.text = "Friends"; subtitle.text = ""; break;
+                case AppPage.Rewards: heading.text = "Walk"; subtitle.text = "A little fresh air. A little surprise to bring home."; break;
+                case AppPage.Social: heading.text = "Community"; subtitle.text = ""; break;
                 case AppPage.Profile: heading.text = ""; subtitle.text = ""; break;
                 case AppPage.Settings: heading.text = "Settings"; subtitle.text = ""; break;
                 case AppPage.Badges: heading.text = "Badges"; subtitle.text = ""; break; // RefreshBadges fills in "N of 15 earned"
-                case AppPage.Boxes: heading.text = "Boxes"; subtitle.text = ServerBoxes ? "Walk to earn free boxes, or pick one to buy." : "Walk for a free box every day, or pick one to buy."; break;
+                case AppPage.Boxes: heading.text = "Shop"; subtitle.text = ServerBoxes ? "Walk to earn free boxes, or pick one to buy." : "Walk for a free box every day, or pick one to buy."; break;
                 case AppPage.Collections: heading.text = "Collections"; subtitle.text = "Meet the little characters for your shelf."; break;
                 case AppPage.Collection:
                     heading.text = ""; subtitle.text = ""; break; // the collection's hero carries its title
                 default: heading.text = StageTitle; subtitle.text = ""; break;
             }
             RefreshFavoriteToggle(); RefreshAvatarButton();
-            StyleTab(homeTab, page == AppPage.Home || page == AppPage.Rewards || page == AppPage.Social);
-            // Collection browsing lives under the Shelf tab.
-            StyleTab(shelfTab, page == AppPage.Shelf || page == AppPage.Collections || page == AppPage.Collection || page == AppPage.ShelfPick
-                || page == AppPage.Personality);
-            StyleTab(fuseTab, page == AppPage.Fusion || page == AppPage.FusionReveal);
-            StyleTab(boxesTab, page == AppPage.Boxes);
-            StyleTab(youTab, page == AppPage.Profile || page == AppPage.Settings || page == AppPage.Badges);
+            RefreshNavigation();
             RefreshShelf(); RefreshProfile(); RefreshSettings(); RefreshWalkingCard(); RefreshHome(); RefreshCollections();
             RefreshPersonality(); RefreshFusion(); if (page == AppPage.FusionReveal) RefreshFusionReveal();
             RefreshShelfPick(); RefreshBadges();
@@ -358,7 +352,8 @@ namespace Pockle.Runtime
         private void Update()
         {
             if (!initialized) return;
-            shelfPreviews?.SetBlocked(modal != null && modal.gameObject.activeSelf);
+            shelfPreviews?.SetBlocked(modal != null && modal.gameObject.activeSelf || AvatarOverlayVisible);
+            if (page == AppPage.Shelf) RefreshVisibleOwnedShelfPortraits();
             if (lastScreenSize.x != Screen.width || lastScreenSize.y != Screen.height || lastSafeArea != Screen.safeArea) ApplySafeArea();
             if (lastLayoutSize != safeRoot.rect.size) { AdaptLayout(); LayoutOnboarding(); }
             UpdateOnboarding();
@@ -373,6 +368,8 @@ namespace Pockle.Runtime
             safeRoot.offsetMin = safeRoot.offsetMax = Vector2.zero;
             modalSafeRoot.anchorMin = safeRoot.anchorMin; modalSafeRoot.anchorMax = safeRoot.anchorMax;
             modalSafeRoot.offsetMin = modalSafeRoot.offsetMax = Vector2.zero;
+            // Insets can move without changing the safe rectangle size. Rebuild the full-width bar too.
+            lastLayoutSize = Vector2.zero;
             LayoutOnboarding();
         }
         private void AdaptLayout()
@@ -391,9 +388,9 @@ namespace Pockle.Runtime
             foreach (var right in new[] { avatarButton, settingsButton.GetComponent<RectTransform>(), favoriteToggle.GetComponent<RectTransform>() })
             { right.anchorMin = right.anchorMax = right.pivot = new Vector2(1, 1); right.anchoredPosition = new Vector2(-left, -16); right.sizeDelta = new Vector2(44, 44); }
             var pill = collectionsPill.GetComponent<RectTransform>();
-            pill.anchorMin = pill.anchorMax = pill.pivot = new Vector2(1, 1); pill.anchoredPosition = new Vector2(-left, -16);
+            pill.anchorMin = pill.anchorMax = pill.pivot = new Vector2(0, 1); pill.anchoredPosition = new Vector2(left, -16);
             pill.sizeDelta = new Vector2(collectionsPill.GetComponentInChildren<Text>().preferredWidth + 36, 44);
-            // Title block: left-aligned, under the header row. You has no title (its profile header is the title).
+            // Title block sits under the header row. Profile carries its own title.
             bool titled = !string.IsNullOrEmpty(heading.text);
             bool subtitled = !string.IsNullOrEmpty(subtitle.text);
             LeftLabel(heading.rectTransform, new Vector2(left, -74), new Vector2(width, 40));
@@ -404,17 +401,9 @@ namespace Pockle.Runtime
             // Full-bleed pages (toy personality, fusion reveal) start at the top edge and draw their own gutters.
             bool fullBleed = FullBleed;
             if (fullBleed) { top = 0; width = size.x; }
-            float viewportHeight = Mathf.Max(30, size.y - top - (tabs ? 0 : 0));
+            LayoutNavigation();
+            float viewportHeight = Mathf.Max(30, size.y - top - (tabs ? NavigationContentHeight : 0));
             TopCentered(browsing, new Vector2(0, -top), new Vector2(width, viewportHeight));
-            // Floating plum tab bar; the scroll area runs beneath it with bottom padding.
-            navigation.anchorMin = navigation.anchorMax = new Vector2(.5f, 0); navigation.pivot = new Vector2(.5f, 0);
-            navigation.anchoredPosition = new Vector2(0, 16); navigation.sizeDelta = new Vector2(Mathf.Min(420, size.x - 24), 76);
-            float navWidth = navigation.sizeDelta.x;
-            // Five tabs, each a big icon over a one-word label (kid-friendly pass, October 19).
-            var tabButtons = new[] { homeTab, shelfTab, fuseTab, boxesTab, youTab };
-            float tabWidth = (navWidth - 12 - 4 * (tabButtons.Length - 1)) / tabButtons.Length;
-            for (int i = 0; i < tabButtons.Length; i++)
-                LeftLabel(tabButtons[i].rectTransform, new Vector2(6 + i * (tabWidth + 4), -6), new Vector2(tabWidth, 64));
             playHintPill.sizeDelta = new Vector2(Mathf.Min(width, 360), 40);
             LayoutStage(size, left, width);
             LayoutCompactHeader(left);
@@ -436,11 +425,12 @@ namespace Pockle.Runtime
                 case AppPage.Badges: height = LayoutBadges(width); break;
                 default: height = LayoutShelf(width); break;
             }
-            // Leave room to scroll the last row clear of the floating tab bar.
-            height += tabs ? 116 : 24;
+            // Content is clipped above the fixed bar; a small trailing gutter keeps its final row comfortable.
+            height += 24;
             content.sizeDelta = new Vector2(0, Mathf.Max(viewportHeight, height));
             content.anchoredPosition = new Vector2(0, Mathf.Clamp(content.anchoredPosition.y, 0, Mathf.Max(0, height - viewportHeight)));
             if (modal.gameObject.activeSelf) LayoutModal();
+            LayoutAvatarOverlay();
         }
 
         // Collection pages are full-bleed too: their painted banner runs to the top edge, under the back button (canvas "Collections, box first").
@@ -657,34 +647,11 @@ namespace Pockle.Runtime
             return button;
         }
 
-        private void BuildTab(string title, string icon, Action click, out Image background)
-        {
-            var button = CreateButton(title, navigation, Vector2.zero, new Vector2(80, 56), PockleTheme.Jelly, click, out background, PockleTheme.SmallSize);
-            SetRadius(background, 22);
-            // Icon above, label below, so five tabs fit the bar; icons are big enough to read without the word.
-            var glyph = AddIcon(button.transform, icon, 28, Ink);
-            glyph.anchorMin = glyph.anchorMax = glyph.pivot = new Vector2(.5f, 1);
-            glyph.anchoredPosition = new Vector2(0, -8);
-            var label = button.GetComponentInChildren<Text>();
-            var lr = label.rectTransform; lr.anchorMin = new Vector2(0, 0); lr.anchorMax = new Vector2(1, 0); lr.pivot = new Vector2(.5f, 0);
-            lr.offsetMin = new Vector2(2, 7); lr.offsetMax = new Vector2(-2, 25);
-        }
-
-        private void StyleTab(Image tab, bool selected)
-        {
-            // Selected: a jelly-pink pill with plum ink. Others: no fill, soft light ink on the plum bar.
-            tab.color = selected ? PockleTheme.Jelly : new Color(1, 1, 1, 0);
-            var tint = selected ? Ink : PockleTheme.OnPlumMuted;
-            tab.GetComponentInChildren<Text>().color = tint;
-            var glyph = tab.GetComponentInChildren<RawImage>();
-            if (glyph != null) glyph.color = tint;
-        }
-
-        /// <summary>Round avatar on Home that opens the profile.</summary>
+        /// <summary>Round avatar on browsing pages that opens Profile without losing the previous page.</summary>
         private RectTransform BuildAvatarButton(Transform parent)
         {
             var button = CreateButton("Your profile", parent, Vector2.zero, new Vector2(44, 44), PockleTheme.FieldPeach,
-                () => SelectTab(AppPage.Profile), out var face, 12);
+                () => Navigate(AppPage.Profile), out var face, 12);
             button.GetComponentInChildren<Text>().enabled = false;
             button.gameObject.AddComponent<Mask>().showMaskGraphic = true;
             var picture = Rect("Avatar", button.transform); Stretch(picture);
@@ -695,9 +662,8 @@ namespace Pockle.Runtime
         private void RefreshAvatarButton()
         {
             if (avatarPortrait == null || profile == null) return;
-            int index = (int)profile.Avatar;
-            avatarPortrait.texture = index >= 0 && index < previews.Length ? previews[index] : null;
-            avatarButton.GetComponent<Image>().color = PockleTheme.FieldFor(profile.AvatarId);
+            avatarPortrait.texture = ProfileAvatarTexture;
+            avatarButton.GetComponent<Image>().color = PockleTheme.FieldPeach;
         }
 
         private void ToggleFavorite()
@@ -753,6 +719,7 @@ namespace Pockle.Runtime
         { if (!focused) { CommitProfile(); PlayerPrefs.Save(); } }
         private void OnDestroy()
         {
+            DisposeAvatarUi();
             CommitProfile();
             shelfPreviews?.Dispose();
             ReleaseScenePortraits(); ReleaseFusion();

@@ -20,9 +20,12 @@ namespace Pockle.Core
             if (next == Current) return false;
             history.Push(Current); Current = next; return true;
         }
+        public static bool IsMainTab(AppPage page) => page == AppPage.Home || page == AppPage.Shelf
+            || page == AppPage.Rewards || page == AppPage.Social || page == AppPage.Boxes;
+
         public void SelectTab(AppPage tab)
         {
-            if (tab != AppPage.Home && tab != AppPage.Shelf && tab != AppPage.Fusion && tab != AppPage.Boxes && tab != AppPage.Profile)
+            if (!IsMainTab(tab))
                 throw new System.ArgumentException("Not a main navigation destination.");
             if (Current == tab) return;
             history.Clear();

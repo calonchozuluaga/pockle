@@ -115,8 +115,10 @@ namespace Pockle.Runtime
         private void SignOut()
         {
             if (account == null) { ShowDialog("Test build", "There's no account to sign out of in this build yet."); return; }
+            HideAccountAvatar();
             account.SignOut(() =>
             {
+                HideAccountAvatar();
                 // Signed out: the sign-in step comes back; the age check already passed on this phone.
                 obTutorialOnly = false; obRenaming = false;
                 ShowOnboardingStep(OnboardingStep.SignIn);
@@ -126,10 +128,15 @@ namespace Pockle.Runtime
         private void DeleteAccount()
         {
             if (account == null) { ShowDialog("Test build", "Account deletion needs a signed-in account, which this build doesn't have yet. You can also ask at playpockle.com/delete-account."); return; }
+            SyncAvatarAccount();
+            string deletingAvatarOwner = avatarService != null ? avatarService.AccountId : null;
             account.RequestDeletion(ok =>
             {
                 if (!ok) { ShowDialog("Couldn't delete right now", "Check your connection and try again, or email privacy@playpockle.com."); return; }
-                ShowDialog("Your account is being deleted", "It will be gone within 30 days. You've been signed out.");
+                bool avatarRemoved = string.IsNullOrEmpty(deletingAvatarOwner) || DeleteAccountAvatar(deletingAvatarOwner);
+                HideAccountAvatar();
+                ShowDialog("Your account is being deleted", "It will be gone within 30 days. You've been signed out." +
+                    (avatarRemoved ? "" : " Your device could not remove its private avatar file; email privacy@playpockle.com for help."));
                 obTutorialOnly = false; obRenaming = false;
                 ShowOnboardingStep(OnboardingStep.SignIn);
                 modal.SetAsLastSibling();

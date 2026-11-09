@@ -1,0 +1,13 @@
+Pockle 1.0 (10) — navigation, shelf and profile
+
+Home, Shelf, Walk, Community and Shop now share a fixed full-width bottom bar with the approved icons. Shelf shows every owned playable Pockle and saved fusion in one grid; filter/search, play directly, or open Live shelf.
+
+Choose from 12 Pockle avatars or a photo, then adjust the crop before saving. Avatar images are private and saved on this device only. They are isolated by signed-in account.
+
+Mystery Mix quote validation, the visible phone status bar and removal of the old About sound button are included.
+
+Check that your collection and fusions remain, navigate back from play, try the end tabs and scroll the shelf to the bottom. Try preset/photo/cancel and restart. On a small screen, check labels and the bottom safe area.
+
+Community Feed, Friends and Exchange currently show coming-soon states. No live trading/social feed or cloud photo upload is enabled.
+
+Purchases remain sandbox tests. Check store-localized prices and odds before confirming. A completed Mix 3/5 purchase must save exactly 3/5 toys and survive restart without recharging or rerolling.

@@ -68,6 +68,7 @@ namespace Pockle.Runtime
         private CollectionVoicePlayer collectionVoice;
         private MomentAudioPlayer momentAudio;
         private ServerWalkingBoxService walkingBoxService;
+        private ProfileAvatarService profileAvatar;
         private AudioClip pressClip;
         private AudioClip releaseClip;
         private AudioClip landingClip;
@@ -175,10 +176,12 @@ namespace Pockle.Runtime
             hud.SetFusionService(new LocalFusionService(collection));
             var accountService=gameObject.AddComponent<SupabaseAccountService>();
             hud.SetAccountService(accountService);
+            profileAvatar = gameObject.AddComponent<ProfileAvatarService>();
+            hud.SetAvatarService(profileAvatar, () => accountService != null ? accountService.UserId : null);
             gameObject.AddComponent<PaidBoxCheckoutService>().Initialize(hud,collection,accountService);
             walkingBoxService = gameObject.AddComponent<ServerWalkingBoxService>();
             walkingBoxService.Initialize(hud,collection,accountService);
-            accountService.Initialize(collection,()=>hud.StartOnboardingIfNeeded()); // UX-050 (Claude): first-run sign-up and tutorial
+            accountService.Initialize(collection,()=> { hud.SyncAvatarAccount(); hud.StartOnboardingIfNeeded(); }); // UX-050 (Claude): first-run sign-up and tutorial
             hud.ResumeSavedFusion();
             if (Application.isEditor || Debug.isDebugBuild) Debug.Log("Pockle fusion ready: persistent same-character fusion, save v" + collection.Progress.Save.Version);
 
@@ -214,6 +217,7 @@ namespace Pockle.Runtime
         private void Update()
         {
             if (toy == null) return;
+            hud.SyncAvatarAccount();
             if (Input.GetKeyDown(KeyCode.Escape) && !hud.GoBack() && Application.platform == RuntimePlatform.Android) Application.Quit();
             SyncInputSuspension(); // Cancel captured/pending gestures before any input is polled.
             if (revealing) UpdateReveal(Time.unscaledDeltaTime);

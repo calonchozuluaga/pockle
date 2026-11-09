@@ -57,15 +57,15 @@ namespace Pockle.Tests
             Assert.That(root.GetComponentsInChildren<RawImage>(true).Count(r => r.transform.parent.name.StartsWith("Bank slot") && r.enabled), Is.EqualTo(2), "each banked box shows its own box art");
             Button("Open your box").onClick.Invoke();
             Assert.That(opened, Is.EqualTo(1));
-            Assert.That(root.GetComponentsInChildren<Button>(true).Any(b => b.name.IndexOf("reroll", StringComparison.OrdinalIgnoreCase) >= 0
-                || b.name.IndexOf("choose", StringComparison.OrdinalIgnoreCase) >= 0), Is.False, "no way to pick or reroll a box's collection");
+            Assert.That(root.GetComponentsInChildren<Button>().Any(b => b.name.IndexOf("reroll", StringComparison.OrdinalIgnoreCase) >= 0
+                || b.name.IndexOf("choose", StringComparison.OrdinalIgnoreCase) >= 0), Is.False, "the walking page exposes no way to pick or reroll a box's collection");
         }
 
         [UnityTest]
         public IEnumerator UnknownCollectionClearsThePreviousBoxPictureUntilTheServerAssignsOne()
         {
             hud.SetWalkingBoxes(View("wally"));
-            Button("Boxes").onClick.Invoke(); yield return null;
+            Button("Shop").onClick.Invoke(); yield return null;
             var card = root.GetComponentsInChildren<Transform>(true).First(t => t.name == "Daily walking box");
             var art = card.Find("Closed box").GetComponent<RawImage>();
             var assigned = art.texture;
@@ -131,7 +131,7 @@ namespace Pockle.Tests
         public IEnumerator WalkingRulesUseTheOneHourDefaultAndRefreshFromTheServerSnapshot()
         {
             hud.SetWalkingBoxes(View());
-            Button("Boxes").onClick.Invoke(); yield return null;
+            Button("Shop").onClick.Invoke(); yield return null;
             Assert.That(Text("Walking box rules"), Does.Contain("1,000 steps earns a box · one every hour · up to 4 a day · 2 can wait"));
             Button("Rules & odds").onClick.Invoke();
             Assert.That(root.GetComponentsInChildren<Text>().Any(t => t.text.Contains("Every 1,000 steps earns a box, one every hour, up to 4 a day. Up to 2 can wait for you")), Is.True);

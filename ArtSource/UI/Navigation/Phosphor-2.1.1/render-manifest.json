@@ -1,0 +1,117 @@
+{
+  "renderer": "macOS AppKit NSImage vector rendering via render-icon.swift",
+  "source": "Phosphor 2.1.1, unchanged pinned SVGs and MIT license",
+  "tint": "currentColor rendered white for Unity tinting; transparent RGBA background",
+  "outputs": [
+    {
+      "source": "house-fill.svg",
+      "source_sha256": "4783cdf0ae5f5ec363df6f77167a41642aac42fe8d73251b9a61232ab43f355d",
+      "output": "Assets/Pockle/Resources/UI/Navigation/house-fill.png",
+      "output_sha256": "d425dbeb9c8ca76c9a653f3fe420a2b0b5ba2579c222570e6e261a2983309548",
+      "size": [
+        256,
+        256
+      ],
+      "painted_pixels": 27468
+    },
+    {
+      "source": "house.svg",
+      "source_sha256": "180e9259e99e23da197b59b19394d006d6a5d33e384cc2b9c8381cb0214a5716",
+      "output": "Assets/Pockle/Resources/UI/Navigation/house.png",
+      "output_sha256": "8ec93778f2cab46e0cdadd8eeb75c7dea02ca58108a6c7d1ae8fbfa427412e4f",
+      "size": [
+        256,
+        256
+      ],
+      "painted_pixels": 12156
+    },
+    {
+      "source": "sneaker-move-fill.svg",
+      "source_sha256": "a832dfeabe92d7b8b60150f44e88995486ab82a35b815f4da96747d01d5c306d",
+      "output": "Assets/Pockle/Resources/UI/Navigation/sneaker-move-fill.png",
+      "output_sha256": "b30692bf426f165622ea7a8cf5f9978ddc6d977fe5c3aa4ab61392c1c08aa1f6",
+      "size": [
+        256,
+        256
+      ],
+      "painted_pixels": 22670
+    },
+    {
+      "source": "sneaker-move.svg",
+      "source_sha256": "5eb0421722132c92faa1024e9a046ac4c933ac19591968548074e323524e16a0",
+      "output": "Assets/Pockle/Resources/UI/Navigation/sneaker-move.png",
+      "output_sha256": "f7429fae2a395b2b6ddedf0a05070a2268a21ec1ffc5e9d010dcb8ea95481790",
+      "size": [
+        256,
+        256
+      ],
+      "painted_pixels": 13117
+    },
+    {
+      "source": "squares-four-fill.svg",
+      "source_sha256": "728b2dbfa447ec3fec54f0f8b3b52cec573c51da00c00a6d73f699027758340c",
+      "output": "Assets/Pockle/Resources/UI/Navigation/squares-four-fill.png",
+      "output_sha256": "5179e2df5e8bb2c86d3d5e080dccc816c2410bcffef320f753b7b9c78d2bc5bb",
+      "size": [
+        256,
+        256
+      ],
+      "painted_pixels": 24928
+    },
+    {
+      "source": "squares-four.svg",
+      "source_sha256": "f70d6b20e08e028ab5b1714077681910a2431092cf7a23b82366ddaec554ab87",
+      "output": "Assets/Pockle/Resources/UI/Navigation/squares-four.png",
+      "output_sha256": "28bc05919ca9da9ad74e6ebb4a568cc96d9d9b9046263ea1d9779e92df43db91",
+      "size": [
+        256,
+        256
+      ],
+      "painted_pixels": 15712
+    },
+    {
+      "source": "storefront-fill.svg",
+      "source_sha256": "c4f89c48138eb0e7269cd8286bb5774135cd5cfd6ea10c588c8c62591353dd83",
+      "output": "Assets/Pockle/Resources/UI/Navigation/storefront-fill.png",
+      "output_sha256": "59104d670a558d4dd1cd3eb0d6a6ec529adc3b631a40d912e039620c7104c848",
+      "size": [
+        256,
+        256
+      ],
+      "painted_pixels": 32285
+    },
+    {
+      "source": "storefront.svg",
+      "source_sha256": "b1e1288fc8b38ddf011dfc23a5f1754d30c296a56d143c67b4ed710ff58d8a62",
+      "output": "Assets/Pockle/Resources/UI/Navigation/storefront.png",
+      "output_sha256": "d83f3d495166cc88dfbbc3da0ae4d31e94e28fba39055f1c23c29f97e5f23e8d",
+      "size": [
+        256,
+        256
+      ],
+      "painted_pixels": 17355
+    },
+    {
+      "source": "users-three-fill.svg",
+      "source_sha256": "aca109558096eca83a60ded74a65b5ab9d341857f0c76f7b89bf93e3bd6df971",
+      "output": "Assets/Pockle/Resources/UI/Navigation/users-three-fill.png",
+      "output_sha256": "eda16a2f81cbf5f323995d81dee25a4a79fd928d219c3c1ab68eedcb7b75a07f",
+      "size": [
+        256,
+        256
+      ],
+      "painted_pixels": 23344
+    },
+    {
+      "source": "users-three.svg",
+      "source_sha256": "0e326e4ef7d1ae16f9988791f68fde7bae513bdc8c06db437cfd55bf13670bcf",
+      "output": "Assets/Pockle/Resources/UI/Navigation/users-three.png",
+      "output_sha256": "e3db5b5cbc7eb71f251a7a4a84e8918dd39bed99dd32bd04f013dc3699721f6b",
+      "size": [
+        256,
+        256
+      ],
+      "painted_pixels": 13034
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "unity": "6000.6.5f1",
+  "nativeDistinctPassed": 153,
+  "runs": [
+    {
+      "file": "fixed-navigation-focused.xml",
+      "start-time": "2026-11-09 17:49:01Z",
+      "total": "153",
+      "passed": "151",
+      "failed": "2",
+      "duration": "214.3456871"
+    },
+    {
+      "file": "fixed-navigation-assertions.xml",
+      "start-time": "2026-11-09 17:53:45Z",
+      "total": "2",
+      "passed": "2",
+      "failed": "0",
+      "duration": "3.8274615"
+    }
+  ],
+  "sourceChecks": {
+    "files": 316,
+    "symbolProfiles": 3,
+    "asmdefs": 5,
+    "assetGuids": 1133,
+    "failures": 0
+  },
+  "portableCore": "passed",
+  "notVerified": [
+    "Physical-phone UI/photo picker/status bar",
+    "Real sandbox Mix purchase and restart",
+    "Full hosted CI",
+    "Live feed/friends/trading or cloud avatars"
+  ],
+  "captures": {
+    "count": 9,
+    "renderer": "Native Unity HUD",
+    "sizes": [
+      [
+        1080,
+        2340
+      ],
+      [
+        960,
+        1704
+      ]
+    ],
+    "safeInsets": "simulated",
+    "preferencesRestored": true,
+    "visualReview": "Inspected all nine captures; selected icons, flat bar, shelf, profile avatars and readable Community unavailable states. Physical OS bars require device acceptance."
+  }
+}

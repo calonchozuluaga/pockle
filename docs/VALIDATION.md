@@ -822,3 +822,12 @@ Not verified: a real sandbox purchase on the owner's phone, actual system status
 ## November 9 — fixed bottom-navigation preview
 
 Docs-only `codex/fixed-navigation-review` uses pinned MIT Phosphor2.1.1 icons, with package integrity verified. JavaScript syntax, self-contained asset links and static/VM checks pass. Native Chrome inspection confirms the three portrait HTML screens, five regular/filled icon pairs, equal Home/Shop highlights and Shelf filtering. Scrolling the Shelf reaches its final row, fusion action and final text above the stationary full-width bar. Proof and exact limits: [UI direction03](ui-direction-review/03/index.html), `verification.json` and `proof/`. No Unity/runtime/Resources change, physical-phone verification or CI rerun is claimed for this design revision.
+
+
+## November 9 — fixed navigation, owned Shelf and private avatars
+
+Branch `codex/fixed-navigation-build` in isolated `/private/tmp/pockle-ios-20261108`, following owner approval of preview03. Native Unity6000.6.5f1 passes **153 distinct focused tests** across navigation, Shelf, avatar/profile/registration, Community, checkout, collection, reveal, walking, onboarding, persistent fusion, paid quote/delivery, account refresh and moment audio. The first run exposed a Button/InputField Selectable initialization collision at `PrototypeHud.Profile.cs:29`; the name is now a plain label opening the verified claim flow. The next run passed151/153; two test assumptions were corrected to compare migrated legacy avatar values and scope walking controls to visible UI. Both focused reruns pass; no unresolved failures. Evidence: `docs/fixed-navigation-build/01/validation.json`.
+
+Full portable Core checks pass. Final source checks pass316 C# files,3 symbol profiles,5 asmdefs and1,133 GUIDs. A source scan run during Unity testing saw its transient InitTestScene; after the runner cleaned up, the final scan passed. These checks do not replace phone acceptance. Device photo picking, status-bar appearance, new sandbox purchases, public social/trading/cloud avatars and full hosted CI remain unverified.
+
+Nine real Unity HUD captures were inspected at1080×2340 and960×1704. The fixed bar, equal selected icons, owned grid, twelve profile images and truthful Community states render correctly. Safe insets are simulated; no OS status-bar screenshot is claimed. Capture fixture preferences were restored and its generated avatar scope removed. Gallery: `docs/fixed-navigation-build/01/index.html`.

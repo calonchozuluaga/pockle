@@ -1,0 +1,69 @@
+{
+  "package": "@phosphor-icons/core",
+  "version": "2.1.1",
+  "license": "MIT",
+  "website": "https://phosphoricons.com/",
+  "repository": "https://github.com/phosphor-icons/core",
+  "tarball": "https://registry.npmjs.org/@phosphor-icons/core/-/core-2.1.1.tgz",
+  "integrity": "sha512-v4ARvrip4qBCImOE5rmPUylOEK4iiED9ZyKjcvzuezqMaiRASCHKcRIuvvxL/twvLpkfnEODCOJp5dM4eZilxQ==",
+  "mapping": {
+    "home": "house",
+    "shelf": "squares-four",
+    "walk": "sneaker-move",
+    "community": "users-three",
+    "shop": "storefront"
+  },
+  "files": [
+    {
+      "destination": "assets/icons/house.svg",
+      "source_entry": "package/assets/regular/house.svg",
+      "sha256": "180e9259e99e23da197b59b19394d006d6a5d33e384cc2b9c8381cb0214a5716"
+    },
+    {
+      "destination": "assets/icons/house-fill.svg",
+      "source_entry": "package/assets/fill/house-fill.svg",
+      "sha256": "4783cdf0ae5f5ec363df6f77167a41642aac42fe8d73251b9a61232ab43f355d"
+    },
+    {
+      "destination": "assets/icons/squares-four.svg",
+      "source_entry": "package/assets/regular/squares-four.svg",
+      "sha256": "f70d6b20e08e028ab5b1714077681910a2431092cf7a23b82366ddaec554ab87"
+    },
+    {
+      "destination": "assets/icons/squares-four-fill.svg",
+      "source_entry": "package/assets/fill/squares-four-fill.svg",
+      "sha256": "728b2dbfa447ec3fec54f0f8b3b52cec573c51da00c00a6d73f699027758340c"
+    },
+    {
+      "destination": "assets/icons/sneaker-move.svg",
+      "source_entry": "package/assets/regular/sneaker-move.svg",
+      "sha256": "5eb0421722132c92faa1024e9a046ac4c933ac19591968548074e323524e16a0"
+    },
+    {
+      "destination": "assets/icons/sneaker-move-fill.svg",
+      "source_entry": "package/assets/fill/sneaker-move-fill.svg",
+      "sha256": "a832dfeabe92d7b8b60150f44e88995486ab82a35b815f4da96747d01d5c306d"
+    },
+    {
+      "destination": "assets/icons/users-three.svg",
+      "source_entry": "package/assets/regular/users-three.svg",
+      "sha256": "0e326e4ef7d1ae16f9988791f68fde7bae513bdc8c06db437cfd55bf13670bcf"
+    },
+    {
+      "destination": "assets/icons/users-three-fill.svg",
+      "source_entry": "package/assets/fill/users-three-fill.svg",
+      "sha256": "aca109558096eca83a60ded74a65b5ab9d341857f0c76f7b89bf93e3bd6df971"
+    },
+    {
+      "destination": "assets/icons/storefront.svg",
+      "source_entry": "package/assets/regular/storefront.svg",
+      "sha256": "b1e1288fc8b38ddf011dfc23a5f1754d30c296a56d143c67b4ed710ff58d8a62"
+    },
+    {
+      "destination": "assets/icons/storefront-fill.svg",
+      "source_entry": "package/assets/fill/storefront-fill.svg",
+      "sha256": "c4f89c48138eb0e7269cd8286bb5774135cd5cfd6ea10c588c8c62591353dd83"
+    }
+  ],
+  "licenseNormalization": "Original MIT license text retained; CRLF line endings normalized to LF for repository whitespace checks."
+}

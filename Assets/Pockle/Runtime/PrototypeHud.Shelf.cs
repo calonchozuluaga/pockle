@@ -111,7 +111,7 @@ namespace Pockle.Runtime
                 var heart = AddIcon(toyFavoriteBadges[i], "Heart", 16, PockleTheme.Heart); heart.anchoredPosition = Vector2.zero;
             }
 
-            BuildShelfCollections();
+            BuildOwnedShelf();
             shelfEmpty = Rect("Nothing in this view", shelfRoot);
             shelfEmptyText = Label("", shelfEmpty, PockleTheme.BodySize, MutedInk, FontStyle.Normal, TextAnchor.UpperCenter, Vector2.zero, Vector2.zero);
             Stretch(shelfEmptyText.rectTransform);
@@ -135,14 +135,11 @@ namespace Pockle.Runtime
 
         private float LayoutShelf(float width)
         {
-            // Live shelf first, then one card per collection (owner decisions, October 14). The old Pip-only grid and its
-            // Everything / Missing / Duplicates switch are retired from this page: spares show as ×N on the slots, and the
-            // full lineup lives on each collection's page.
-            float y = LayoutLivingShelf(width, 0);
+            // The default shelf is every owned finish together. The living scene remains an explicit secondary view.
             shelfViews.gameObject.SetActive(false); shelfSection.gameObject.SetActive(false); shelfEmpty.gameObject.SetActive(false);
             foreach (var tile in toyTiles) tile.gameObject.SetActive(false);
-            y = LayoutSavedFusions(width, y);
-            y = LayoutShelfCollections(width, y);
+            SetLivingShelfVisible(ownedShelfLiveView);
+            float y = LayoutOwnedShelf(width);
             TopCentered(shelfRoot, Vector2.zero, new Vector2(width, y + 8));
             RefreshShelf();
             return y + 8;
@@ -179,8 +176,8 @@ namespace Pockle.Runtime
                 shelfViewFaces[i].GetComponentInChildren<Text>().color = selected ? Ink : MutedInk;
             }
             shelfEmptyText.text = shelfView == ShelfView.Missing ? "You've found every finish in this collection. Nice shelf!" : "No duplicates here yet. Spares come from walking boxes.";
-            if (page == AppPage.Shelf && subtitle != null) subtitle.text = ShelfMood();
-            RefreshShelfCollections();
+            RefreshOwnedShelf();
+            if (page == AppPage.Shelf && subtitle != null) subtitle.text = ownedShelfLiveView ? ShelfMood() : "Every toy. One place.";
         }
 
         private void RefreshCollection()

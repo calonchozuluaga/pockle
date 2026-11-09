@@ -116,8 +116,8 @@ namespace Pockle.Runtime
 
             // Your live shelf: a strip of the shelf art with the top row of toys and the moment they share.
             homeShelfTitle = Label("Your live shelf", homeRoot, PockleTheme.HeadingSize, Ink, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, new Vector2(200, 30));
-            homeSeeAll = HeaderLink("See all", () => Navigate(AppPage.Shelf));
-            homeShelfPeek = CreateButton("Live shelf", homeRoot, Vector2.zero, new Vector2(300, 176), SceneDay, () => Navigate(AppPage.Shelf), out var peekFace, 12, false);
+            homeSeeAll = HeaderLink("See all", () => SelectTab(AppPage.Shelf));
+            homeShelfPeek = CreateButton("Live shelf", homeRoot, Vector2.zero, new Vector2(300, 176), SceneDay, OpenLivingShelfView, out var peekFace, 12, false);
             homeShelfPeek.name = "Home live shelf";
             homeShelfPeek.GetComponentInChildren<Text>().enabled = false;
             SetRadius(peekFace, 26);

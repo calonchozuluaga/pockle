@@ -1,8 +1,8 @@
 {
   "version": 1,
   "created": "2026-11-09",
-  "status": "prepared for owner review; not imported into Unity Resources",
-  "review": "All twelve PNGs visually inspected by the authoring agent. Owner approval remains separate.",
+  "status": "Owner approved with UI review03; imported into Unity Resources/UI/Avatars for codex/fixed-navigation-build",
+  "review": "All twelve PNGs visually inspected by the authoring agent and approved by the owner. Source PNG bytes copied unchanged into Resources.",
   "provenance": "Original tool-generated PNG bytes copied unchanged; each output hash matched its tool-generated source. Paths below are repository-relative; generationAsset is a basename for provenance.",
   "assets": [
     {
@@ -185,5 +185,108 @@
       "generationAsset": "exec-579ae03e-d389-48fb-a6d9-bffb770da62e.png",
       "sourceCopyVerified": true
     }
-  ]
+  ],
+  "unityImport": {
+    "date": "2026-11-09",
+    "branch": "codex/fixed-navigation-build",
+    "assets": [
+      {
+        "id": "pip-peach",
+        "resource": "Assets/Pockle/Resources/UI/Avatars/pip-peach.png",
+        "source": "ArtSource/Avatars/01/pip-peach.png",
+        "sha256": "52f309c830be799f692df1c4d793e39b9a3dd7a17ec13d457120989a45a606d5",
+        "unchangedSourceBytes": true,
+        "importMaximumSize": 512
+      },
+      {
+        "id": "pip-moon",
+        "resource": "Assets/Pockle/Resources/UI/Avatars/pip-moon.png",
+        "source": "ArtSource/Avatars/01/pip-moon.png",
+        "sha256": "6b32018a32c658ba1679256ef8dee9c074bb4982f2aedbefeba7da0aebe21b64",
+        "unchangedSourceBytes": true,
+        "importMaximumSize": 512
+      },
+      {
+        "id": "fox",
+        "resource": "Assets/Pockle/Resources/UI/Avatars/fox.png",
+        "source": "ArtSource/Avatars/01/fox.png",
+        "sha256": "ae1175ec9f4a86ff328d09b762533cb58f2a1cb20094da364858a034c540b14f",
+        "unchangedSourceBytes": true,
+        "importMaximumSize": 512
+      },
+      {
+        "id": "axolotl",
+        "resource": "Assets/Pockle/Resources/UI/Avatars/axolotl.png",
+        "source": "ArtSource/Avatars/01/axolotl.png",
+        "sha256": "5f28fcd1a0dcd4f69c2077b10d3f88ec421a51f85233042125611ffa8d41f949",
+        "unchangedSourceBytes": true,
+        "importMaximumSize": 512
+      },
+      {
+        "id": "firb",
+        "resource": "Assets/Pockle/Resources/UI/Avatars/firb.png",
+        "source": "ArtSource/Avatars/01/firb.png",
+        "sha256": "557e0469caf7afe627326bc9862e14a473c70afff751a261292b49ff6aa35821",
+        "unchangedSourceBytes": true,
+        "importMaximumSize": 512
+      },
+      {
+        "id": "coco",
+        "resource": "Assets/Pockle/Resources/UI/Avatars/coco.png",
+        "source": "ArtSource/Avatars/01/coco.png",
+        "sha256": "f505529a9a2596e83134cf550d3ac5701f96be8a524f8388e3c5aa223f43af54",
+        "unchangedSourceBytes": true,
+        "importMaximumSize": 512
+      },
+      {
+        "id": "snowy",
+        "resource": "Assets/Pockle/Resources/UI/Avatars/snowy.png",
+        "source": "ArtSource/Avatars/01/snowy.png",
+        "sha256": "11f86d0e66d829b988c8dae4b708d65a7165924b0347adc804465615e8e10c25",
+        "unchangedSourceBytes": true,
+        "importMaximumSize": 512
+      },
+      {
+        "id": "ginger",
+        "resource": "Assets/Pockle/Resources/UI/Avatars/ginger.png",
+        "source": "ArtSource/Avatars/01/ginger.png",
+        "sha256": "887e9d2549510da86630c123e242dfa795ee0976aed29cf48d17b2d948e6929e",
+        "unchangedSourceBytes": true,
+        "importMaximumSize": 512
+      },
+      {
+        "id": "reiny",
+        "resource": "Assets/Pockle/Resources/UI/Avatars/reiny.png",
+        "source": "ArtSource/Avatars/01/reiny.png",
+        "sha256": "79e931a90f3d937d4fdc679e709999edeeb071549ad7c3a5b091031c87c2bbb7",
+        "unchangedSourceBytes": true,
+        "importMaximumSize": 512
+      },
+      {
+        "id": "guin",
+        "resource": "Assets/Pockle/Resources/UI/Avatars/guin.png",
+        "source": "ArtSource/Avatars/01/guin.png",
+        "sha256": "2217c518f4d2c0461f3a059ab5a31f2cecb904c534556964c1287f29af1355b3",
+        "unchangedSourceBytes": true,
+        "importMaximumSize": 512
+      },
+      {
+        "id": "bundy",
+        "resource": "Assets/Pockle/Resources/UI/Avatars/bundy.png",
+        "source": "ArtSource/Avatars/01/bundy.png",
+        "sha256": "8eca55208eb334cc258c963df2ccf0b36a6c3a1cd4388d19caaae18084a2cbee",
+        "unchangedSourceBytes": true,
+        "importMaximumSize": 512
+      },
+      {
+        "id": "wally",
+        "resource": "Assets/Pockle/Resources/UI/Avatars/wally.png",
+        "source": "ArtSource/Avatars/01/wally.png",
+        "sha256": "f4b9fd729d032b38b060a14be23bb192231fb72d4f424500845d59ad92594cbe",
+        "unchangedSourceBytes": true,
+        "importMaximumSize": 512
+      }
+    ],
+    "settings": "512px maximum, bilinear filtering, clamp wrap, no mipmaps; generated source PNGs unchanged."
+  }
 }

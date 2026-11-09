@@ -16,7 +16,7 @@ internal static class MenuChecks
         Assert(menu.Push(AppPage.Settings) && menu.Scroll == 290, "Settings lost its own scroll position.");
         Assert(!menu.Push(AppPage.Settings), "Repeated taps created duplicate history entries.");
         Assert(menu.Back() && menu.Current == AppPage.Shelf, "Repeated settings tap changed Back behavior.");
-        menu.SelectTab(AppPage.Boxes); menu.SaveScroll(450); menu.SelectTab(AppPage.Profile);
+        menu.SelectTab(AppPage.Boxes); menu.SaveScroll(450); menu.SelectTab(AppPage.Social);
         Assert(menu.Back() && menu.Current == AppPage.Home && !menu.Back(), "Tab changes left a hidden stack of old pages.");
         menu.Push(AppPage.Shelf);
         Assert(menu.Scroll == 127, "Tab navigation erased collection context.");
@@ -53,7 +53,7 @@ internal static class MenuChecks
         rejected = false;
         try { menu.Push((AppPage)999); } catch (ArgumentOutOfRangeException) { rejected = true; }
         Assert(rejected && menu.Current == AppPage.Home && !menu.Back(), "Unknown page damaged Back history.");
-        menu.Push(AppPage.Collection); menu.SelectTab(AppPage.Profile);
+        menu.Push(AppPage.Collection); menu.SelectTab(AppPage.Social);
         Assert(menu.Back() && menu.Current == AppPage.Home && !menu.Back(), "Tab change retained hidden collection history.");
 
         menu.Push(AppPage.Collection); menu.Push(AppPage.Play); menu.SelectTab(AppPage.Shelf);
@@ -61,9 +61,20 @@ internal static class MenuChecks
         menu.SelectTab(AppPage.Shelf);
         Assert(menu.Back() && menu.Current == AppPage.Home && !menu.Back(), "Shelf tab retained hidden collection history.");
 
-        menu.Push(AppPage.Collection); menu.Push(AppPage.Play); menu.SelectTab(AppPage.Fusion);
-        Assert(menu.Current == AppPage.Fusion, "Fuse is not reachable as a main tab.");
-        Assert(menu.Back() && menu.Current == AppPage.Home && !menu.Back(), "Fuse tab retained nested toy history.");
+        menu.Push(AppPage.Collection); menu.Push(AppPage.Play); menu.SelectTab(AppPage.Rewards);
+        Assert(menu.Current == AppPage.Rewards, "Walk is not reachable as a main tab.");
+        Assert(menu.Back() && menu.Current == AppPage.Home && !menu.Back(), "Walk tab retained nested toy history.");
+        foreach (AppPage tab in new[] { AppPage.Home, AppPage.Shelf, AppPage.Rewards, AppPage.Social, AppPage.Boxes })
+            Assert(MenuNavigation.IsMainTab(tab), "An approved main destination is unavailable.");
+        foreach (AppPage secondary in new[] { AppPage.Fusion, AppPage.Profile })
+        {
+            rejected = false;
+            try { menu.SelectTab(secondary); } catch (ArgumentException) { rejected = true; }
+            Assert(rejected && menu.Current == AppPage.Home, "A secondary action became a main tab.");
+            menu.Push(AppPage.Shelf); menu.Push(secondary);
+            Assert(menu.Back() && menu.Current == AppPage.Shelf, "A secondary page lost the originating shelf.");
+            menu.SelectTab(AppPage.Home);
+        }
 
         Assert(ProfileName.Normalize(null!) == "Collector" && ProfileName.Normalize(" \t\n") == "Collector", "An empty display name did not fall back.");
         Assert(ProfileName.Normalize("  Lucía 李  ") == "Lucía 李", "Non-English names or whitespace trimming broke.");

@@ -361,6 +361,7 @@ namespace Pockle.Runtime
             account.SignIn(provider, result =>
             {
                 SetSignInBusy(false);
+                SyncAvatarAccount();
                 if (!OnboardingVisible) return;
                 // A returning player who finished onboarding before (signed out, or a new phone with the same account
                 // after the tutorial) goes straight back in.
@@ -429,9 +430,14 @@ namespace Pockle.Runtime
         private void AcceptName(string name)
         {
             profile.SetName(name);
-            if (profileName != null) profileName.SetTextWithoutNotify(profile.Name);
+            if (profileName != null) profileName.text = profile.Name;
             if (obRenaming) { obRenaming = false; onboarding.gameObject.SetActive(false); RefreshAccountSettings(); return; }
-            // A returning player (signed out, new account) who already did the tutorial doesn't repeat it.
+            // Optional identity choice follows the successful username + backup gate; cancelling cannot undo it.
+            if (!OfferRegistrationAvatar(ContinueAfterAvatar)) ContinueAfterAvatar();
+        }
+
+        private void ContinueAfterAvatar()
+        {
             if (OnboardingState.Completed) { FinishOnboarding(); RefreshAccountSettings(); return; }
             ShowOnboardingStep(OnboardingStep.Tutorial);
         }

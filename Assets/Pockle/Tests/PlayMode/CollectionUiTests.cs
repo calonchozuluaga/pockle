@@ -249,7 +249,7 @@ namespace Pockle.Tests
             Object.Destroy(cover);
             yield return null; yield return null;
             Assert.That(previews.ActiveCount, Is.GreaterThan(0));
-            ButtonWithText("Boxes").onClick.Invoke();
+            ButtonWithText("Shop").onClick.Invoke();
             yield return null;
             Assert.That(previews.ActiveCount, Is.Zero, "Leaving the lineup must release every actor.");
             OpenPipLineup();
@@ -339,16 +339,16 @@ namespace Pockle.Tests
             Assert.AreEqual(AppPage.Home, hud.CurrentPage);
             ButtonWithText("See all").onClick.Invoke();
             yield return null;
-            var portraits = ShelfTilePortraits();
-            Assert.AreEqual(4, portraits.Length, "The live shelf shows four separate rendered toys.");
-            Assert.IsTrue(portraits.All(image => image.texture.width > 0), "Each live-shelf toy has its cut-out portrait.");
+            var tiles = root.GetComponentsInChildren<Button>().Where(b => b.name.StartsWith("Owned toy · ")).ToArray();
+            Assert.AreEqual(4, tiles.Length, "All four owned finishes appear together, without collection folders.");
+            Assert.IsTrue(tiles.All(b => b.interactable));
             PipVariant selected = PipVariant.PeachJelly;
             hud.VariantChanged += choice => selected = choice;
-            ButtonNamed("Slot · " + ToyCatalog.MoonId).onClick.Invoke();
+            ButtonNamed("Owned toy · " + ToyCatalog.MoonId).onClick.Invoke();
             Assert.AreEqual(PipVariant.MoonJelly, selected);
             Assert.IsFalse(hud.StoreVisible, "Selected toy must be available for direct manipulation.");
             hud.GoBack();
-            ButtonWithText("Boxes").onClick.Invoke();
+            ButtonWithText("Shop").onClick.Invoke();
             yield return null;
             var before = (int[])session.Progress.Save.Counts.Clone();
             // November 4: no products are connected, so the launch lineup says "Coming soon" and nothing opens.
@@ -364,27 +364,21 @@ namespace Pockle.Tests
         }
 
         [UnityTest]
-        public IEnumerator FuseIsATabAndHomeHasBigPictureSections()
+        public IEnumerator FiveDestinationsKeepFusionInShelfAndHomeHasBigPictureSections()
         {
             Assert.AreEqual(AppPage.Home, hud.CurrentPage);
             var tabs = root.GetComponentsInChildren<RectTransform>().First(r => r.name == "Navigation").GetComponentsInChildren<Button>();
-            CollectionAssert.AreEqual(new[] { "Home", "Shelf", "Fuse", "Boxes", "You" }, tabs.Select(b => b.GetComponentInChildren<Text>().text).ToArray(),
-                "Five tabs, Fuse in the middle (owner, October 19).");
+            CollectionAssert.AreEqual(new[] { "Home", "Shelf", "Walk", "Community", "Shop" }, tabs.Select(b => b.GetComponentInChildren<Text>().text).ToArray());
             foreach (string word in new[] { "Play", "Fuse", "Boxes", "Badges" })
-                Assert.IsTrue(ButtonNamed("Home feature · " + word).gameObject.activeInHierarchy, word + " has its own big section on Home.");
-
-            ButtonNamed("Home feature · Fuse").onClick.Invoke();
-            yield return null;
+                Assert.IsTrue(ButtonNamed("Home feature · " + word).gameObject.activeInHierarchy);
+            ButtonNamed("Home feature · Fuse").onClick.Invoke(); yield return null;
             Assert.AreEqual(AppPage.Fusion, hud.CurrentPage);
-            Assert.IsTrue(tabs[2].gameObject.activeInHierarchy, "Fuse keeps the tab bar now that it is a tab.");
-            Assert.IsFalse(ButtonNamed("Back", true).gameObject.activeSelf, "A tab page shows the tab bar, not a back button.");
-            tabs[0].onClick.Invoke();
-            ButtonNamed("Home feature · Play").onClick.Invoke();
-            Assert.AreEqual(AppPage.Shelf, hud.CurrentPage);
-            tabs[2].onClick.Invoke();
-            Assert.AreEqual(AppPage.Fusion, hud.CurrentPage, "The Fuse tab opens Fuse from anywhere.");
-            tabs[0].onClick.Invoke();
-            ButtonNamed("Home feature · Badges").onClick.Invoke();
+            Assert.IsTrue(ButtonNamed("Back", true).gameObject.activeSelf, "Fusion is now a detail route with Back.");
+            hud.GoBack(); Assert.AreEqual(AppPage.Home, hud.CurrentPage);
+            ButtonNamed("Home feature · Play").onClick.Invoke(); Assert.AreEqual(AppPage.Shelf, hud.CurrentPage);
+            ButtonNamed("Owned shelf · Fuse").onClick.Invoke(); Assert.AreEqual(AppPage.Fusion, hud.CurrentPage);
+            hud.GoBack(); Assert.AreEqual(AppPage.Shelf, hud.CurrentPage);
+            ButtonWithText("Home").onClick.Invoke(); ButtonNamed("Home feature · Badges").onClick.Invoke();
             Assert.AreEqual(AppPage.Badges, hud.CurrentPage);
         }
 
@@ -435,7 +429,7 @@ namespace Pockle.Tests
             {
                 yield return null; Canvas.ForceUpdateCanvases();
                 CaptureShelfUi(canvas, camera, target, "ui29-home");
-                ButtonWithText("Shelf").onClick.Invoke(); yield return null;
+                ButtonWithText("Shelf").onClick.Invoke(); ButtonNamed("Owned shelf · Live shelf").onClick.Invoke(); yield return null;
                 var arrange = ButtonNamed("Edit shelf");
                 Assert.AreSame(Resources.Load<Texture2D>("UI/Features/FeatureArrange"), arrange.GetComponentsInChildren<RawImage>().Single(image => image.name == "Painting").texture);
                 Assert.That(arrange.GetComponent<RectTransform>().rect.height, Is.GreaterThanOrEqualTo(110));
@@ -479,13 +473,13 @@ namespace Pockle.Tests
         [UnityTest]
         public IEnumerator DailyBoxUiUnlocksAndOnlyGrantsOnce()
         {
-            ButtonWithText("Boxes").onClick.Invoke();
+            ButtonWithText("Shop").onClick.Invoke();
             Assert.IsFalse(ButtonWithText("Walk to unlock").interactable);
             // The Shelf tab is reachable from every tab page, and Back from it returns Home.
             ButtonWithText("Shelf").onClick.Invoke();
             Assert.AreEqual(AppPage.Shelf, hud.CurrentPage);
             Assert.IsTrue(hud.GoBack()); Assert.AreEqual(AppPage.Home, hud.CurrentPage);
-            ButtonWithText("Boxes").onClick.Invoke();
+            ButtonWithText("Shop").onClick.Invoke();
             int grants = 0;
             hud.DailyBoxRequested += () => { if (session.ClaimDaily(out _)) grants++; };
             session.SimulateDailyWalk();
@@ -509,13 +503,13 @@ namespace Pockle.Tests
             var scroll = root.GetComponentInChildren<ScrollRect>();
             float position = Mathf.Max(0, scroll.content.rect.height - scroll.viewport.rect.height) * .5f;
             scroll.content.anchoredPosition = new Vector2(0, position);
-            ButtonNamed("Slot · " + ToyCatalog.MoonId).onClick.Invoke(); // a collection-card slot plays the toy
+            ButtonNamed("Owned toy · " + ToyCatalog.MoonId).onClick.Invoke(); // an owned grid tile goes directly to play
             Assert.AreEqual(AppPage.Play, hud.CurrentPage); Assert.IsFalse(hud.StoreVisible);
             hud.GoBack(); Assert.AreEqual(AppPage.Shelf, hud.CurrentPage);
             Assert.AreEqual(position, scroll.content.anchoredPosition.y, .1f, "Play round trip lost the shelf position.");
             hud.GoBack(); Assert.AreEqual(AppPage.Home, hud.CurrentPage);
             // Settings opens from the gear on You (v2).
-            ButtonWithText("You").onClick.Invoke();
+            ButtonNamed("Your profile").onClick.Invoke();
             ButtonWithText("Settings").onClick.Invoke();
             Assert.AreEqual(AppPage.Settings, hud.CurrentPage); Assert.IsTrue(hud.StoreVisible);
             var volume = root.GetComponentInChildren<Slider>(); volume.value = .42f;
@@ -532,33 +526,35 @@ namespace Pockle.Tests
         public IEnumerator LocalProfilePersistsWithoutPublishingOrGrantingToys()
         {
             var inventory = (int[])session.Progress.Save.Counts.Clone();
-            ButtonWithText("You").onClick.Invoke();
-            var field = root.GetComponentInChildren<InputField>();
-            field.text = "  Lucía 李  "; field.onEndEdit.Invoke(field.text);
-            Assert.AreEqual("Lucía 李", PlayerPrefs.GetString("pockle.profile.local.name"));
-            Assert.IsFalse(field.textComponent.supportRichText);
-            ButtonNamed("Avatar · MOON JELLY").onClick.Invoke();
-            Assert.AreEqual(1, PlayerPrefs.GetInt("pockle.profile.local.avatar"));
+            // GuestProfile legitimately migrates the legacy default when the HUD starts; opening Profile must not change it.
+            int legacyAvatar = PlayerPrefs.GetInt("pockle.profile.local.avatar");
+            string legacyAvatarId = PlayerPrefs.GetString("pockle.profile.local.avatarId");
+            ButtonNamed("Your profile").onClick.Invoke();
+            Assert.IsNull(root.GetComponentInChildren<InputField>(), "Collector names use the account claim flow, not a local text field.");
+            Assert.IsFalse(ButtonNamed("Change collector name").interactable, "No unverified account name claim.");
+            Assert.IsFalse(ButtonNamed("Avatar · pip-moon").interactable, "Avatar changes require a verified account scope.");
+            Assert.AreEqual(legacyAvatar, PlayerPrefs.GetInt("pockle.profile.local.avatar"));
+            Assert.AreEqual(legacyAvatarId, PlayerPrefs.GetString("pockle.profile.local.avatarId"));
             // The favorite is set with the heart while playing a toy (v2).
             Assert.IsTrue(hud.ShowToy(PipVariants.CollectibleId(PipVariant.MoonJelly)));
             ButtonNamed("Favorite").onClick.Invoke();
             Assert.AreEqual(1, PlayerPrefs.GetInt("pockle.profile.local.favorite"));
             hud.GoBack(); hud.GoBack();
             ButtonWithText("Home").onClick.Invoke();
-            Assert.IsTrue(Greets("Lucía 李"));
+            Assert.IsTrue(Greets("Collector"));
             ButtonNamed("Home activity · see all").onClick.Invoke();
             Assert.AreEqual(AppPage.Social, hud.CurrentPage);
             Assert.IsTrue(root.GetComponentsInChildren<Text>().Any(text => text.text.Contains("No public profiles are connected yet")));
-            ButtonWithText("Your friends").onClick.Invoke();
-            Assert.IsTrue(root.GetComponentsInChildren<Text>().Any(text => text.text.Contains("when accounts are ready")));
+            ButtonWithText("Friends").onClick.Invoke();
+            Assert.IsTrue(root.GetComponentsInChildren<Text>().Any(text => text.text.Contains("Friends and shelf visits are coming soon.")));
             CollectionAssert.AreEqual(inventory, session.Progress.Save.Counts);
             Object.Destroy(root); yield return null;
             root = new GameObject("Restarted local profile test");
             hud = root.AddComponent<PrototypeHud>(); hud.Initialize(_ => { }, _ => { }, _ => { });
             yield return null;
-            Assert.IsTrue(Greets("Lucía 李"));
-            ButtonWithText("You").onClick.Invoke();
-            Assert.AreEqual("Lucía 李", root.GetComponentInChildren<InputField>().text);
+            Assert.IsTrue(Greets("Collector"));
+            ButtonNamed("Your profile").onClick.Invoke();
+            Assert.AreEqual("Collector", ButtonNamed("Change collector name").GetComponentInChildren<Text>().text);
         }
 
         [UnityTest]
@@ -584,16 +580,12 @@ namespace Pockle.Tests
             Assert.IsTrue(VisibleText("3 of " + catalogFinishes + " finishes · 5 toys on your shelf"));
             ButtonWithText("See all").onClick.Invoke();
             yield return null; Canvas.ForceUpdateCanvases();
-            Assert.IsTrue(VisibleText("3/15"), "The Pip card counts the toys found.");
+            Assert.IsTrue(VisibleText("3 little friends · 2 extra copies"));
             Assert.IsFalse(VisibleText("Moon Jelly"), "An undiscovered toy's name must not be shown.");
-            var moon = ButtonNamed("Slot · " + ToyCatalog.MoonId);
-            Assert.IsFalse(moon.interactable, "An undiscovered toy cannot be played.");
-            Assert.IsFalse(moon.GetComponentsInChildren<RawImage>().Any(image => image.enabled && image.texture != null), "A missing toy shows no face.");
-            Assert.IsTrue(VisibleText("×3"), "Spares show a count badge on their slot.");
-            var portraits = ShelfTilePortraits();
-            Assert.AreEqual(3, portraits.Length, "Only discovered toys sit on the live shelf.");
+            Assert.IsFalse(root.GetComponentsInChildren<Button>().Any(t => t.name == "Owned toy · " + ToyCatalog.MoonId));
+            Assert.IsTrue(VisibleText("+2 extras"), "Only copies beyond the protected first copy are extras.");
+            Assert.AreEqual(3, root.GetComponentsInChildren<Button>().Count(t => t.name.StartsWith("Owned toy · ")));
             Assert.AreEqual(3, hud.LiveShelf.Count);
-            Assert.IsTrue(ButtonNamed("Open spot 3").gameObject.activeInHierarchy, "Free spots invite you to add a toy.");
             Assert.IsFalse(hud.ShowToy(PipVariants.CollectibleId(PipVariant.MoonJelly)), "An unowned ID must not open play.");
             Assert.IsFalse(hud.ShowToy("moss.velvet-flock"), "A planned collectible without art must not open play.");
             Assert.AreEqual(AppPage.Shelf, hud.CurrentPage);
@@ -678,6 +670,7 @@ namespace Pockle.Tests
         {
             var inventory = session.OwnedCounts.ToDictionary(pair => pair.Key, pair => pair.Value);
             ButtonWithText("Shelf").onClick.Invoke();
+            ButtonNamed("Owned shelf · Live shelf").onClick.Invoke();
             ButtonNamed("Shelf time · day").onClick.Invoke();
             yield return null;
             // Gold, Moon and Peach share the top shelf; Mint starts the bottom one. Each shelf shows its first pair's moment.
@@ -713,6 +706,7 @@ namespace Pockle.Tests
             hud = root.AddComponent<PrototypeHud>(); hud.Initialize(_ => { }, _ => { }, _ => { }); hud.Bind(session); hud.SetFusionService(new LocalFusionService(session));
             yield return null;
             ButtonWithText("Shelf").onClick.Invoke();
+            ButtonNamed("Owned shelf · Live shelf").onClick.Invoke();
             Assert.IsTrue(VisibleText("2 shelf moments found"), "A restart keeps the moments found.");
             CollectionAssert.AreEquivalent(inventory, session.OwnedCounts, "Personalities never change the inventory.");
         }
@@ -735,7 +729,7 @@ namespace Pockle.Tests
             Assert.IsTrue(VisibleText("3 of " + catalogFinishes + " finishes · 8 toys on your shelf"),
                 "Home counts owned finishes across collections; the fusion study adds to toys, not boxed finishes.");
             ButtonWithText("Shelf").onClick.Invoke();
-            ButtonNamed("Shelf feature · Fuse").onClick.Invoke();
+            ButtonNamed("Owned shelf · Fuse").onClick.Invoke();
             ButtonNamed("Spare · " + ToyCatalog.PeachId).onClick.Invoke();
             ButtonNamed("Spare · " + ToyCatalog.MoonId).onClick.Invoke();
             ButtonNamed("Fusion slot · Spare 1").onClick.Invoke(); // take Peach back; Moon is still picked
@@ -750,8 +744,8 @@ namespace Pockle.Tests
             ButtonWithText("Shelf").onClick.Invoke();
             yield return null;
             Assert.IsFalse(root.GetComponentsInChildren<Button>(true).Any(b => b.name == "Shelf collection · " + PipFusionStudies.CollectionId));
-            Assert.IsTrue(ButtonNamed("Saved fusion · " + PipFusionStudies.DuskId).gameObject.activeInHierarchy, "Owned studies show under Fusions.");
-            Assert.AreEqual("Dusk", ButtonNamed("Saved fusion · " + PipFusionStudies.DuskId).GetComponentInChildren<Text>().text);
+            Assert.IsTrue(ButtonNamed("Owned toy · " + PipFusionStudies.DuskId).gameObject.activeInHierarchy, "Owned studies show under Fusions.");
+            Assert.IsTrue(ButtonNamed("Owned toy · " + PipFusionStudies.DuskId).GetComponentsInChildren<Text>().Any(t => t.text == "Dusk"));
             ButtonNamed("All collections").onClick.Invoke();
             Assert.IsFalse(root.GetComponentsInChildren<Button>(true).Any(b => b.name == "Collection · " + PipFusionStudies.CollectionId));
         }
@@ -780,7 +774,7 @@ namespace Pockle.Tests
             hud = root.AddComponent<PrototypeHud>(); hud.Initialize(_ => { }, _ => { }, _ => { }); hud.Bind(session); hud.SetFusionService(new LocalFusionService(session));
             yield return null;
             ButtonWithText("Shelf").onClick.Invoke();
-            ButtonNamed("Shelf feature · Fuse").onClick.Invoke();
+            ButtonNamed("Owned shelf · Fuse").onClick.Invoke();
             yield return null;
             var firstSlot = ButtonNamed("Spare · " + ToyCatalog.PeachId).GetComponent<RectTransform>().anchoredPosition;
             var foxTile = ButtonNamed("Spare · " + fox).GetComponent<RectTransform>();
@@ -817,7 +811,7 @@ namespace Pockle.Tests
             yield return null;
             var inventory = session.OwnedCounts.ToDictionary(pair => pair.Key, pair => pair.Value);
             ButtonWithText("Shelf").onClick.Invoke();
-            ButtonNamed("Shelf feature · Fuse").onClick.Invoke();
+            ButtonNamed("Owned shelf · Fuse").onClick.Invoke();
             Assert.AreEqual(AppPage.Fusion, hud.CurrentPage);
             var fuse = ButtonNamed("Fuse");
             Assert.IsFalse(fuse.interactable, "Fusing needs two spares.");
@@ -870,7 +864,8 @@ namespace Pockle.Tests
         private void OpenPipLineup()
         {
             ButtonWithText("Shelf").onClick.Invoke();
-            ButtonNamed("Shelf collection · pip").onClick.Invoke();
+            ButtonNamed("All collections").onClick.Invoke();
+            ButtonNamed("Collection · pip").onClick.Invoke();
             Assert.AreEqual(AppPage.Collection, hud.CurrentPage);
         }
 
@@ -1047,6 +1042,7 @@ namespace Pockle.Tests
             ButtonWithText("Shelf").onClick.Invoke();
             yield return null;
             Assert.AreEqual(4, hud.LiveShelf.Count, "New toys take free spots automatically.");
+            ButtonNamed("Owned shelf · Live shelf").onClick.Invoke();
             ButtonNamed("Edit shelf").onClick.Invoke();
             Assert.AreEqual(AppPage.ShelfPick, hud.CurrentPage);
             Assert.IsTrue(VisibleText("4 of 6"));
@@ -1073,7 +1069,7 @@ namespace Pockle.Tests
         [UnityTest]
         public IEnumerator BadgeCabinetOpensFromYouAndShowsEarnedAndLockedBadges()
         {
-            ButtonWithText("You").onClick.Invoke();
+            ButtonNamed("Your profile").onClick.Invoke();
             yield return null;
             Assert.IsTrue(VisibleText("0 of 15 earned"), "The You page row counts badges instead of saying \"Coming later\".");
             ButtonWithText("Badges").onClick.Invoke();
@@ -1093,7 +1089,7 @@ namespace Pockle.Tests
             session = root.AddComponent<CollectionSession>(); session.Initialize();
             hud = root.AddComponent<PrototypeHud>(); hud.Initialize(_ => { }, _ => { }, _ => { }); hud.Bind(session); hud.SetFusionService(new LocalFusionService(session));
             yield return null;
-            ButtonWithText("You").onClick.Invoke();
+            ButtonNamed("Your profile").onClick.Invoke();
             Assert.IsTrue(VisibleText("1 of 15 earned"));
             ButtonWithText("Badges").onClick.Invoke();
             yield return null;
