@@ -1360,3 +1360,8 @@ Verified: full portable Core including143 response bundles; **99 distinct native
 
 
 Final local evidence: **99 distinct native tests pass**, full Core passes143 response bundles, source checks324C#/3profiles/5asmdefs/1141GUIDs0fail, diff check clean after restoring only incidental Unity settings/importer changes. Sixteen real HUD/model captures inspected; the last one verifies a partially faded single bubble over the play scene. The capture harness restores its recorded preferences and removes its generated avatar scope. All local HTML image/audio links resolve; browser interaction is not claimed while the Mac is locked. Review mirrored to owner `docs/playtest-feedback-review/01/index.html`. No phone build/installation or real Mix purchase verified. Waiting on the existing questions about payment-sheet timing/error and Mac unlock before SKU/dashboard diagnosis can finish.
+
+
+### November9 — verified feedback branch pushed
+
+Source/review commit `6a90c37` is pushed on `codex/playtest-feedback-11`. All99 focused native cases and the portable/source checks above are the final local evidence; hostedCI, actual Mystery Mix purchase and physical-phone acceptance remain unverified. Review is mirrored to the owner checkout. Main and TestFlight1.0(10) are unchanged. Remaining diagnosis needs the exact Mix error/payment-sheet timing and owner-unlocked browser for store/RevenueCat readback.
