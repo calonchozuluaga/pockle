@@ -1,0 +1,72 @@
+[
+  {
+    "id": "fusion-complete",
+    "seconds": 3.0,
+    "peak": 0.21429443359375,
+    "rms": 0.023804807189726333,
+    "tail100msRms": 0.00013149334538576838,
+    "tail20msRms": 0.000276568042380906,
+    "lastSample": -0.00146484375,
+    "nearFullScaleSamples": 0
+  },
+  {
+    "id": "box-reveal",
+    "seconds": 3.0,
+    "peak": 0.310394287109375,
+    "rms": 0.00632062188559234,
+    "tail100msRms": 0.00022162932474195665,
+    "tail20msRms": 0.00010853505365186617,
+    "lastSample": 0.00018310546875,
+    "nearFullScaleSamples": 0
+  },
+  {
+    "id": "special-reveal",
+    "seconds": 3.0,
+    "peak": 0.480987548828125,
+    "rms": 0.041775232925640296,
+    "tail100msRms": 0.00015779966975938293,
+    "tail20msRms": 0.0003370917640564155,
+    "lastSample": 0.00103759765625,
+    "nearFullScaleSamples": 0
+  },
+  {
+    "id": "steps-1000",
+    "seconds": 3.0,
+    "peak": 0.95159912109375,
+    "rms": 0.07992025544686078,
+    "tail100msRms": 5.705801004474138e-05,
+    "tail20msRms": 4.665033516809234e-05,
+    "lastSample": -6.103515625e-05,
+    "nearFullScaleSamples": 0
+  },
+  {
+    "id": "walking-box-ready",
+    "seconds": 3.0,
+    "peak": 0.363494873046875,
+    "rms": 0.021482312331747865,
+    "tail100msRms": 0.00015035083665802354,
+    "tail20msRms": 0.0003181867201227594,
+    "lastSample": 9.1552734375e-05,
+    "nearFullScaleSamples": 0
+  },
+  {
+    "id": "trade-complete",
+    "seconds": 3.0,
+    "peak": 0.844207763671875,
+    "rms": 0.05654599212676436,
+    "tail100msRms": 8.051798255242773e-05,
+    "tail20msRms": 0.00013854816153845454,
+    "lastSample": -9.1552734375e-05,
+    "nearFullScaleSamples": 0
+  },
+  {
+    "id": "purchase-saved",
+    "seconds": 3.0,
+    "peak": 0.393402099609375,
+    "rms": 0.021719544488393912,
+    "tail100msRms": 6.249006402148468e-05,
+    "tail20msRms": 6.411475312283698e-05,
+    "lastSample": 3.0517578125e-05,
+    "nearFullScaleSamples": 0
+  }
+]
