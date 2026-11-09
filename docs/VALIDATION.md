@@ -817,3 +817,8 @@ Portable Core checks, source checks (308 C# files /3 symbol profiles /5 asmdefs 
 Browser review via a self-contained localhost page verifies Shelf filtering, Community Exchange layout and unavailable-spare guard, all12 avatar images, selection, crop zoom/application and four/five equal-tab navigation. Screenshots and checks are in [UI direction02](ui-direction-review/02/index.html). All examples are clearly labeled sample data; no actual upload, purchase, friend request or trade is sent.
 
 Not verified: a real sandbox purchase on the owner's phone, actual system status-bar contrast/safe areas, native photo pickers on devices, account/HUD/avatar cloud wiring/deletion, live social/trading or a new phone build. Source removal of About's synthetic button is covered by the native UI suites, but phone listening remains untested. UI/avatar art still awaits owner design review.
+
+
+## November 9 — fixed bottom-navigation preview
+
+Docs-only `codex/fixed-navigation-review` uses pinned MIT Phosphor2.1.1 icons, with package integrity verified. JavaScript syntax, self-contained asset links and static/VM checks pass. Native Chrome inspection confirms the three portrait HTML screens, five regular/filled icon pairs, equal Home/Shop highlights and Shelf filtering. Scrolling the Shelf reaches its final row, fusion action and final text above the stationary full-width bar. Proof and exact limits: [UI direction03](ui-direction-review/03/index.html), `verification.json` and `proof/`. No Unity/runtime/Resources change, physical-phone verification or CI rerun is claimed for this design revision.

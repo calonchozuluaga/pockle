@@ -1,0 +1,48 @@
+{
+  "date": "2026-11-09",
+  "scope": "HTML revision03 only; not installed in Unity",
+  "javascriptSyntax": "avatars.js, nav-icons.js, preview.js passed",
+  "logicFixtures": {
+    "navSlots": 5,
+    "destinations": [
+      "Home",
+      "Shelf",
+      "Walk",
+      "Community",
+      "Shop"
+    ],
+    "noAlternativeB": true,
+    "noGlobalFuseTab": true,
+    "selectedIcon": "matching fill form; selected capsule only",
+    "restingIcon": "matching regular form",
+    "profileActiveTab": "none",
+    "comparisonCards": 5,
+    "comparisonIconStates": 10,
+    "allOwned": 12,
+    "fusions": 1,
+    "extrasFinishes": 5,
+    "avatarChoices": 12,
+    "firstRegistration": "12 presets, separate draft, Continue applies choice, Skip uses Peach Pip",
+    "zeroSpareOffer": "agreement and acceptance disabled",
+    "networkOrPersistentBrowserStorage": "none"
+  },
+  "fixedBarImplementation": "Non-scrolling full-width flex sibling below min-height:0 scrolling content; continuous opaque plum safe area. Browser verified final shelf row, fusion action and final copy above fixed bar.",
+  "assetOriginalByteMatches": 34,
+  "htmlCssLocalLinks": "passed; self-contained",
+  "icons": "Pinned Phosphor 2.1.1 regular/fill SVGs; package verification and license recorded by root in assets/icons/provenance.json",
+  "browserRendering": {
+    "browser": "Native Chrome, scoped localhost preview at 80% desktop zoom",
+    "verified": [
+      "Three portrait HTML previews rendered with Phosphor icons and equal labeled tabs",
+      "Fusions filter isolates Sorbet and All owned restores grid",
+      "Shelf scroll reaches last toy row, fusion action and final copy above unchanged bar",
+      "Home and Shop selected states retain matching icon capsule and label alignment at outer edges",
+      "Five regular/fill icon pairs and navigation closeup inspected"
+    ],
+    "proofDirectory": "proof",
+    "screenshots": "Current revision03 screenshots, browser chrome cropped off; no review02 screenshots reused"
+  },
+  "firstRegistrationDialog": "static/VM checks only; no new visual verification",
+  "unityOrPhone": "not run; runtime unchanged",
+  "realSocialUploadTrading": "not implemented; mock data and local image preview only"
+}

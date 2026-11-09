@@ -311,3 +311,8 @@ UX-002/003/025/038/042 follow-up: owner approved the warm UI and moment audition
 UX-014: confirmed native JSON-null parsing failure for Mystery Mix3/5. Deployed a narrow backwards-compatible quote response fix; both packs pass the installed build9 guard in native tests. Actual sandbox payment/restart acceptance remains open. UX-025: obsolete About sound button removed and visible native status bars prepared for the next build; physical-device verification remains.
 
 UX-015/031/017/019: [UI direction02](ui-direction-review/02/index.html) proposes a flat owned Shelf, Walk/Shop actions, equal labeled navigation and a Community home for Feed/Friends/public Exchange. Twelve avatar images and photo/crop concepts are ready for owner review. Local native avatar foundation is tested but unwired; cloud uploads, real friends/feed/trading, HUD integration and phone acceptance remain incomplete. Existing task acceptance checkboxes stay open.
+
+
+### November 9 — approved five destinations, fixed-bar refinement
+
+UX-002/031: owner selected **Home / Shelf / Walk / Community / Shop** and asked for the bar fixed to the bottom. [UI direction03](ui-direction-review/03/index.html) replaces the floating pill with an edge-to-edge plum bar, equal labeled targets and consistent Phosphor regular/filled icons. The content ends above the bar and the home-indicator area shares its background. Browser review passes; Unity integration and device safe-area acceptance remain open. This supersedes the navigation alternatives in review02, without changing task acceptance checkboxes or claiming live social features.
