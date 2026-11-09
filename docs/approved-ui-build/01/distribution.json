@@ -10,7 +10,7 @@
   "ipaBytes": 514355369,
   "ipaSha256": "7608576941b9a16e1fa166998d72b12995609f6ca2a89be59a6b8f4e300bfd23",
   "testFlightGroup": "Pockle owner internal",
-  "groupAssignment": "blocked by owner export-compliance declaration",
+  "groupAssignment": "verified: Pockle owner internal, 1 existing tester",
   "ownerDeviceAcceptance": "not_run",
   "logs": {
     "archive": "/private/tmp/pockle-testflight-archive9-retry.log",
@@ -18,8 +18,12 @@
     "upload": "/private/tmp/pockle-testflight-upload9.log"
   },
   "uploadCompletedLocal": "2026-11-09T09:19:47-07:00",
-  "processing": "build visible in TestFlight; Missing Compliance",
+  "processing": "complete",
   "symbolWarning": "UnityRuntime.framework dSYM missing, UUID B5BCB31B-E424-3C81-A0EE-2EF2ADFA93D7",
   "testNotes": "saved in App Store Connect",
-  "appStoreConnectBuildId": "6592ccb4-5845-451f-b06f-c7d95fd3d76c"
+  "appStoreConnectBuildId": "6592ccb4-5845-451f-b06f-c7d95fd3d76c",
+  "exportCompliance": "completed by owner; no longer blocking testing",
+  "testFlightStatus": "Testing",
+  "distributionVerifiedLocal": "2026-11-09T09:37:44-07:00",
+  "testFlightGroupUrl": "https://appstoreconnect.apple.com/teams/b4649b6e-4146-4a40-a9d6-d1d5a87fb3e2/apps/6830781336/testflight/groups/e702b709-d2b1-4d76-9d1a-649edf891e08/builds"
 }

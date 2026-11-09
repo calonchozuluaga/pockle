@@ -1258,3 +1258,9 @@ The Android v8 shown in the owner's screenshot signed and verifies successfully,
 ### Build 9 browser checkpoint
 
 Owner renewed Apple sign-in. Build 1.0 (9) is visible in TestFlight as Missing Compliance, build ID `6592ccb4-5845-451f-b06f-c7d95fd3d76c`. What to Test was saved successfully. Add Group opens the App Encryption Documentation form before group selection; no group has been assigned yet. The form is open for the owner, who reserves final legal declarations. No declaration was selected or submitted by Codex. Resume with the existing Pockle owner internal group after the owner saves compliance.
+
+## November 9 — build 9 available in TestFlight
+
+Continued the existing release claim on `codex/approved-ui-phone`, application source `21d2d18`; refetched origin/main and reread both handoffs. The owner completed Apple export compliance. Added build 1.0 (9) to the existing **Pockle owner internal** group; the group builds page visibly verifies **Testing**, one existing tester, two available builds (8 and 9). What to Test remains saved. No new testers or invitations, public App Store submission, live purchase, runtime change or credential entry.
+
+Release docs/status updated in `docs/approved-ui-build/01` and `docs/VALIDATION.md`. Owner can update via TestFlight → Pockle → Update. **Verified:** completed group assignment and Testing status in App Store Connect, unchanged uploaded archive identity, docs diff check. **Not verified:** installation or phone acceptance of build 9, new sandbox transactions/walks/audio listening, public trading or authoritative current ownership/edition allocation. Existing 113/113 native tests apply to the unchanged source; no tests rerun for this browser/docs-only completion. UnityRuntime.framework dSYM warning remains nonblocking.

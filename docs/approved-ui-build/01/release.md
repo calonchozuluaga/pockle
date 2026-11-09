@@ -16,7 +16,7 @@ Branch: `codex/approved-ui-phone`. Isolated Unity project: `/private/tmp/pockle-
 
 `index.html` contains 10 real Unity portrait captures from an offline fixture. Prices and inventory in those images are illustrative; no player records or purchases changed.
 
-Native Unity: 113/113 focused PlayMode tests passed. Core portable checks passed. Ten portrait captures completed with saved preferences restored. Native archive and App Store IPA export succeeded. Build 1.0 (9) uploaded on November 9 at 09:19 MST; Apple reported processing started. The owner renewed browser sign-in; build 9 is visible as Missing Compliance and its test notes are saved. Existing owner-group assignment is blocked until the owner completes the open App Encryption Documentation form. The upload succeeded with the existing UnityRuntime.framework dSYM warning.
+Native Unity: 113/113 focused PlayMode tests passed. Core portable checks passed. Ten portrait captures completed with saved preferences restored. Native archive and App Store IPA export succeeded. Build 1.0 (9) uploaded on November 9 at 09:19 MST; Apple reported processing started. The owner completed export compliance. Build 1.0 (9) is now assigned to Pockle owner internal (one existing tester), and its group page visibly reports Testing. What to Test is saved. Install the update through TestFlight; owner device acceptance is still pending. The upload succeeded with the existing UnityRuntime.framework dSYM warning.
 
 ## Test on the phone
 
