@@ -73,3 +73,6 @@ Device verified: Pixel7Pro runs Play build4, not development build. Its private 
 
 
 Owner-authorized reviewer recovery: Pixel user10 “Pockle Review” created, existing Play build4 enabled and user10 selected. MainCarlosuser0 retains installed Pockle with a different private data directory. No data clear/transfer/packageupdate. Owner must complete Android setup and Google sign-in on phone; reviewer backup and playable acceptance are still pending. Return to Carlos using Android user switcher. This is isolated test setup, not a fix for the misleading name-check UI.
+
+
+Latest verified: reviewer LuckySquish21 has1cloudbackup/34rows/0fusions. Sign-in details Complete, approved13+ ranges saved; Non-government and Game/Casual saved. Publicsupportalias+website saved/published after ownerconfirmation; noappreleasepublished. GroupdraftunderCarlosZulappcanuse@googlegroups.com to expose publicjoining; @zulapp.comonlyofferedorganizationjoining. Finalcreationpendingownerapproval, memberlist/postingrestrictedtoowner, noWorkspacepolicychange. ExistingonboardingcodealreadyenforcesMinimumAge13; earlieragegatenewUIrequestshouldbereadastest/alignmentrequest. No all-paid-content reviewer entitlement verified.
