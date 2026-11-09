@@ -120,7 +120,7 @@ namespace Pockle.Runtime
         private void RequestQuote(string offer,string collectionId)
         {
             var product=PaidBoxProducts.Find(offer);
-            if(working||storeOpen||product==null||product.CollectionId!=collectionId||!packages.ContainsKey(offer)||PlayerPrefs.HasKey(PendingKey))
+            if(working||storeOpen||product==null||!product.MatchesCollection(collectionId)||!packages.ContainsKey(offer)||PlayerPrefs.HasKey(PendingKey))
             {hud.SetCheckoutState(null,CheckoutState.Failed);return;}
             StartCoroutine(LoadQuote(offer));
         }
@@ -128,26 +128,37 @@ namespace Pockle.Runtime
         {
             working=true;string owner=user;quoteId=null;quoteProduct=null;string raw=null;bool ok=false;
             yield return Request("quote",JsonUtility.ToJson(new ProductPayload{product_id=product}),(r,s)=>{raw=r;ok=s;});
-            var q=ok?Parse<Quote>(raw):null;
-            var policy=PaidBoxProducts.Find(product);
-            if(owner!=account.UserId||q==null||q.product_id!=product||q.box_count!=policy.Count||q.collection_id!=policy.CollectionId||q.odds==null)
+            var view=ok&&owner==account.UserId&&packages.TryGetValue(product,out var package)?DecodeQuote(raw,product,package.StoreProduct.PriceString):null;
+            if(owner!=account.UserId||view==null)
             {hud.SetCheckoutState(null,CheckoutState.Failed);working=false;yield break;}
+            quoteId=view.QuoteId;quoteProduct=product;hud.ShowCheckoutQuote(view);
+            working=false;
+        }
+
+        // Keep wire decoding/validation independently testable with actual SQL quote fixtures.
+        // Store prices remain local and a valid quote never grants inventory or calls the store.
+        internal static CheckoutQuote DecodeQuote(string raw,string product,string price)
+        {
+            var q=Parse<Quote>(raw);
+            var policy=PaidBoxProducts.Find(product);
+            if(policy==null||q==null||q.product_id!=product||q.box_count!=policy.Count||!policy.MatchesCollection(q.collection_id)||q.odds==null)return null;
             var groups=new List<CheckoutOddsGroup>();
             foreach(var group in q.odds)
             {
+                if(group==null)return null;
                 var rows=new List<CheckoutOddsRow>();
-                if(group.rows!=null)foreach(var row in group.rows)rows.Add(new CheckoutOddsRow{Tier=RarityLook.FromTier((ToyTier)row.tier),Percent=row.percent});
+                if(group.rows!=null)foreach(var row in group.rows)
+                {if(row==null)return null;rows.Add(new CheckoutOddsRow{Tier=RarityLook.FromTier((ToyTier)row.tier),Percent=row.percent});}
                 var contents=new List<CheckoutContentsItem>();
-                if(group.contents!=null)foreach(var item in group.contents)contents.Add(new CheckoutContentsItem{CollectibleId=item.collectible_id,
-                    Tier=RarityLook.FromTier((ToyTier)item.tier),Percent=item.percent,WithinCollectionPercent=item.within_collection_percent});
+                if(group.contents!=null)foreach(var item in group.contents)
+                {if(item==null)return null;contents.Add(new CheckoutContentsItem{CollectibleId=item.collectible_id,
+                    Tier=RarityLook.FromTier((ToyTier)item.tier),Percent=item.percent,WithinCollectionPercent=item.within_collection_percent});}
                 groups.Add(new CheckoutOddsGroup{CollectionId=group.collection_id,CollectionPercent=policy.CollectionId==null?(double?)group.collection_percent:null,Rows=rows,Contents=contents});
             }
-            var view=new CheckoutQuote{QuoteId=q.quote_id,OfferId=product,CollectionId=q.collection_id,BoxCount=q.box_count,
+            var view=new CheckoutQuote{QuoteId=q.quote_id,OfferId=product,CollectionId=policy.CollectionId,BoxCount=q.box_count,
                 Kind=policy.CollectionId==null?CheckoutOfferKind.MysteryMix:CheckoutOfferKind.CollectionBox,
-                LocalizedPrice=packages[product].StoreProduct.PriceString,Odds=groups,Notes=q.notes};
-            if(view.Complete){quoteId=q.quote_id;quoteProduct=product;hud.ShowCheckoutQuote(view);}
-            else hud.SetCheckoutState(null,CheckoutState.Failed);
-            working=false;
+                LocalizedPrice=price,Odds=groups,Notes=q.notes};
+            return view.Complete?view:null;
         }
         private void Confirm(string id)
         {

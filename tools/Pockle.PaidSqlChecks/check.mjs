@@ -82,8 +82,12 @@ try {
   await pg.exec("delete from pockle_private.paid_box_finishes where id='retired.test'");
   await pg.exec(sync);
 
+  const quoteFixtures = [];
   for (const id of client.products) {
     const q = await quote(id), all = q.odds.flatMap(g => g.contents);
+    quoteFixtures.push({...q,quote_id:'fixture-'+id});
+    assert(q.collection_id === (id.includes('.mix.') ? null : id.split('.')[2]), `Wrong optional collection identity: ${id}`);
+    assert(q.box_count === (id.includes('.mix.') ? Number(id.split('.')[2]) : 1), `Wrong box count: ${id}`);
     assert(q.quote_id && all.length === (id.includes('.mix.') ? 165 : 15), `Incomplete contents: ${id}`);
     assert(q.odds.every(g => g.contents.every(i => matchesClient(i, g.collection_id))), `Client would reject quote: ${id}`);
     assert(new Set(all.map(i => i.collectible_id)).size === all.length, 'Duplicate disclosed finish');
@@ -96,6 +100,12 @@ try {
         .reduce((sum,i) => sum+i.within_collection_percent,0)-r.percent) < 1e-7, 'Contents tier probability mismatch');
       if (id.includes('.mix.')) assert(g.contents.every(i => Math.abs(i.percent-i.within_collection_percent*g.collection_percent/100) < 1e-7), 'Mix collection chance missing');
     }
+  }
+  // Optional bridge to the native Unity JsonUtility regression suite. This contains only
+  // deterministic local catalog/odds fixtures, never account IDs, sessions or purchases.
+  if (process.env.POCKLE_QUOTE_FIXTURE_DIR) {
+    await fs.mkdir(process.env.POCKLE_QUOTE_FIXTURE_DIR,{recursive:true});
+    for (const q of quoteFixtures) await fs.writeFile(`${process.env.POCKLE_QUOTE_FIXTURE_DIR}/${q.product_id}.json`,JSON.stringify(q,null,2)+'\n');
   }
   assert((await call('deliveries')).deliveries.length === 1, 'Browsing granted a toy');
   const payload = {...oldPayload, product_id:'pockle.mix.5.v1', transaction_id:'verified-1'};

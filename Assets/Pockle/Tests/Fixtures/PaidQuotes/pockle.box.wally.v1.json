@@ -1,0 +1,127 @@
+{
+  "odds": [
+    {
+      "rows": [
+        {
+          "tier": 0,
+          "percent": 88
+        },
+        {
+          "tier": 1,
+          "percent": 8
+        },
+        {
+          "tier": 2,
+          "percent": 3
+        },
+        {
+          "tier": 3,
+          "percent": 1
+        }
+      ],
+      "contents": [
+        {
+          "tier": 0,
+          "percent": 9.777777777777779,
+          "collectible_id": "wally.boucle-plush",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 9.777777777777779,
+          "collectible_id": "wally.clear-jelly",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 9.777777777777779,
+          "collectible_id": "wally.confetti-gel",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 9.777777777777779,
+          "collectible_id": "wally.gloss-vinyl",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 9.777777777777779,
+          "collectible_id": "wally.kelp-mint",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 9.777777777777779,
+          "collectible_id": "wally.matte-vinyl",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 9.777777777777779,
+          "collectible_id": "wally.mochi-foam",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 9.777777777777779,
+          "collectible_id": "wally.pearl-jelly",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 9.777777777777779,
+          "collectible_id": "wally.velvet-flock",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 1,
+          "percent": 2.6666666666666665,
+          "collectible_id": "wally.coated-metallic",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 1,
+          "percent": 2.6666666666666665,
+          "collectible_id": "wally.rose-gold-shell",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 1,
+          "percent": 2.6666666666666665,
+          "collectible_id": "wally.treasure-leaf",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 2,
+          "percent": 1.5,
+          "collectible_id": "wally.diamond-frost",
+          "within_collection_percent": 1.5
+        },
+        {
+          "tier": 2,
+          "percent": 1.5,
+          "collectible_id": "wally.glow-jelly",
+          "within_collection_percent": 1.5
+        },
+        {
+          "tier": 3,
+          "percent": 1,
+          "collectible_id": "wally.molten-abyss",
+          "within_collection_percent": 1
+        }
+      ],
+      "collection_id": "wally",
+      "collection_percent": null
+    }
+  ],
+  "notes": [
+    "Internal sandbox test. No production editions are issued.",
+    "Collections in a Mystery Mix are equally likely; duplicates are possible.",
+    "No completion boost is applied in this test."
+  ],
+  "quote_id": "fixture-pockle.box.wally.v1",
+  "box_count": 1,
+  "product_id": "pockle.box.wally.v1",
+  "collection_id": "wally"
+}

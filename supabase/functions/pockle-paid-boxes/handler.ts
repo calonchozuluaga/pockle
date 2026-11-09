@@ -29,7 +29,17 @@ export async function handlePaid(req: Request,env: Env,request: typeof fetch=fet
   if(!env.revenuecat.startsWith('sk_')||status.available!==true)return reply({error:'checkout_unavailable'},503);
   if(action==='quote') {
    if(!products.has(payload.product_id as string))return reply({error:'invalid_product'},400);
-   return reply(await rpc('quote',{product_id:payload.product_id}));
+   const quote=await rpc('quote',{product_id:payload.product_id});
+   // Unity 6000.6 JsonUtility turns an explicit JSON null string into "", while
+   // an omitted field stays null. Existing build 9 expects null for a Mix's
+   // absent collection. Omit only this optional top-level field; every real
+   // collection identity, item, probability and pack count remains untouched.
+   if((payload.product_id==='pockle.mix.3.v1'||payload.product_id==='pockle.mix.5.v1')
+      &&quote?.product_id===payload.product_id&&quote.collection_id===null) {
+    const {collection_id:_absent,...wireQuote}=quote;
+    return reply(wireQuote);
+   }
+   return reply(quote);
   }
   if(action==='progress')return reply(await rpc('progress',{receipt_id:payload.receipt_id,revealed:payload.revealed,finished:payload.finished===true}));
   // Never accept a client's success flag, transaction, store, environment or awarded toy.

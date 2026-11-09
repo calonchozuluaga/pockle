@@ -13,6 +13,12 @@ namespace Pockle.Core
         public int Count { get; }
         internal PaidBoxProduct(string id, string package, string? collection, int count)
         { Id = id; Package = package; CollectionId = collection; Count = count; }
+
+        /// <summary>Wire serializers may represent an absent optional string as null or empty.
+        /// Only Mystery Mix permits either form; a Collection Box must match its exact approved ID.</summary>
+        public bool MatchesCollection(string? collection)
+            => CollectionId == null ? string.IsNullOrEmpty(collection)
+                : string.Equals(CollectionId, collection, StringComparison.Ordinal);
     }
 
     public static class PaidBoxProducts

@@ -1,0 +1,52 @@
+{
+  "engine": "Unity 6000.6.5f1",
+  "sourceBranch": "codex/mystery-social-review",
+  "run": "initial native quote/UI/avatar integration",
+  "xml": "test-results/mystery-social-native.xml",
+  "xmlSha256": "ad7808914cf28c8ceb9c14ce1290cb7498bf3cbb9914bd44b670eb35ad8b9730",
+  "result": "Passed",
+  "total": 81,
+  "passed": 81,
+  "failed": 0,
+  "skipped": 0,
+  "started": "2026-11-09 17:06:29Z",
+  "ended": "2026-11-09 17:08:43Z",
+  "suites": {
+    "Pockle.Tests.BoxRevealUiTests": {
+      "total": 11,
+      "passed": 11,
+      "failed": 0,
+      "skipped": 0
+    },
+    "Pockle.Tests.CheckoutUiTests": {
+      "total": 18,
+      "passed": 18,
+      "failed": 0,
+      "skipped": 0
+    },
+    "Pockle.Tests.CollectionUiTests": {
+      "total": 30,
+      "passed": 30,
+      "failed": 0,
+      "skipped": 0
+    },
+    "Pockle.Tests.PaidQuoteRuntimeTests": {
+      "total": 19,
+      "passed": 19,
+      "failed": 0,
+      "skipped": 0
+    },
+    "Pockle.Tests.ProfileAvatarTests": {
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "nativeWireEvidence": {
+    "MixOptionalCollectionMatchesProductAfterUnityDecode(\"null\")": "Wire collection_id=null; Unity decoded string length 0",
+    "MixOptionalCollectionMatchesProductAfterUnityDecode(\"\\\"\\\"\")": "Wire collection_id=\"\"; Unity decoded string length 0",
+    "MixOptionalCollectionMatchesProductAfterUnityDecode(\"missing\")": "Wire collection_id=missing; Unity decoded null"
+  },
+  "scope": "Local fixtures only. No accounts, purchases, live writes or deployment. Subsequent Edge-compatibility test and avatar follow-ups need their own recorded results."
+}

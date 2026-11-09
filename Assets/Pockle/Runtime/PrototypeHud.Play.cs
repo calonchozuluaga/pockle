@@ -68,8 +68,8 @@ namespace Pockle.Runtime
         private const string EnvironmentKeyPrefix = "pockle.stage.environment.v1.";
         private const float WorldTileWidth = 84, WorldTileHeight = 104, WorldTileRadius = 18;
         // About tab.
-        private Text aboutSummary, aboutLine, aboutVoiceLabel;
-        private Button aboutVoice, aboutMeet;
+        private Text aboutSummary, aboutLine;
+        private Button aboutMeet;
         private readonly RectTransform[] aboutChips = new RectTransform[3];
         private readonly Text[] aboutChipTexts = new Text[3];
         private readonly RectTransform[] aboutCards = new RectTransform[3];
@@ -163,9 +163,6 @@ namespace Pockle.Runtime
             var about = stagePanels[AboutTab];
             aboutSummary = Label("", about, PockleTheme.BodySize + 1, Ink, FontStyle.Bold, TextAnchor.MiddleLeft, Vector2.zero, new Vector2(220, 24));
             aboutLine = Label("", about, PockleTheme.SmallSize, MutedInk, FontStyle.Normal, TextAnchor.MiddleLeft, Vector2.zero, new Vector2(220, 18));
-            aboutVoice = CreateButton("Voice", about, Vector2.zero, new Vector2(110, 40), Quiet, () => { personalityId = selectedCollectibleId; PlayVoice(); }, out _, PockleTheme.SmallSize);
-            aboutVoice.name = "Stage voice";
-            aboutVoiceLabel = aboutVoice.GetComponentInChildren<Text>();
             for (int i = 0; i < 3; i++)
             {
                 aboutChips[i] = Rect("Trait", about); Surface(aboutChips[i], Quiet, 14);
@@ -419,7 +416,6 @@ namespace Pockle.Runtime
             {
                 aboutSummary.text = personality.Summary;
                 aboutLine.text = collection.DisplayName + " by nature · " + personality.TouchName;
-                aboutVoiceLabel.text = personality.Voice;
                 for (int i = 0; i < 3; i++)
                 {
                     bool touch = i == 2;
@@ -636,11 +632,9 @@ namespace Pockle.Runtime
             for (int i = 0; i < StageLook.Lights.Length; i++) LeftLabel(lightTiles[i].GetComponent<RectTransform>(), new Vector2(pad + i * (lightWidth + 8), -6), new Vector2(lightWidth, 56));
             LeftLabel(stageLightNote.rectTransform, new Vector2(pad, -72), new Vector2(row, 20));
 
-            // About: summary and voice, trait chips, three reactions, then Meet.
-            float voiceWidth = Mathf.Max(96, aboutVoiceLabel.preferredWidth + 28);
-            LeftLabel(aboutSummary.rectTransform, new Vector2(pad, -2), new Vector2(row - voiceWidth - 8, 24));
-            LeftLabel(aboutLine.rectTransform, new Vector2(pad, -26), new Vector2(row - voiceWidth - 8, 18));
-            LeftLabel(aboutVoice.GetComponent<RectTransform>(), new Vector2(pad + row - voiceWidth, -4), new Vector2(voiceWidth, 40));
+            // About stays informational; character voices belong to the actual toy reactions.
+            LeftLabel(aboutSummary.rectTransform, new Vector2(pad, -2), new Vector2(row, 24));
+            LeftLabel(aboutLine.rectTransform, new Vector2(pad, -26), new Vector2(row, 18));
             float chipX = pad;
             for (int i = 0; i < 3; i++)
             {

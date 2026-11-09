@@ -554,8 +554,6 @@ namespace Pockle.Runtime
         private void ReleaseFusion()
         {
             if (revealTexture != null) { Destroy(revealTexture); revealTexture = null; }
-            foreach (var clip in voiceClips.Values) if (clip != null) Destroy(clip);
-            voiceClips.Clear();
         }
     }
 }

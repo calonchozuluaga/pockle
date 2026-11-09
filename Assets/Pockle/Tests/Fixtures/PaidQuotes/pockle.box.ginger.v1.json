@@ -1,0 +1,127 @@
+{
+  "odds": [
+    {
+      "rows": [
+        {
+          "tier": 0,
+          "percent": 88
+        },
+        {
+          "tier": 1,
+          "percent": 8
+        },
+        {
+          "tier": 2,
+          "percent": 3
+        },
+        {
+          "tier": 3,
+          "percent": 1
+        }
+      ],
+      "contents": [
+        {
+          "tier": 0,
+          "percent": 9.777777777777779,
+          "collectible_id": "ginger.boucle-plush",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 9.777777777777779,
+          "collectible_id": "ginger.clear-jelly",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 9.777777777777779,
+          "collectible_id": "ginger.confetti-gel",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 9.777777777777779,
+          "collectible_id": "ginger.gloss-vinyl",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 9.777777777777779,
+          "collectible_id": "ginger.matte-vinyl",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 9.777777777777779,
+          "collectible_id": "ginger.mochi-foam",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 9.777777777777779,
+          "collectible_id": "ginger.pearl-jelly",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 9.777777777777779,
+          "collectible_id": "ginger.signature-matte",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 9.777777777777779,
+          "collectible_id": "ginger.velvet-flock",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 1,
+          "percent": 2.6666666666666665,
+          "collectible_id": "ginger.coated-metallic",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 1,
+          "percent": 2.6666666666666665,
+          "collectible_id": "ginger.gilded-leaf",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 1,
+          "percent": 2.6666666666666665,
+          "collectible_id": "ginger.rose-gold",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 2,
+          "percent": 1.5,
+          "collectible_id": "ginger.diamond-prism",
+          "within_collection_percent": 1.5
+        },
+        {
+          "tier": 2,
+          "percent": 1.5,
+          "collectible_id": "ginger.glow-jelly",
+          "within_collection_percent": 1.5
+        },
+        {
+          "tier": 3,
+          "percent": 1,
+          "collectible_id": "ginger.secret-edition",
+          "within_collection_percent": 1
+        }
+      ],
+      "collection_id": "ginger",
+      "collection_percent": null
+    }
+  ],
+  "notes": [
+    "Internal sandbox test. No production editions are issued.",
+    "Collections in a Mystery Mix are equally likely; duplicates are possible.",
+    "No completion boost is applied in this test."
+  ],
+  "quote_id": "fixture-pockle.box.ginger.v1",
+  "box_count": 1,
+  "product_id": "pockle.box.ginger.v1",
+  "collection_id": "ginger"
+}

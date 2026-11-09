@@ -18,12 +18,11 @@ namespace Pockle.Runtime
         private RectTransform personalityToy, personalityShadow, personalitySheet, personalityChips, personalityFriendsRow;
         private RawImage personalityPicture;
         private PersonalityMotion personalityMotion;
-        private Button personalityVoice, personalityPlay;
-        private Text personalityEyebrow, personalityName, personalityLine, personalityVoiceLabel;
+        private Button personalityPlay;
+        private Text personalityEyebrow, personalityName, personalityLine;
         private RectTransform personalityReactsHeading, personalityFriendsHeading;
         private Text personalityFriendsNote;
         private readonly List<RectTransform> personalitySparkles = new List<RectTransform>();
-        private AudioSource voiceSource;
 
         // Trait badges: a white circle with a sparkle, then the word, on a soft colour.
         private readonly List<Text> chipTexts = new List<Text>();
@@ -76,10 +75,6 @@ namespace Pockle.Runtime
 
         private void BuildPersonality()
         {
-            personalityVoice = CreateButton("Voice", personalityRoot, Vector2.zero, new Vector2(140, 44), new Color(1, 1, 1, .6f), PlayVoice, out _, 14);
-            personalityVoice.name = "Personality voice";
-            personalityVoiceLabel = personalityVoice.GetComponentInChildren<Text>();
-
             personalityShadow = Rect("Contact shadow", personalityRoot); Surface(personalityShadow, new Color(.59f, .39f, .08f, .18f), 15);
             personalityToy = Rect("Personality toy", personalityRoot);
             var motion = Rect("Personality motion", personalityToy); Stretch(motion); motion.pivot = new Vector2(.5f, SceneBase);
@@ -252,8 +247,6 @@ namespace Pockle.Runtime
             personalityEyebrow.text = ((family != null ? family.DisplayName : "Pip") + series + (number > 0 ? " · No. " + number : "")).ToUpperInvariant();
             personalityEyebrow.color = deep;
             personalityLine.text = personality.Summary + ".";
-            personalityVoiceLabel.text = personality.Voice;
-            personalityVoice.name = "Voice · " + personality.Voice;
             personalityPicture.texture = CutoutPortrait(personalityId); // tilts with its personality, so no square behind it
             personalityMotion.SetStyle(personality.Motion);
             foreach (var sparkle in personalitySparkles) sparkle.gameObject.SetActive(personality.Motion == PersonalityMotionStyle.Show);
@@ -373,9 +366,6 @@ namespace Pockle.Runtime
         {
             const float gutter = 20f;
             float inner = Mathf.Min(width - gutter * 2, 440f), left = (width - inner) / 2;
-            var voice = personalityVoice.GetComponent<RectTransform>();
-            float voiceWidth = Mathf.Max(120, personalityVoiceLabel.preferredWidth + 32);
-            LeftLabel(voice, new Vector2(width - 20 - voiceWidth, -16), new Vector2(voiceWidth, 44));
 
             const float toy = 220f, baseY = 300f;
             LeftLabel(personalityToy, new Vector2(width / 2 - toy / 2, -(baseY + SceneBase * toy - toy)), new Vector2(toy, toy));
@@ -494,36 +484,5 @@ namespace Pockle.Runtime
             return height;
         }
 
-        private void PlayVoice()
-        {
-            if (!soundEnabled || !PersonalityBook.TryGet(personalityId, out var personality)) return;
-            if (voiceSource == null) { voiceSource = gameObject.AddComponent<AudioSource>(); voiceSource.playOnAwake = false; }
-            voiceSource.volume = Mathf.Clamp01(PlayerPrefs.GetFloat("pockle.prototype.soundVolume", 1));
-            voiceSource.PlayOneShot(VoiceClip(personality.VoicePitch));
-        }
-
-        private readonly Dictionary<float, AudioClip> voiceClips = new Dictionary<float, AudioClip>();
-
-        /// <summary>A tiny synthesized two-note chirp, pitched per personality. Local and placeholder, like the toy sounds.</summary>
-        private AudioClip VoiceClip(float pitch)
-        {
-            if (voiceClips.TryGetValue(pitch, out var clip) && clip != null) return clip;
-            const int rate = 22050; int length = (int)(rate * .26f);
-            var samples = new float[length];
-            double phase = 0;
-            for (int i = 0; i < length; i++)
-            {
-                float t = i / (float)rate;
-                float note = t < .12f ? 660f : 880f;
-                phase += 2 * Mathf.PI * note * pitch / rate;
-                float local = t < .12f ? t / .12f : (t - .12f) / .14f;
-                float envelope = Mathf.Sin(Mathf.PI * Mathf.Clamp01(local)) * .35f;
-                samples[i] = (float)System.Math.Sin(phase) * envelope;
-            }
-            clip = AudioClip.Create("Pockle voice " + pitch, length, 1, rate, false);
-            clip.SetData(samples, 0);
-            voiceClips[pitch] = clip;
-            return clip;
-        }
     }
 }

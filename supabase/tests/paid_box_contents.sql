@@ -20,6 +20,8 @@ begin
  select count(*) into before_count from pockle_private.paid_box_deliveries;
  for product in select * from pockle_private.paid_box_products loop
   q:=public.pockle_paid_box_quote(x.u,x.s,'quote',jsonb_build_object('product_id',product.id));
+  assert (q->>'collection_id') is not distinct from product.collection_id,'Quote optional collection identity changed';
+  assert (q->>'box_count')::int=product.box_count,'Quote box count changed';
   total:=0;
   for g in select value from jsonb_array_elements(q->'odds') loop
    assert jsonb_array_length(g->'contents')=(select count(*) from pockle_private.paid_box_finishes where collection_id=g->>'collection_id'),'Incomplete contents';

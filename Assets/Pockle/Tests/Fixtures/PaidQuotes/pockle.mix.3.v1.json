@@ -1,0 +1,1267 @@
+{
+  "odds": [
+    {
+      "rows": [
+        {
+          "tier": 0,
+          "percent": 88
+        },
+        {
+          "tier": 1,
+          "percent": 8
+        },
+        {
+          "tier": 2,
+          "percent": 3
+        },
+        {
+          "tier": 3,
+          "percent": 1
+        }
+      ],
+      "contents": [
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "ginger.boucle-plush",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "ginger.clear-jelly",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "ginger.confetti-gel",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "ginger.gloss-vinyl",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "ginger.matte-vinyl",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "ginger.mochi-foam",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "ginger.pearl-jelly",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "ginger.signature-matte",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "ginger.velvet-flock",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "ginger.coated-metallic",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "ginger.gilded-leaf",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "ginger.rose-gold",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 2,
+          "percent": 0.13636363636363635,
+          "collectible_id": "ginger.diamond-prism",
+          "within_collection_percent": 1.5
+        },
+        {
+          "tier": 2,
+          "percent": 0.13636363636363635,
+          "collectible_id": "ginger.glow-jelly",
+          "within_collection_percent": 1.5
+        },
+        {
+          "tier": 3,
+          "percent": 0.09090909090909091,
+          "collectible_id": "ginger.secret-edition",
+          "within_collection_percent": 1
+        }
+      ],
+      "collection_id": "ginger",
+      "collection_percent": 9.090909090909092
+    },
+    {
+      "rows": [
+        {
+          "tier": 0,
+          "percent": 88
+        },
+        {
+          "tier": 1,
+          "percent": 8
+        },
+        {
+          "tier": 2,
+          "percent": 3
+        },
+        {
+          "tier": 3,
+          "percent": 1
+        }
+      ],
+      "contents": [
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "bundy.boucle-plush",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "bundy.clear-jelly",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "bundy.confetti-gel",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "bundy.gloss-vinyl",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "bundy.matte-vinyl",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "bundy.mochi-foam",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "bundy.pearl-jelly",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "bundy.signature-matte",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "bundy.velvet-flock",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "bundy.coated-metallic",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "bundy.gilded-leaf",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "bundy.rose-gold",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 2,
+          "percent": 0.13636363636363635,
+          "collectible_id": "bundy.diamond-prism",
+          "within_collection_percent": 1.5
+        },
+        {
+          "tier": 2,
+          "percent": 0.13636363636363635,
+          "collectible_id": "bundy.glow-jelly",
+          "within_collection_percent": 1.5
+        },
+        {
+          "tier": 3,
+          "percent": 0.09090909090909091,
+          "collectible_id": "bundy.secret-edition",
+          "within_collection_percent": 1
+        }
+      ],
+      "collection_id": "bundy",
+      "collection_percent": 9.090909090909092
+    },
+    {
+      "rows": [
+        {
+          "tier": 0,
+          "percent": 88
+        },
+        {
+          "tier": 1,
+          "percent": 8
+        },
+        {
+          "tier": 2,
+          "percent": 3
+        },
+        {
+          "tier": 3,
+          "percent": 1
+        }
+      ],
+      "contents": [
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "snowy.boucle-plush",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "snowy.clear-jelly",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "snowy.confetti-gel",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "snowy.gloss-vinyl",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "snowy.matte-vinyl",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "snowy.mochi-foam",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "snowy.pearl-jelly",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "snowy.signature-matte",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "snowy.velvet-flock",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "snowy.coated-metallic",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "snowy.gilded-leaf",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "snowy.rose-gold",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 2,
+          "percent": 0.13636363636363635,
+          "collectible_id": "snowy.diamond-prism",
+          "within_collection_percent": 1.5
+        },
+        {
+          "tier": 2,
+          "percent": 0.13636363636363635,
+          "collectible_id": "snowy.glow-jelly",
+          "within_collection_percent": 1.5
+        },
+        {
+          "tier": 3,
+          "percent": 0.09090909090909091,
+          "collectible_id": "snowy.secret-edition",
+          "within_collection_percent": 1
+        }
+      ],
+      "collection_id": "snowy",
+      "collection_percent": 9.090909090909092
+    },
+    {
+      "rows": [
+        {
+          "tier": 0,
+          "percent": 88
+        },
+        {
+          "tier": 1,
+          "percent": 8
+        },
+        {
+          "tier": 2,
+          "percent": 3
+        },
+        {
+          "tier": 3,
+          "percent": 1
+        }
+      ],
+      "contents": [
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "wally.boucle-plush",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "wally.clear-jelly",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "wally.confetti-gel",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "wally.gloss-vinyl",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "wally.kelp-mint",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "wally.matte-vinyl",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "wally.mochi-foam",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "wally.pearl-jelly",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "wally.velvet-flock",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "wally.coated-metallic",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "wally.rose-gold-shell",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "wally.treasure-leaf",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 2,
+          "percent": 0.13636363636363635,
+          "collectible_id": "wally.diamond-frost",
+          "within_collection_percent": 1.5
+        },
+        {
+          "tier": 2,
+          "percent": 0.13636363636363635,
+          "collectible_id": "wally.glow-jelly",
+          "within_collection_percent": 1.5
+        },
+        {
+          "tier": 3,
+          "percent": 0.09090909090909091,
+          "collectible_id": "wally.molten-abyss",
+          "within_collection_percent": 1
+        }
+      ],
+      "collection_id": "wally",
+      "collection_percent": 9.090909090909092
+    },
+    {
+      "rows": [
+        {
+          "tier": 0,
+          "percent": 88
+        },
+        {
+          "tier": 1,
+          "percent": 8
+        },
+        {
+          "tier": 2,
+          "percent": 3
+        },
+        {
+          "tier": 3,
+          "percent": 1
+        }
+      ],
+      "contents": [
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "axolotl.boucle-plush",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "axolotl.clear-jelly",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "axolotl.confetti-gel",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "axolotl.gloss-vinyl",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "axolotl.matte-vinyl",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "axolotl.mochi-foam",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "axolotl.pearl-jelly",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "axolotl.signature-matte",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "axolotl.velvet-flock",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "axolotl.coated-metallic",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "axolotl.gilded-leaf",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "axolotl.rose-gold",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 2,
+          "percent": 0.13636363636363635,
+          "collectible_id": "axolotl.diamond-prism",
+          "within_collection_percent": 1.5
+        },
+        {
+          "tier": 2,
+          "percent": 0.13636363636363635,
+          "collectible_id": "axolotl.glow-jelly",
+          "within_collection_percent": 1.5
+        },
+        {
+          "tier": 3,
+          "percent": 0.09090909090909091,
+          "collectible_id": "axolotl.secret-edition",
+          "within_collection_percent": 1
+        }
+      ],
+      "collection_id": "axolotl",
+      "collection_percent": 9.090909090909092
+    },
+    {
+      "rows": [
+        {
+          "tier": 0,
+          "percent": 88
+        },
+        {
+          "tier": 1,
+          "percent": 8
+        },
+        {
+          "tier": 2,
+          "percent": 3
+        },
+        {
+          "tier": 3,
+          "percent": 1
+        }
+      ],
+      "contents": [
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "guin.boucle-plush",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "guin.clear-jelly",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "guin.confetti-gel",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "guin.gloss-vinyl",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "guin.matte-vinyl",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "guin.mochi-foam",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "guin.pearl-jelly",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "guin.signature-matte",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "guin.velvet-flock",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "guin.coated-metallic",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "guin.gilded-leaf",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "guin.rose-gold",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 2,
+          "percent": 0.13636363636363635,
+          "collectible_id": "guin.diamond-prism",
+          "within_collection_percent": 1.5
+        },
+        {
+          "tier": 2,
+          "percent": 0.13636363636363635,
+          "collectible_id": "guin.glow-jelly",
+          "within_collection_percent": 1.5
+        },
+        {
+          "tier": 3,
+          "percent": 0.09090909090909091,
+          "collectible_id": "guin.secret-edition",
+          "within_collection_percent": 1
+        }
+      ],
+      "collection_id": "guin",
+      "collection_percent": 9.090909090909092
+    },
+    {
+      "rows": [
+        {
+          "tier": 0,
+          "percent": 88
+        },
+        {
+          "tier": 1,
+          "percent": 8
+        },
+        {
+          "tier": 2,
+          "percent": 3
+        },
+        {
+          "tier": 3,
+          "percent": 1
+        }
+      ],
+      "contents": [
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "fox.boucle-plush",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "fox.clear-jelly",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "fox.confetti-gel",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "fox.gloss-vinyl",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "fox.matte-vinyl",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "fox.mochi-foam",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "fox.pearl-jelly",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "fox.signature-matte",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "fox.velvet-flock",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "fox.coated-metallic",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "fox.gilded-leaf",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "fox.rose-gold",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 2,
+          "percent": 0.13636363636363635,
+          "collectible_id": "fox.diamond-prism",
+          "within_collection_percent": 1.5
+        },
+        {
+          "tier": 2,
+          "percent": 0.13636363636363635,
+          "collectible_id": "fox.glow-jelly",
+          "within_collection_percent": 1.5
+        },
+        {
+          "tier": 3,
+          "percent": 0.09090909090909091,
+          "collectible_id": "fox.secret-edition",
+          "within_collection_percent": 1
+        }
+      ],
+      "collection_id": "fox",
+      "collection_percent": 9.090909090909092
+    },
+    {
+      "rows": [
+        {
+          "tier": 0,
+          "percent": 88
+        },
+        {
+          "tier": 1,
+          "percent": 8
+        },
+        {
+          "tier": 2,
+          "percent": 3
+        },
+        {
+          "tier": 3,
+          "percent": 1
+        }
+      ],
+      "contents": [
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "pip.boucle-plush",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "pip.gloss-vinyl",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "pip.gold-confetti",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "pip.matte-vinyl",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "pip.mint-mochi",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "pip.moon-pearl",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "pip.peach-jelly",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "pip.signature-matte",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "pip.velvet-flock",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "pip.coated-metallic",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "pip.gilded-leaf",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "pip.rose-gold",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 2,
+          "percent": 0.13636363636363635,
+          "collectible_id": "pip.diamond-prism",
+          "within_collection_percent": 1.5
+        },
+        {
+          "tier": 2,
+          "percent": 0.13636363636363635,
+          "collectible_id": "pip.glow-jelly",
+          "within_collection_percent": 1.5
+        },
+        {
+          "tier": 3,
+          "percent": 0.09090909090909091,
+          "collectible_id": "pip.secret-edition",
+          "within_collection_percent": 1
+        }
+      ],
+      "collection_id": "pip",
+      "collection_percent": 9.090909090909092
+    },
+    {
+      "rows": [
+        {
+          "tier": 0,
+          "percent": 88
+        },
+        {
+          "tier": 1,
+          "percent": 8
+        },
+        {
+          "tier": 2,
+          "percent": 3
+        },
+        {
+          "tier": 3,
+          "percent": 1
+        }
+      ],
+      "contents": [
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "firb.boucle-plush",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "firb.clear-jelly",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "firb.confetti-gel",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "firb.gloss-vinyl",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "firb.matte-vinyl",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "firb.mochi-foam",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "firb.pearl-jelly",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "firb.signature-matte",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "firb.velvet-flock",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "firb.coated-metallic",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "firb.gilded-leaf",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "firb.rose-gold",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 2,
+          "percent": 0.13636363636363635,
+          "collectible_id": "firb.diamond-prism",
+          "within_collection_percent": 1.5
+        },
+        {
+          "tier": 2,
+          "percent": 0.13636363636363635,
+          "collectible_id": "firb.glow-jelly",
+          "within_collection_percent": 1.5
+        },
+        {
+          "tier": 3,
+          "percent": 0.09090909090909091,
+          "collectible_id": "firb.secret-edition",
+          "within_collection_percent": 1
+        }
+      ],
+      "collection_id": "firb",
+      "collection_percent": 9.090909090909092
+    },
+    {
+      "rows": [
+        {
+          "tier": 0,
+          "percent": 88
+        },
+        {
+          "tier": 1,
+          "percent": 8
+        },
+        {
+          "tier": 2,
+          "percent": 3
+        },
+        {
+          "tier": 3,
+          "percent": 1
+        }
+      ],
+      "contents": [
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "coco.boucle-plush",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "coco.clear-jelly",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "coco.confetti-gel",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "coco.gloss-vinyl",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "coco.matte-vinyl",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "coco.mochi-foam",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "coco.pearl-jelly",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "coco.signature-matte",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "coco.velvet-flock",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "coco.coated-metallic",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "coco.gilded-leaf",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "coco.rose-gold",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 2,
+          "percent": 0.13636363636363635,
+          "collectible_id": "coco.diamond-prism",
+          "within_collection_percent": 1.5
+        },
+        {
+          "tier": 2,
+          "percent": 0.13636363636363635,
+          "collectible_id": "coco.glow-jelly",
+          "within_collection_percent": 1.5
+        },
+        {
+          "tier": 3,
+          "percent": 0.09090909090909091,
+          "collectible_id": "coco.secret-edition",
+          "within_collection_percent": 1
+        }
+      ],
+      "collection_id": "coco",
+      "collection_percent": 9.090909090909092
+    },
+    {
+      "rows": [
+        {
+          "tier": 0,
+          "percent": 88
+        },
+        {
+          "tier": 1,
+          "percent": 8
+        },
+        {
+          "tier": 2,
+          "percent": 3
+        },
+        {
+          "tier": 3,
+          "percent": 1
+        }
+      ],
+      "contents": [
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "reiny.boucle-plush",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "reiny.clear-jelly",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "reiny.confetti-gel",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "reiny.gloss-vinyl",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "reiny.matte-vinyl",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "reiny.mochi-foam",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "reiny.pearl-jelly",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "reiny.signature-matte",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 0,
+          "percent": 0.8888888888888888,
+          "collectible_id": "reiny.velvet-flock",
+          "within_collection_percent": 9.777777777777779
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "reiny.coated-metallic",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "reiny.gilded-leaf",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 1,
+          "percent": 0.24242424242424243,
+          "collectible_id": "reiny.rose-gold",
+          "within_collection_percent": 2.6666666666666665
+        },
+        {
+          "tier": 2,
+          "percent": 0.13636363636363635,
+          "collectible_id": "reiny.diamond-prism",
+          "within_collection_percent": 1.5
+        },
+        {
+          "tier": 2,
+          "percent": 0.13636363636363635,
+          "collectible_id": "reiny.glow-jelly",
+          "within_collection_percent": 1.5
+        },
+        {
+          "tier": 3,
+          "percent": 0.09090909090909091,
+          "collectible_id": "reiny.secret-edition",
+          "within_collection_percent": 1
+        }
+      ],
+      "collection_id": "reiny",
+      "collection_percent": 9.090909090909092
+    }
+  ],
+  "notes": [
+    "Internal sandbox test. No production editions are issued.",
+    "Collections in a Mystery Mix are equally likely; duplicates are possible.",
+    "No completion boost is applied in this test."
+  ],
+  "quote_id": "fixture-pockle.mix.3.v1",
+  "box_count": 3,
+  "product_id": "pockle.mix.3.v1",
+  "collection_id": null
+}

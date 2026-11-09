@@ -1,0 +1,28 @@
+{
+  "engine": "Unity6000.6.5f1",
+  "xml": "test-results/mystery-social-final-focused.xml",
+  "xmlSha256": "e23ca56ded4e2f823ffdacd792ba04b8262a74139a939fbbc1d4573bdd409522",
+  "result": "Passed",
+  "total": 26,
+  "passed": 26,
+  "failed": 0,
+  "skipped": 0,
+  "started": "2026-11-09 17:12:38Z",
+  "ended": "2026-11-09 17:12:38Z",
+  "suites": {
+    "Pockle.Tests.PaidQuoteRuntimeTests": {
+      "total": 20,
+      "passed": 20
+    },
+    "Pockle.Tests.ProfileAvatarTests": {
+      "total": 6,
+      "passed": 6
+    }
+  },
+  "legacyBuild9Guard": [
+    {
+      "test": "OmittedMixFieldPassesTheInstalledBuild9IdentityGuard",
+      "result": "Passed"
+    }
+  ]
+}

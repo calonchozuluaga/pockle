@@ -59,3 +59,43 @@ Deno.test('quote contents come only from the authenticated server quote RPC',asy
  });
  assert(response.status===200&&quoted);const result=await response.json();assert(result.odds[0].contents[0].percent===11);
 });
+
+Deno.test('Mix quotes omit only the absent top-level collection for installed Unity clients',async()=>{
+ for(const [product,count] of [['pockle.mix.3.v1',3],['pockle.mix.5.v1',5]] as const) {
+  const saved={quote_id:'fixture',product_id:product,box_count:count,collection_id:null,
+   odds:[{collection_id:'fox',collection_percent:100/11,rows:[{tier:0,percent:88}],contents:[{collectible_id:'fox.clear-jelly',tier:0,percent:88/9/11,within_collection_percent:88/9}]}],
+   notes:['server notes']};
+  const calls:string[]=[];
+  const response=await handlePaid(req('quote',{product_id:product}),env,async(input,init)=>{
+   if(String(input).endsWith('/auth/v1/user'))return Response.json(user);
+   const b=JSON.parse(String(init?.body));calls.push(b.action);
+   assert(b.actor===uid&&b.session_id===sid);
+   if(b.action==='status')return Response.json({available:true});
+   assert(String(input).endsWith('/rpc/pockle_paid_box_quote'));
+   assert(b.action==='quote'&&b.payload.product_id===product);return Response.json(saved);
+  });
+  assert(response.status===200);const wire=await response.json();
+  assert(!Object.hasOwn(wire,'collection_id'));
+  const {collection_id:_absent,...expected}=saved;
+  assert(JSON.stringify(wire)===JSON.stringify(expected));
+  // Compare fields explicitly, independent of JSON object-key order.
+  assert(wire.quote_id===saved.quote_id&&wire.product_id===product&&wire.box_count===count);
+  assert(JSON.stringify(wire.odds)===JSON.stringify(saved.odds)&&JSON.stringify(wire.notes)===JSON.stringify(saved.notes));
+  assert(JSON.stringify(calls)==='["status","quote"]');
+ }
+});
+
+Deno.test('compatibility omission never hides a wrong Mix identity or a real collection identity',async()=>{
+ for(const [requested,returned,collection] of [
+  ['pockle.box.fox.v1','pockle.box.fox.v1','fox'],
+  ['pockle.mix.3.v1','pockle.mix.3.v1','fox'],
+  ['pockle.mix.3.v1','pockle.mix.5.v1',null],
+ ]) {
+  const saved={quote_id:'fixture',product_id:returned,collection_id:collection,box_count:3};
+  const response=await handlePaid(req('quote',{product_id:requested}),env,async(input,init)=>{
+   if(String(input).endsWith('/auth/v1/user'))return Response.json(user);
+   return Response.json(JSON.parse(String(init?.body)).action==='status'?{available:true}:saved);
+  });
+  assert(response.status===200);assert(JSON.stringify(await response.json())===JSON.stringify(saved));
+ }
+});

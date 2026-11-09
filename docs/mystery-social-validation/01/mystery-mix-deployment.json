@@ -1,0 +1,51 @@
+{
+  "project": "azdzafotawbrplukeqcl",
+  "function": "pockle-paid-boxes",
+  "before": {
+    "version": 3,
+    "bundleSha256": "4771a30f364a6d4217549f75c4c63f6831f22f64e19a7e2b898bf832a59b6ccb"
+  },
+  "after": {
+    "version": 4,
+    "status": "ACTIVE",
+    "bundleSha256": "055737ae76b7be420a6485c06ec46edd0214b60a99deb8f50f773a6c91bd3a98",
+    "deployedAtUtc": "2026-11-09T17:11:55.275Z"
+  },
+  "change": "Omit only a null top-level collection_id on a matching pockle.mix.3.v1 or pockle.mix.5.v1 quote. Other fields and collection IDs are unchanged.",
+  "readback": {
+    "exactFileContentsMatch": true,
+    "existingIndexAndSharedHelperUnchanged": true,
+    "existingInFunctionAuthChecksPreserved": true,
+    "unauthenticatedMixQuote": {
+      "http": 401,
+      "body": {
+        "error": "unauthenticated"
+      }
+    },
+    "verifyJwt": false,
+    "verifyJwtSettingUnchanged": true
+  },
+  "verification": {
+    "denoHandlerTests": {
+      "passed": 8,
+      "failed": 0
+    },
+    "nativeInitial": "native-initial-81.json",
+    "sql": "Actual Core/server parity for 165 finishes and 13 products; full local migration chain and four SQL suites passed.",
+    "finalNativeCompatibility": "native-final-26.json: 26/26 passed; includes exact installed-build9 guard for both Mix products"
+  },
+  "scope": {
+    "playerMutations": false,
+    "purchases": false,
+    "storeSubmission": false,
+    "otherFunctionsChanged": false,
+    "migrations": false,
+    "serverFixSupportsInstalledBuild9": true,
+    "ownerDeviceAcceptance": "not_run"
+  },
+  "sourcesReviewed": [
+    "https://supabase.com/changelog",
+    "https://supabase.com/docs/guides/database/functions"
+  ],
+  "notes": "Current Supabase changelog's Flutter/Dart breaking change does not affect this Unity/raw HTTP integration. Native Unity6000.6.5f1 proved explicit JSON null becomes an empty string but an omitted string remains null; build9's direct equality guard rejected the former."
+}
