@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
+using Pockle.Core;
 
 namespace Pockle.Editor
 {
@@ -20,6 +21,12 @@ namespace Pockle.Editor
             if (!string.IsNullOrEmpty(requested) && (!int.TryParse(requested, out code) || code < 1))
                 throw new InvalidOperationException("POCKLE_PLAY_BUILD_NUMBER must be positive.");
             var flags = new Dictionary<string, byte[]>();
+            const string channelPath = "Assets/Pockle/Resources/Backend/CheckoutBuildChannel.txt";
+            byte[] originalChannel = File.ReadAllBytes(channelPath);
+            string community = Environment.GetEnvironmentVariable("POCKLE_PLAY_COMMUNITY_BETA");
+            if (!string.IsNullOrEmpty(community) && community != "1" && community != "0")
+                throw new InvalidOperationException("POCKLE_PLAY_COMMUNITY_BETA must be 0 or 1.");
+            string channel = community == "1" ? CheckoutBuildPolicy.CommunityBeta : CheckoutBuildPolicy.OwnerSandbox;
             string originalVersion = PlayerSettings.bundleVersion;
             var platform = NamedBuildTarget.Android;
             string originalId = PlayerSettings.GetApplicationIdentifier(platform);
@@ -33,6 +40,8 @@ namespace Pockle.Editor
             int originalCode = PlayerSettings.Android.bundleVersionCode;
             try
             {
+                File.WriteAllText(channelPath, channel + "\n");
+                AssetDatabase.ImportAsset(channelPath, ImportAssetOptions.ForceSynchronousImport);
                 foreach (string file in Directory.GetFiles("Assets/Pockle/Resources", "*OwnerTest*.txt", SearchOption.TopDirectoryOnly))
                 {
                     flags.Add(file, File.ReadAllBytes(file));
@@ -60,10 +69,12 @@ namespace Pockle.Editor
                 });
                 if (report.summary.result != BuildResult.Succeeded)
                     throw new Exception("Play bootstrap bundle failed: " + report.summary.result);
-                Debug.Log("POCKLE_PLAY_BOOTSTRAP_AAB_OK:" + output);
+                Debug.Log("POCKLE_PLAY_BOOTSTRAP_AAB_OK:" + output + " channel=" + channel);
             }
             finally
             {
+                File.WriteAllBytes(channelPath, originalChannel);
+                AssetDatabase.ImportAsset(channelPath, ImportAssetOptions.ForceSynchronousImport);
                 PlayerSettings.bundleVersion = originalVersion;
                 foreach (var flag in flags)
                 {

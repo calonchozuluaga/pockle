@@ -864,3 +864,8 @@ Unchanged source6a90c37 (existing99focusednative/Core/source evidence) exported 
 ### November9 — TestFlight11 delivery complete
 
 Owner saved export compliance. AppStore groupPockleownerinternal (existingone tester) visibly lists1.0(11)Testing. No new invitations/publicsubmission; physical-phone acceptance remains pending. Google listing declaration saved by owner; currentdashboard unblocksclosedreleasepreview/submission but no closedrollout/opt-in yet. Unchangedsource6a90c37 retains99focusednative/Core/source evidence; no tests rerun for release-only changes.
+
+
+### November9 — Android community beta checkout guard
+
+Android-symbol pinnedUnity6000.6.5f1 PlayMode57/57 pass: CheckoutSchedulingRuntimeTests (including blockednewquote/cachedconfirmation and preservedpendingrecovery), PaidDeliveryRuntimeTests, PaidQuoteRuntimeTests for13products, CheckoutUiTests and WalkingBoxUiTests. XMLtest-results/community-checkout.xml; log/private/tmp/pockle-community-unity.log. FullCorepasses including strictchannelpolicy andexistingreplay/restartchecks; Source325C#/3profiles/5asmdefs/1143GUIDs0fail. No realcheckout/purchase or backendmutation used. CommunityAndroid9artifact/physicaldevice/runtimeacceptance stillpending; iOSbehavior intentionallyunchanged.

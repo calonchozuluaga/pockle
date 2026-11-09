@@ -98,3 +98,6 @@ Execution order after the owner saves that draft:
 4. Provide the existing GoogleGroup join link and actual enabled Play opt-in link after the release is live. Verify actual opt-ins; group membership alone does not start the12tester/14day requirement. Production release remains disabled until its separate gates pass.
 
 No community checkout gate, new Android build, OAuth audience change, closed rollout or opt-in is claimed complete by this checkpoint.
+
+
+November9 implementation: community checkout guard and build-channel resource prepared on codex/google-community-beta. Android-target native57/57 pass (new-entry blocking, prior payment recovery, actual13quote fixtures, delivery persistence, checkout UI and walking); fullCore/source325files1143GUIDs0fail. No server/schema or HUD changes. iOS11 remainsTesting on its prior source. MatchingAndroid9community artifact will contain the latest approvedUI with native purchases unavailable for general testers; existing purchase recovery remains. GoogleCloud new-user audience check waits at owner password/2FA for carlos@zulapp.com. No closedrollout or newtesterinvitation yet.

@@ -50,5 +50,23 @@ namespace Pockle.Tests
             Call("RecoverRequested");Assert.That(Get("recoverSoon"),Is.True);Assert.That(Get("recoveryAt"),Is.EqualTo(0f));
             Assert.That(PlayerPrefs.HasKey("pockle.checkout.pending.v1."+User),Is.False,"Queueing cannot claim a payment or spend anything.");
         }
+        [Test] public void CommunityBetaBlocksNewQuotesAndCachedConfirmationsBeforeStoreEntry()
+        {
+            Set("storeCheckoutEnabled",false);
+            Call("RequestQuote","pockle.mix.3.v1",null);
+            Assert.That(Get("queuedQuote"),Is.Null);
+            Set("quoteId","cached-quote");Set("quoteProduct","pockle.mix.3.v1");Call("Confirm","cached-quote");
+            Assert.That(Get("queuedConfirmation"),Is.Null);Assert.That(Get("storeOpen"),Is.False);
+            Assert.That(PlayerPrefs.HasKey(Pending),Is.False,"Blocked checkout must not create a purchase marker.");
+        }
+        [Test] public void CommunityBetaPreservesExistingPurchaseAndCanRequestRecovery()
+        {
+            Set("storeCheckoutEnabled",false);
+            PlayerPrefs.SetString(Pending,"{\"state\":\"paid\",\"product\":\"pockle.mix.5.v1\"}");
+            Call("RequestQuote","pockle.mix.3.v1",null);
+            Assert.That(Get("recoverSoon"),Is.True);Assert.That(Get("storeOpen"),Is.False);
+            Assert.That(PlayerPrefs.GetString(Pending),Does.Contain("pockle.mix.5.v1"));
+            Set("recoverSoon",false);Call("RecoverRequested");Assert.That(Get("recoverSoon"),Is.True);
+        }
     }
 }

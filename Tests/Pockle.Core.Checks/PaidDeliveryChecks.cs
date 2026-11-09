@@ -7,6 +7,11 @@ internal static class PaidDeliveryChecks
     private static void Assert(bool condition,string message){if(!condition)throw new Exception(message);}
     public static void Run()
     {
+        foreach(string channel in new[]{"community-beta","", "COMMUNITY-BETA", "unknown"})
+            Assert(!CheckoutBuildPolicy.AllowsNewPurchases(true,channel),"Community/unknown Android channels must never allow new checkout.");
+        Assert(!CheckoutBuildPolicy.AllowsNewPurchases(true,null),"A missing Android channel must fail closed.");
+        Assert(CheckoutBuildPolicy.AllowsNewPurchases(true,"owner-sandbox\n"),"Explicit owner purchase-testing channel should remain available.");
+        Assert(CheckoutBuildPolicy.AllowsNewPurchases(false,"community-beta"),"Android community gating must not change iOS owner TestFlight.");
         var ids=new HashSet<string>();var packages=new HashSet<string>();
         Assert(PaidBoxProducts.All.Count==13,"Thirteen approved products required.");
         foreach(var p in PaidBoxProducts.All){Assert(ids.Add(p.Id)&&packages.Add(p.Package),"Duplicate product or package.");Assert(p.Count==(p.CollectionId==null?p.Id.Contains(".3.")?3:5:1),"Product grant count changed.");}

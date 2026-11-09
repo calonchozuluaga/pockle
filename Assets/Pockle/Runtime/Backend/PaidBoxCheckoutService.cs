@@ -28,6 +28,7 @@ namespace Pockle.Runtime
         private Config config;
         private string user,configuredUser,quoteId,quoteProduct;
         private bool working,storeOpen,stopped;
+        private bool storeCheckoutEnabled=true;
         private string queuedQuote, queuedConfirmation;
         private bool recoverSoon;
         private float recoveryAt;
@@ -43,6 +44,8 @@ namespace Pockle.Runtime
             hud=view;collection=session;account=accounts;
             var asset=Resources.Load<TextAsset>("Backend/PocklePurchases");
             if(asset!=null)config=Parse<Config>(asset.text);
+            var channel=Resources.Load<TextAsset>("Backend/CheckoutBuildChannel");
+            storeCheckoutEnabled=CheckoutBuildPolicy.AllowsNewPurchases(Application.platform==RuntimePlatform.Android,channel?.text);
             hud.CheckoutQuoteRequested+=RequestQuote;
             hud.CheckoutConfirmed+=Confirm;
             hud.CheckoutRecoveryRequested+=RecoverRequested;
@@ -115,6 +118,7 @@ namespace Pockle.Runtime
         }
         private void BindCatalog()
         {
+            if(!storeCheckoutEnabled){hud.SetCheckoutCatalog(null);return;}
             var offers=new List<CheckoutOffer>();
             bool pending=PlayerPrefs.HasKey(PendingKey);
             foreach(var policy in PaidBoxProducts.All)
@@ -131,6 +135,7 @@ namespace Pockle.Runtime
         {
             var product=PaidBoxProducts.Find(offer);
             if(PlayerPrefs.HasKey(PendingKey)){ShowPendingCheckout();return;}
+            if(BlockNewPurchases())return;
             if(storeOpen||product==null||!product.MatchesCollection(collectionId)||!packages.ContainsKey(offer))
             {hud.SetCheckoutState(null,CheckoutState.Failed);return;}
             if(working){queuedQuote=offer;return;}
@@ -177,6 +182,7 @@ namespace Pockle.Runtime
         {
             if(id!=quoteId||user!=account.UserId)return;
             if(PlayerPrefs.HasKey(PendingKey)){ShowPendingCheckout();return;}
+            if(BlockNewPurchases())return;
             if(storeOpen||!packages.TryGetValue(quoteProduct??"",out var package))return;
             if(working){queuedConfirmation=id;return;}
             storeOpen=true;
@@ -200,6 +206,12 @@ namespace Pockle.Runtime
         {
             hud.SetCheckoutState(null,CheckoutState.PaymentPending,"We're checking your previous purchase. Please don't buy again while your toys are being saved.");
             recoverSoon=true;recoveryAt=0;
+        }
+        private bool BlockNewPurchases()
+        {
+            if(storeCheckoutEnabled)return false;
+            hud.SetCheckoutState(null,CheckoutState.Failed,"Box purchases are off in this Android community beta. Walk to earn free boxes.");
+            return true;
         }
         private void RecoverRequested(){if(!storeOpen&&!string.IsNullOrEmpty(user)){recoverSoon=true;recoveryAt=0;}}
         private IEnumerator RecoverImmediately(string owner)

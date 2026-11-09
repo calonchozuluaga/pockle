@@ -253,3 +253,8 @@ This section records source integration, not device acceptance. Native suite/cap
 PaidBoxCheckoutService queues foreground quote/confirmation while another request runs, avoids background refresh over an open checkout, and gives paid recovery its own immediate path with bounded retry. An uncertain prior payment cannot start another checkout. Delivery authority remains server-side and inventory is persisted before ShowBoxReveal. Pack UI shows3/5 saved results individually or via Reveal all; early Play finishes presentation without changing the saved grant.
 
 The flat owned Shelf uses transparent cutouts in its bounded cache. Home's chooser writes the existing FavoriteId after ownership validation; the neutral walking carton is a presentation fallback until a server collection is assigned. Avatar selection is a separate border, preserving crop geometry.
+
+
+### Android community beta checkout boundary
+
+`CheckoutBuildPolicy` reads the packaged `Backend/CheckoutBuildChannel` via PaidBoxCheckoutService. Explicit `owner-sandbox` preserves existing purchase tests; Android `community-beta`, missing or unknown channels fail closed for new quotes, catalog purchase offers and confirmations. This is a beta UI/store-entry gate, not purchase authority. Authenticated receipt recovery remains available, so prior paid results are not lost. Server sandbox-only validation still applies. PlayInternalBundleBuild temporarily packages community-beta when POCKLE_PLAY_COMMUNITY_BETA=1, restoring the source resource/settings afterward. It does not change iOS TestFlight checkout or production purchase eligibility.
