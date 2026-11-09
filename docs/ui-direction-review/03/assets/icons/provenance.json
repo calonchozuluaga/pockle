@@ -64,5 +64,6 @@
       "source_entry": "package/assets/fill/storefront-fill.svg",
       "sha256": "c4f89c48138eb0e7269cd8286bb5774135cd5cfd6ea10c588c8c62591353dd83"
     }
-  ]
+  ],
+  "licenseNormalization": "Original MIT license text retained; CRLF line endings normalized to LF for repository whitespace checks."
 }
