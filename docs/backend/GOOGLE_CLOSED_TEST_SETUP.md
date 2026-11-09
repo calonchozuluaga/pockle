@@ -64,3 +64,6 @@ Owner decision, November8: intended launch audience13+ (13–15,16–17,18+). Go
 
 
 Latest Console verification: Ads is Complete, 4/11 tasks done. Sign-in details is still incomplete; Target audience remains locked on that prerequisite. Owner asked to complete both Add and outer Save and establish the dedicated reviewer player profile. No reviewer credentials inspected, no audience ranges applied yet.
+
+
+Reviewer login diagnostic: server confirms LuckySquish21 claimed, but no reviewer cloud snapshot. Owner is using an older Android installation. Backup/account-link failure is suspected; name-claim UI hides that distinction. No save reset or ownership transfer performed. Android connection required to confirm installed package and account-link state before recovery.
