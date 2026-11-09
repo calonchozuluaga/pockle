@@ -1,0 +1,61 @@
+{
+  "status": "Prepared for owner review; not uploaded",
+  "baseline": "cf7049a",
+  "unity": "6000.6.5f1",
+  "screenshots": "Real Unity HUD/model renders with offline sample inventory. Not physical-device captures. No account or purchase connected.",
+  "feature": "AI-generated promotional artwork from approved website reference; resized to exact delivery dimensions.",
+  "recommendedOrder": [
+    "06-play-pip.png",
+    "02-collections.png",
+    "03-pip-collection.png",
+    "04-live-shelf.png"
+  ],
+  "held": [
+    "01-home.png: existing header copy requires review; box issues deferred",
+    "05-fusion.png: existing presentation requires review"
+  ],
+  "assets": [
+    {
+      "file": "icon-512.png",
+      "width": 512,
+      "height": 512,
+      "mode": "RGB",
+      "bytes": 271152
+    },
+    {
+      "file": "feature-1024x500.png",
+      "width": 1024,
+      "height": 500,
+      "mode": "RGB",
+      "bytes": 589436
+    },
+    {
+      "file": "screenshots/06-play-pip.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 535822
+    },
+    {
+      "file": "screenshots/02-collections.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 1811376
+    },
+    {
+      "file": "screenshots/03-pip-collection.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 1276395
+    },
+    {
+      "file": "screenshots/04-live-shelf.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 1116294
+    }
+  ]
+}
