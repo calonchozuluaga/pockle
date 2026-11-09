@@ -1,0 +1,12 @@
+Build 9 adds a warmer interface, collection-art box cards, easier play controls, new moment sounds, and fixes for walking rewards and box purchases.
+
+Please test:
+
+- Update: Your signed-in session, collection and saved fusions should remain intact.
+- Play: Use Pockles to switch between owned characters and fusions. Try Backdrop, Daylight, Night and phone rotation. Check that thumbnails show the correct character.
+- Fusion: Fuse actual spares, then tap Play on the result. Restart and confirm the new toy remains saved and spent spares stay spent.
+- Walking: Earn a box with 1,000 credited steps and the one-hour cooldown. Collections are randomly assigned when earned. Limits remain four boxes daily and two banked.
+- Boxes: Try a non-Wally sandbox purchase. Review contents and probabilities first; confirm one saved delivery and reveal, retained after restart.
+- Sound: Listen for fusion, reveal, step milestone and box-ready sounds. Check complete playback, volume and mute. Returning from the background should not replay old milestones.
+
+Please report the device, steps taken and any error text.

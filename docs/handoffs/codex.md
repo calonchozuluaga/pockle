@@ -1242,3 +1242,15 @@ Seven approved moment WAVs were imported with reproducible constant gain and com
 ### Build9 packaging checkpoint
 
 Source commit `21d2d18` pushed to `origin/codex/approved-ui-phone`. Final source checks passed (299 C# files,1065 GUIDs); diff-check clean after restoring only incidental Unity/AppIcon/meta/ProjectSettings serialization in the isolated checkout. Production iOS export succeeded (`com.playpockle.app`,1.0,build9,8/8 owner flags disabled during export and restored locally). Native Xcode archive is waiting for the owner's existing-key codesign Keychain authorization; no signing credentials created/read. TestFlight upload/group distribution is not yet complete.
+
+## November 9 — resume approved TestFlight9 delivery
+
+Claim: finish the already-authorized build 9 signing, upload and internal-group distribution on `codex/approved-ui-phone` (`fccd797`, application source `21d2d18`). Refetched origin/main and read both handoffs and coordination. Owner screenshot confirms signing Android v8, not iOS 9. The overnight Xcode archive failed at both framework codesign steps with `errSecInternalComponent` after waiting for Keychain; it produced no complete archive or upload. Retrying the unchanged native archive with existing certificates; no runtime, HUD or credential changes. Files: release evidence and docs/handoffs/codex.md only.
+
+### November 9 — TestFlight build 9 uploaded
+
+The unchanged native archive retry and App Store IPA export succeeded. The exported IPA verifies `com.playpockle.app`, version 1.0, build 9 (514,355,369 bytes; SHA-256 `7608576941b9a16e1fa166998d72b12995609f6ca2a89be59a6b8f4e300bfd23`). Apple accepted the upload at 09:19 MST and reported processing started. Existing UnityRuntime.framework dSYM warning remains; it did not block upload. No new signing credentials were created or read.
+
+App Store Connect redirected the refreshed browser to sign-in. Owner action requested there; final processing, any export-compliance step and attachment to the existing Pockle owner internal group are still pending. No public review submission or new tester invitation. Device acceptance remains unverified. Logs and status: `docs/approved-ui-build/01/distribution.json`; test instructions: `what-to-test.txt`.
+
+The Android v8 shown in the owner's screenshot signed and verifies successfully, but it predates source `21d2d18` and does not contain the new Play/UI/moment-audio update. It was not uploaded as the latest update.
