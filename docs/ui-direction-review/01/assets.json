@@ -1,0 +1,27 @@
+{
+  "purpose": "UI concept review only. Existing approved art copied without image modifications. No app resources changed.",
+  "sources": {
+    "wordmark.png": "Assets/Pockle/Resources/UI/PockleWordmark.png",
+    "display.ttf": "Assets/Pockle/Resources/UI/Fonts/Bricolage-Display.ttf",
+    "body.ttf": "Assets/Pockle/Resources/UI/Fonts/Bricolage-Body.ttf",
+    "pip.png": "Assets/Pockle/Resources/UI/Onboarding/Toys/pip_peach-jelly.png",
+    "fox.png": "Assets/Pockle/Resources/UI/Onboarding/Toys/fox_boucle-plush.png",
+    "wally.png": "Assets/Pockle/Resources/UI/Onboarding/Toys/wally_kelp-mint.png",
+    "pip-cover.png": "Assets/Pockle/Resources/Collections/Pip/Cover.png",
+    "fox-cover.png": "Assets/Pockle/Resources/Collections/Fox/Cover.png",
+    "wally-cover.png": "Assets/Pockle/Resources/Collections/Wally/Cover.png",
+    "firb-cover.png": "Assets/Pockle/Resources/Collections/Firb/Cover.png",
+    "pip-world.png": "Assets/Pockle/Resources/Worlds/pip-jelly-garden.png",
+    "night-world.png": "Assets/Pockle/Resources/Worlds/pip-starlight-grove.png",
+    "fox-box.png": "Assets/Pockle/Resources/UI/Boxes/Collection-fox.png",
+    "pip-box.png": "Assets/Pockle/Resources/UI/Boxes/Collection-pip.png",
+    "wally-box.png": "Assets/Pockle/Resources/UI/Boxes/Collection-wally.png",
+    "sorbet.png": "docs/captures/pip-fusion-materials/pip.fusion-sorbet-0.png",
+    "pip-peach-jelly.png": "docs/roster-finish-review/02/renders/pip.peach-jelly.png",
+    "pip-mint-mochi.png": "docs/roster-finish-review/02/renders/pip.mint-mochi.png",
+    "pip-moon-pearl.png": "docs/roster-finish-review/02/renders/pip.moon-pearl.png",
+    "pip-coated-metallic.png": "docs/roster-finish-review/02/renders/pip.coated-metallic.png",
+    "pip-glow-jelly.png": "docs/roster-finish-review/02/renders/pip.glow-jelly.png",
+    "pip-secret-edition.png": "docs/roster-finish-review/02/renders/pip.secret-edition.png"
+  }
+}
