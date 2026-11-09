@@ -6,8 +6,8 @@
   "sourcePushed": true,
   "unityExport": "succeeded",
   "ownerGrantFlagsDisabledInExport": 8,
-  "archive": "waiting for existing signing key approval",
-  "upload": "not started",
+  "archive": "succeeded",
+  "upload": "waiting for renewed codesign Keychain prompt during upload export",
   "testFlight": "not assigned",
   "exportLog": "/private/tmp/pockle-testflight-export10.log",
   "archiveLog": "/private/tmp/pockle-testflight-archive10.log",
@@ -16,5 +16,19 @@
     "UniformTypeIdentifiers",
     "ImageIO"
   ],
-  "nativeStatusBarHidden": false
+  "nativeStatusBarHidden": false,
+  "distributionExport": "succeeded",
+  "ipa": "Builds/TestFlight-10/Pockle.ipa",
+  "ipaBytes": 538976650,
+  "ipaSha256": "650bb90fa8de0297addf965d037e685743e5f751e784a150cabca1af8c83dfe9",
+  "strictDeepSignature": "passed with normal Mac trust store; sandbox trust context rejected",
+  "entitlements": {
+    "application-identifier": "736A8S9RK8.com.playpockle.app",
+    "beta-reports-active": true,
+    "get-task-allow": false
+  },
+  "packagedOwnerFlags": "all eight parsed TextAssets disabled",
+  "avatarNativeBridge": "delegate/protocol in binary; all four C exports in matching dSYM",
+  "minimumIos": "15.0",
+  "uploadLog": "/private/tmp/pockle-testflight-upload10.log"
 }

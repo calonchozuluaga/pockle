@@ -831,3 +831,8 @@ Branch `codex/fixed-navigation-build` in isolated `/private/tmp/pockle-ios-20261
 Full portable Core checks pass. Final source checks pass316 C# files,3 symbol profiles,5 asmdefs and1,133 GUIDs. A source scan run during Unity testing saw its transient InitTestScene; after the runner cleaned up, the final scan passed. These checks do not replace phone acceptance. Device photo picking, status-bar appearance, new sandbox purchases, public social/trading/cloud avatars and full hosted CI remain unverified.
 
 Nine real Unity HUD captures were inspected at1080×2340 and960×1704. The fixed bar, equal selected icons, owned grid, twelve profile images and truthful Community states render correctly. Safe insets are simulated; no OS status-bar screenshot is claimed. Capture fixture preferences were restored and its generated avatar scope removed. Gallery: `docs/fixed-navigation-build/01/index.html`.
+
+
+## November 9 — build10 archive and distribution IPA verified
+
+Unchanged source `4bf1161` archived after the owner approved existing-key access. Distribution export succeeded: `com.playpockle.app`,1.0(10),arm64,iOS15 minimum. The IPA passes deep strict signature validation with the Mac trust store; beta-reports-active=true and get-task-allow=false. SHA256 `650bb90fa8de0297addf965d037e685743e5f751e784a150cabca1af8c83dfe9`,538,976,650bytes. Read-only archive audit confirms the native photo delegate/protocol and all four bridge symbols in matching dSYM, PhotosUI linkage, visible status-bar plist/controller, and all eight packaged OwnerTest TextAssets disabled. Source flags restored; owner settings/runtime untouched. Upload has started but is waiting for a renewed macOS codesign Keychain prompt. No TestFlight availability claimed yet.

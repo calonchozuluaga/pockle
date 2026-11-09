@@ -1316,3 +1316,13 @@ Verified153 distinct native Unity6000.6.5f1 tests, full portable Core, source316
 ### November 9 — TestFlight10 export complete; signing prompt pending
 
 Source commit `4bf1161` is pushed on `codex/fixed-navigation-build`. Unity production export succeeded for `com.playpockle.app` 1.0(10), with all eight owner-grant flags disabled. PhotosUI/UniformTypeIdentifiers/ImageIO frameworks and visible status-bar plist values are verified in the export. Xcode archive uses the existing team/certificate; it is waiting for the owner's macOS Keychain approval (running session57360, log `/private/tmp/pockle-testflight-archive10.log`). No new credential was created or read. Upload and TestFlight assignment have not happened. Finish the archive, export/upload with existing Build plists, then verify Apple processing/compliance and assign the existing owner internal group. `docs/fixed-navigation-build/01/distribution.json` records this exact state. All incidental tracked importer/ProjectSettings changes restored; owner runtime checkout untouched.
+
+
+### November 9 — TestFlight10 delivery resumed
+
+Owner completed the existing Keychain prompt; archive log confirms ARCHIVE SUCCEEDED. Continuing UX-002/004/015/025/031 release delivery on `codex/fixed-navigation-build`, unchanged source `4bf1161`; origin/main and both handoffs checked. Files are release evidence, VALIDATION and this handoff only. Next: signed distribution IPA verification, upload, processing and existing owner-group assignment. No new credentials, invitations, purchases or public submission.
+
+
+### November 9 — signed build10 verified; upload signing prompt pending
+
+Archive and distribution export both succeeded. IPA deep strict signature passes using the normal Mac trust store; production bundle1.0(10), beta entitlement and nondebug entitlements confirmed. Read-only packaged-data audit passes all eight disabled owner flags and native avatar/status-bar integration. Upload command is running in session1158, `/private/tmp/pockle-testflight-upload10.log`, using existing `Builds/TestFlightUploadOptions.plist`; it is waiting at another codesign Keychain prompt. Owner was asked to allow it. Do not start a duplicate upload. After it completes, verify upload success, Apple processing, save the prepared what-to-test notes, owner-only compliance if needed, and existing internal-group assignment. No public submission or new invitations. Source remains4bf1161; only release records changed.
