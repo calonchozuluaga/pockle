@@ -10,7 +10,7 @@
   "ipaBytes": 514355369,
   "ipaSha256": "7608576941b9a16e1fa166998d72b12995609f6ca2a89be59a6b8f4e300bfd23",
   "testFlightGroup": "Pockle owner internal",
-  "groupAssignment": "pending browser sign-in",
+  "groupAssignment": "blocked by owner export-compliance declaration",
   "ownerDeviceAcceptance": "not_run",
   "logs": {
     "archive": "/private/tmp/pockle-testflight-archive9-retry.log",
@@ -18,6 +18,8 @@
     "upload": "/private/tmp/pockle-testflight-upload9.log"
   },
   "uploadCompletedLocal": "2026-11-09T09:19:47-07:00",
-  "processing": "started; final App Store Connect status not yet checked",
-  "symbolWarning": "UnityRuntime.framework dSYM missing, UUID B5BCB31B-E424-3C81-A0EE-2EF2ADFA93D7"
+  "processing": "build visible in TestFlight; Missing Compliance",
+  "symbolWarning": "UnityRuntime.framework dSYM missing, UUID B5BCB31B-E424-3C81-A0EE-2EF2ADFA93D7",
+  "testNotes": "saved in App Store Connect",
+  "appStoreConnectBuildId": "6592ccb4-5845-451f-b06f-c7d95fd3d76c"
 }

@@ -1254,3 +1254,7 @@ The unchanged native archive retry and App Store IPA export succeeded. The expor
 App Store Connect redirected the refreshed browser to sign-in. Owner action requested there; final processing, any export-compliance step and attachment to the existing Pockle owner internal group are still pending. No public review submission or new tester invitation. Device acceptance remains unverified. Logs and status: `docs/approved-ui-build/01/distribution.json`; test instructions: `what-to-test.txt`.
 
 The Android v8 shown in the owner's screenshot signed and verifies successfully, but it predates source `21d2d18` and does not contain the new Play/UI/moment-audio update. It was not uploaded as the latest update.
+
+### Build 9 browser checkpoint
+
+Owner renewed Apple sign-in. Build 1.0 (9) is visible in TestFlight as Missing Compliance, build ID `6592ccb4-5845-451f-b06f-c7d95fd3d76c`. What to Test was saved successfully. Add Group opens the App Encryption Documentation form before group selection; no group has been assigned yet. The form is open for the owner, who reserves final legal declarations. No declaration was selected or submitted by Codex. Resume with the existing Pockle owner internal group after the owner saves compliance.
