@@ -129,7 +129,13 @@
       "reviewScreenshot": false
     }
   ],
-  "testflightStatus": "Missing Compliance; owner export declaration pending",
+  "testflightStatus": "Ready to Test",
   "distributionProfileVerified": true,
-  "debugSymbolsWarning": "UnityRuntime.framework dSYM missing: B5BCB31B-E424-3C81-A0EE-2EF2ADFA93D7"
+  "debugSymbolsWarning": "UnityRuntime.framework dSYM missing: B5BCB31B-E424-3C81-A0EE-2EF2ADFA93D7",
+  "internalGroup": "Pockle owner internal",
+  "internalGroupId": "e702b709-d2b1-4d76-9d1a-649edf891e08",
+  "automaticDistribution": false,
+  "ownerInvitationSent": true,
+  "ownerTesterStatus": "Invited",
+  "internalTesterCount": 1
 }

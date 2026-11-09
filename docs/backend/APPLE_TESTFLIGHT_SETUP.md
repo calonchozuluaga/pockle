@@ -30,3 +30,9 @@ Once TestFlight is available, the owner signs in and tests a sandbox single-box 
 Owner-only remaining actions, if prompted: Apple export-compliance/legal answers and phone sign-in/purchase prompts. Existing paid agreement/bank/tax setup needs no repeat action based on today's inspection.
 
 Sources: [Apple sandbox setup](https://developer.apple.com/help/app-review/before-submitting-for-review/configure-in-app-purchases/), [Apple product metadata](https://developer.apple.com/help/app-store-connect/manage-in-app-purchases/view-and-edit-in-app-purchase-information/), [RevenueCat SDK configuration](https://www.revenuecat.com/docs/getting-started/configuring-sdk), [TestFlight](https://developer.apple.com/testflight/).
+
+
+November8 follow-up: owner completed encryption declaration. Apple cleared compliance. Internal group Pockle owner internal created with automatic distribution off; build1.0(8) added and visibly Ready to Test. Carlos-only invitation prepared, not sent pending explicit message authorization; no other team members selected. Phone sandbox acceptance remains pending.
+
+
+November8: owner explicitly authorized invitation to carlos@zulapp.com only. Sent using Apple Add Testers. Live group confirms 1Tester/1Build, Carlos Internal status Invited. No other tester selected, automatic distribution off, no role/admin changes. Owner should open invitation on iPhone, install TestFlight build1.0(8), sign in and perform sandbox purchase/restart acceptance. Existing development app/save retained separately; no purchase test or install claimed.
