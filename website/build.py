@@ -3,7 +3,7 @@ import pathlib, shutil
 
 ROOT = pathlib.Path(__file__).parent
 OUT = ROOT / "public"
-UPDATED = "October 21, 2026"
+UPDATED = "November 8, 2026"
 PRIVACY_UPDATED = "November 8, 2026"
 COMPANY = "Zulapp LLC"
 SUPPORT = "support@playpockle.com"
@@ -155,7 +155,7 @@ You can report or block any player in the app. We may remove names, reverse trad
     ("disclaimers", "Disclaimers and limits", f"""
 <p>Pockle is provided "as is". We work to keep it running but don't promise it will always be available or error-free. To the extent the law allows, {COMPANY} isn't liable for indirect or consequential damages,
 and our total liability is limited to the amount you paid us in the 12 months before the claim. Some places don't allow these limits, so they may not apply to you.</p>"""),
-    ("law", "Governing law", f"<p>These Terms are governed by the laws of the State of [STATE — to confirm], USA, without regard to conflict-of-law rules. Nothing here limits rights you have under the consumer laws of where you live.</p>"),
+    ("law", "Governing law", f"<p>These Terms are governed by the laws of the State of Colorado, USA, without regard to conflict-of-law rules. Nothing here limits rights you have under the consumer laws of where you live.</p>"),
     ("changes", "Changes", "<p>We may update these Terms. For important changes we'll tell you in the app in advance; continuing to play after they take effect means you accept them.</p>"),
     ("contact", "Contact", f"<p>{COMPANY}<br>Legal notices: {mail(LEGAL)}<br>Help: {mail(SUPPORT)}</p>"),
 ]

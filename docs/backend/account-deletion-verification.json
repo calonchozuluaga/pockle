@@ -1,0 +1,32 @@
+{
+  "date_local": "2026-11-08",
+  "project_ref": "azdzafotawbrplukeqcl",
+  "cron": {
+    "name": "pockle-account-erasure",
+    "schedule": "*/5 * * * *",
+    "active": true,
+    "previous_24h_successful_runs": 288
+  },
+  "pending_deletions": 0,
+  "overdue_deletions": 0,
+  "database_fixture": "supabase/tests/account_foundation.sql",
+  "result": "PASS",
+  "transaction_rolled_back": true,
+  "remaining_fixture_players": 0,
+  "coverage": [
+    "account identity",
+    "username isolation",
+    "exact 89 inventory/15 fusion snapshot",
+    "replay",
+    "live SQL session boundary",
+    "Auth/session/cloud snapshot erasure",
+    "purchase-record retention"
+  ],
+  "not_verified": [
+    "real OAuth through device deletion flow",
+    "RevenueCat customer data deletion",
+    "provider backup/log retention",
+    "privacy alias mailbox delivery"
+  ],
+  "first_attempt": "SQL dollar-quoting syntax error; corrected before successful fixture; no persisted mutation"
+}
