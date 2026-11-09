@@ -859,3 +859,8 @@ On existing TestFlight1.0(10), owner completed a Mystery Mix5 sandbox payment an
 ### November9 — approved playtest UI exported/uploaded as TestFlight11
 
 Unchanged source6a90c37 (existing99focusednative/Core/source evidence) exported using pinnedUnity6000.6.5f1 as com.playpockle.app1.0(11). Archive and signed IPA export succeeded; deep strict signature, beta/debug entitlements, native frameworks, visible statusbar and all8disabled test-grant TextAssets verified in actual IPA. Apple upload reports Uploaded Unity-iPhone/EXPORT SUCCEEDED. Apple processing/compliance and group assignment remain pending; no phone availability/acceptance claim. Evidence `docs/playtest-feedback-review/01/distribution.json`. No additional code, grants, production payment setup or public submission. Existing UnityRuntime.framework dSYM warning remains.
+
+
+### November9 — TestFlight11 delivery complete
+
+Owner saved export compliance. AppStore groupPockleownerinternal (existingone tester) visibly lists1.0(11)Testing. No new invitations/publicsubmission; physical-phone acceptance remains pending. Google listing declaration saved by owner; currentdashboard unblocksclosedreleasepreview/submission but no closedrollout/opt-in yet. Unchangedsource6a90c37 retains99focusednative/Core/source evidence; no tests rerun for release-only changes.

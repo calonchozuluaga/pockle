@@ -1415,3 +1415,13 @@ Expanded GOOGLE_CLOSED_TEST_SETUP.md with the current10/11listing gate, owner-on
 ### November9 — TestFlight11 processed; owner declaration is final delivery gate
 
 Apple processed build1.0(11), ID`a30b74af-5839-43c5-9bc8-d6544375e2b4`. What-to-test notes saved; Apple displayedSaved. Provide Export Compliance Information opens blank App Encryption Documentation; no algorithm selected. Owner asked to review/Save personally. Current page is that Apple form; Google listing AI declaration is preserved in its other tab, also awaiting owner review/Save. Groups(0), so build11 is not yet available to the owner. After Apple clears, add only existing Pockle owner internal group e702b709-d2b1-4d76-9d1a-649edf891e08 and verifyTesting; do not re-upload or send invitations. Both forms are ready for concrete owner action under standing final-legal boundary; no runtime/trading/production checkout changes performed. Exact signed IPA/tests are in distribution.json and validation.json.
+
+
+### November9 — owner completed both final declarations; delivery resumed
+
+Owner reports Apple build11 export declaration and Google listing AI declaration saved. Claim unchanged UX-003/004/010/011/014/015/025 release delivery on `codex/playtest-feedback-11`, source6a90c37; origin/main and both handoffs checked. Files: distribution/validation/handoff evidence only until TestFlightTesting and Google saved state are verified. Reuse existing owner group, no new invitations/public production submission. Then continue safe Google closed-test candidate/setup in its own topic branch; no community paid rollout until checkout is safe.
+
+
+### November9 — TestFlight11 available; Google listing complete
+
+Owner completed both declarations. Apple cleared compliance; added11 only to existing Pockle owner internal (one tester), and its Builds table explicitly shows1.0(11)Testing/expires90days. Evidence `docs/playtest-feedback-review/01/testflight11-testing.png` and distribution.json. No new invitations/public submission. Owner can update through TestFlight. Google Publishing overview lists saved defaultlisting/allrequiredinformation; dashboard now has no unfinished app-setup task and closedtest3/5complete (country/testers/releasecomplete; preview/submitavailable).0opt-insstill. ExistingAlpha8 must not be rolled out to community until checkout is safe. Next: isolated codex/google-community-beta topic to include approvedUI and gate general Android beta checkout, verify sign-in audience, validate/signmatchingAAB then finish closedreview. No tests rerun for unchanged source6a90c37 delivery-only actions.
