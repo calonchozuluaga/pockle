@@ -44,5 +44,20 @@
     "status": "Prepare for Submission"
   },
   "conclusion": "No package-ID, price or availability mismatch found. Empty RevenueCat transaction history does not prove whether Apple showed a payment sheet or processed an unreported attempt. Actual failure and complete purchase flow remain unverified. Owner asked for payment-sheet timing and exact error.",
-  "changed_external_state": "None beyond dashboard view/navigation; Biotadex untouched"
+  "changed_external_state": "None beyond dashboard view/navigation; Biotadex untouched",
+  "follow_up": {
+    "observed_at_utc": "2026-11-09T22:34:45Z",
+    "owner_test": "Owner retried TestFlight purchase: payment succeeded, all five boxes revealed sequentially, final summary appeared after a few seconds.",
+    "server_verification": {
+      "product": "pockle.mix.5.v1",
+      "delivery_created_at_utc": "2026-11-09T22:33:59.167750Z",
+      "saved_items": 5,
+      "revealed": 5,
+      "finished": true,
+      "receipt_in_cloud_backup": true,
+      "latest_backup_at_utc": "2026-11-09T22:34:26.978051Z"
+    },
+    "status": "Mix 5 sandbox purchase, saved delivery and complete reveal confirmed. Mix 3 actual purchase and restart persistence are not newly tested. Earlier empty transaction history is a timestamped observation superseded by this later purchase.",
+    "remaining": "Reduce perceived delivery delay and show clear payment/saving progress using the prepared client recovery changes; no new server or store mutation required."
+  }
 }

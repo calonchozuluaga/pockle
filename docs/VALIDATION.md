@@ -849,3 +849,8 @@ Final distribution confirmation: owner completed compliance; Apple shows1.0(10) 
 No backend mutation or store purchase was made. Read-only Supabase aggregates show successful singles but no completed Mix delivery. Current server logs do not establish the client/StoreKit failure. Product readback is blocked by the locked Mac; payment-sheet timing/error details are requested. Real phone acceptance, new Mix3/5 sandbox transactions/restart, hostedCI and a new device build remain unverified.
 
 Final local review:16 offline Unity HUD/model captures inspected, including320-point Shelf, Home teaser/chooser, selected avatar border, full/fading single bubble, matched sleepy/grumpy/happy faces, Mix3 sequential cards and3/5-toy summaries. Fixture preferences restored; all image/audio links resolve. Final source scan passes324C#/3profiles/5asmdefs/1141GUIDs. Incidental Unity settings/importer reserialization restored. Browser interaction remains unverified while the Mac is locked; no new phone build or real purchase was made.
+
+
+### November9 — Mystery Mix5 end-to-end owner acceptance
+
+On existing TestFlight1.0(10), owner completed a Mystery Mix5 sandbox payment and saw all five box reveals in sequence followed by the summary, after a few seconds of loading. Supabase read-only follow-up confirms five persisted items, revealed5/finishedtrue and the receipt included in the latest cloud-save backup. No manual grant/store/backend change was used. Mix3 purchase and an explicit cold-restart persistence check remain unverified in this session. Prepared playtest-feedback client recovery/clarity changes are still outside this phone build. Evidence: `docs/playtest-feedback-review/01/mix-store-readback.json`. No tests repeated for this documentation-only update.
