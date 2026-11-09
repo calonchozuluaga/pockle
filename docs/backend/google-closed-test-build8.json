@@ -1,0 +1,14 @@
+{
+  "bundle": "com.playpockle.app",
+  "version": "1.0",
+  "versionCode": 8,
+  "buildSucceeded": true,
+  "bundletoolValidation": true,
+  "approvedAudioPaths": 143,
+  "disabledOwnerFlags": 8,
+  "googlePublicSdkKeyPackaged": true,
+  "sha256": "5f4868340c84f58363a707dd77d6d7f0ab69c41050fd89ffdaf5d5d52e777c4e",
+  "bytes": 473814520,
+  "ownerSignaturePending": true,
+  "closedTestPublished": false
+}
