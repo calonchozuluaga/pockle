@@ -206,8 +206,8 @@ def build():
     shutil.copytree(ROOT / "assets", OUT / "assets")
     shutil.copyfile(HOME_SOURCE, OUT / "index.html")
     doc("privacy", "Privacy Policy", "How Pockle collects, uses and protects your information.", "moon",
-        f"Last updated {PRIVACY_UPDATED}. This policy explains what {COMPANY} collects when you play Pockle, and why.", PRIV, "/privacy/")
-    doc("terms", "Terms of Service", "The rules for playing Pockle.", "", f"Last updated {UPDATED}. The rules for playing Pockle.", TERMS, "/terms/")
+        f"Last updated {PRIVACY_UPDATED}. This policy explains what {COMPANY} collects when you play Pockle, and why.", PRIV, "/privacy/", draft=False)
+    doc("terms", "Terms of Service", "The rules for playing Pockle.", "", f"Last updated {UPDATED}. The rules for playing Pockle.", TERMS, "/terms/", draft=False)
     page("support", "Support · Pockle", "Help with Pockle: walking, boxes, trading, purchases and accounts.", SUPPORT_BODY, "/support/")
     page("delete-account", "Delete your account · Pockle", "How to delete your Pockle account and data.", DELETE_BODY)
     page("_404", "Page not found · Pockle", "This page doesn't exist.",

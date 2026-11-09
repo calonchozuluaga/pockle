@@ -7,4 +7,4 @@ Later: the public trading ledger (website v2), reading Supabase's public ledger 
 - Legal and support pages: edit content in `build.py`, styles in `assets/site.css`.
 - Run `python3 build.py` to regenerate `public/` after any change.
 - Vercel project `playpockle` serves `website/public` (no build step).
-- Legal pages are drafts for legal review. Owner: Zulapp LLC. Contacts: support@, privacy@, legal@playpockle.com.
+- Privacy, Delete account and Terms wording approved by the owner November 8, 2026. Terms use Colorado law. Changes to legal declarations still need owner review. Contacts: support@, privacy@, legal@playpockle.com.
