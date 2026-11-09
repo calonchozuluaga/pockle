@@ -9,6 +9,14 @@
   "googlePublicSdkKeyPackaged": true,
   "sha256": "5f4868340c84f58363a707dd77d6d7f0ab69c41050fd89ffdaf5d5d52e777c4e",
   "bytes": 473814520,
-  "ownerSignaturePending": true,
-  "closedTestPublished": false
+  "ownerSignaturePending": false,
+  "closedTestPublished": false,
+  "signedPayloadMatches": true,
+  "signedSha256": "de6ecb787a44a47cd125e37e8125ea0ba15b139669cc8af7fbd2e76f1ff8f4d3",
+  "signatureVerified": true,
+  "uploaded": true,
+  "playArtifactVerified": "8 (1.0)",
+  "releaseDraftSaved": true,
+  "releaseName": "1.0 (8) \u2014 Closed beta",
+  "healthDeclarationVerifiedComplete": true
 }
