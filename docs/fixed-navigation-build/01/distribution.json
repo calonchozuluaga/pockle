@@ -7,8 +7,8 @@
   "unityExport": "succeeded",
   "ownerGrantFlagsDisabledInExport": 8,
   "archive": "succeeded",
-  "upload": "waiting for renewed codesign Keychain prompt during upload export",
-  "testFlight": "not assigned",
+  "upload": "succeeded",
+  "testFlight": "processed; Missing Compliance; owner declaration requested",
   "exportLog": "/private/tmp/pockle-testflight-export10.log",
   "archiveLog": "/private/tmp/pockle-testflight-archive10.log",
   "nativePickerFrameworks": [
@@ -30,5 +30,11 @@
   "packagedOwnerFlags": "all eight parsed TextAssets disabled",
   "avatarNativeBridge": "delegate/protocol in binary; all four C exports in matching dSYM",
   "minimumIos": "15.0",
-  "uploadLog": "/private/tmp/pockle-testflight-upload10.log"
+  "uploadLog": "/private/tmp/pockle-testflight-upload10.log",
+  "uploadedAt": "2026-11-09T13:22:32-07:00",
+  "warning": "Existing UnityRuntime.framework dSYM missing for UUID B5BCB31B-E424-3C81-A0EE-2EF2ADFA93D7; upload succeeds, framework crash symbolication incomplete.",
+  "appStoreBuildId": "b1d0eb67-01e1-4341-a90e-777e5db3a4ad",
+  "testNotes": "saved; Apple displayed Saved",
+  "group": "Pockle owner internal; assignment blocked by compliance",
+  "buildUrl": "https://appstoreconnect.apple.com/teams/b4649b6e-4146-4a40-a9d6-d1d5a87fb3e2/apps/6830781336/testflight/ios/b1d0eb67-01e1-4341-a90e-777e5db3a4ad"
 }

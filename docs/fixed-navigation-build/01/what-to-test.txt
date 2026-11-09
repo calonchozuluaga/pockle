@@ -2,7 +2,7 @@ Pockle 1.0 (10) — navigation, shelf and profile
 
 Home, Shelf, Walk, Community and Shop now share a fixed full-width bottom bar with the approved icons. Shelf shows every owned playable Pockle and saved fusion in one grid; filter/search, play directly, or open Live shelf.
 
-Choose from 12 Pockle avatars or a photo, then adjust the crop before saving. Avatar images are private and saved on this device only. They are isolated by signed-in account.
+Choose from 12 Pockle avatars, or select a photo and adjust its crop before saving. Avatar images are private and saved on this device only. They are isolated by signed-in account.
 
 Mystery Mix quote validation, the visible phone status bar and removal of the old About sound button are included.
 
