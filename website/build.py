@@ -4,6 +4,7 @@ import pathlib, shutil
 ROOT = pathlib.Path(__file__).parent
 OUT = ROOT / "public"
 UPDATED = "October 21, 2026"
+PRIVACY_UPDATED = "November 8, 2026"
 COMPANY = "Zulapp LLC"
 SUPPORT = "support@playpockle.com"
 PRIVACY = "privacy@playpockle.com"
@@ -79,37 +80,37 @@ PRIV = [
     ("summary", "The short version", f"""
 <ul>
 <li>Pockle is a collecting game for people <strong>13 and older</strong>, made by {COMPANY}.</li>
-<li>We collect what the game needs: your sign-in, your collector name, your toys, your step counts and your purchases.</li>
+<li>We collect what the game needs: your sign-in, your collector name, your toys, optional step counts and your purchases.</li>
 <li>We <strong>don't</strong> collect your location, your contacts or your photos, and we don't keep your birthday.</li>
 <li>We don't sell your personal information.</li>
-<li>You can delete your account at any time in the app or <a href="/delete-account/">on this website</a>.</li>
+<li>You can request deletion of your account in the app or <a href="/delete-account/">without the app</a>.</li>
 </ul>"""),
     ("collect", "What we collect", f"""
 <table class="plain"><tr><th>What</th><th>Why</th></tr>
-<tr><td><strong>Sign-in details</strong> from Apple or Google: an account identifier and, if you share it, an email address (Apple may give us a private relay address instead).</td><td>To create your account and let you sign in on a new phone.</td></tr>
-<tr><td><strong>Collector name</strong> and profile choices (avatar toy, favourite toy).</td><td>Shown to friends and trading partners. We ask you not to use your real name.</td></tr>
+<tr><td><strong>Sign-in details</strong> from Apple or Google: an account identifier and the name or email address returned by your sign-in provider (Apple may give us a private relay address instead).</td><td>To create your account and let you sign in on a new phone.</td></tr>
+<tr><td><strong>Collector name</strong> and profile choices (avatar toy, favourite toy).</td><td>To identify your account and personalize your collection. We ask you not to use your real name.</td></tr>
 <tr><td><strong>Age check result.</strong> You enter a birthday; we keep only whether you passed, not the date.</td><td>Pockle is for players 13 and older.</td></tr>
-<tr><td><strong>Step counts</strong> from your phone's motion sensors (Android "Physical activity" or iPhone "Motion &amp; Fitness").</td><td>To unlock free boxes. We use step totals only, not where you walked.</td></tr>
-<tr><td><strong>Game data:</strong> the toys you own, boxes opened, fusions, badges, friends, trades and reactions.</td><td>To run the game and keep your collection safe across devices.</td></tr>
-<tr><td><strong>Purchase records</strong> from Apple or Google: what you bought and when, and a receipt to verify it.</td><td>To deliver boxes you pay for and prevent fraud. We never see your card details.</td></tr>
-<tr><td><strong>Device and technical data:</strong> device model, operating system, app version, crash and error reports, and a push notification token if you allow notifications.</td><td>To keep Pockle working, fix bugs and send the notifications you turned on.</td></tr>
+<tr><td><strong>Step counts</strong> from your phone's motion sensors (Android "Physical activity" or iPhone "Motion &amp; Fitness").</td><td>To unlock free boxes when you enable walking. Step totals and progress are included in cloud saves; we do not record where you walked.</td></tr>
+<tr><td><strong>Game data:</strong> the toys and spares you own, boxes opened, fusions, badges, collection progress and saved preferences.</td><td>To run the game and keep your collection safe across devices.</td></tr>
+<tr><td><strong>Purchase records</strong> from Apple or Google, processed through RevenueCat: product identifiers, transaction identifiers, purchase dates and purchase status, linked to your Pockle account.</td><td>To deliver boxes you pay for and prevent fraud. We never see your card details.</td></tr>
+<tr><td><strong>Device and technical data:</strong> an app-generated installation identifier used with cloud saves, app and platform information used by purchase services, and service request logs used to operate accounts and purchases.</td><td>To link backups to an installation, deliver purchases and protect the service. The current beta does not send automatic crash reports or register a remote push notification token.</td></tr>
 <tr><td><strong>Messages you send us</strong> at {SUPPORT} or {PRIVACY}.</td><td>To help you.</td></tr>
 </table>
 <p>We don't collect precise or approximate location, contacts, photos, microphone or camera data. Players can't send each other free-text messages.</p>"""),
     ("use", "How we use it", """
-<ul><li>To provide the game: accounts, cloud saves, boxes, trading and notifications.</li>
+<ul><li>To provide accounts, cloud saves, collections, fusions and box delivery. Notification reminders in the current beta are scheduled on your phone.</li>
 <li>To keep Pockle fair and safe: verifying steps and purchases, preventing cheating, enforcing our <a href="/terms/">Terms</a> and handling reports.</li>
-<li>To understand and improve the game using aggregated, de-identified statistics.</li>
+<li>To understand purchases and delivery issues using purchase-service reports.</li>
 <li>To meet legal obligations.</li></ul>
 <p>We don't use your information for targeted advertising, and we don't sell it.</p>"""),
     ("public", "What other players can see", """
-<p>Your collector name, avatar, the shelf you choose to show, your badges, and the reactions you send are visible to friends, and to other players when you trade.
-The public trading ledger on this website shows how many of each toy exist and are still available, and open trade offers and wants. It never shows email addresses, sign-in details or step counts.</p>
-<p>Shelves are private until you choose to make yours public.</p>"""),
+<p>The current beta does not publish your cloud save, shelf or trade offers to other players. Your collector name identifies your Pockle account; account email addresses, sign-in details and step history are not published.</p>
+<p>If public shelves or player trading become available, we will describe what is visible and the controls available before enabling those features.</p>"""),
     ("share", "Who we share it with", f"""
 <p>We share information only with service providers who help us run Pockle, under contracts that limit how they use it:</p>
 <ul><li><strong>Supabase</strong> — database, accounts and game servers.</li>
-<li><strong>Apple and Google</strong> — sign-in, app distribution, in-app purchases and push notifications.</li>
+<li><strong>RevenueCat</strong> — purchase processing, purchase validation and purchase reporting. It receives your Pockle account identifier and purchase history so we can deliver purchased boxes and resolve purchase issues.</li>
+<li><strong>Apple and Google</strong> — sign-in, app distribution and in-app purchases. Their stores process payment details; Pockle does not receive your card number.</li>
 <li><strong>Vercel</strong> — hosting for this website.</li></ul>
 <p>We may also share information if the law requires it, to protect players' safety, or as part of a sale or merger of {COMPANY} (you would be told first).</p>"""),
     ("kids", "Children and teens", f"""
@@ -117,8 +118,8 @@ The public trading ledger on this website shows how many of each toy exist and a
 If you believe a child under 13 has an account, contact {mail(PRIVACY)} and we will delete it.</p>
 <p>Players aged 13 to 17 should have a parent or guardian's permission to play and to make purchases.</p>"""),
     ("keep", "How long we keep it", """
-<p>We keep your information while your account is active. When you delete your account, we delete or de-identify your personal information within 30 days,
-except purchase and transaction records we must keep for tax, accounting or fraud-prevention reasons, and anonymous toy-count statistics on the public ledger.</p>"""),
+<p>We keep your information while your account is active. After a verified account-deletion request, we delete or de-identify associated account and cloud-save data within 30 days.
+Purchase and transaction records may be retained where required for tax, accounting or fraud prevention. Deletion requests also cover personal data held by our service providers, subject to those retention requirements. Apple and Google separately control the purchase records in your store account.</p>"""),
     ("rights", "Your choices and rights", f"""
 <ul><li><strong>Access, correct or delete</strong> your information: use the in-app settings, the <a href="/delete-account/">delete account page</a>, or email {mail(PRIVACY)}.</li>
 <li><strong>Step counting</strong> and <strong>notifications</strong> can be turned off at any time in your phone's settings.</li>
@@ -186,14 +187,15 @@ To ask about or delete a teen's account, email {mail(PRIVACY)}.</p>
 DELETE_BODY = f"""<div class="doc-hero peach"><div class="wrap"><h1>Delete your Pockle account</h1><p>How to permanently delete your account and data, from the app or without it.</p></div></div>
 <div class="doc"><nav class="toc" aria-label="On this page"><a href="#app">In the app</a><a href="#email">Without the app</a><a href="#what">What gets deleted</a></nav><article>
 <h2 id="app">In the app</h2>
-<ol class="steps"><li>Open Pockle and tap <strong>Settings</strong> (the gear on Home).</li><li>Tap <strong>Your account</strong>, then <strong>Delete account</strong>.</li><li>Confirm. You'll be signed out, and deletion finishes within 30 days.</li></ol>
+<ol class="steps"><li>Open Pockle and tap <strong>Settings</strong> (the gear on Home).</li><li>Tap <strong>Your account</strong>, then <strong>Delete account</strong>.</li><li>Confirm the deletion request. You'll be signed out; deletion of associated cloud account data finishes within 30 days.</li></ol>
 <h2 id="email">Without the app</h2>
 <p>Email {mail(PRIVACY)} from the email address linked to your Apple or Google sign-in, with the subject <strong>"Delete my Pockle account"</strong> and your collector name. We'll confirm it's your account and delete it within 30 days.
 Parents can request deletion of a teen's account the same way.</p>
 <h2 id="what">What gets deleted, and what's kept</h2>
 <table class="plain"><tr><th>Deleted</th><th>Kept, and why</th></tr>
-<tr><td>Your account and sign-in link, collector name and profile, toys, spares, fusions, badges, friends, trade offers, step history and notification settings.</td>
-<td>Purchase and transaction records, kept as long as tax and fraud-prevention laws require. Anonymous toy counts on the public ledger, which never identify you.</td></tr></table>
+<tr><td>Your Pockle account and sign-in link, collector name and profile, cloud saves containing toys, spares, fusions, badges, step history and saved preferences, and associated personal data held by our service providers, subject to the retention exceptions opposite.</td>
+<td>Purchase and transaction records where needed for tax, accounting or fraud prevention. Apple and Google retain their own store records under their policies.</td></tr></table>
+<p>Account deletion does not automatically erase local app data on every phone you have used. Local copies may remain until you remove the app or clear its stored data. Removing the app alone does not request deletion of your cloud account.</p>
 <div class="note">Deleting is permanent. Your toys can't be restored, and purchases aren't refunded except where the law requires. If you only want to stop, you can sign out or turn off walking and notifications instead.</div>
 </article></div>"""
 
@@ -204,7 +206,7 @@ def build():
     shutil.copytree(ROOT / "assets", OUT / "assets")
     shutil.copyfile(HOME_SOURCE, OUT / "index.html")
     doc("privacy", "Privacy Policy", "How Pockle collects, uses and protects your information.", "moon",
-        f"Last updated {UPDATED}. This policy explains what {COMPANY} collects when you play Pockle, and why.", PRIV, "/privacy/")
+        f"Last updated {PRIVACY_UPDATED}. This policy explains what {COMPANY} collects when you play Pockle, and why.", PRIV, "/privacy/")
     doc("terms", "Terms of Service", "The rules for playing Pockle.", "", f"Last updated {UPDATED}. The rules for playing Pockle.", TERMS, "/terms/")
     page("support", "Support · Pockle", "Help with Pockle: walking, boxes, trading, purchases and accounts.", SUPPORT_BODY, "/support/")
     page("delete-account", "Delete your account · Pockle", "How to delete your Pockle account and data.", DELETE_BODY)
