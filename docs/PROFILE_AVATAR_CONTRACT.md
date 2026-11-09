@@ -1,0 +1,51 @@
+# Profile avatars — implementation and cloud contract
+
+November 9, 2026 · `codex/mystery-social-review`. This is a dormant runtime foundation for the owner's avatar/onboarding review. The HUD is not wired and the generated avatar artwork is not in Resources yet. No user photo has been read or uploaded and no Storage configuration or account data has changed.
+
+## Current implementation
+
+`AvatarCatalog` supplies twelve stable artwork IDs, independent of inventory: `pip-peach`, `pip-moon`, `fox`, `axolotl`, `firb`, `coco`, `snowy`, `ginger`, `reiny`, `guin`, `bundy`, `wally`. Approved art will load from `Resources/UI/Avatars/<id>`. None of these choices grants a toy or requires one to be owned. Existing GuestProfile and inventory data are untouched.
+
+`ProfileAvatarService` has account-separated local storage under `Application.persistentDataPath/ProfileAvatars/v1/<verified-auth-UUID>/`. The selected preset/photo is written only on an explicit save; a new photo has an opaque filename and the selection manifest replaces atomically. Cancel, bad images and stale/duplicate picker callbacks do not replace the saved selection. Disabling the service cancels pending selection. Manifest and image reads have hard byte limits; new photo bytes are flushed and decoded before the manifest commits. UI notification failures cannot roll back a committed photo. Pending files belong to their account directory, and restart removes abandoned pending files, unselected immutable photos and interrupted manifest files. Switching to a preset removes the previously selected local photo. Photo data is never placed in PlayerPrefs, an inventory snapshot or logs.
+
+Photo selection uses the system picker, not gallery enumeration. iOS 14+ uses PHPicker and ImageIO thumbnail decoding; iOS 13 returns unsupported and keeps all preset choices available. The project minimum OS stays unchanged, and PhotosUI / UniformTypeIdentifiers are weak-linked. Android 13+ uses the native photo picker; older supported Android versions use the document picker. No broad photo/storage permission, camera capture or new external package is introduced. Both platforms normalize orientation and bound the intermediate image to 2048px. The runtime validates PNG/JPEG dimensions before decoding and exports the square crop as a new 512px PNG containing new pixels only, stripping original EXIF/GPS and filenames. Zoom is 1–4×; the crop is clamped within the source.
+
+**These saves are local.** `IsCloudSaved` is always false and `SaveScopeLabel` is “Saved on this device.” Do not label the button “Upload” or promise cross-device restoration until the cloud contract below is implemented and verified. Public avatars, public shelves and moderation are separate work; this service does not publish anything.
+
+## HUD binding after artwork/flow approval
+
+1. Add one service to the app root. Bind `SupabaseAccountService.UserId` only when the account is verified/signed in; call `BindAccount(null)` immediately on sign-out. Do not derive ownership from the collector name, email, legacy owner preference or OAuth user metadata.
+2. After username claim succeeds and before the tutorial, offer the twelve presets plus **Choose photo**. The same choice can be changed later in You. The current account service becomes ready after username + backup, so a photo cannot be persisted before that succeeds.
+3. Listen to `Changed`; render `Texture`, `PresetId`, `HasPhoto`, `Stage` and `Message`. Resource art is intentionally absent until approval; never substitute a fake cloud image. Existing four-Pip GuestProfile selection may be mapped to its closest preset during a separately reviewed migration, but must not rewrite inventory.
+4. `SelectPreset(id)` commits locally and returns success/failure. `PickPhoto()` opens the OS picker. When `Stage == Cropping`, show `PendingPhoto` in a circular/square preview, support pan and zoom, and provide **Save photo** and **Cancel**. Crop centers are normalized with bottom-left origin. Call `CommitPhotoCrop(centerX, centerY, zoom)` only for Save. Call `CancelPhoto()` on Back/close, leaving the old selection unchanged.
+5. Keep the local-only note next to Save; once saved, report the service's scope label. Do not play a cloud-success sound.
+6. Before requesting account deletion, capture the verified UUID. Only after the account service confirms that request, call `DeleteAccountData(capturedId)`. If local cleanup fails, report/retry cleanup without claiming it succeeded. Sign-out hides and cancels this account's pending picture but does not delete its saved selection. Do not delete another account's directory. UI teardown must unsubscribe from `Changed`.
+
+## Cloud upload/sync contract — required, not implemented
+
+Existing backend `profile` returns only player ID and username; the private players table has no avatar fields. Legacy backups omit GuestProfile. There is no Storage bucket, upload policy, image validator or Storage deletion worker. Adding only a public bucket or a photo URL to the save would not meet the intended ownership/deletion guarantees.
+
+Implement an avatar-specific endpoint and private bucket in a separate migration/PR. Do not alter the payment/walking API during this task:
+
+- Authenticate Apple/Google through the existing Auth validation, check the current `session_id` and active player mapping server-side, and derive actor/player IDs there. Never trust an uploaded owner field or user-editable JWT metadata. Reject deletion-requested accounts, stale sessions and anonymous accounts.
+- Keep a versioned avatar record per player: `kind` (preset/photo), whitelisted `preset_id`, private `object_key`, integer `revision`, timestamps. RLS and grants deny other users; no arbitrary object URL/path. Preset changes also persist through this endpoint. Include the avatar record in authenticated profile reads, independent of inventory backups.
+- Use an idempotent upload intent with a short expiry and server-generated immutable path. Upload to private staging with strict MIME/byte quotas. Limit to one pending upload and rate-limit intent creation. Client requests must carry the last avatar revision so two devices cannot silently overwrite each other.
+- Finalize only after a trusted decoder validates and re-encodes the image to an actual bounded 512×512 PNG, strips metadata, and records its digest. Checking Content-Type/filename/PNG header alone is insufficient. The current server has no image-decoding dependency: choose and pin one, test resource limits, and do not accept unvalidated uploads meanwhile.
+- Atomically compare the expected revision and commit the new avatar record after the object exists; return the authoritative record and revision. Retrying an intent returns the same result. Upload/finalize failure keeps the old avatar. Queue the superseded object and abandoned staging objects for deletion through the **Storage API**, not direct SQL against storage.objects.
+- Fetch through authenticated download or short-lived signed URLs. Cache by owner + revision; clear visible/cache references at sign-out and reject late responses from a former account. Say “Saved to your account” only after finalize acknowledgement. Offline/failed synchronization must remain visibly local/pending. Do not merge another account's image because a filename or collector name matches.
+- Extend the existing deletion worker to revoke avatar access immediately when deletion is requested and remove active, superseded and pending Storage objects before deleting the Auth user. Record/retry provider cleanup and verify absence; purchase records remain under their separate retention policy. Local deletion must clear this account's final and pending files. Account deletion currently has no avatar-storage work, so cloud uploads stay disabled until this worker is implemented.
+- Public profile use needs its own explicit visibility choice, abuse/report handling and server moderation decision. A private upload must not automatically become feed/trading artwork. Revisit the privacy and store data declarations before enabling server photo uploads.
+
+## Verification
+
+Completed November 9:
+
+- Full portable Core checks, including all twelve IDs, UUID/path restrictions, crop bounds and malformed/oversized PNG/JPEG headers: passed.
+- SourceChecks after initial implementation: 305 C# files across default/Editor/Android, five asmdefs, 1082 GUIDs, zero failures. Root runs the final integrated check after other agents finish.
+- Android native Java compiled with Unity's JDK and Android API 36: passed.
+- iOS native Objective-C++ compiled with ARC for arm64 iOS 15 and minimum deployment iOS 13: passed. The iOS 13 compile emits only the current SDK's libc++ minimum-platform warning; no unguarded PhotosUI availability warning. This is syntax compilation, not a linked Unity archive or device test.
+- New Unity suite `Pockle.Tests.ProfileAvatarTests` has six cases for account-scoped persistence/deletion, canceled/stale picker results and crop/preset replacement. All six passed in the final native Unity run, alongside twenty paid-quote tests (26/26 total, Unity exit 0). Results: `test-results/mystery-social-final-focused.xml`; compact evidence: `docs/mystery-social-validation/01/native-final-26.json`.
+
+Not verified: native Unity export/linking, R8 release packaging, real OS picker/orientation/large-image/cancel behavior on phones, final crop UI, cross-device/cloud sync, provider deletion. No real photos were read or uploaded; test images are synthetic. The existing inventory, payment and auth services are unchanged.
+
+References checked: [Apple photo picker](https://developer.apple.com/documentation/photokit/selecting-photos-and-videos-in-ios), [Android photo picker](https://developer.android.com/training/data-storage/shared/photo-picker), [Supabase Storage access control](https://supabase.com/docs/guides/storage/security/access-control), [Storage object deletion](https://supabase.com/docs/guides/storage/management/delete-objects). The Supabase changelog index fetch returned an unsupported-markdown response; no Supabase feature was deployed or schema migration created in this task.

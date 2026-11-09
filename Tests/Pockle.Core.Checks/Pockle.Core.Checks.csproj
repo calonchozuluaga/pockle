@@ -12,6 +12,7 @@
     <Compile Include="PaidDeliveryChecks.cs" />
     <Compile Include="WalkingDeliveryChecks.cs" />
     <Compile Include="MomentAudioChecks.cs" />
+    <Compile Include="AvatarChecks.cs" />
     <Compile Include="AccountProtocolChecks.cs" />
     <Compile Include="AuthoredMeshChecks.cs" />
     <Compile Include="InteractionChecks.cs" />

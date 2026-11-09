@@ -53,6 +53,7 @@ MaterialTouchChecks.Run();
             PaidDeliveryChecks.Run();
             WalkingDeliveryChecks.Run();
             MomentAudioChecks.Run();
+            AvatarChecks.Run();
             return 0;
         }
         catch (Exception exception)

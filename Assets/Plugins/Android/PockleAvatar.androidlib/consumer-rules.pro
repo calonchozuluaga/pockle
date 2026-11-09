@@ -1,0 +1,1 @@
+-keep class studio.pockle.avatar.AvatarPickerActivity { public *; }
