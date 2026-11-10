@@ -1,0 +1,15 @@
+{
+  "provider": "Runway connected sound-effect tool",
+  "existingCreditsOnly": true,
+  "common": {
+    "taskId": "d709427c-7338-46b5-8155-40b664a987ed",
+    "requestedDuration": 3.2,
+    "shakePopTargetSeconds": 0.8
+  },
+  "special": {
+    "taskId": "139f3acc-ca53-4f90-8e81-d5facb93bce1",
+    "requestedDuration": 4,
+    "shakePopTargetSeconds": 1.2
+  },
+  "approval": "auditions only; no runtime replacement"
+}

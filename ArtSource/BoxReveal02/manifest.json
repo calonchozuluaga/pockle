@@ -1,0 +1,72 @@
+{
+  "date": "2026-11-09",
+  "branch": "codex/box-reveal-design-02",
+  "status": "concept and sound auditions; owner review pending; not imported into Resources",
+  "box": {
+    "source": "mystery-carton-02.png",
+    "tool": "built-in image_gen",
+    "generatedFile": "exec-3e4a6d4a-842b-4eb8-be41-d2da74fea1d7.png",
+    "promptFile": "image-prompt.txt",
+    "referenceRoles": [
+      {
+        "file": "docs/packaging/pockle-folded-box-concepts-02.png",
+        "role": "folded-carton shape and approved packaging family"
+      },
+      {
+        "file": "Assets/Pockle/Resources/UI/PockleWordmark.png",
+        "role": "brand identity"
+      },
+      {
+        "file": "Assets/Pockle/Resources/UI/Boxes/Collection-pip.png",
+        "role": "cardboard/print material and dimensional reference; not a collection-specific replacement"
+      }
+    ],
+    "implementationNotes": "Concept art only. For a final 3D carton use the actual brand wordmark texture, separate lid/flaps and high-resolution surface print. Universal teaser should not imply a specific collection or leak the result's rarity."
+  },
+  "audio": {
+    "provider": "Runway connected tool",
+    "model": "ElevenLabs Text to Sound v2",
+    "generationCount": 2,
+    "existingCreditsUsed": 8,
+    "creditsRemainingAfter": 4097,
+    "noTopUp": true,
+    "loop": false,
+    "promptInfluence": 0.3,
+    "sourceProcessing": "Original generated MP3 bytes retained. Review copies byte-identical; no trimming, resynthesis, gain edits or conversion. Analysis WAVs only for integrity checks.",
+    "entries": [
+      {
+        "id": "common-reveal-02",
+        "taskId": "d709427c-7338-46b5-8155-40b664a987ed",
+        "source": "common-reveal-02.mp3",
+        "requestedSeconds": 3.2,
+        "popTargetSeconds": 0.8,
+        "prompt": "A small premium cardboard toy carton shakes: 0 to 0.8 seconds three playful dry papery rattles and soft toy knocks, accelerating. At 0.8 seconds a crisp lid flap opens and a round cushioned pop. Then a warm two-note glass chime and tiny sparkle, fading fully to silence. Close clean studio foley, joyful tactile mobile game reveal. No voices, speech, music bed, coins, casino or harsh highs."
+      },
+      {
+        "id": "special-reveal-02",
+        "taskId": "139f3acc-ca53-4f90-8e81-d5facb93bce1",
+        "source": "special-reveal-02.mp3",
+        "requestedSeconds": 4,
+        "popTargetSeconds": 1.2,
+        "prompt": "A small premium cardboard toy carton shakes: 0 to 1.2 seconds accelerating dry paper rattles and soft toy knocks. At 1.2 seconds a crisp lid flap bursts open with a round pop and airy bright whoosh. A joyful rising glass-bell flourish blooms into shimmering celebratory sparkles, then a full soft decay to silence. Close clean mobile game foley. No voice, speech, music bed, coins, casino, brass or harsh highs."
+      }
+    ]
+  },
+  "timing": {
+    "currentUnityFullDurationSeconds": 2.2,
+    "commonPopSeconds": 0.792,
+    "rarePopSeconds": 0.924,
+    "epicPopSeconds": 1.056,
+    "secretPopSeconds": 1.232,
+    "currentSoundStarts": "Opened callback at pop; no shake-start sound hook",
+    "proposal": "Start shake foley with opening gesture; trigger the selected reveal ending at the actual saved-result pop event. Rarer result keeps a full celebration tail. Do not play common and special together. Calm/Skip must suppress the shake and avoid replaying an entire delayed shake cue.",
+    "auditionCaveat": "Prompts specify pop timing targets. Human listening and animation alignment remain to verify; a full generated take is not a production-ready event-aligned stem."
+  },
+  "verification": {
+    "decode": "CoreAudio 44.1kHz mono full3.2s/4s; zero near-full-scale decoded samples; both final20msRMS below0.00015",
+    "qualityFile": "quality.json",
+    "humanListening": "Owner review pending",
+    "browserPreview": "Static links and script syntax can be checked offline; browser interaction not claimed when local-file navigation is blocked.",
+    "unchanged": "Existing seven moment audio sources/runtime assets and Unity code unchanged."
+  }
+}
