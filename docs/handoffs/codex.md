@@ -1437,3 +1437,41 @@ On separate `codex/google-community-beta`, based on verified TestFlight11 releas
 Sourceec229ab/native57/Core/sourcepasses. ActualcommunityAAB9 validated, eightdisabledflags/channelcommunitybetaverified in hashed Unityassetfiles; retainedpayloadSHA256match after strippingdebugsignatures. ManifestlaunchMode is numeric1(singleTop); initial checker assumed string; scanning only*.assets omitted hash-named files. Both audit assumptions corrected without runtimechanges. 499142993bytes, SHA256f3ae4eb2e7b11fc36d16e452f241103ee71d0c2b40046a2e317ccd3ce381cd59 copiedtoownerBuilds/Pockle-Play-Internal-v9.unsigned.aab. Owner askedsignexistingkey. No upload/rollout; currentAlpha8stilldraft. AllincidentalUnitysettings/importer/iconchangesrestored.
 
 Owner verifiedGoogleCloudsession. PockleprojectaudienceExternal/Testing/one testuser; no registeredsensitive/restrictedscopes. Clientaddsnone, SupabaseGoogledefaultsemail/profile; Googleofficialdocs explicitlyexemptbasicidentity fromtestuserallowlist. Do notclaimTestingaloneblocksnewtesters. Freshcohortloginacceptance remains. PublishappdisabledpendingBranding, noaudience/securitychangeorcredentialsread. Evidence and primarylinks in google-community-beta9.json/GOOGLE_CLOSED_TEST_SETUP. Nextverifyownersignedpayload, replaceAlpha8with9, recheckreviewer/group/country andpreviewclosedrelease before authorizedtestreview; no publicproductionorcommunityposts. TestFlight11alreadyTesting and shouldnotbereuploaded.
+
+
+### November9 — owner signed Android9; closed test delivery resumed
+
+Continuing UX-010/011 Googlecommunitybeta delivery on codex/google-community-beta, sourceec229ab. Origin/main and both handoffs checked. Owner reports existing-key signature done; verify signedpayload/certificate/bundle, replace unsafeAlpha8draft with9, review countries/group/reviewer and submit only closedtest scope. Files limited to release evidence/notes/handoff unless actual validation failure requires code fix. No newcredentials, productionpayment enablement, publicproduction submission, invitations or communityposts. Exact artifact/outcome follows.
+
+
+### November 9 — Sarah TestFlight invitation claimed
+
+Owner explicitly requests invitation to sarah@thelittlesugars.com. On codex/google-community-beta, distribution-only task: inspect latest Pockle build11, add external beta tester with no App Store Connect team role, send invitation when Apple permits, and record actual result. Files: docs/handoffs/codex.md only. Existing Android9 closed-test delivery remains pending; no production release, credential or payment changes.
+
+
+### November 9 — Sarah added; first external Beta App Review pending
+
+Verified App Store Connect external group Pockle invited testers, ID57eb0673-660c-4223-b6ca-83b1c02b0b1d, contains only sarah@thelittlesugars.com; tester status No Builds Available. No team/admin role or public link created. Selected latest1.0(11) and Next: Apple requires initial Test Information before external Beta App Review. Prepared accurate description (trading unavailable), support@playpockle.com, Carlos Zuluaga/carlos@zulapp.com, dedicated reviewer username testerpockle@gmail.com. Owner asked to enter contact phone and reviewer password directly on Apple page and click Next under standing credential boundary. No password handled, no submission/invitation delivery claimed; group still0builds until wizard completes. Existing internal owner11Testing unaffected. Android9 signed verification sessions completed exit0: payload identical, uploadcertificate matches8, bundletool validates; signed SHA256c15096a61a8571f8901cb2fca8e38ca35aaf51f0194fc07bafa40a22afa4dbf9. Alpha upload/rollout still pending while Apple form is handed to owner.
+
+
+### November 9 — external TestFlight submitted by owner; waiting for Apple
+
+Owner reports Submitted after entering reviewer credentials privately. Read-only App Store Connect verification: Pockle invited testers (57eb0673-660c-4223-b6ca-83b1c02b0b1d) now1tester/1build, latest1.0(11) explicitly Waiting for Review. Testers tab confirms sarah@thelittlesugars.com remains No Builds Available while review is pending. No invitation delivery/install availability claimed. No credentials inspected, further submission, public link or team access created. Existing owner internal testing unaffected. Distribution-only verification on codex/google-community-beta; no source change/test rerun. Android9 signed verification remains passed but Alpha upload/rollout pending.
+
+
+### November 9 — Google remaining-gates status review
+
+Owner asks what remains for Google. Continuing codex/google-community-beta distribution readback, files limited to this handoff. Origin/main fetched and both owner handoffs read. Signed9verification alreadypassed. Native Chrome controls timed out twice; read-only fallback uses existing in-app Play Console dashboard on exact play.google.com origin. Initial cached page10/11 contradicts prior native saved-listing11/11, so refreshing before reporting current setup. No new release/publication or policy/credential changes in this status check.
+
+
+Google status readback, November9: refreshed existing in-app dashboard confirms setup section no longer incomplete, closed3/5complete (countries/testers/create release done; preview/confirm and Send for review remain),0opt-ins, productionApplydisabled with12continuous14dayrequirement. Alpha page explicitlyInactive,1country, draft1.0(8)—Closed beta. Signed9notuploaded; no submission yet. Exact HTTPSfallback worked after nativeChromecontrolstimeout; no originwarningorpolicybypass. Existing tab retainedforreleasecontinuation. Owner status answer must distinguish preparedartifact9 from liveclosedrelease and generalbeta checkout disabled from owner sandbox purchase tests. No productionreadiness claim.
+
+
+### November 9 — upload latest signed Android9 claimed
+
+Owner explicitly requests upload latest. Continuing codex/google-community-beta distribution: exact signed9 SHA256/size matches verifiedrecord, replace build8 in existing Alpha draft, inspect validation and save latestcandidate. Origin/main/bothhandoffs read. Files: release evidence/backendrecord/handoff only. No credentials, productionpayments, publicproduction, communityposts or additionaltesters. Existing closedtestsubmission authorization persists; record actual state after validation.
+
+
+### November 9 — Android9 uploaded and validated; owner Advertising ID Save required
+
+Uploaded exact ownersigned499270876byte9 bundle through existing in-app Play Alpha draft1 filechooser. Googlefinishedoptimization; artifact9(1.0),SDK26+/target36,arm64 confirmed. Removed only8fromdraft(recoverableartifactlibrary), savedname1.0(9)—Community closed beta and accuratecommunitynotes(purchasesdisabled/tradingunavailable). Changes saved confirmation. Preview:0blockingerrors/2warnings(noReTrace mapping,nativenosymbols). Savedrelease toPublishingoverview. Queued15changes onlyAlphacandidate9/US/group pockle-beta-testers@googlegroups.com +owneralreadysavedlisting/declarations; managedpublishingoff. Googlequickcheckblocksreviewon Incomplete advertising ID declaration. Openedform, selectedNo basedonverifiedfinalmanifest/source/noadSDK, finalSaveuntouchedunderstandingownerlegalboundary; owneraskedSaveinexistingin-apptab. Evidencegoogle-testing/build9-ad-id-owner-save.png. No reviewsubmitted/rollout/liveoptinsclaimed. PublishingqueuealsohasexistingGooglePlayGamesonPCoptin; review/removeunintendedPCscopebeforefinalsubmission. No credential/password/signing/runtime/backend changes;57native/fullCore/sourceevidenceunchanged; no newtestsrunforupload.

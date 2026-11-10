@@ -31,7 +31,7 @@
   ],
   "sha256": "f3ae4eb2e7b11fc36d16e452f241103ee71d0c2b40046a2e317ccd3ce381cd59",
   "bytes": 499142993,
-  "ownerSignaturePending": true,
+  "ownerSignaturePending": false,
   "closedTestPublished": false,
   "tests": "57 focused Android-symbol native cases; full Core and source checks passed",
   "googleOAuthAudience": {
@@ -48,5 +48,25 @@
       "https://developers.google.com/identity/protocols/oauth2/production-readiness/overview",
       "https://github.com/supabase/auth/blob/master/internal/api/provider/google.go"
     ]
-  }
+  },
+  "signedPayloadMatches": true,
+  "uploadCertificateMatchesVersion8": true,
+  "signedSha256": "c15096a61a8571f8901cb2fca8e38ca35aaf51f0194fc07bafa40a22afa4dbf9",
+  "signedBytes": 499270876,
+  "uploadedToGooglePlay": true,
+  "alphaDraftVersionCode": 9,
+  "replacedDraftVersionCode": 8,
+  "alphaReleaseName": "1.0 (9) \u2014 Community closed beta",
+  "googleDraftSaved": true,
+  "googleReleaseValidationBlockingErrors": 0,
+  "googleReleaseValidationWarnings": [
+    "No deobfuscation file",
+    "Native debug symbols not uploaded"
+  ],
+  "googleReleaseSavedToPublishingOverview": true,
+  "googleReviewSubmitted": false,
+  "googlePreReviewBlocker": "Incomplete advertising ID declaration; No selected for owner Save",
+  "googleQueuedCountry": "United States",
+  "googleQueuedTesterGroup": "pockle-beta-testers@googlegroups.com",
+  "googleQueuedFormFactorNote": "Publishing overview also lists existing Google Play Games on PC opt-in; review/remove unintended PC scope before final submission."
 }
