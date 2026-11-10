@@ -1,0 +1,52 @@
+{
+  "sourceCommit": "ec229ab",
+  "bundle": "com.playpockle.app",
+  "version": "1.0",
+  "versionCode": 9,
+  "channel": "community-beta",
+  "newPurchases": "disabled",
+  "existingPurchaseRecovery": "retained",
+  "buildSucceeded": true,
+  "bundletoolValidation": true,
+  "disabledOwnerFlags": 8,
+  "channelVerifiedInActualBundle": true,
+  "retainedPayloadMatches": true,
+  "removedDebugSignatureFiles": [
+    "META-INF/ANDROIDD.RSA",
+    "META-INF/ANDROIDD.SF",
+    "META-INF/MANIFEST.MF"
+  ],
+  "billingLibrary": [
+    "9.1.0"
+  ],
+  "minSdk": "26",
+  "targetSdk": "36",
+  "permissions": [
+    "android.permission.INTERNET",
+    "android.permission.VIBRATE",
+    "android.permission.ACCESS_NETWORK_STATE",
+    "com.android.vending.BILLING",
+    "com.playpockle.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION",
+    "android.permission.ACTIVITY_RECOGNITION"
+  ],
+  "sha256": "f3ae4eb2e7b11fc36d16e452f241103ee71d0c2b40046a2e317ccd3ce381cd59",
+  "bytes": 499142993,
+  "ownerSignaturePending": true,
+  "closedTestPublished": false,
+  "tests": "57 focused Android-symbol native cases; full Core and source checks passed",
+  "googleOAuthAudience": {
+    "project": "pockle-512403",
+    "publishingStatus": "Testing",
+    "userType": "External",
+    "testUsers": 1,
+    "sensitiveScopesConfigured": 0,
+    "restrictedScopesConfigured": 0,
+    "clientExtraScopes": false,
+    "assessment": "Client does not request extra scopes; Supabase Google provider defaults to email/profile. Google documents basic-identity exception to test-user allowlist. This status alone is not evidence of a beta sign-in block. Fresh cohort device sign-in still requires acceptance.",
+    "productionBranding": "Publish app disabled until Branding configuration completed; no configuration or audience change performed",
+    "sources": [
+      "https://developers.google.com/identity/protocols/oauth2/production-readiness/overview",
+      "https://github.com/supabase/auth/blob/master/internal/api/provider/google.go"
+    ]
+  }
+}
