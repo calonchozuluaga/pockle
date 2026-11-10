@@ -869,3 +869,8 @@ Owner saved export compliance. AppStore groupPockleownerinternal (existingone te
 ### November9 — Android community beta checkout guard
 
 Android-symbol pinnedUnity6000.6.5f1 PlayMode57/57 pass: CheckoutSchedulingRuntimeTests (including blockednewquote/cachedconfirmation and preservedpendingrecovery), PaidDeliveryRuntimeTests, PaidQuoteRuntimeTests for13products, CheckoutUiTests and WalkingBoxUiTests. XMLtest-results/community-checkout.xml; log/private/tmp/pockle-community-unity.log. FullCorepasses including strictchannelpolicy andexistingreplay/restartchecks; Source325C#/3profiles/5asmdefs/1143GUIDs0fail. No realcheckout/purchase or backendmutation used. CommunityAndroid9artifact/physicaldevice/runtimeacceptance stillpending; iOSbehavior intentionallyunchanged.
+
+
+### November 9 — distribution readback
+
+Google accepted signed Android9, only artifact9 in Alpha; no blocking bundle errors/two crash-symbolication warnings. Publishing overview shows Changes in review after confirmed14change submission, automaticquickchecks pending. Exactsignature/payload/version/channel evidence in backend/google-community-beta9.json; screenshot backend/google-testing/build9-submitted.png. This establishes upload/submission, not approval, live enrollment or deviceacceptance. Sourceec229ab unchanged; existing57native/Core/source evidence reused, no tests rerun. AppleexternalTestFlight11 lastverifiedWaitingforReview withSarahadded; installavailabilitypendingApple.

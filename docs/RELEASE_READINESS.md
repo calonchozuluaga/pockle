@@ -93,3 +93,8 @@ Production-ID version1.0/build8 uploaded and processed; owner export compliance 
 
 ## November8 — Google closed-test preparation
 Google explicitly requires12testers continuously opted in for14days;0observed. Alpha draft created,USstaged,latestAndroid1.0(8)verifiedreadyforownersigning. Storedeclarations/revieweraccess/listingandcohortconfigurationblockclosedpublication. Internalv4remainsactiveanddoesnotstarttheclock. GoogleGrouprecruitmentrecommended; no group/invitations created. See docs/backend/GOOGLE_CLOSED_TEST_SETUP.md.
+
+
+## November 9 — Android community beta 9 submitted
+
+Google accepted the owner-signed `com.playpockle.app` 1.0 (9) into Alpha; removed version 8 from the draft. Bundle validation has no blocking errors and two crash-analysis warnings (mapping file and native debug symbols). Owner saved Advertising ID = No. Submitted 14 changes for the United States closed test using `pockle-beta-testers@googlegroups.com`; Publishing overview now shows **Changes in review**, with automated quick checks still running. This is not a live closed test or production release. Removed the unrequested Google Play Games on PC opt-in before submission. New community-beta purchases stay disabled; existing paid recovery and walking remain. Evidence: `docs/backend/google-community-beta9.json` and `docs/backend/google-testing/build9-submitted.png`. Wait for approval, then verify enabled enrollment link and fresh tester login. The 12-testers/14-continuous-days requirement has not started based on this submission.

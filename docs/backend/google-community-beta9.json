@@ -64,9 +64,15 @@
     "Native debug symbols not uploaded"
   ],
   "googleReleaseSavedToPublishingOverview": true,
-  "googleReviewSubmitted": false,
-  "googlePreReviewBlocker": "Incomplete advertising ID declaration; No selected for owner Save",
+  "googleReviewSubmitted": true,
+  "googlePreReviewBlocker": null,
   "googleQueuedCountry": "United States",
   "googleQueuedTesterGroup": "pockle-beta-testers@googlegroups.com",
-  "googleQueuedFormFactorNote": "Publishing overview also lists existing Google Play Games on PC opt-in; review/remove unintended PC scope before final submission."
+  "googleQueuedFormFactorNote": "Unrequested Google Play Games on PC opt-in removed before submission; final queue has no PC opt-in",
+  "googleReviewSubmissionDate": "2026-11-09",
+  "googleReviewStatus": "Changes in review; automatic quick checks still running",
+  "googleAdvertisingIdDeclaration": "Owner saved No; verified updated in What you have told us",
+  "googlePlayGamesPcOptedIn": false,
+  "googleSubmittedChangeCount": 14,
+  "googleSubmissionEvidence": "docs/backend/google-testing/build9-submitted.png"
 }
