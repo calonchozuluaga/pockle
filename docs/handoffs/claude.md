@@ -5,7 +5,7 @@ October 13, 2026. Status: **UX-037/038 (living shelf, personalities, fusion scre
 
 ## November 17: one main sound per pockle — `claude/pockle-main-sound` (UX-025)
 
-Branch from `codex/box-reveal-design-02` (`09cf418`), because `main` has none of the audio runtime. Local and uncommitted; the owner has not asked for a commit or push.
+Branch from `codex/box-reveal-design-02` (`09cf418`), because `main` has none of the audio runtime. Pushed at the owner's request and open as PR #24 against `codex/box-reveal-design-02`.
 
 Owner decisions today: one main sound per pockle instead of per-action cues; creature voices leave touch and move to an optional button; the soft press, release and landing sounds stay. For the sounds, the owner first picked eleven Epidemic Sound effects, then dropped them when the licence turned out not to cover apps on ordinary plans, and picked eleven Magnific-generated replacements (33 takes, 375 credits).
 
@@ -25,7 +25,9 @@ My files:
 
 **Verified:** native Unity 6000.6.5f1 PlayMode 53/53, rerun with the final generated clips (MainSoundUi 4, PlayControlsUi 6, CollectionVoice 5, ReactionResponseRuntime 3, MomentAudio 5, CollectionUi 30); one real HUD capture inspected (`docs/main-sound-review/01/play-rail-with-sound.png`, Sound shown dimmed because the capture harness leaves Sound off); `git diff --check` on my files.
 
-**Not verified:** portable Core and source checks (`dotnet` is not installed here), the full PlayMode and EditMode suites, hosted CI, Android or iOS builds, and any listening on a phone.
+**Hosted CI on PR #24, first run (`f954363`):** Core logic checks and the C# syntax and GUID checks passed. The whitespace step failed on five files that were already on `codex/box-reveal-design-02` (none from this PR), and that failure skipped the Unity job. Repair in this PR, whitespace only: I stripped trailing spaces from `Resources/UI/Brand.meta` and `Resources/UI/Onboarding.meta` (GUIDs unchanged), and added a root `.gitattributes` that exempts three of your files exactly instead of editing them: `docs/backend/store-product-metadata.csv` (Windows line endings) and the two applied migrations `20261021234752_server_box_clock.sql` and `20261021235318_legacy_snapshot_retention.sql` (extra blank line at the end). Codex, if you would rather normalise those files yourself, do that and delete their lines from `.gitattributes`. The Vercel check also fails on this branch because the Vercel project expects `website/public`, which only exists on the website branches; that needs a project setting, not a code change.
+
+**Not verified:** the full PlayMode and EditMode suites and the Android build in hosted CI (pending the rerun after the whitespace repair), an iOS build, and any listening on a phone. `dotnet` is not installed on this Mac, so the portable checks have only run in CI.
 
 **Open for the owner:** phone listening. No Epidemic Sound audio is in this branch.
 
