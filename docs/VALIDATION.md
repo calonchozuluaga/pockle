@@ -874,3 +874,15 @@ Android-symbol pinnedUnity6000.6.5f1 PlayMode57/57 pass: CheckoutSchedulingRunti
 ### November 9 — distribution readback
 
 Google accepted signed Android9, only artifact9 in Alpha; no blocking bundle errors/two crash-symbolication warnings. Publishing overview shows Changes in review after confirmed14change submission, automaticquickchecks pending. Exactsignature/payload/version/channel evidence in backend/google-community-beta9.json; screenshot backend/google-testing/build9-submitted.png. This establishes upload/submission, not approval, live enrollment or deviceacceptance. Sourceec229ab unchanged; existing57native/Core/source evidence reused, no tests rerun. AppleexternalTestFlight11 lastverifiedWaitingforReview withSarahadded; installavailabilitypendingApple.
+
+### November 17 — main sound on request (`claude/pockle-main-sound`, local)
+
+Native Unity 6000.6.5f1 batch PlayMode on a fresh checkout of `09cf418` plus this change: **53/53** — MainSoundUiTests 4 (eleven clips load as 44.1 kHz mono, 0.2–3 s, contain audio, do not clip; Sound control plays only when pressed, restarts without stacking, follows the staged character, honours Sound off, zero volume and leaving Play; touch responses show their callout with no creature voice), PlayControlsUiTests 6, CollectionVoiceTests 5, ReactionResponseRuntimeTests 3, MomentAudioTests 5, CollectionUiTests 30. `ApprovedUiCapture` rendered the Play screen with five rail controls; one capture inspected and kept at `docs/main-sound-review/01/play-rail-with-sound.png`, the harness's other outputs and incidental project-setting changes were restored.
+
+Not run: portable Core checks and source checks (no `dotnet` on this machine), the remaining PlayMode and EditMode suites, hosted CI, device builds. Not heard: any clip in the app or on a phone.
+
+The same 53 were rerun after the eleven auditioned stock clips were replaced with the owner's Magnific-generated picks (trimmed, 0.42–2.85 s): **53/53** again.
+
+Hosted CI on `dd857f0` (PR #24): portable checks pass, EditMode **17/17**, PlayMode **262/278**. The 16 failures are inherited: the 15 affected classes were rerun locally on `dd857f0` and on an untouched `09cf418`, and the same 15 tests fail identically on both; the sixteenth is a 180 s timeout seen only in CI. The list is in `docs/handoffs/claude.md`.
+
+Phone builds from `dd857f0`: TestFlight 1.0 (12) uploaded and Testing in Pockle owner internal (the owner completed export compliance), and Google Play 1.0 (10) published to internal testing. Both packages were checked for the eleven main sounds, the eight disabled owner flags, identity and signature; details in `docs/main-sound-review/01/distribution.json`. Not verified: any play or listening on a phone.

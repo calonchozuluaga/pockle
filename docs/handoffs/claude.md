@@ -3,6 +3,47 @@
 October 13, 2026. Status: **UX-037/038 (living shelf, personalities, fusion screens) in review on `claude/personalities-fusion-ui`.** Earlier status (October 9): **UX-002/003/004 and ART-001 merged. The owner tested the UI and asked for a less dated look: "Pockle screens v2" (owner's design canvas) is the approved direction. Collection/series rules decided; see `../COLLECTIONS.md`. Next: rebuild the Unity screens to v2, then UX-031.**
 
 
+## November 17: one main sound per pockle — `claude/pockle-main-sound` (UX-025)
+
+Branch from `codex/box-reveal-design-02` (`09cf418`), because `main` has none of the audio runtime. Pushed at the owner's request and open as PR #24 against `codex/box-reveal-design-02`.
+
+Owner decisions today: one main sound per pockle instead of per-action cues; creature voices leave touch and move to an optional button; the soft press, release and landing sounds stay. For the sounds, the owner first picked eleven Epidemic Sound effects, then dropped them when the licence turned out not to cover apps on ordinary plans, and picked eleven Magnific-generated replacements (33 takes, 375 credits).
+
+My files:
+- `Assets/Pockle/Runtime/PrototypeHud.MainSound.cs` (new), small hooks in `PrototypeHud.Play.cs` (rail build, refresh, layout) and `PrototypeHud.cs` (settings, pause, focus, disable).
+- `Assets/Pockle/Tests/PlayMode/MainSoundUiTests.cs` (new).
+- `Assets/Pockle/Resources/Audio/Main/<characterId>.wav` ×11 and `ArtSource/Audio/Main/02/` (manifest with prompts, all 33 source takes, import script, README).
+- Docs: `COLLECTION_AUDIO.md`, `ARCHITECTURE.md`, `UI_UX_TASKS.md`.
+
+**One edit in your lane, approved by the owner today (he chose "Claude does it" when asked who should make it):** `TactilePrototype.PresentToyResponse` no longer calls `collectionVoice?.TryPlayResponse(response)`. That was the only place touch played a creature voice. Nothing else in the file changed: the duration lookup, the `IsBusy` gates, `Stop()` calls and `momentAudio.VoiceBusy` are as you left them (the gates are now always open). Please review.
+
+**For Codex:**
+1. The bubble and face still take their duration from the recording's length via `ClipForResponse`. Fine for now; switch to a fixed duration if you retire the recordings.
+2. With no voice, nothing spaces repeated callouts except the reaction drivers. Say if you want a cooldown.
+3. Optional: subscribe to `hud.MainSoundPlayed(collectibleId, seconds)` if the face should react, or if a moment cue should wait for it. The HUD source does not consult `momentAudio.IsBusy`.
+4. The 143 cues and their tests can stay until you decide; nothing here references them.
+
+**Verified:** native Unity 6000.6.5f1 PlayMode 53/53, rerun with the final generated clips (MainSoundUi 4, PlayControlsUi 6, CollectionVoice 5, ReactionResponseRuntime 3, MomentAudio 5, CollectionUi 30); one real HUD capture inspected (`docs/main-sound-review/01/play-rail-with-sound.png`, Sound shown dimmed because the capture harness leaves Sound off); `git diff --check` on my files.
+
+**Hosted CI on PR #24, first run (`f954363`):** Core logic checks and the C# syntax and GUID checks passed. The whitespace step failed on five files that were already on `codex/box-reveal-design-02` (none from this PR), and that failure skipped the Unity job. Repair in this PR, whitespace only: I stripped trailing spaces from `Resources/UI/Brand.meta` and `Resources/UI/Onboarding.meta` (GUIDs unchanged), and added a root `.gitattributes` that exempts three of your files exactly instead of editing them: `docs/backend/store-product-metadata.csv` (Windows line endings) and the two applied migrations `20261021234752_server_box_clock.sql` and `20261021235318_legacy_snapshot_retention.sql` (extra blank line at the end). Codex, if you would rather normalise those files yourself, do that and delete their lines from `.gitattributes`. The Vercel check also fails on this branch because the Vercel project expects `website/public`, which only exists on the website branches; that needs a project setting, not a code change.
+
+**Hosted CI on `dd857f0`:** portable checks pass, EditMode 17/17, PlayMode 262/278. The Vercel check now passes because the owner had me change the Vercel project (build from the repository root, serve `website/public`, skip commits without that folder).
+
+**The 16 PlayMode failures are not from this PR.** I reran the 15 affected test classes on this Mac on `dd857f0` and on an untouched checkout of `09cf418` (`codex/box-reveal-design-02`): the same 15 tests fail with the same messages on both. The sixteenth, `OwnedShelfUiTests.LargeRosterRendersOnlyVisibleStillPortraitsAndKeepsTheLastRowReachable`, timed out at 180 s in CI only and passes locally on both. Codex, these need your triage; I have not touched them:
+- Counts that expect 10 finishes per character where the catalog has 15: `AxolotlFinishesTests`, `FoxCollectionUiTests`, `FoxFinishesTests`, `HolidayCollectionTests`, `LatestPipCollectionTests`, `ToyTemperamentTests` (100 vs 150), `WinterTrioTests` (30 vs 45), and `BadgeRuntimeFactsTests` (4 vs 6).
+- `BadgeTests` ×2: the secret-finder badge is no longer earned by "any secret".
+- `RarityLookTests`: a label reads Epic where the test expects UltraRare.
+- `FoxOwnerGrantTests`, `GlowOnboardingRuntimeTests` (held gesture and queued tap) and `ToyCueIntegrationTests` (the first tap reaction raises no cue): these may be real behaviour changes rather than stale expectations.
+- `WinterTrioFinishTests`: guin glow-jelly differs from clear-jelly by 0.0085 against a 0.009 threshold.
+
+**Phone builds from `dd857f0`, at the owner's request (records in `docs/main-sound-review/01/distribution.json`):**
+- TestFlight 1.0 (12): exported, archived, verified and uploaded. The owner completed export compliance; test notes saved. Added to Pockle owner internal only, and that group's Builds page shows 1.0 (12) Testing. The external Pockle invited testers group was not given build 12.
+- Google Play 1.0 (10), owner-sandbox channel: built, validated, signed by the owner, and published to the internal testing track (tester list Pockle owner internal). The closed track and version 9 were not touched.
+
+**Not verified:** the Android APK job in hosted CI (skipped because the Unity job failed), and any listening or play on a phone. `dotnet` is not installed on this Mac, so the portable checks have only run in CI.
+
+**Open for the owner:** phone listening on both builds. No Epidemic Sound audio is in this branch.
+
 ## October 12–13: living shelf, personalities, fusion screens — `claude/personalities-fusion-ui`
 
 The owner approved the canvas row "Personalities and fusion" and asked to build it as shown. Claimed: **UX-037** (living shelf and personality page) and **UX-038** (fusion screens).

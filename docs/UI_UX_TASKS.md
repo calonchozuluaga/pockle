@@ -335,3 +335,6 @@ November9 delivery follow-up: approved fixed navigation, flat owned Shelf and pr
 
 
 November9 playtest follow-up on `codex/playtest-feedback-11`: UX-025 coherent face/audio/callout bundles and single bubble silhouette; UX-003/004 transparent owned portraits, icon actions, featured-toy choice and neutral walking teaser; UX-015 avatar selection border; UX-014 foreground checkout queue/immediate pending recovery and reviewable pack flow. Native99 distinct cases pass; review artifacts under `docs/playtest-feedback-review/01`. Actual Mystery Mix purchase diagnosis remains open pending owner error timing and dashboard access; no new phone release is claimed.
+
+
+November17 sound direction on `claude/pockle-main-sound` (UX-025): owner chose one main sound per pockle, played only from a new Sound control on the Play rail; soft touch sounds stay. HUD control, eleven owner-picked clips generated with Magnific, silent touch responses and `MainSoundUiTests` are implemented locally, uncommitted. Native Unity 6000.6.5f1 PlayMode: 53/53 across MainSoundUi, PlayControlsUi, CollectionVoice, ReactionResponseRuntime, MomentAudio and CollectionUi. Open: phone listening, portable/source checks (no dotnet on this machine).

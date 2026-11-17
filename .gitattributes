@@ -1,0 +1,6 @@
+# Whitespace exemptions for `git diff --check` (the CI "Whitespace errors" step). Keep this list short and exact.
+# Store metadata sheet is kept with Windows line endings as exported.
+docs/backend/store-product-metadata.csv whitespace=cr-at-eol
+# Applied Supabase migrations are never edited after the fact; these two end with an extra blank line.
+supabase/migrations/20261021234752_server_box_clock.sql whitespace=-blank-at-eof
+supabase/migrations/20261021235318_legacy_snapshot_retention.sql whitespace=-blank-at-eof

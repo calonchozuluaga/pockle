@@ -136,6 +136,7 @@ namespace Pockle.Runtime
                     () => SetTrayTab(trayTab == tab ? TrayClosed : tab), out stageTabFaces[i], PockleTheme.SmallSize);
                 stageTabs[i].name = "Stage tab · " + TrayTabNames[i];
             }
+            BuildStageSound(); // plays the toy's one main sound; shown only when its character has one
             stagePanel = Rect("Stage panel", stageTray);
             for (int i = 0; i < TrayTabNames.Length; i++) stagePanels[i] = Rect(TrayTabNames[i] + " panel", stagePanel);
 
@@ -352,6 +353,7 @@ namespace Pockle.Runtime
             stageEyebrow.gameObject.SetActive(play);
             stageTray.gameObject.SetActive(play && known && trayTab != TrayClosed);
             stageRail.gameObject.SetActive(play && known);
+            RefreshStageSound(play && known, toy);
             RefreshStageTalk(play && known, known ? toy.Id : null);
             var rarity = known ? RarityLook.Of(toy) : RarityLook.For(RarityTier.Common, false, "");
             stageRarity.gameObject.SetActive(play && rarity.Shown);
@@ -619,9 +621,13 @@ namespace Pockle.Runtime
             stageRail.anchorMin = stageRail.anchorMax = stageRail.pivot = new Vector2(.5f, 0);
             stageRail.anchoredPosition = new Vector2(0, 16);
             stageRail.sizeDelta = new Vector2(trayWidth, RailButton);
-            float controlWidth = (trayWidth - RailGap * 3) / 4;
+            // The Sound control joins the row only for toys that have a main sound; otherwise the four share the width.
+            bool withSound = stageSound != null && stageSound.gameObject.activeSelf;
+            int controls = RailOrder.Length + (withSound ? 1 : 0);
+            float controlWidth = (trayWidth - RailGap * (controls - 1)) / controls;
             for (int r = 0; r < RailOrder.Length; r++)
                 LeftLabel(stageTabs[RailOrder[r]].GetComponent<RectTransform>(), new Vector2(r * (controlWidth + RailGap), 0), new Vector2(controlWidth, RailButton));
+            if (withSound) LeftLabel(stageSound.GetComponent<RectTransform>(), new Vector2(RailOrder.Length * (controlWidth + RailGap), 0), new Vector2(controlWidth, RailButton));
 
             float pad = 8, row = inner - pad * 2;
             LayoutPocklePicker(row, pickerHeight);

@@ -258,3 +258,8 @@ The flat owned Shelf uses transparent cutouts in its bounded cache. Home's choos
 ### Android community beta checkout boundary
 
 `CheckoutBuildPolicy` reads the packaged `Backend/CheckoutBuildChannel` via PaidBoxCheckoutService. Explicit `owner-sandbox` preserves existing purchase tests; Android `community-beta`, missing or unknown channels fail closed for new quotes, catalog purchase offers and confirmations. This is a beta UI/store-entry gate, not purchase authority. Authenticated receipt recovery remains available, so prior paid results are not lost. Server sandbox-only validation still applies. PlayInternalBundleBuild temporarily packages community-beta when POCKLE_PLAY_COMMUNITY_BETA=1, restoring the source resource/settings afterward. It does not change iOS TestFlight checkout or production purchase eligibility.
+
+
+## Main sound on request — November 17
+
+`PrototypeHud.MainSound.cs` owns one `AudioSource` and a small clip cache keyed by character id (`Resources/Audio/Main/<characterId>`). `BuildStageSound` adds the "Stage sound" button to the play rail; `RefreshStageSound` shows it only when the staged character has a clip and stops playback when the toy or page changes; `LayoutStage` divides the rail among four or five controls. `PlayMainSound` honours `soundEnabled` and the saved volume and raises `MainSoundPlayed(collectibleId, seconds)` for the runtime. It is independent of `CollectionVoicePlayer` and `MomentAudioPlayer`; nothing in touch handling calls it.

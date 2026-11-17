@@ -325,7 +325,8 @@ namespace Pockle.Runtime
             }
             hud.ShowToyResponse(new ToyExpression(response.Text), head, 0, duration);
             ToyReactionStarted?.Invoke(cue, head); RecordToyActivity();
-            if (momentAudio == null || !momentAudio.IsBusy) collectionVoice?.TryPlayResponse(response);
+            // Owner decision, November 17: touch shows the face and callout but plays no creature voice. A toy's one
+            // main sound is heard only from the HUD's Sound control (PrototypeHud.MainSound). Material sounds are unchanged.
         }
         private bool AnyReactionPlaying => pipReactions.IsPlaying||foxReactions.IsPlaying||axolotlReactions.IsPlaying||firbReactions.IsPlaying||cocoReactions.IsPlaying||gingerReactions.IsPlaying||snowyReactions.IsPlaying||winterReactions.IsPlaying||wallyReactions.IsPlaying;
         private void PlayTapReaction()

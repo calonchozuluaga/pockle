@@ -1,0 +1,80 @@
+{
+  "sourceCommit": "dd857f0",
+  "branch": "claude/pockle-main-sound",
+  "pullRequest": 24,
+  "builtBy": "Claude, on the owner's request of 2026-11-17",
+  "ownerGrantFlagsDisabledInBuilds": 8,
+  "mainSoundsPackaged": 11,
+  "ios": {
+    "build": "1.0 (12)",
+    "bundle": "com.playpockle.app",
+    "unityExport": "succeeded (Pockle.Editor.TestFlightIosBuild.Export, POCKLE_TESTFLIGHT_BUILD_NUMBER=12)",
+    "archive": "succeeded with Xcode automatic signing; a first attempt with manual signing failed before compiling because the App Store profile is Xcode managed",
+    "distributionExport": "succeeded",
+    "strictDeepSignature": "passed",
+    "signingAuthority": "Apple Distribution, team 736A8S9RK8",
+    "entitlements": {
+      "application-identifier": "736A8S9RK8.com.playpockle.app",
+      "beta-reports-active": true,
+      "get-task-allow": false
+    },
+    "ipa": "Builds/TestFlight-12/Pockle.ipa",
+    "ipaBytes": 540180349,
+    "ipaSha256": "c05cbe321a194a2b0c003fb30624299028adbaffc771fed783b091a567b07df7",
+    "upload": "succeeded 2026-11-17 15:12 MST",
+    "warning": "Existing UnityRuntime.framework dSYM UUID B5BCB31B-E424-3C81-A0EE-2EF2ADFA93D7 missing; upload succeeds, native framework crash symbolication incomplete.",
+    "appStoreBuildId": "d99bfb4d-618f-4d05-8adf-ea1e4722b7ca",
+    "testNotes": "saved; Apple displayed Saved",
+    "compliance": "completed by owner; gate cleared",
+    "testFlight": "Testing",
+    "group": "Pockle owner internal",
+    "groupId": "e702b709-d2b1-4d76-9d1a-649edf891e08",
+    "groupAssignment": "verified Testing on the group's Builds page; one tester, five builds",
+    "externalGroup": "Pockle invited testers not given build 12; verified it still lists only 1.0 (11)",
+    "phoneAcceptance": "not yet verified"
+  },
+  "android": {
+    "version": "1.0",
+    "versionCode": 10,
+    "bundle": "com.playpockle.app",
+    "channel": "owner-sandbox",
+    "unityBuild": "succeeded (Pockle.Editor.PlayInternalBundleBuild.Build, POCKLE_PLAY_BUILD_NUMBER=10)",
+    "bundletoolValidation": true,
+    "minSdk": "26",
+    "targetSdk": "36",
+    "billingLibrary": "9.1.0",
+    "permissions": [
+      "android.permission.INTERNET",
+      "android.permission.VIBRATE",
+      "android.permission.ACCESS_NETWORK_STATE",
+      "com.android.vending.BILLING",
+      "com.playpockle.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION",
+      "android.permission.ACTIVITY_RECOGNITION"
+    ],
+    "removedDebugSignatureFiles": [
+      "META-INF/ANDROIDD.RSA",
+      "META-INF/ANDROIDD.SF",
+      "META-INF/MANIFEST.MF"
+    ],
+    "retainedPayloadMatches": true,
+    "unsignedSha256": "910b23b4eafd02fc8757651128486d653ccf651fd2e420bf55293563fda2d9d0",
+    "unsignedBytes": 500309476,
+    "signedByOwner": true,
+    "signedPayloadMatches": true,
+    "uploadCertificateMatchesEarlierUploads": true,
+    "signedSha256": "bb1e91e9579b9338a73b0ebb394c58cadf7d70c60bb6c2db6b33c40963fea26a",
+    "signedBytes": 500440212,
+    "track": "internal testing",
+    "trackTesterLists": ["Pockle owner internal"],
+    "releaseName": "1.0 (10) — Main sounds, owner test",
+    "googleReleaseValidationBlockingErrors": 0,
+    "googleReleaseValidationWarnings": [
+      "No deobfuscation file",
+      "Native debug symbols not uploaded"
+    ],
+    "published": "2026-11-17; Play Console shows Available to internal testers",
+    "closedTrackVersion9": "not touched",
+    "phoneAcceptance": "not yet verified"
+  },
+  "publicStoreSubmission": false
+}
