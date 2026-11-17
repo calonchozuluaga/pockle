@@ -37,12 +37,12 @@ My files:
 - `WinterTrioFinishTests`: guin glow-jelly differs from clear-jelly by 0.0085 against a 0.009 threshold.
 
 **Phone builds from `dd857f0`, at the owner's request (records in `docs/main-sound-review/01/distribution.json`):**
-- TestFlight 1.0 (12): exported, archived, verified and uploaded. Apple shows Missing Compliance; the declaration is the owner's. Test notes saved. Not in any group yet; it goes to Pockle owner internal only.
+- TestFlight 1.0 (12): exported, archived, verified and uploaded. The owner completed export compliance; test notes saved. Added to Pockle owner internal only, and that group's Builds page shows 1.0 (12) Testing. The external Pockle invited testers group was not given build 12.
 - Google Play 1.0 (10), owner-sandbox channel: built, validated, signed by the owner, and published to the internal testing track (tester list Pockle owner internal). The closed track and version 9 were not touched.
 
 **Not verified:** the Android APK job in hosted CI (skipped because the Unity job failed), and any listening or play on a phone. `dotnet` is not installed on this Mac, so the portable checks have only run in CI.
 
-**Open for the owner:** the export-compliance answer for TestFlight 12, then phone listening on both builds. No Epidemic Sound audio is in this branch.
+**Open for the owner:** phone listening on both builds. No Epidemic Sound audio is in this branch.
 
 ## October 12–13: living shelf, personalities, fusion screens — `claude/personalities-fusion-ui`
 

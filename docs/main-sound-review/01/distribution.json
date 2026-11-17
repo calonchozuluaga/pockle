@@ -25,8 +25,12 @@
     "warning": "Existing UnityRuntime.framework dSYM UUID B5BCB31B-E424-3C81-A0EE-2EF2ADFA93D7 missing; upload succeeds, native framework crash symbolication incomplete.",
     "appStoreBuildId": "d99bfb4d-618f-4d05-8adf-ea1e4722b7ca",
     "testNotes": "saved; Apple displayed Saved",
-    "compliance": "Missing Compliance; the export declaration is the owner's to answer",
-    "group": "none yet; to be added to Pockle owner internal only, after compliance clears",
+    "compliance": "completed by owner; gate cleared",
+    "testFlight": "Testing",
+    "group": "Pockle owner internal",
+    "groupId": "e702b709-d2b1-4d76-9d1a-649edf891e08",
+    "groupAssignment": "verified Testing on the group's Builds page; one tester, five builds",
+    "externalGroup": "Pockle invited testers not given build 12; verified it still lists only 1.0 (11)",
     "phoneAcceptance": "not yet verified"
   },
   "android": {
