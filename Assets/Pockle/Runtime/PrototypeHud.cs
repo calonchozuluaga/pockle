@@ -321,6 +321,8 @@ namespace Pockle.Runtime
             soundEnabled = sound; hapticsEnabled = haptics; reducedMotionEnabled = reducedMotion;
             SquishFeedback.Calm = reducedMotion;
             shelfPreviews?.SetCalm(reducedMotion);
+            if (!sound) StopMainSound();
+            if (stageSound != null) stageSound.interactable = sound;
             RefreshSettings();
         }
         private void BuildModal()
@@ -714,11 +716,11 @@ namespace Pockle.Runtime
         }
 
         private void OnEnable() { if (shelfPreviews != null) shelfPreviews.enabled = true; }
-        private void OnDisable() { if (shelfPreviews != null) shelfPreviews.enabled = false; }
+        private void OnDisable() { if (shelfPreviews != null) shelfPreviews.enabled = false; StopMainSound(); }
         private void OnApplicationPause(bool paused)
-        { if (paused) { CommitProfile(); PlayerPrefs.Save(); } }
+        { if (paused) { CommitProfile(); PlayerPrefs.Save(); StopMainSound(); } }
         private void OnApplicationFocus(bool focused)
-        { if (!focused) { CommitProfile(); PlayerPrefs.Save(); } }
+        { if (!focused) { CommitProfile(); PlayerPrefs.Save(); StopMainSound(); } }
         private void OnDestroy()
         {
             DisposeAvatarUi();

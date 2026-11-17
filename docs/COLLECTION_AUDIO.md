@@ -42,3 +42,18 @@ Native Unity6000.6.5f1/iOS-target CollectionVoiceTests: 5/5 pass (full pilot dec
 
 ## November 8 — complete set approved and imported
 Owner approved all143cues. Resources now contains all55action +88temperament clips as full-length44.1kHz monoPCM WAV, avoiding Unity MP3-decoder padding differences. Native5/5 audio tests pass including decode/quiet endings and exact asset routing for all143; Core and Source checks pass. Review/provenance marks the approval. No additional credits used. Phone build6 has not yet been replaced; real-device playback ofthecompleteapprovedset remains pending.
+
+
+## November 17 — one main sound per pockle, on request
+
+Owner decision: finding eight or more good sounds per pockle does not scale with the roster, and creature voices on every touch are overbearing when a toy is stretched repeatedly. Direction:
+
+- **One main sound per character**, at `Resources/Audio/Main/<characterId>`. A new pockle needs one approved clip.
+- **Heard only on request.** The Play screen's rail gains a fifth labelled control, **Sound**, shown only when the staged toy's character has a clip. Pressing again restarts it; sounds never stack. It follows the global Sound switch and volume and stops on toy change, page change, pause and focus loss.
+- **Touch stays tactile.** The soft press, release and landing sounds remain. The owner wants creature voices removed from tap, lift and squish.
+
+Implemented on `claude/pockle-main-sound`: `PrototypeHud.MainSound.cs`, `MainSoundUiTests`, eleven clips generated in the owner's Magnific Pockle project and chosen by the owner (`ArtSource/Audio/Main/02/README.md`). With the owner's approval, `TactilePrototype.PresentToyResponse` no longer calls `collectionVoice.TryPlayResponse`, so touch shows the face and callout without a voice. The callout still takes its duration from the matching recording's length, so timing is unchanged. The 143 action and temperament cues, `CollectionVoicePlayer` and their tests remain in place, unused by touch.
+
+**Source history:** the owner first auditioned Epidemic Sound sound effects and picked eleven. Epidemic's pricing page lists app and game use only on Business Plus and Enterprise, and its licence bars standalone distribution of clips, so none of that audio is in the repository. Each pick became the brief for a generated replacement.
+
+**Open:** the clips have not been heard in the app or on a phone.

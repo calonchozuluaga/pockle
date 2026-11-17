@@ -3,6 +3,32 @@
 October 13, 2026. Status: **UX-037/038 (living shelf, personalities, fusion screens) in review on `claude/personalities-fusion-ui`.** Earlier status (October 9): **UX-002/003/004 and ART-001 merged. The owner tested the UI and asked for a less dated look: "Pockle screens v2" (owner's design canvas) is the approved direction. Collection/series rules decided; see `../COLLECTIONS.md`. Next: rebuild the Unity screens to v2, then UX-031.**
 
 
+## November 17: one main sound per pockle — `claude/pockle-main-sound` (UX-025)
+
+Branch from `codex/box-reveal-design-02` (`09cf418`), because `main` has none of the audio runtime. Local and uncommitted; the owner has not asked for a commit or push.
+
+Owner decisions today: one main sound per pockle instead of per-action cues; creature voices leave touch and move to an optional button; the soft press, release and landing sounds stay. For the sounds, the owner first picked eleven Epidemic Sound effects, then dropped them when the licence turned out not to cover apps on ordinary plans, and picked eleven Magnific-generated replacements (33 takes, 375 credits).
+
+My files:
+- `Assets/Pockle/Runtime/PrototypeHud.MainSound.cs` (new), small hooks in `PrototypeHud.Play.cs` (rail build, refresh, layout) and `PrototypeHud.cs` (settings, pause, focus, disable).
+- `Assets/Pockle/Tests/PlayMode/MainSoundUiTests.cs` (new).
+- `Assets/Pockle/Resources/Audio/Main/<characterId>.wav` ×11 and `ArtSource/Audio/Main/02/` (manifest with prompts, all 33 source takes, import script, README).
+- Docs: `COLLECTION_AUDIO.md`, `ARCHITECTURE.md`, `UI_UX_TASKS.md`.
+
+**One edit in your lane, approved by the owner today (he chose "Claude does it" when asked who should make it):** `TactilePrototype.PresentToyResponse` no longer calls `collectionVoice?.TryPlayResponse(response)`. That was the only place touch played a creature voice. Nothing else in the file changed: the duration lookup, the `IsBusy` gates, `Stop()` calls and `momentAudio.VoiceBusy` are as you left them (the gates are now always open). Please review.
+
+**For Codex:**
+1. The bubble and face still take their duration from the recording's length via `ClipForResponse`. Fine for now; switch to a fixed duration if you retire the recordings.
+2. With no voice, nothing spaces repeated callouts except the reaction drivers. Say if you want a cooldown.
+3. Optional: subscribe to `hud.MainSoundPlayed(collectibleId, seconds)` if the face should react, or if a moment cue should wait for it. The HUD source does not consult `momentAudio.IsBusy`.
+4. The 143 cues and their tests can stay until you decide; nothing here references them.
+
+**Verified:** native Unity 6000.6.5f1 PlayMode 53/53, rerun with the final generated clips (MainSoundUi 4, PlayControlsUi 6, CollectionVoice 5, ReactionResponseRuntime 3, MomentAudio 5, CollectionUi 30); one real HUD capture inspected (`docs/main-sound-review/01/play-rail-with-sound.png`, Sound shown dimmed because the capture harness leaves Sound off); `git diff --check` on my files.
+
+**Not verified:** portable Core and source checks (`dotnet` is not installed here), the full PlayMode and EditMode suites, hosted CI, Android or iOS builds, and any listening on a phone.
+
+**Open for the owner:** phone listening. No Epidemic Sound audio is in this branch.
+
 ## October 12–13: living shelf, personalities, fusion screens — `claude/personalities-fusion-ui`
 
 The owner approved the canvas row "Personalities and fusion" and asked to build it as shown. Claimed: **UX-037** (living shelf and personality page) and **UX-038** (fusion screens).
