@@ -27,9 +27,22 @@ My files:
 
 **Hosted CI on PR #24, first run (`f954363`):** Core logic checks and the C# syntax and GUID checks passed. The whitespace step failed on five files that were already on `codex/box-reveal-design-02` (none from this PR), and that failure skipped the Unity job. Repair in this PR, whitespace only: I stripped trailing spaces from `Resources/UI/Brand.meta` and `Resources/UI/Onboarding.meta` (GUIDs unchanged), and added a root `.gitattributes` that exempts three of your files exactly instead of editing them: `docs/backend/store-product-metadata.csv` (Windows line endings) and the two applied migrations `20261021234752_server_box_clock.sql` and `20261021235318_legacy_snapshot_retention.sql` (extra blank line at the end). Codex, if you would rather normalise those files yourself, do that and delete their lines from `.gitattributes`. The Vercel check also fails on this branch because the Vercel project expects `website/public`, which only exists on the website branches; that needs a project setting, not a code change.
 
-**Not verified:** the full PlayMode and EditMode suites and the Android build in hosted CI (pending the rerun after the whitespace repair), an iOS build, and any listening on a phone. `dotnet` is not installed on this Mac, so the portable checks have only run in CI.
+**Hosted CI on `dd857f0`:** portable checks pass, EditMode 17/17, PlayMode 262/278. The Vercel check now passes because the owner had me change the Vercel project (build from the repository root, serve `website/public`, skip commits without that folder).
 
-**Open for the owner:** phone listening. No Epidemic Sound audio is in this branch.
+**The 16 PlayMode failures are not from this PR.** I reran the 15 affected test classes on this Mac on `dd857f0` and on an untouched checkout of `09cf418` (`codex/box-reveal-design-02`): the same 15 tests fail with the same messages on both. The sixteenth, `OwnedShelfUiTests.LargeRosterRendersOnlyVisibleStillPortraitsAndKeepsTheLastRowReachable`, timed out at 180 s in CI only and passes locally on both. Codex, these need your triage; I have not touched them:
+- Counts that expect 10 finishes per character where the catalog has 15: `AxolotlFinishesTests`, `FoxCollectionUiTests`, `FoxFinishesTests`, `HolidayCollectionTests`, `LatestPipCollectionTests`, `ToyTemperamentTests` (100 vs 150), `WinterTrioTests` (30 vs 45), and `BadgeRuntimeFactsTests` (4 vs 6).
+- `BadgeTests` ×2: the secret-finder badge is no longer earned by "any secret".
+- `RarityLookTests`: a label reads Epic where the test expects UltraRare.
+- `FoxOwnerGrantTests`, `GlowOnboardingRuntimeTests` (held gesture and queued tap) and `ToyCueIntegrationTests` (the first tap reaction raises no cue): these may be real behaviour changes rather than stale expectations.
+- `WinterTrioFinishTests`: guin glow-jelly differs from clear-jelly by 0.0085 against a 0.009 threshold.
+
+**Phone builds from `dd857f0`, at the owner's request (records in `docs/main-sound-review/01/distribution.json`):**
+- TestFlight 1.0 (12): exported, archived, verified and uploaded. Apple shows Missing Compliance; the declaration is the owner's. Test notes saved. Not in any group yet; it goes to Pockle owner internal only.
+- Google Play 1.0 (10), owner-sandbox channel: built, validated, signed by the owner, and published to the internal testing track (tester list Pockle owner internal). The closed track and version 9 were not touched.
+
+**Not verified:** the Android APK job in hosted CI (skipped because the Unity job failed), and any listening or play on a phone. `dotnet` is not installed on this Mac, so the portable checks have only run in CI.
+
+**Open for the owner:** the export-compliance answer for TestFlight 12, then phone listening on both builds. No Epidemic Sound audio is in this branch.
 
 ## October 12–13: living shelf, personalities, fusion screens — `claude/personalities-fusion-ui`
 
