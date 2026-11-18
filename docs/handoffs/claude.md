@@ -19,6 +19,10 @@ My files:
 
 **Verified:** native Unity 6000.6.5f1 PlayMode 42/42 (WalkingBoxUi 12 including the new test, CollectionUi 30); three real HUD captures inspected (`docs/surprise-box-review/01`): Home and Shop in the server state with no collection assigned, and the signed-out Home after today's box is opened.
 
+**Phone builds from `97395a8`, at the owner's request (records in `docs/surprise-box-review/01/distribution.json`):** both carry the main sounds too.
+- TestFlight 1.0 (13): exported, archived, checked (identity, Apple Distribution signature, eleven main sounds, the surprise box picture, eight owner flags disabled) and uploaded. Waiting on the owner's export-compliance answer before it can go to Pockle owner internal. Not for the external group.
+- Google Play 1.0 (11), owner-sandbox channel: built, stripped of the debug signature, validated with bundletool and checked the same way. Waiting on the owner's signature, then internal testing only.
+
 **Not verified:** a phone; hosted CI; the portable/source checks (`dotnet` is not installed here).
 
 ## November 17: one main sound per pockle — `claude/pockle-main-sound` (UX-025)

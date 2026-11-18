@@ -895,3 +895,5 @@ Native Unity 6000.6.5f1 batch PlayMode on the `claude/pockle-main-sound` worktre
 Three real HUD captures at 1080×2340 inspected, in `docs/surprise-box-review/01`: Home and Shop with a server snapshot and no collection assigned, and the signed-out Home after today's box is opened. `home-walking-card-before-after.png` sets the earlier capture (`docs/playtest-feedback-review/01/screenshots/01-home.png`) beside the new one.
 
 Not verified: a phone, hosted CI, the portable/source checks (no `dotnet` on this Mac). The picture is the closed box cut from the November 9 concept sheet; the owner approved it from the before/after capture.
+
+Phone builds from `97395a8`: TestFlight 1.0 (13) uploaded (processing; export compliance is the owner's), and the Google Play 1.0 (11) bundle built and validated, waiting for the owner's signature. Both packages were unpacked and checked for the surprise box picture (`ui/boxes/surprise`), the eleven main sounds, identity and version; the IPA passes a strict deep signature check. Details in `docs/surprise-box-review/01/distribution.json`.
