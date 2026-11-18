@@ -41,7 +41,11 @@ All three share the same layout changes from the assessment: no fixed title bloc
 
 ### Step 1, the Jelly glass kit (November 18, owner said "Yes, build it")
 
-Built on `claude/ui-audit` (local, nothing committed or pushed). Claimed: UX-053 step 1. Files, all in my lane: `Resources/UI/PockleGlass.shader`, `Resources/UI/PockleGround.shader`, `Runtime/UI/GlassSurface.cs`, `Runtime/UI/PockleGlass.cs`, `Runtime/PrototypeHud.Glass.cs`, nine pictures in `Resources/UI/Icons/Jelly/`, and edits to `PrototypeHud.cs`, `.Navigation.cs`, `.Play.cs`, `.MainSound.cs`, `.HomeFeatures.cs`, `.OwnedShelf.cs`, `.Settings.cs`, `.Fusion.cs`, `.Onboarding.cs`, `UI/PockleTheme.cs`, `Tests/PlayMode/FixedNavigationUiTests.cs`, `docs/VISUAL_SYSTEM.md`.
+Built on `claude/ui-audit`, committed as `9191346` and open as PR #25 (base `claude/surprise-box-art`, pushed for that purpose).
+
+**Phone build from `9191346`, at the owner's request ("Yes, build it", November 18):** TestFlight 1.0 (14) exported, archived with Xcode automatic signing and uploaded (upload succeeded 09:02 MST; the usual missing UnityRuntime dSYM warning). No Android build was made for this step; Android size is still unmeasured with the nine new icons.
+
+Originally built locally with nothing committed. Claimed: UX-053 step 1. Files, all in my lane: `Resources/UI/PockleGlass.shader`, `Resources/UI/PockleGround.shader`, `Runtime/UI/GlassSurface.cs`, `Runtime/UI/PockleGlass.cs`, `Runtime/PrototypeHud.Glass.cs`, nine pictures in `Resources/UI/Icons/Jelly/`, and edits to `PrototypeHud.cs`, `.Navigation.cs`, `.Play.cs`, `.MainSound.cs`, `.HomeFeatures.cs`, `.OwnedShelf.cs`, `.Settings.cs`, `.Fusion.cs`, `.Onboarding.cs`, `UI/PockleTheme.cs`, `Tests/PlayMode/FixedNavigationUiTests.cs`, `docs/VISUAL_SYSTEM.md`.
 
 What changed in the app:
 - Every rounded surface now goes through one glass shader (rim, gloss, sheen, soft shadow), added in `PrototypeHud.Surface`. Quiet fills became clear glass, paper became frost, the plum main button became one rose jelly button. This undoes "flat, no shadows" from October 9, which the owner's pick implies.
