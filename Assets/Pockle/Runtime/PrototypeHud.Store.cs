@@ -26,8 +26,6 @@ namespace Pockle.Runtime
         /// <summary>Transparent cutouts of the three closed boxes, in offer order, and their width/height ratios.</summary>
         private static readonly string[] BoxCutouts = { "UI/Boxes/JellyGarden", "UI/Boxes/MidnightGlow", "UI/Boxes/GoldConfetti" };
         private static readonly float[] BoxAspects = { 380f / 342f, 387f / 343f, 371f / 324f };
-        /// <summary>Fallback crops of Resources/Store/CollectionBoxes if a cutout is missing.</summary>
-        private static readonly Rect[] BoxCrops = { new Rect(.04f, .09f, .30f, .74f), new Rect(.35f, .06f, .29f, .73f), new Rect(.655f, .09f, .325f, .74f) };
 
         /// <summary>A closed box picture. Its aspect comes from the source image, not the imported texture, so it never stretches.</summary>
         private RectTransform BoxArt(Transform parent, int index)
@@ -38,12 +36,7 @@ namespace Pockle.Runtime
             BoxHype.Add(image, new Color(1f, .86f, .93f), index * 1.4f);
             var cutout = Resources.Load<Texture2D>(BoxCutouts[index]);
             if (cutout != null) image.texture = cutout;
-            else
-            {
-                image.texture = Resources.Load<Texture2D>("Store/CollectionBoxes");
-                image.uvRect = BoxCrops[index];
-                if (image.texture == null) image.enabled = false;
-            }
+            else image.enabled = false;
             return rect;
         }
 
