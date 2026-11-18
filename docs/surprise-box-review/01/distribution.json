@@ -1,5 +1,5 @@
 {
-  "sourceCommit": "iOS 97395a8; Android: the following size-trim commit on the same branch",
+  "sourceCommit": "iOS 97395a8; Android 6a1768b (size trim)",
   "branch": "claude/surprise-box-art (on top of claude/pockle-main-sound 6f8bf40)",
   "builtBy": "Claude, on the owner's request of 2026-11-17 (\"Yes, build it\")",
   "contains": "the surprise box picture on the walking cards, plus everything in TestFlight 12 / Play 10 (main sounds)",
@@ -39,8 +39,8 @@
     "unsignedBundle": "Builds/Pockle-Play-Internal-v11.unsigned.aab",
     "unsignedBytes": 499470095,
     "unsignedSha256": "01027023330a00f980c121dfee8818c56a0cac22d7a8c5949cebcf6e68eafdfc",
-    "signing": "pending: the owner signs with tools/sign-play-bundle.py",
-    "track": "pending: internal testing only (tester list Pockle owner internal); closed track and version 9 not to be touched",
+    "signing": "signed by the owner with tools/sign-play-bundle.py; jar verified; same upload certificate as build 10; 0 of 993 payload entries changed",
+    "track": "internal testing (tester list Pockle owner internal); published 2026-11-17 21:49 MST; Available to internal testers",
     "phoneAcceptance": "not yet verified",
     "firstAttempt": {
       "result": "rejected by Play at upload: base module over the 500 MB compressed download limit",
@@ -50,6 +50,11 @@
       "note": "build 10 measured 499822877 and was accepted; the 900 px surprise picture added about 1.16 MB"
     },
     "sizeTrim": "surprise picture 900 px to 512 px; unused Resources/Store/CollectionBoxes sheet removed; eleven main sounds stored as Vorbis quality 100 instead of PCM",
-    "bundletoolMaxDownloadBytes": 498974274
+    "bundletoolMaxDownloadBytes": 498974274,
+    "signedBytes": 499600809,
+    "signedSha256": "8421402e63425bef1584b0d596bc2b178720fa400db6af93dd838794e619a738",
+    "releaseName": "1.0 (11) — Surprise box, owner test",
+    "playReview": "0 errors, 2 warnings (no deobfuscation file, no native debug symbols), same as build 10; size for new installs 499 MB, 849 KB smaller than build 10",
+    "closedTrack": "not touched; version 9 unchanged"
   }
 }
