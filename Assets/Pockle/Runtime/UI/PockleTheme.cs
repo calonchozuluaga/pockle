@@ -22,6 +22,16 @@ namespace Pockle.Runtime
         public static readonly Color FusionGround = Hex(0xEED2DF);
         public static readonly Color FusionGlow = Hex(0xFAE8CE);
 
+        // Jelly glass (UX-053): see-through surfaces over the page painting, and one deep rose for the main action.
+        /// <summary>Clear glass for rows, chips, inputs, and secondary buttons.</summary>
+        public static readonly Color Glass = new Color(1f, 1f, 1f, .30f);
+        /// <summary>Frosted glass behind words: cards, sheets, and the tab bar.</summary>
+        public static readonly Color Frost = new Color(1f, .975f, .95f, .60f);
+        /// <summary>The bright lens over a selected tab or chip.</summary>
+        public static readonly Color Lens = new Color(1f, 1f, 1f, .62f);
+        /// <summary>The main action's jelly button.</summary>
+        public static readonly Color Rose = Hex(0x8E3B66);
+
         // Brand and toy colour fields.
         public static readonly Color Jelly = Hex(0xFFD2C6);
         public static readonly Color JellyInk = Hex(0x823D58);

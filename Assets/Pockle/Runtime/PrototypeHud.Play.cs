@@ -40,7 +40,8 @@ namespace Pockle.Runtime
         private RawImage stageRarityIcon;
         private const float RarityHeight = 26;
         private static readonly int[] RailOrder = { 0, 1, 2, 3 };
-        private const float RailButton = 48, RailGap = 6, CardHeader = 44;
+        private const float RailButton = 64, RailGap = 6, CardHeader = 44;
+        private static readonly Color RailGlass = new Color(1, 1, 1, .42f), RailLens = new Color(1, 1, 1, .88f);
         private Text stageTrayTitle, stageTrayNote;
         private Button stageTrayClose;
         private RectTransform stageShade;
@@ -132,9 +133,10 @@ namespace Pockle.Runtime
             foreach (int i in RailOrder)
             {
                 int tab = i;
-                stageTabs[i] = CreateButton(TrayTabNames[i], stageRail, Vector2.zero, new Vector2(RailButton, RailButton), new Color(1, 1, 1, .8f),
-                    () => SetTrayTab(trayTab == tab ? TrayClosed : tab), out stageTabFaces[i], PockleTheme.SmallSize);
+                stageTabs[i] = CreateButton(TrayTabNames[i], stageRail, Vector2.zero, new Vector2(RailButton, RailButton), RailGlass,
+                    () => SetTrayTab(trayTab == tab ? TrayClosed : tab), out stageTabFaces[i], PockleTheme.SmallSize, false);
                 stageTabs[i].name = "Stage tab · " + TrayTabNames[i];
+                JellyIcon(stageTabs[i], TrayTabNames[i]);
             }
             BuildStageSound(); // plays the toy's one main sound; shown only when its character has one
             stagePanel = Rect("Stage panel", stageTray);
@@ -218,9 +220,8 @@ namespace Pockle.Runtime
             {
                 bool on = i == tab;
                 stagePanels[i].gameObject.SetActive(on);
-                stageTabFaces[i].color = on ? Primary : new Color(1, 1, 1, .8f);
-                stageTabs[i].GetComponentInChildren<Text>(true).color = on ? PockleTheme.OnPlum : Ink;
-                foreach (var icon in stageTabs[i].GetComponentsInChildren<RawImage>(true)) icon.color = on ? PockleTheme.OnPlum : Ink;
+                // The open control brightens like a lens; its picture and word keep their own colours.
+                stageTabFaces[i].color = on ? RailLens : RailGlass;
             }
             stagePanel.gameObject.SetActive(tab != TrayClosed);
             stageTray.gameObject.SetActive(tab != TrayClosed && page == AppPage.Play && StageSelection(out _, out _));
@@ -255,9 +256,7 @@ namespace Pockle.Runtime
             stagePanel.gameObject.SetActive(false); stageTray.gameObject.SetActive(false);
             for (int i = 0; i < stageTabs.Length; i++)
             {
-                stageTabFaces[i].color = new Color(1, 1, 1, .8f);
-                stageTabs[i].GetComponentInChildren<Text>(true).color = Ink;
-                foreach (var icon in stageTabs[i].GetComponentsInChildren<RawImage>(true)) icon.color = Ink;
+                stageTabFaces[i].color = RailGlass;
             }
         }
 

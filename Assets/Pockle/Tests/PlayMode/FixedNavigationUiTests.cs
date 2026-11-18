@@ -91,7 +91,7 @@ namespace Pockle.Tests
         }
 
         [UnityTest]
-        public IEnumerator FullWidthBackgroundCoversBottomInsetWhileTargetsStaySafeAndContentStaysAbove()
+        public IEnumerator FloatingCapsuleKeepsTargetsSafeAndPagesScrollBehindIt()
         {
             hud.enabled = false; // Keep the synthetic safe-area fixture stable; this is not a device claim.
             var safe = RectNamed("Safe area");
@@ -108,8 +108,15 @@ namespace Pockle.Tests
                 Assert.That(barBounds.xMin, Is.EqualTo(canvasBounds.xMin).Within(.1f));
                 Assert.That(barBounds.xMax, Is.EqualTo(canvasBounds.xMax).Within(.1f));
                 Assert.That(barBounds.yMin, Is.EqualTo(canvasBounds.yMin).Within(.1f));
-                Assert.IsNull(bar.GetComponent<Image>().sprite, "A flat rectangle must not reuse the old rounded pill sprite.");
-                Assert.That(bar.GetComponent<Image>().color.a, Is.EqualTo(1).Within(.001f));
+                // UX-053: the bar is a frosted capsule floating over the page, so the full-width holder itself stays clear.
+                Assert.That(bar.GetComponent<Image>().color.a, Is.EqualTo(0).Within(.001f));
+                var capsule = RectNamed("Tab capsule");
+                Assert.AreEqual(GlassStyle.Frost, capsule.GetComponent<GlassSurface>().Style, "Words on the bar sit on frosted glass.");
+                Assert.IsTrue(capsule.GetComponent<Image>().raycastTarget, "Taps between tabs must not reach the page beneath.");
+                var capsuleBounds = Bounds(capsule);
+                Assert.That(capsuleBounds.xMin, Is.GreaterThanOrEqualTo(safeBounds.xMin - .1f));
+                Assert.That(capsuleBounds.xMax, Is.LessThanOrEqualTo(safeBounds.xMax + .1f));
+                Assert.That(capsuleBounds.yMin, Is.GreaterThanOrEqualTo(safeBounds.yMin - .1f));
                 var buttons = bar.GetComponentsInChildren<Button>(); float width = Bounds(buttons[0].GetComponent<RectTransform>()).width;
                 foreach (var button in buttons)
                 {
@@ -119,9 +126,14 @@ namespace Pockle.Tests
                     Assert.That(bounds.xMax, Is.LessThanOrEqualTo(safeBounds.xMax + .1f));
                     Assert.That(bounds.yMin, Is.GreaterThanOrEqualTo(safeBounds.yMin));
                     Assert.That(button.GetComponent<RectTransform>().rect.height, Is.GreaterThanOrEqualTo(44));
+                    Assert.That(bounds.yMin, Is.GreaterThanOrEqualTo(capsuleBounds.yMin - .1f));
+                    Assert.That(bounds.yMax, Is.LessThanOrEqualTo(capsuleBounds.yMax + .1f));
                 }
+                // Pages scroll behind the capsule: the clip line hides inside it, and the page has room to scroll its last row clear.
                 var viewport = Bounds(RectNamed("Collection browsing"));
-                Assert.That(viewport.yMin, Is.EqualTo(barBounds.yMax).Within(.1f), "Scroll viewport must end above the bar, not behind it.");
+                Assert.That(viewport.yMin, Is.GreaterThan(capsuleBounds.yMin).And.LessThan(capsuleBounds.yMax));
+                var page = RectNamed("Collection content");
+                Assert.That(Bounds(page).height, Is.GreaterThanOrEqualTo(viewport.height - .1f));
             }
             yield return null;
         }

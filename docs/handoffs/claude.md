@@ -3,6 +3,59 @@
 October 13, 2026. Status: **UX-037/038 (living shelf, personalities, fusion screens) in review on `claude/personalities-fusion-ui`.** Earlier status (October 9): **UX-002/003/004 and ART-001 merged. The owner tested the UI and asked for a less dated look: "Pockle screens v2" (owner's design canvas) is the approved direction. Collection/series rules decided; see `../COLLECTIONS.md`. Next: rebuild the Unity screens to v2, then UX-031.**
 
 
+## November 17: UI assessment and plan (UX-053, proposed) — `claude/ui-audit`
+
+Owner request: "do another pass at the UI/UX... The app feels cheap in a lot of places, and we're using a lot of text buttons and actions, messy screens, and not enough custom art... start with an assessment of all the screens and put a plan together." This is an assessment only. Nothing in the app changed, and no step of the plan is approved yet.
+
+Branch `claude/ui-audit`, from `claude/surprise-box-art` (`da2ae79`). Nothing committed or pushed.
+
+My files:
+- `Assets/Pockle/Editor/UiAuditCapture.cs` (+ meta): renders every screen of the real HUD at 390 × 845 pt from an offline fixture (a mid-game collector), with a capture at each scroll stop. `-executeMethod Pockle.Editor.UiAuditCapture.Capture`; `POCKLE_UI_AUDIT_OUT` sets the folder and `POCKLE_UI_AUDIT_ONLY=01,12` limits it to shots with those name prefixes. It saves and restores every preference it touches (checked key by key against a copy of the editor's preference file: only Unity's own session counters differed). It is the before/after tool for the whole pass.
+- `docs/ui-audit/01/`: `index.html` (findings, screen-by-screen notes, plan, art list, owner decisions), `screens/` (88 captures, 640 px JPEG), `evidence/` (3 figures). The same page is published privately for the owner.
+
+Findings in one line each: the frame around the toys is one flat rounded rectangle in three tints; actions are words in pills (94 `CreateButton` sites, 6 icon-only); the title block is fixed, so 64% of a tab's screen scrolls; the two- or three-way switch is drawn six ways and toy tiles four ways; Walk and Community are nearly empty; box opening and the fusion moment are the plainest screens. First run, the collection covers, the badges and Play's backdrops are the standard to match.
+
+Plan as proposed to the owner (order, not dates): 0 choose the look from mock-ups; 1 a drawn kit (buttons, cards, chips, one switch, tab bar, icons) and a header that scrolls away; 2 Home, Walk, box opening; 3 Shelf, one collection, Shop; 4 Play, Toy details, Fuse; 5 the rest. It reverses "flat, no shadows" from the October 9 v2 direction if the owner agrees, and keeps words with icons on main actions (October 19 and November 8 decisions).
+
+**For Codex, nothing to do yet. Two requests will follow if the owner approves the plan:**
+1. Room on Android. 77 pictures are imported with no compression: `Resources/Boxes` (30) and `Resources/Collections` (11) in your lane; `Resources/UI/Boxes` (23), `UI/Avatars` (12) and `UI/Shelves` (1) in mine. Together about 470 MB as RGBA32 before packing. I will compress mine and measure with bundletool; yours would need the same.
+2. A solid picture of the featured toy for Home. The transparent owned portrait lets the painting show through the toy's body (`docs/ui-audit/01/screens/01-home-box-ready.jpg`).
+
+Small flaws seen in the captures, all in my files and not yet fixed: Peach Jelly's play chips read "Sunny · Curious · Sunny"; locked-badge captions are cut off; collection covers stop below the status bar; missing-toy silhouettes overlap their rarity labels; live-shelf captions are clipped at both edges.
+
+### Step 0, look boards (November 18, owner asked to "draw the looks")
+
+Three looks, each mocked on the same three screens (Home, Shelf, Play), nine artboards on a private design canvas for the owner. Preview pictures and the source that draws them are in `docs/ui-audit/02-looks/` (`look-A.jpg`, `look-B.jpg`, `look-C.jpg`, `src/`). These are HTML mock-ups, not Unity screens. No look is chosen yet.
+
+- **A · Jelly:** milky glass cards, glossy candy buttons, a floating tab bar.
+- **B · Sticker book:** cream dotted paper, die-cut toys with white edges, washi tape, handwritten labels.
+- **C · Toy shop:** an awning, a shop window, wooden shelves, brass name labels, buttons with a pressable lip.
+
+All three share the same layout changes from the assessment: no fixed title block, one hero on Home (the box and one button), a real shelf with rarity as a mark and extras as a number, and icon-plus-word controls on Play. The toys, box, wordmark, avatar and paintings are the app's own; the icons are stand-ins I drew; the toy on Play is the first-run artwork standing in for the live 3D toy. `UiAuditCapture` gained `POCKLE_UI_AUDIT_CUTOUTS=<folder>`, which exports every owned toy's transparent portrait (that is where the shelf toys came from).
+
+**Owner's pick (November 18):** "I like Jelly the best, but maybe less bright colors. I really like Apple's liquid glass look. We don't have to recreate it exactly, but a combination of those two would be best." He also allowed Magnific credits for art, on a model that supports transparency.
+
+**A2 · Jelly glass** is that combination, added to the canvas as a fourth row (Home, Shelf, Play, and Home over a dusk painting) and saved as `look-A2.jpg`, `src/look_a2.py`. It is our own glass, not a copy of Apple's: thin clear panels that let the app's paintings show through, frosted where they carry words, one deep rose jelly button as the only strong colour, a floating tab bar with a bright "lens" on the selected tab, glass shelves. Nine test icons in a calm jelly style were generated for it (one sheet, 175 credits; prompt and model in `icons/source.json`). They are in `docs/` only, not in the app. Not yet approved for building.
+
+**Verified:** two native Unity 6000.6.5f1 capture runs, 86 shots with none skipped and a 4-shot rerun; every capture looked at; preferences restored. **Not verified:** a phone (these are editor stills, so motion and sound are not judged); the size saving from compression is an estimate; no tests were run because no runtime code changed.
+
+### Step 1, the Jelly glass kit (November 18, owner said "Yes, build it")
+
+Built on `claude/ui-audit` (local, nothing committed or pushed). Claimed: UX-053 step 1. Files, all in my lane: `Resources/UI/PockleGlass.shader`, `Resources/UI/PockleGround.shader`, `Runtime/UI/GlassSurface.cs`, `Runtime/UI/PockleGlass.cs`, `Runtime/PrototypeHud.Glass.cs`, nine pictures in `Resources/UI/Icons/Jelly/`, and edits to `PrototypeHud.cs`, `.Navigation.cs`, `.Play.cs`, `.MainSound.cs`, `.HomeFeatures.cs`, `.OwnedShelf.cs`, `.Settings.cs`, `.Fusion.cs`, `.Onboarding.cs`, `UI/PockleTheme.cs`, `Tests/PlayMode/FixedNavigationUiTests.cs`, `docs/VISUAL_SYSTEM.md`.
+
+What changed in the app:
+- Every rounded surface now goes through one glass shader (rim, gloss, sheen, soft shadow), added in `PrototypeHud.Surface`. Quiet fills became clear glass, paper became frost, the plum main button became one rose jelly button. This undoes "flat, no shadows" from October 9, which the owner's pick implies.
+- Browsing pages stand on a toned copy of the room painting the app already ships; frosted cards show a blurred copy made at run time. No new painting was added.
+- The tab bar is a frosted capsule floating over the page with a bright lens on the selected tab. Pages now scroll behind it, and the page's top edge fades under the fixed title instead of being cut.
+- Jelly pictures sit above the words on the five play controls and in Home's four section labels. Words stay with icons.
+- Shelf: the two big plum shortcut tiles are clear glass, filter chips are real pills, the selected one is a lens.
+
+Not in this step: the fixed 156 pt header, new layouts for Home, Walk or the box opening, more icons, new paintings. Loose text that sits straight on the painting (the Walk page's rule text) is readable but weaker than text on frost; step 2 should put it on a card.
+
+For Codex: nothing is asked of you by this step. The nine icons add about 0.2 MB of source PNG at 128 px with normal compression; Android has about 1 MB of room, so please measure before the next Play build. The two earlier requests (texture compression, a solid featured-toy picture) still stand.
+
+**Verified:** Unity 6000.6.5f1 on this Mac. EditMode 17/17. PlayMode 264 of 279; the 15 failures are the same inherited ones listed under "one main sound per pockle" below, with the same messages, and none is a UI test. The rewritten navigation test passes. Three full capture runs of 87 shots, every sheet looked at; final set in `docs/ui-audit/03-glass-kit/screens/`, with `before-after-1.jpg` and `-2.jpg`. No duplicate GUIDs; `git diff --check` clean. **Not verified:** a phone, so the shader on real Android and iOS graphics chips, frame rate while scrolling and the look of the blur on a real screen are all unseen. `dotnet` is not installed on this Mac, so the portable Core checks and source checks did not run here (Core is untouched; CI runs them). Android size was not measured.
+
 ## November 17: surprise box picture on the walking cards (UX-003 / UX-052)
 
 Owner report after testing TestFlight 12 / Play 10: "the surprise box on the walking section on the homepage is still the one with no art". Cause: before the server assigns a collection, Home and Shop drew `MysteryCartonGraphic` (three flat quads, the wordmark and a "?"). The richer box from your November 9 concept was never imported.

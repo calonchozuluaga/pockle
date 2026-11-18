@@ -100,7 +100,7 @@ namespace Pockle.Runtime
 
         private static void StyleSwitch(Image track, RectTransform knob, bool on)
         {
-            track.color = on ? PockleTheme.Plum : PockleTheme.FillDeep;
+            track.color = on ? PockleTheme.Rose : new Color(.24f, .13f, .22f, .22f);
             knob.anchoredPosition = new Vector2(on ? 23 : 3, 0);
         }
 

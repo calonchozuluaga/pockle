@@ -290,11 +290,12 @@ namespace Pockle.Runtime
             bool google = provider == AccountProvider.Google;
             string title = google ? "Continue with Google" : "Continue with Apple";
             var button = CreateButton(title, parent, Vector2.zero, new Vector2(300, 56), google ? ProviderGoogleStroke : Color.black, click, out var face, PockleTheme.ButtonSize);
+            Glass(face, GlassStyle.Flat); // the providers' own button styles stay plain: no gloss, rim or shadow
             if (google)
             {
                 // A true 1px border: the face is the stroke colour and a white fill sits 1px inside it.
                 var fill = Rect("Fill", button.transform); Stretch(fill); fill.offsetMin = new Vector2(1, 1); fill.offsetMax = new Vector2(-1, -1);
-                var inner = Surface(fill, Color.white, 27); fill.SetAsFirstSibling(); button.targetGraphic = inner;
+                var inner = Glass(Surface(fill, Color.white, 27), GlassStyle.Flat); fill.SetAsFirstSibling(); button.targetGraphic = inner;
             }
             var label = button.GetComponentInChildren<Text>();
             label.color = google ? ProviderGoogleInk : Color.white;

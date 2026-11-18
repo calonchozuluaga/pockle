@@ -38,9 +38,10 @@ namespace Pockle.Runtime
         /// <summary>A fifth labelled control on the play rail. It plays a sound; it does not open a card.</summary>
         private void BuildStageSound()
         {
-            stageSound = CreateButton("Sound", stageRail, Vector2.zero, new Vector2(RailButton, RailButton), new Color(1, 1, 1, .8f),
-                PlayMainSound, out _, PockleTheme.SmallSize);
+            stageSound = CreateButton("Sound", stageRail, Vector2.zero, new Vector2(RailButton, RailButton), RailGlass,
+                PlayMainSound, out _, PockleTheme.SmallSize, false);
             stageSound.name = "Stage sound";
+            JellyIcon(stageSound, "Sound");
             stageSound.gameObject.SetActive(false);
         }
 

@@ -321,7 +321,7 @@ namespace Pockle.Runtime
 
             fusionGo.interactable = ready && fusion.Available;
             fusionGo.GetComponentInChildren<Text>().text = ready ? "Fuse " + FirstName(fuseFirst) + " + " + FirstName(fuseSecond) : "Pick two spares";
-            fusionGo.GetComponent<Image>().color = ready ? PockleTheme.Plum : PockleTheme.FillDeep;
+            fusionGo.GetComponent<Image>().color = ready ? PockleTheme.Rose : PockleTheme.FillDeep;
             fusionGo.GetComponentInChildren<Text>().color = ready ? PockleTheme.OnPlum : MutedInk;
             fusionGoNote.text = !fusion.Available ? "Fusion is unavailable. Your spares are safe." : ready
                 ? (fuseFirst == fuseSecond ? "Uses two spares of this finish. They are spent permanently." : "Uses one spare of each finish. They are spent permanently.")

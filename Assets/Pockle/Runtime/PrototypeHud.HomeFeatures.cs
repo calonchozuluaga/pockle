@@ -40,8 +40,11 @@ namespace Pockle.Runtime
             label.transform.SetParent(pill, false);
             label.color = Ink; label.alignment = TextAnchor.MiddleLeft; label.horizontalOverflow = HorizontalWrapMode.Overflow; label.resizeTextForBestFit = false;
             var lr = label.rectTransform; lr.anchorMin = Vector2.zero; lr.anchorMax = Vector2.one; lr.offsetMin = new Vector2(36, 0); lr.offsetMax = new Vector2(-12, 0);
-            var glyph = AddIcon(pill, icon, 20, Ink);
-            glyph.anchorMin = glyph.anchorMax = glyph.pivot = new Vector2(0, .5f); glyph.anchoredPosition = new Vector2(10, 0);
+            // A jelly picture when there is one for this word (Play, Fuse, Boxes, Badges); the line icon otherwise.
+            var jelly = Resources.Load<Texture2D>("UI/Icons/Jelly/" + (word == "Boxes" ? "Shop" : word));
+            var glyph = AddIcon(pill, icon, jelly != null ? 26 : 20, jelly != null ? Color.white : Ink);
+            if (jelly != null) glyph.GetComponent<RawImage>().texture = jelly;
+            glyph.anchorMin = glyph.anchorMax = glyph.pivot = new Vector2(0, .5f); glyph.anchoredPosition = new Vector2(jelly != null ? 7 : 10, 0);
             pill.sizeDelta = new Vector2(36 + label.preferredWidth + 14, 38);
             tile.Label = pill;
             return tile;
