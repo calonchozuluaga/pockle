@@ -886,3 +886,12 @@ The same 53 were rerun after the eleven auditioned stock clips were replaced wit
 Hosted CI on `dd857f0` (PR #24): portable checks pass, EditMode **17/17**, PlayMode **262/278**. The 16 failures are inherited: the 15 affected classes were rerun locally on `dd857f0` and on an untouched `09cf418`, and the same 15 tests fail identically on both; the sixteenth is a 180 s timeout seen only in CI. The list is in `docs/handoffs/claude.md`.
 
 Phone builds from `dd857f0`: TestFlight 1.0 (12) uploaded and Testing in Pockle owner internal (the owner completed export compliance), and Google Play 1.0 (10) published to internal testing. Both packages were checked for the eleven main sounds, the eight disabled owner flags, identity and signature; details in `docs/main-sound-review/01/distribution.json`. Not verified: any play or listening on a phone.
+
+
+### November 17 — surprise box picture on the walking cards (`claude/surprise-box-art`, local)
+
+Native Unity 6000.6.5f1 batch PlayMode on the `claude/pockle-main-sound` worktree plus this change: **42/42** — WalkingBoxUiTests 12 (including the new `UnknownCollectionShowsTheSurpriseBoxPictureOnHomeAndBoxes`: the picture loads, shows on Home and Shop when no collection is assigned, is square and the same size as a collection's box, and gives way to the assigned collection's own box) and CollectionUiTests 30. Zero compiler errors.
+
+Three real HUD captures at 1080×2340 inspected, in `docs/surprise-box-review/01`: Home and Shop with a server snapshot and no collection assigned, and the signed-out Home after today's box is opened. `home-walking-card-before-after.png` sets the earlier capture (`docs/playtest-feedback-review/01/screenshots/01-home.png`) beside the new one.
+
+Not verified: a phone, hosted CI, the portable/source checks (no `dotnet` on this Mac). The picture is the closed box cut from the November 9 concept sheet; the owner approved it from the before/after capture.

@@ -252,7 +252,7 @@ This section records source integration, not device acceptance. Native suite/cap
 
 PaidBoxCheckoutService queues foreground quote/confirmation while another request runs, avoids background refresh over an open checkout, and gives paid recovery its own immediate path with bounded retry. An uncertain prior payment cannot start another checkout. Delivery authority remains server-side and inventory is persisted before ShowBoxReveal. Pack UI shows3/5 saved results individually or via Reveal all; early Play finishes presentation without changing the saved grant.
 
-The flat owned Shelf uses transparent cutouts in its bounded cache. Home's chooser writes the existing FavoriteId after ownership validation; the neutral walking carton is a presentation fallback until a server collection is assigned. Avatar selection is a separate border, preserving crop geometry.
+The flat owned Shelf uses transparent cutouts in its bounded cache. Home's chooser writes the existing FavoriteId after ownership validation; until a server collection is assigned, the walking cards on Home and Shop show the neutral "Who's inside?" box picture (`Resources/UI/Boxes/Surprise`, `PrototypeHud.SurpriseBoxResource`); the code-drawn `MysteryCartonGraphic` remains only as the fallback when that picture is missing. Avatar selection is a separate border, preserving crop geometry.
 
 
 ### Android community beta checkout boundary

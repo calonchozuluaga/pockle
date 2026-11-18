@@ -67,10 +67,25 @@ namespace Pockle.Runtime
                 : (ToyCatalog.TryGetCollection(collectionId, out var c) ? c.DisplayName : collectionId) + " box";
         }
 
+        /// <summary>Resources path of the neutral "Who's inside?" box shown until the server assigns a collection.</summary>
+        public const string SurpriseBoxResource = "UI/Boxes/Surprise";
+        private bool surpriseBoxPicture;
+
         private void BuildMysteryCarton(Text placeholder)
         {
             placeholder.text = "";
             var art = Rect("Surprise collection box", placeholder.transform); Stretch(art);
+            var picture = Resources.Load<Texture2D>(SurpriseBoxResource);
+            if (picture != null)
+            {
+                // Square and framed like the collection boxes, so it covers the same spot their pictures do.
+                var image = art.gameObject.AddComponent<RawImage>(); image.texture = picture; image.raycastTarget = false;
+                var fit = art.gameObject.AddComponent<AspectRatioFitter>();
+                fit.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent; fit.aspectRatio = (float)picture.width / Mathf.Max(1, picture.height);
+                surpriseBoxPicture = true;
+                return;
+            }
+            // No picture in this build: the plain drawn carton.
             art.gameObject.AddComponent<MysteryCartonGraphic>().raycastTarget = false;
             var logo = Rect("Pockle box brand", art);
             logo.anchorMin = new Vector2(.20f,.51f); logo.anchorMax = new Vector2(.64f,.65f); logo.offsetMin = logo.offsetMax = Vector2.zero;

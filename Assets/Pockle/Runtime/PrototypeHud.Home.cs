@@ -578,7 +578,9 @@ namespace Pockle.Runtime
                 homeBoxTitle.color = opened ? PockleTheme.OnPlum : Ink;
                 homeStatus.color = opened ? PockleTheme.OnPlumMuted : PockleTheme.JellyInk;
                 homeBoxHype.Tint = opened ? new Color(.45f, .38f, .8f, 1f) : Color.white;
-                homeMystery.gameObject.SetActive(opened && homeBoxArt.enabled);
+                bool mystery = opened && (homeBoxArt.enabled || surpriseBoxPicture);
+                homeMystery.gameObject.SetActive(mystery);
+                if (mystery && surpriseBoxPicture) homeBoxArt.enabled = false; // the surprise box stands in for the tinted silhouette
                 homeCountdown.gameObject.SetActive(opened);
                 homeBoxHype.Excited = ready; // the box only glows, shakes and sparkles when it can be opened
                 homeOpen.gameObject.SetActive(ready); homeOpen.interactable = ready;

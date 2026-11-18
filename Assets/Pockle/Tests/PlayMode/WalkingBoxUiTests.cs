@@ -84,6 +84,32 @@ namespace Pockle.Tests
         }
 
         [UnityTest]
+        public IEnumerator UnknownCollectionShowsTheSurpriseBoxPictureOnHomeAndBoxes()
+        {
+            var surprise = Resources.Load<Texture2D>(PrototypeHud.SurpriseBoxResource);
+            Assert.That(surprise, Is.Not.Null, "the 'Who's inside?' box picture ships with the app");
+            hud.SetWalkingBoxes(View()); yield return null; yield return null;
+            var home = root.GetComponentsInChildren<Transform>(true).First(t => t.name == "Mystery mark");
+            Assert.That(home.gameObject.activeInHierarchy, Is.True, "Home shows a box before the server assigns a collection");
+            var picture = home.Find("Surprise collection box").GetComponent<RawImage>();
+            Assert.That(picture != null && picture.enabled && picture.texture == surprise, Is.True, "the picture, not the plain drawn carton");
+            Assert.That(home.GetComponentInChildren<MysteryCartonGraphic>(true), Is.Null);
+            var size = ((RectTransform)picture.transform).rect.size;
+            Assert.That(size.x, Is.GreaterThan(1f));
+            Assert.That(size.x, Is.EqualTo(size.y).Within(.5f), "the square picture is never stretched");
+            var known = root.GetComponentsInChildren<RawImage>(true).First(r => r.name == "Box art");
+            Assert.That(size.x, Is.EqualTo(known.rectTransform.rect.width).Within(.5f), "the same size as a collection's box picture");
+            Assert.That(known.enabled, Is.False, "no other box shows behind it");
+            Button("Shop").onClick.Invoke(); yield return null;
+            var boxes = root.GetComponentsInChildren<Transform>(true).First(t => t.name == "Unknown walking collection");
+            Assert.That(boxes.gameObject.activeInHierarchy, Is.True);
+            Assert.That(boxes.Find("Surprise collection box").GetComponent<RawImage>().texture, Is.SameAs(surprise));
+            hud.SetWalkingBoxes(View("fox")); yield return null;
+            Assert.That(home.gameObject.activeSelf, Is.False, "an assigned collection replaces the surprise box with its own");
+            Assert.That(known.enabled && known.texture != null && known.texture != surprise, Is.True);
+        }
+
+        [UnityTest]
         public IEnumerator OfflineAndReconnectingShowSavedBoxesButNeverOpen()
         {
             foreach (var state in new[] { WalkingBoxConnection.Offline, WalkingBoxConnection.Reconnecting })

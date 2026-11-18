@@ -3,6 +3,24 @@
 October 13, 2026. Status: **UX-037/038 (living shelf, personalities, fusion screens) in review on `claude/personalities-fusion-ui`.** Earlier status (October 9): **UX-002/003/004 and ART-001 merged. The owner tested the UI and asked for a less dated look: "Pockle screens v2" (owner's design canvas) is the approved direction. Collection/series rules decided; see `../COLLECTIONS.md`. Next: rebuild the Unity screens to v2, then UX-031.**
 
 
+## November 17: surprise box picture on the walking cards (UX-003 / UX-052)
+
+Owner report after testing TestFlight 12 / Play 10: "the surprise box on the walking section on the homepage is still the one with no art". Cause: before the server assigns a collection, Home and Shop drew `MysteryCartonGraphic` (three flat quads, the wordmark and a "?"). The richer box from your November 9 concept was never imported.
+
+The owner approved the picture from the before/after capture and asked for phone builds. Branch `claude/surprise-box-art`, stacked on `claude/pockle-main-sound` (`6f8bf40`) so one build carries both; committed locally, not pushed, not part of PR #24.
+
+My files:
+- `Assets/Pockle/Resources/UI/Boxes/Surprise.png` (+ meta, same import settings as `Collection-pip.png`): the closed box from `ArtSource/BoxReveal02/mystery-carton-02.png`, cut out on this Mac with the system subject mask, edge tightened, centred on a 900 px transparent square at its original pixel size (about 70% of the canvas, like the collection boxes). No regeneration, no credits.
+- `PrototypeHud.WalkingBoxes.cs`: `BuildMysteryCarton` shows that picture (`SurpriseBoxResource`), square, the same size and place as a collection's box; the drawn carton stays as the fallback when the picture is missing.
+- `PrototypeHud.Home.cs`: signed out, after today's box is opened, the surprise box replaces the tinted Pip silhouette instead of sitting on top of it.
+- `WalkingBoxUiTests.UnknownCollectionShowsTheSurpriseBoxPictureOnHomeAndBoxes` (new).
+
+**For Codex:** the picture is your concept sheet's artwork, so its wordmark is the generated one, not the real wordmark texture your README asks for in the final 3D print. If you build the production carton, replace `UI/Boxes/Surprise.png` at the same path and the UI picks it up. Nothing in your lane changed.
+
+**Verified:** native Unity 6000.6.5f1 PlayMode 42/42 (WalkingBoxUi 12 including the new test, CollectionUi 30); three real HUD captures inspected (`docs/surprise-box-review/01`): Home and Shop in the server state with no collection assigned, and the signed-out Home after today's box is opened.
+
+**Not verified:** a phone; hosted CI; the portable/source checks (`dotnet` is not installed here).
+
 ## November 17: one main sound per pockle — `claude/pockle-main-sound` (UX-025)
 
 Branch from `codex/box-reveal-design-02` (`09cf418`), because `main` has none of the audio runtime. Pushed at the owner's request and open as PR #24 against `codex/box-reveal-design-02`.

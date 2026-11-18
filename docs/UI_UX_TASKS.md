@@ -338,3 +338,6 @@ November9 playtest follow-up on `codex/playtest-feedback-11`: UX-025 coherent fa
 
 
 November17 sound direction on `claude/pockle-main-sound` (UX-025): owner chose one main sound per pockle, played only from a new Sound control on the Play rail; soft touch sounds stay. HUD control, eleven owner-picked clips generated with Magnific, silent touch responses and `MainSoundUiTests` are implemented locally, uncommitted. Native Unity 6000.6.5f1 PlayMode: 53/53 across MainSoundUi, PlayControlsUi, CollectionVoice, ReactionResponseRuntime, MomentAudio and CollectionUi. Open: phone listening, portable/source checks (no dotnet on this machine).
+
+
+November17 surprise box picture (UX-003/052, Claude, `claude/surprise-box-art` on top of `claude/pockle-main-sound`): owner reported Home's walking card still showing the plain drawn carton. The closed box from Codex's November 9 concept (`ArtSource/BoxReveal02/mystery-carton-02.png`) is now a transparent picture at `Resources/UI/Boxes/Surprise.png`, shown on Home and Shop until the server assigns a collection. Native PlayMode 42/42 (WalkingBoxUi 12, CollectionUi 30); captures in `docs/surprise-box-review/01`. Owner approved the picture from the capture. Open: phone check.
