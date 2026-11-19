@@ -914,3 +914,5 @@ November 19 notification iOS candidate: native Unity export, Xcode workspace arc
 
 
 November 19 notification distribution follow-up: owner explicitly approved build15 upload to Pockle and assignment to existing Pockle owner internal only. Xcode upload succeeded at 13:19 Mountain; App Store Connect independently shows 1.0(15) Processing. Upload warning: vendor UnityRuntime.framework dSYM absent (B5BCB31B-E424-3C81-A0EE-2EF2ADFA93D7); uploaded app accepted, while crash symbolication for that vendor framework may be limited. App UnityFramework dSYM matches the archive. Final 7/7 policy/backend tests also passed after notification-kind isolation correction. No native phone acceptance, group availability, compliance completion or public release claimed.
+
+November 19 notification delivery completion: owner completed Apple compliance. App Store Connect owner internal group Builds explicitly shows1.0(15) Testing,1 tester; build detail Group(1), individual testers0. No external/public release. Screenshot/evidence notification-build-review/01/build15-testing.png and distribution.json. Real phone permissions, reminders and tap/account preservation remain pending.

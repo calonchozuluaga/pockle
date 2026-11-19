@@ -22,11 +22,17 @@
   "focusedPlayMode": "68/68",
   "finalPolicy": "7/7",
   "deviceAcceptance": "pending",
-  "upload": "succeeded; processing complete; Missing Compliance",
+  "upload": "succeeded; processing complete",
   "uploadedAt": "2026-11-19T13:19:19-07:00",
   "uploadWarning": "UnityRuntime.framework vendor dSYM absent for UUID B5BCB31B-E424-3C81-A0EE-2EF2ADFA93D7; upload succeeded. UnityFramework app dSYM matches archive.",
-  "testflightGroup": "Pockle owner internal only; assignment pending compliance",
+  "testflightGroup": "Pockle owner internal",
   "appleBuildId": "f949763d-7931-47fd-882c-fdf2919cee5d",
   "testNotes": "saved and UI verified",
-  "compliance": "owner declaration requested; form open with no answers selected"
+  "compliance": "owner completed; compliance blocker removed in Apple UI",
+  "testflightGroupId": "e702b709-d2b1-4d76-9d1a-649edf891e08",
+  "testflightStatus": "Testing",
+  "testflightTesters": 1,
+  "individualTesters": 0,
+  "evidence": "build15-testing.png",
+  "externalAssignment": false
 }
