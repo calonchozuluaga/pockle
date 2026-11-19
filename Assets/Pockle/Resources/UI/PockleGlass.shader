@@ -62,22 +62,22 @@ Shader "Pockle/UI/Glass"
                 return o;
             }
 
-            float Box(float2 p, float2 half, float r)
+            float Box(float2 p, float2 halfSize, float r)
             {
-                float2 q = abs(p) - half + r;
+                float2 q = abs(p) - halfSize + r;
                 return length(max(q, 0)) + min(max(q.x, q.y), 0) - r;
             }
 
             fixed4 frag(Output i):SV_Target
             {
-                float2 half = i.shape.xy;
-                float r = min(i.shape.z, min(half.x, half.y));
-                float d = Box(i.local, half, r);
+                float2 halfSize = i.shape.xy;
+                float r = min(i.shape.z, min(halfSize.x, halfSize.y));
+                float d = Box(i.local, halfSize, r);
                 float aa = max(fwidth(d), .0001);
                 float inside = saturate(.5 - d / aa);
                 float rim = i.style.x, gloss = i.style.y, shadow = i.style.z, sheen = i.style.w;
                 fixed4 tint = i.color;
-                float t = saturate(i.local.y / max(half.y, .001) * .5 + .5); // 0 at the bottom edge, 1 at the top
+                float t = saturate(i.local.y / max(halfSize.y, .001) * .5 + .5); // 0 at the bottom edge, 1 at the top
 
                 // Body: frost shows the blurred painting through the tint; everything else is the tint itself.
                 float frost = step(.5, i.shape.w);
@@ -94,7 +94,7 @@ Shader "Pockle/UI/Glass"
                 float band = smoothstep(.50, .98, t) * smoothstep(-1.5, -5.5, d);
                 rgb = lerp(rgb, 1, band * gloss * .20);
                 // A faint diagonal sheen on clear glass.
-                float diagonal = i.local.x / max(half.x, .001) * .35 + i.local.y / max(half.y, .001);
+                float diagonal = i.local.x / max(halfSize.x, .001) * .35 + i.local.y / max(halfSize.y, .001);
                 rgb = lerp(rgb, 1, exp(-pow((diagonal - .45) * 2.4, 2)) * sheen * .10);
                 // Inner glow and the bright rim that catches light, strongest along the top.
                 rgb = lerp(rgb, 1, exp(d / 5) * rim * .10);
@@ -103,7 +103,7 @@ Shader "Pockle/UI/Glass"
                 alpha = max(alpha, edge * .9) * seen;
 
                 // Soft shadow below, drawn in the margin GlassSurface adds around the surface.
-                float below = Box(i.local + float2(0, 3), half, r);
+                float below = Box(i.local + float2(0, 3), halfSize, r);
                 float cast = shadow * .20 * pow(saturate(1 - max(below, 0) / 11), 2) * seen;
                 fixed4 colour;
                 colour.rgb = lerp(float3(.045, .016, .04), rgb, inside);
