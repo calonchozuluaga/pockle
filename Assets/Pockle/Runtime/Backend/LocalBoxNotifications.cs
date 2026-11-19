@@ -50,6 +50,7 @@ namespace Pockle.Runtime
             session.WalkingEnableRequested += RequestFromWalking;
             walking.NotificationSnapshotReceived += Observe;
             RefreshPermission();
+            hud.SetNotificationPermission(Permission, RequestFromSettings, OpenPhoneSettings);
             StartCoroutine(CheckLaunch());
         }
         private void Update()
@@ -103,6 +104,12 @@ namespace Pockle.Runtime
             Save();
             gate.Schedule(NotificationPrefs.BoxReady, () => Send(EligibilityId, EligibilityTitle, EligibilityText, seconds));
         }
+        public void RequestFromSettings()
+        {
+            if (session == null) return;
+            if (!session.WalkingActive) session.EnableWalking();
+            else RequestFromWalking();
+        }
         public void RequestFromWalking()
         {
             if (!permissionBusy && PlayerPrefs.GetInt(PromptKey, 0) == 0 && NotificationPrefs.IsOn(NotificationPrefs.BoxReady))
@@ -147,7 +154,7 @@ namespace Pockle.Runtime
             if (Permission != BoxNotificationPermission.Granted) CancelAll();
         }
         private void SetPermission(BoxNotificationPermission value)
-        { if (Permission != value) { Permission = value; PermissionChanged?.Invoke(value); } }
+        { if (Permission != value) { Permission = value; hud?.SetNotificationPermission(value, RequestFromSettings, OpenPhoneSettings); PermissionChanged?.Invoke(value); } }
         public void OpenPhoneSettings()
         {
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR

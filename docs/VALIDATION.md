@@ -905,3 +905,5 @@ Google Play 1.0 (11) from `6a1768b`: signed by the owner (verified, same upload 
 
 ### November 19 — UX-027 local notifications
 Full portable suite and source checks passed. Core/runtime Roslyn compilation passed for Editor, iOS and Android symbols against Unity 6000.6.5f1 and Mobile Notifications 2.5.0 APIs; package build hook and four new NUnit cases compile. Native test execution blocked by Unity licensing IPC despite active Personal license in Hub. No new native PlayMode pass, UPM resolution, build, device delivery or permission result is claimed. See codex handoff November 19 for exact scope and pending phone matrix.
+
+November 19 follow-up: licensing IPC repaired without changing license/activation. Native notification policy 4/4, permission Settings UI 4/4, EditMode 17/17 passed. Affected PlayMode 66/68: two CollectionUiTests fail from existing Metal PockleGlass.shader:65 variable `half`; narrow fix approval pending. Native package resolution succeeded. No phone build/delivery yet.

@@ -14,6 +14,24 @@ namespace Pockle.Runtime
     {
         private RectTransform accountHeading, accountCard, notifyHeading, notifyCard;
         private Text accountWho, accountWhoDetail;
+        private Button notificationPermissionButton;
+        private Text notificationPermissionNote;
+        private BoxNotificationPermission notificationPermission = BoxNotificationPermission.Unsupported;
+        private Action requestNotificationPermission, openNotificationSettings;
+
+        public void SetNotificationPermission(BoxNotificationPermission state, Action request, Action openSettings)
+        {
+            notificationPermission = state; requestNotificationPermission = request; openNotificationSettings = openSettings;
+            RefreshAccountSettings();
+        }
+
+        private void NotificationPermissionAction()
+        {
+            if (notificationPermission == BoxNotificationPermission.NotAsked)
+            { NotificationPrefs.Set(NotificationPrefs.BoxReady, true); requestNotificationPermission?.Invoke(); }
+            else if (notificationPermission == BoxNotificationPermission.Denied || notificationPermission == BoxNotificationPermission.Granted)
+                openNotificationSettings?.Invoke();
+        }
         private readonly Button[] notifySwitches = new Button[NotificationPrefs.Kinds.Length];
         private readonly Image[] notifyTracks = new Image[NotificationPrefs.Kinds.Length];
         private readonly RectTransform[] notifyKnobs = new RectTransform[NotificationPrefs.Kinds.Length];
@@ -56,9 +74,11 @@ namespace Pockle.Runtime
                 SwitchRow(NotificationPrefs.Titles[i], notifyCard, () => { NotificationPrefs.Set(NotificationPrefs.Kinds[kind], !NotificationPrefs.IsOn(NotificationPrefs.Kinds[kind])); RefreshAccountSettings(); },
                     out notifySwitches[i], out notifyTracks[i], out notifyKnobs[i]);
             }
+            LinkRow("Phone notification permission", notifyCard, NotificationPermissionAction);
+            notificationPermissionButton = notifyCard.Find("Phone notification permission").GetComponent<Button>();
             var note = Label("Pockle asks your phone for permission the first time you turn on walking. You can also turn notifications off in your phone's settings.",
                 notifyCard, PockleTheme.CaptionSize, MutedInk, FontStyle.Normal, TextAnchor.UpperLeft, Vector2.zero, Vector2.zero);
-            note.gameObject.name = "Notification note";
+            note.gameObject.name = "Notification note"; notificationPermissionNote = note;
         }
 
         // ----- Layout and refresh -----
@@ -100,6 +120,19 @@ namespace Pockle.Runtime
                 : TestBuildSignIn ? "Test build · not signed in, saved on this phone only" : "Not signed in";
             for (int i = 0; i < NotificationPrefs.Kinds.Length; i++)
                 StyleSwitch(notifyTracks[i], notifyKnobs[i], NotificationPrefs.IsOn(NotificationPrefs.Kinds[i]));
+            if (notificationPermissionButton == null) return;
+            bool ask = notificationPermission == BoxNotificationPermission.NotAsked;
+            bool pending = notificationPermission == BoxNotificationPermission.Pending;
+            bool unsupported = notificationPermission == BoxNotificationPermission.Unsupported;
+            notificationPermissionButton.interactable = !pending && !unsupported;
+            notificationPermissionButton.GetComponentInChildren<Text>().text = ask
+                ? (session != null && session.WalkingActive ? "Allow walking alerts" : "Enable walking & alerts")
+                : pending ? "Waiting for permission…" : unsupported ? "Phone alerts unavailable" : "Open notification settings";
+            notificationPermissionNote.text = ask ? "Allow gentle walking reminders. Pockle will ask your phone for permission when you choose to enable them."
+                : pending ? "Finish the permission request on your phone."
+                : notificationPermission == BoxNotificationPermission.Denied ? "Notifications are turned off in your phone's settings. You can allow them there."
+                : notificationPermission == BoxNotificationPermission.Granted ? "Your phone allows alerts. Pockle sends at most two walking reminders a day."
+                : "Phone alerts aren't available here. Your notification choices are saved.";
         }
 
         // ----- Actions -----
