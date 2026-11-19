@@ -46,7 +46,7 @@ namespace Pockle.Runtime
             try { NotificationCenter.Initialize(args); }
             catch (Exception e) { Debug.LogWarning("Notifications unavailable: " + e.GetType().Name); return; }
 #endif
-            gate = new NotificationGate(_ => CancelAll());
+            gate = new NotificationGate(kind => { if (kind == NotificationPrefs.BoxReady) CancelAll(); });
             session.WalkingEnableRequested += RequestFromWalking;
             walking.NotificationSnapshotReceived += Observe;
             RefreshPermission();
