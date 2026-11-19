@@ -12,9 +12,10 @@ namespace Pockle.Runtime
         // Short aliases for the v2 theme tokens used throughout the HUD partials.
         private static Color Ink => PockleTheme.Plum;
         private static Color MutedInk => PockleTheme.PlumSoft;
-        private static Color Primary => PockleTheme.Plum;
-        private static Color Quiet => PockleTheme.Fill;
-        private static Color Paper => PockleTheme.Milk;
+        // Jelly glass (UX-053): the main action is a rose jelly button, quiet controls are clear glass, cards are frosted.
+        private static Color Primary => PockleTheme.Rose;
+        private static Color Quiet => PockleTheme.Glass;
+        private static Color Paper => PockleTheme.Frost;
         private readonly MenuNavigation navigator = new MenuNavigation();
         private AppPage page => navigator.Current;
         public AppPage CurrentPage => page;
@@ -40,6 +41,7 @@ namespace Pockle.Runtime
         private RectTransform personalityRoot, fusionRoot, fusionRevealRoot;
         private Button collectionsPill;
         private Image groundImage;
+        private RectMask2D viewportMask;
         private Sprite roundedSprite;
         private Texture2D roundedTexture;
         private Canvas canvas;
@@ -77,6 +79,7 @@ namespace Pockle.Runtime
             // Approved peach/plum browsing ground; readable cards stay cream and play shows the 3D stage.
             pageGround = Rect("Page ground", root.transform); Stretch(pageGround);
             groundImage = pageGround.gameObject.AddComponent<Image>(); groundImage.color = PockleTheme.Page; groundImage.raycastTarget = false;
+            BuildGlassGround();
             safeRoot = Rect("Safe area", root.transform); Stretch(safeRoot);
             brand = BuildWordmark(safeRoot);
             avatarButton = BuildAvatarButton(safeRoot);
@@ -96,7 +99,7 @@ namespace Pockle.Runtime
                 TextAnchor.UpperLeft, Vector2.zero, new Vector2(350, 44));
             browsing = Rect("Collection browsing", safeRoot);
             var scroll = browsing.gameObject.AddComponent<ScrollRect>(); scroll.horizontal = false; scroll.movementType = ScrollRect.MovementType.Clamped;
-            var viewport = Rect("Viewport", browsing); Stretch(viewport); viewport.gameObject.AddComponent<RectMask2D>();
+            var viewport = Rect("Viewport", browsing); Stretch(viewport); viewportMask = viewport.gameObject.AddComponent<RectMask2D>();
             var dragTarget = viewport.gameObject.AddComponent<Image>(); dragTarget.color = Color.clear;
             content = Rect("Collection content", viewport); content.anchorMin = new Vector2(0, 1); content.anchorMax = new Vector2(1, 1); content.pivot = new Vector2(.5f, 1);
             scroll.content = content; scroll.viewport = viewport;
@@ -311,6 +314,7 @@ namespace Pockle.Runtime
             RefreshShelfPick(); RefreshBadges();
             if (!play && trayTab != TrayClosed) SetTrayTab(TrayClosed);
             RefreshStage();
+            RefreshGlass();
             content.anchoredPosition = new Vector2(0, navigator.Scroll);
             if (lastLayoutSize.x > 0) AdaptLayout();
             BackdropChanged?.Invoke(play ? StageBackdrop : PrototypeStage.Background);
@@ -361,6 +365,7 @@ namespace Pockle.Runtime
             if (lastScreenSize.x != Screen.width || lastScreenSize.y != Screen.height || lastSafeArea != Screen.safeArea) ApplySafeArea();
             if (lastLayoutSize != safeRoot.rect.size) { AdaptLayout(); LayoutOnboarding(); }
             UpdateOnboarding();
+            RefreshGlass();
         }
         private void ApplySafeArea()
         {
@@ -406,7 +411,10 @@ namespace Pockle.Runtime
             bool fullBleed = FullBleed;
             if (fullBleed) { top = 0; width = size.x; }
             LayoutNavigation();
-            float viewportHeight = Mathf.Max(30, size.y - top - (tabs ? NavigationContentHeight : 0));
+            // Pages scroll underneath the floating tab capsule, so the viewport runs to the bottom of the safe area.
+            // The clip line hides behind the capsule's middle, and the page's top edge fades out under the fixed title.
+            float viewportHeight = Mathf.Max(30, size.y - top - (tabs ? NavigationContentHeight / 2 : 0));
+            viewportMask.softness = fullBleed ? Vector2Int.zero : new Vector2Int(0, 14);
             TopCentered(browsing, new Vector2(0, -top), new Vector2(width, viewportHeight));
             playHintPill.sizeDelta = new Vector2(Mathf.Min(width, 360), 40);
             LayoutStage(size, left, width);
@@ -429,8 +437,8 @@ namespace Pockle.Runtime
                 case AppPage.Badges: height = LayoutBadges(width); break;
                 default: height = LayoutShelf(width); break;
             }
-            // Content is clipped above the fixed bar; a small trailing gutter keeps its final row comfortable.
-            height += 24;
+            // A trailing gutter keeps the final row comfortable and clear of the floating tab capsule.
+            height += 24 + (tabs ? NavigationContentHeight / 2 : 0);
             content.sizeDelta = new Vector2(0, Mathf.Max(viewportHeight, height));
             content.anchoredPosition = new Vector2(0, Mathf.Clamp(content.anchoredPosition.y, 0, Mathf.Max(0, height - viewportHeight)));
             if (modal.gameObject.activeSelf) LayoutModal();
@@ -464,8 +472,12 @@ namespace Pockle.Runtime
             rect.pivot = new Vector2(0f, 1f);
             rect.anchoredPosition = new Vector2(position.x, -position.y);
             rect.sizeDelta = size;
-            // Pills by default: the corner radius is half the button's height.
-            background = Surface(rect, colour, pill ? size.y / 2 : PockleTheme.TileRadius);
+            // The main action is one deep rose jelly button everywhere.
+            bool jelly = colour == PockleTheme.Plum || colour == PockleTheme.Rose;
+            if (jelly) colour = PockleTheme.Rose;
+            // Pills by default: the glass shader clamps the radius to half the button's height, whatever size it is laid out at.
+            background = Surface(rect, colour, pill ? PillRadius : PockleTheme.TileRadius);
+            if (jelly) Glass(background, GlassStyle.Jelly);
             background.raycastTarget = true;
             var button = rect.gameObject.AddComponent<Button>();
             button.targetGraphic = background;
@@ -517,10 +529,29 @@ namespace Pockle.Runtime
             image.sprite = roundedSprite;
             image.type = Image.Type.Sliced;
             SetRadius(image, radius);
-            image.color = colour;
+            // Older call sites still name the flat v2 fills; they become glass and frost here.
+            image.color = colour == PockleTheme.Fill ? PockleTheme.Glass : colour == PockleTheme.Milk ? PockleTheme.Frost : colour;
             image.raycastTarget = false;
+            var glass = PockleGlass.Surface;
+            if (glass != null)
+            {
+                image.material = glass;
+                var surface = rect.gameObject.AddComponent<GlassSurface>();
+                // Paper is always frosted: it blurs the painting behind it, and turns solid where there is none.
+                if (image.color == PockleTheme.Frost) surface.Style = GlassStyle.Frost;
+            }
             return image;
         }
+
+        /// <summary>Chooses how a surface made by <see cref="Surface"/> catches light.</summary>
+        private static Image Glass(Image image, GlassStyle style)
+        {
+            var glass = image != null ? image.GetComponent<GlassSurface>() : null;
+            if (glass != null) glass.Style = style;
+            return image;
+        }
+
+        private const float PillRadius = 1000f;
 
         /// <summary>The sprite's corners are 64 px; scaling pixels-per-unit sets the drawn corner radius.</summary>
         private static void SetRadius(Image image, float radius)
@@ -531,7 +562,7 @@ namespace Pockle.Runtime
         /// <summary>Readable text colour on a fill: light on plum and midnight, plum on everything else.</summary>
         private static Color InkOn(Color fill)
         {
-            return fill == PockleTheme.Plum || fill == PockleTheme.Midnight ? PockleTheme.OnPlum : PockleTheme.Plum;
+            return fill == PockleTheme.Plum || fill == PockleTheme.Rose || fill == PockleTheme.Midnight ? PockleTheme.OnPlum : PockleTheme.Plum;
         }
 
         private static RectTransform Rect(string name, Transform parent)
@@ -557,7 +588,7 @@ namespace Pockle.Runtime
             rect.offsetMax = Vector2.zero;
         }
 
-        /// <summary>A large flat surface (v2 has no drop shadows).</summary>
+        /// <summary>A large surface behind words: frosted glass when it takes the paper colour, a softly lit field otherwise.</summary>
         private Image Card(RectTransform rect, Color colour)
         {
             return Surface(rect, colour, PockleTheme.CardRadius);
@@ -729,6 +760,7 @@ namespace Pockle.Runtime
             ReleaseScenePortraits(); ReleaseFusion();
             if (session != null) session.Changed -= RefreshCollection;
             foreach (var preview in previews) if (preview != null) { preview.Release(); Destroy(preview); }
+            ReleaseGlass();
             if (roundedSprite != null) Destroy(roundedSprite);
             if (roundedTexture != null) Destroy(roundedTexture);
             if (canvas != null) Destroy(canvas.gameObject);

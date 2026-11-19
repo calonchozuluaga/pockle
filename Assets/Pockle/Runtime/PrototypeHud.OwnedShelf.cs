@@ -74,19 +74,20 @@ namespace Pockle.Runtime
 
         private Button OwnedShelfAction(string title, string caption, string name, Color color, Action action)
         {
-            var button = CreateButton(title, ownedShelfRoot, Vector2.zero, Vector2.zero, color, action, out _, 15);
+            // Clear glass with plum words: the shelf's shortcuts are quiet, so the rose stays for the one main action.
+            var button = CreateButton(title, ownedShelfRoot, Vector2.zero, Vector2.zero, Quiet, action, out _, 15);
             button.name = name;
             SetRadius(button.GetComponent<Image>(), 20);
             string glyph = name.EndsWith("Walk") ? "sneaker-move" : name.EndsWith("Shop") ? "storefront" : "squares-four";
             var iconRect = Rect("Shelf action icon", button.transform);
             LeftLabel(iconRect, new Vector2(12, -12), new Vector2(25, 25));
             var icon = iconRect.gameObject.AddComponent<RawImage>();
-            icon.texture = name.EndsWith("Fuse") ? PockleTheme.Icon("Fuse") : Resources.Load<Texture2D>("UI/Navigation/" + glyph); icon.color = PockleTheme.Jelly; icon.raycastTarget = false;
+            icon.texture = name.EndsWith("Fuse") ? PockleTheme.Icon("Fuse") : Resources.Load<Texture2D>("UI/Navigation/" + glyph); icon.color = PockleTheme.Rose; icon.raycastTarget = false;
             var words = button.GetComponentInChildren<Text>(); words.alignment = TextAnchor.MiddleLeft;
-            words.color = PockleTheme.OnPlum;
+            words.color = Ink;
             words.rectTransform.anchorMin = new Vector2(0, .32f); words.rectTransform.anchorMax = new Vector2(1, 1);
             words.rectTransform.offsetMin = new Vector2(46, 0); words.rectTransform.offsetMax = new Vector2(-10, -5);
-            var sub = Label(caption, button.transform, 12, PockleTheme.OnPlumMuted, FontStyle.Normal, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
+            var sub = Label(caption, button.transform, 12, MutedInk, FontStyle.Normal, TextAnchor.MiddleLeft, Vector2.zero, Vector2.zero);
             sub.rectTransform.anchorMin = Vector2.zero; sub.rectTransform.anchorMax = new Vector2(1, .32f);
             sub.rectTransform.offsetMin = new Vector2(12, 8); sub.rectTransform.offsetMax = new Vector2(-12, 0);
             return button;
@@ -198,8 +199,8 @@ namespace Pockle.Runtime
             {
                 bool selected = (int)ownedShelfFilter == i;
                 LeftLabel(ownedShelfFilterFaces[i].rectTransform, new Vector2(i * (chip + 8), 0), new Vector2(chip, 44));
-                ownedShelfFilterFaces[i].color = selected ? Ink : Quiet;
-                ownedShelfFilterFaces[i].GetComponentInChildren<Text>().color = selected ? Paper : Ink;
+                ownedShelfFilterFaces[i].color = selected ? PockleTheme.Lens : Quiet;
+                ownedShelfFilterFaces[i].GetComponentInChildren<Text>().color = Ink;
             }
             y += 58;
             const float gap = 10;

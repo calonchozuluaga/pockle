@@ -21,13 +21,19 @@ namespace Pockle.Runtime
             internal Texture2D Regular, Filled;
         }
 
+        private RectTransform navigationCapsule;
+        private const float CapsuleInset = 12f, CapsuleHeight = 64f;
+
         private void BuildNavigation()
         {
-            // A canvas sibling spans the screen, including the bottom/side unsafe areas.
-            // Its buttons are independently constrained to the safe horizontal bounds.
+            // A canvas sibling spans the screen, including the bottom/side unsafe areas, and stays clear: the bar is a
+            // frosted capsule floating over the page (UX-053). Its buttons are constrained to the safe horizontal bounds.
             navigation = Rect("Navigation", canvas.transform);
             var background = navigation.gameObject.AddComponent<Image>();
-            background.color = Primary;
+            background.color = Color.clear; background.raycastTarget = false;
+            navigationCapsule = Rect("Tab capsule", navigation);
+            var capsule = Surface(navigationCapsule, PockleTheme.Frost, CapsuleHeight / 2);
+            Glass(capsule, GlassStyle.Frost); capsule.raycastTarget = true; // taps between tabs never reach the page beneath
             navigationItems = Rect("Navigation safe targets", navigation);
             navigationItemsByPage = new[]
             {
@@ -41,24 +47,22 @@ namespace Pockle.Runtime
 
         private NavigationItem BuildNavigationItem(string title, string resource, AppPage destination)
         {
-            var button = CreateButton(title, navigationItems, Vector2.zero, new Vector2(78, 56),
-                Color.clear, () => SelectTab(destination), out var background, 11);
-            // The whole equal-sized target remains tappable; only the icon gets a selected capsule.
-            background.sprite = null;
-            background.type = Image.Type.Simple;
-            var selectionRect = Rect("Selected icon", button.transform);
-            TopCentered(selectionRect, new Vector2(0, -1), new Vector2(48, 32));
-            var selection = Surface(selectionRect, Color.clear, 14);
+            var button = CreateButton(title, navigationItems, Vector2.zero, new Vector2(70, 56),
+                Color.clear, () => SelectTab(destination), out _, 11);
+            // The whole equal-sized target remains tappable; the selected tab sits under a bright glass lens.
+            var selectionRect = Rect("Selected icon", button.transform); selectionRect.SetAsFirstSibling();
+            Stretch(selectionRect); selectionRect.offsetMin = new Vector2(2, 1); selectionRect.offsetMax = new Vector2(-2, -1);
+            var selection = Surface(selectionRect, Color.clear, 27);
             var iconRect = Rect("Navigation icon", selectionRect);
-            iconRect.anchorMin = iconRect.anchorMax = iconRect.pivot = new Vector2(.5f, .5f);
-            iconRect.sizeDelta = new Vector2(27, 27);
+            iconRect.anchorMin = iconRect.anchorMax = iconRect.pivot = new Vector2(.5f, 1);
+            iconRect.anchoredPosition = new Vector2(0, -6); iconRect.sizeDelta = new Vector2(26, 26);
             var glyph = iconRect.gameObject.AddComponent<RawImage>();
             glyph.raycastTarget = false;
             var label = button.GetComponentInChildren<Text>();
             var labelRect = label.rectTransform;
             labelRect.anchorMin = new Vector2(0, 0); labelRect.anchorMax = new Vector2(1, 0);
             labelRect.pivot = new Vector2(.5f, 0);
-            labelRect.offsetMin = new Vector2(1, 2); labelRect.offsetMax = new Vector2(-1, 19);
+            labelRect.offsetMin = new Vector2(1, 5); labelRect.offsetMax = new Vector2(-1, 22);
             label.resizeTextMinSize = 10; label.resizeTextMaxSize = 11;
             label.horizontalOverflow = HorizontalWrapMode.Overflow;
             return new NavigationItem
@@ -81,10 +85,15 @@ namespace Pockle.Runtime
             navigation.pivot = new Vector2(.5f, 0);
             navigation.anchoredPosition = Vector2.zero;
             navigation.sizeDelta = new Vector2(0, NavigationContentHeight + bottomInset);
-            LeftLabel(navigationItems, new Vector2(leftInset, 0), new Vector2(safeRoot.rect.width, NavigationContentHeight));
-            float width = safeRoot.rect.width / navigationItemsByPage.Length;
+            // The capsule and its targets sit inside the safe area, a little above its bottom edge.
+            float width = Mathf.Min(safeRoot.rect.width - CapsuleInset * 2, 460);
+            float left = leftInset + (safeRoot.rect.width - width) / 2;
+            float top = (NavigationContentHeight - CapsuleHeight) / 2;
+            LeftLabel(navigationCapsule, new Vector2(left, -top), new Vector2(width, CapsuleHeight));
+            LeftLabel(navigationItems, new Vector2(left + 4, -top), new Vector2(width - 8, CapsuleHeight));
+            float each = (width - 8) / navigationItemsByPage.Length;
             for (int i = 0; i < navigationItemsByPage.Length; i++)
-                LeftLabel(navigationItemsByPage[i].Rect, new Vector2(i * width, -8), new Vector2(width, 56));
+                LeftLabel(navigationItemsByPage[i].Rect, new Vector2(i * each, -4), new Vector2(each, 56));
         }
 
         private void RefreshNavigation()
@@ -94,10 +103,10 @@ namespace Pockle.Runtime
             foreach (var item in navigationItemsByPage)
             {
                 bool selected = current == item.Page;
-                item.Selection.color = selected ? PockleTheme.Jelly : Color.clear;
-                item.Glyph.color = selected ? Ink : PockleTheme.OnPlumMuted;
+                item.Selection.color = selected ? PockleTheme.Lens : Color.clear;
+                item.Glyph.color = selected ? Ink : MutedInk;
                 item.Glyph.texture = selected ? item.Filled : item.Regular;
-                item.Label.color = selected ? PockleTheme.Jelly : PockleTheme.OnPlumMuted;
+                item.Label.color = selected ? Ink : MutedInk;
             }
         }
 

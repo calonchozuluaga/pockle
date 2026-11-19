@@ -1,0 +1,19 @@
+{
+ "made": "2026-11-18",
+ "tool": "Magnific, owner's Pockle project",
+ "model": "GPT 2.6, 2k, high quality, transparent background",
+ "credits": 175,
+ "note": "One 3 x 3 sheet, cut into nine 256 px icons with src/split_icons.py (faint halo removed). Test icons for the look boards; not in the app.",
+ "icons": [
+  "ic-play",
+  "ic-fuse",
+  "ic-shop",
+  "ic-badge",
+  "ic-pockles",
+  "ic-backdrop",
+  "ic-light",
+  "ic-about",
+  "ic-sound"
+ ],
+ "prompt": "A 3 by 3 grid of nine separate small 3D icons on a fully transparent background, evenly spaced with wide clear gaps between them, no grid lines, no text, no labels, no plates or tiles behind the icons, no shadows on the background. Every icon is a single chunky, rounded object made of soft translucent jelly glass, like a glossy gummy sweet with a gentle inner glow and one soft highlight, lit from the top left. Calm, muted pastel colours only: dusty rose, peach, sage green, lavender, soft sky blue, butter yellow. All nine are the same size, seen from the front and slightly above, in exactly the same style. Row 1: a round smiling blob toy with two dot eyes; two teardrop shapes merging into one; a small shop front with a striped awning. Row 2: a round medal with a star in the middle and two ribbon tails; three tiny blob toys standing together; a picture frame showing soft hills and a sun. Row 3: a sun with short rounded rays; an open book; a loudspeaker with two sound waves."
+}

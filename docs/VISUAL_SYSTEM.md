@@ -6,6 +6,24 @@ Version **v2 screens 04** (shown in **Settings → About**). Owner: Claude, per 
 
 Calm, modern, and toy-first: a milk-white app with plum ink, where colour comes from the toys themselves. Each toy sits on its own colour field. The UI is flat, with no drop shadows or button lips, so the jelly toys provide the depth.
 
+## Jelly glass (UX-053, owner's pick November 18, 2026)
+
+The owner chose "A2 · Jelly glass" from the look boards (`docs/ui-audit/02-looks/`): the jelly look in calmer colours, with clear, light-catching glass. It replaces "flat, no drop shadows" above. The kit lives in three places:
+
+- `Resources/UI/PockleGlass.shader` draws every rounded surface in one pass: shape, a bright rim that is strongest along the top, a soft gloss, a faint diagonal sheen and a soft shadow. `Runtime/UI/GlassSurface.cs` gives it one quad per surface with the size, corner radius and style. `PrototypeHud.Surface` adds it to everything, so no screen builds its own.
+- `Runtime/UI/PockleGlass.cs` tones the page painting (less colour, a milk lift) and makes a small blurred copy at run time. Frosted surfaces show that blurred copy at their place on screen. The painting is one the app already ships (`UI/Onboarding/OnboardingTutorial2`), so the look adds no pictures to the download.
+- `PrototypeHud.Glass.cs` puts the painting behind browsing pages and tells frost when it is really there. On the toy's stage, onboarding, a box opening and the colour-field pages, frost turns nearly solid instead.
+
+| Style | Token | Use |
+| --- | --- | --- |
+| Clear glass | `Glass` (white, 30%) | Rows, chips, inputs, secondary buttons |
+| Frost | `Frost` (warm white, 60%) | Cards, sheets, dialogs, the tab capsule: anything behind words |
+| Lens | `Lens` (white, 62%) | The selected tab, chip or segment |
+| Jelly | `Rose` `#8E3B66` | The main action. It is the only strong colour in the chrome |
+| Flat | | Apple and Google sign-in buttons, which keep their own plain styles |
+
+The tab bar is a frosted capsule floating over the page with a lens on the selected tab; pages scroll behind it. Jelly pictures (`Resources/UI/Icons/Jelly/`, 128 px) sit above the words on the play controls and beside them on Home's four sections; words stay with icons. The older tokens below remain for colour fields and ink; `Fill` and `Milk` passed to `Surface` become `Glass` and `Frost`, and `Plum` passed to `CreateButton` becomes the rose jelly button.
+
 ## Colour
 
 | Token | Hex | Use |
