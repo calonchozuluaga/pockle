@@ -181,6 +181,7 @@ namespace Pockle.Runtime
             gameObject.AddComponent<PaidBoxCheckoutService>().Initialize(hud,collection,accountService);
             walkingBoxService = gameObject.AddComponent<ServerWalkingBoxService>();
             walkingBoxService.Initialize(hud,collection,accountService);
+            gameObject.AddComponent<LocalBoxNotifications>().Initialize(collection,accountService,walkingBoxService,hud);
             accountService.Initialize(collection,()=> { hud.SyncAvatarAccount(); hud.StartOnboardingIfNeeded(); }); // UX-050 (Claude): first-run sign-up and tutorial
             hud.ResumeSavedFusion();
             if (Application.isEditor || Debug.isDebugBuild) Debug.Log("Pockle fusion ready: persistent same-character fusion, save v" + collection.Progress.Save.Version);

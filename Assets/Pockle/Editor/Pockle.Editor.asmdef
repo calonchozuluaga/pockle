@@ -1,7 +1,13 @@
 {
   "name": "Pockle.Editor",
   "rootNamespace": "Pockle.Editor",
-  "references": ["Pockle.Runtime", "Pockle.Core"],
-  "includePlatforms": ["Editor"],
+  "references": [
+    "Pockle.Runtime",
+    "Pockle.Core",
+    "Unity.Notifications"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
   "autoReferenced": true
 }

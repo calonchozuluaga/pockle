@@ -18,6 +18,7 @@ namespace Pockle.Runtime
         public const string BadgePreferenceKey = "pockle.badges.earned.v1";
         public CollectionProgress Progress { get; private set; }
         public event Action Changed;
+        public event Action WalkingEnableRequested;
         public int FusionsMade => Progress != null ? Progress.FusionsMade : 0;
         public IReadOnlyDictionary<string, int> BadgeEligibleOwnedCounts => Progress.BadgeEligibleOwnedCounts;
         public long LifetimeSteps => Progress != null ? Progress.LifetimeSteps : 0;
@@ -302,7 +303,7 @@ namespace Pockle.Runtime
             SensorTotal = source.SensorTotal, SensorUptime = source.SensorUptime, SensorBoot = source.SensorBoot
         };
 
-        public void EnableWalking() { if (!readOnlySave) tracker.Enable(); Changed?.Invoke(); }
+        public void EnableWalking() { if (!readOnlySave) { tracker.Enable(); WalkingEnableRequested?.Invoke(); } Changed?.Invoke(); }
 
         public bool ClaimDaily(out PipVariant variant)
         {

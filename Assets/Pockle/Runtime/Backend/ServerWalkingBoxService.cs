@@ -29,9 +29,11 @@ namespace Pockle.Runtime
         private bool busy,stopped,reportBlocked;
         private float retryAt;
         private Snapshot snapshot;
+        private WalkingBoxView notificationView;
         private readonly Dictionary<string,Delivery> saved = new Dictionary<string,Delivery>();
         /// <summary>Validated server progress, for in-memory presentation edges; never a local earning signal.</summary>
         public event Action<WalkingMomentSnapshot> SnapshotReceived;
+        public event Action<string, WalkingBoxView, DateTimeOffset, string[]> NotificationSnapshotReceived;
         private string Key => "pockle.walking.server.v1." + owner;
         private string ProgressKey(string id) => Key + ".reveal." + id;
 
@@ -123,6 +125,8 @@ namespace Pockle.Runtime
             var bankedIds = new string[next.boxes.Length];
             for (int i = 0; i < bankedIds.Length; i++) bankedIds[i] = next.boxes[i].id;
             var serverDay = DateTimeOffset.Parse(next.server_time,CultureInfo.InvariantCulture).UtcDateTime.Date;
+            NotificationSnapshotReceived?.Invoke(requestingOwner, notificationView,
+                DateTimeOffset.Parse(next.server_time,CultureInfo.InvariantCulture), bankedIds);
             SnapshotReceived?.Invoke(new WalkingMomentSnapshot(requestingOwner,
                 (int)(serverDay - new DateTime(1970,1,1)).TotalDays,next.earned_today,next.step_credit,bankedIds));
             if(hud.OnboardingVisible||hud.BoxRevealVisible||hud.CheckoutVisible||!string.IsNullOrEmpty(collection.Progress.Save.PendingFusionId))yield break;
@@ -152,12 +156,13 @@ namespace Pockle.Runtime
             var bank=new List<string>();foreach(var b in snapshot.boxes)bank.Add(b.collection_id);
             var odds=new List<TierOdds>();if(snapshot.odds!=null)foreach(var row in snapshot.odds)
                 if(row.tier>=0&&row.tier<=3&&row.chance>=0&&row.chance<=1)odds.Add(new TierOdds(RarityLook.FromTier((ToyTier)row.tier),row.chance));
-            hud.SetWalkingBoxes(new WalkingBoxView{BankedCollectionIds=bank,EarnedToday=snapshot.earned_today,
+            notificationView = new WalkingBoxView{BankedCollectionIds=bank,EarnedToday=snapshot.earned_today,
                 StepCredit=Math.Min(snapshot.steps_per_box,snapshot.step_credit),StepsPerBox=snapshot.steps_per_box,
                 MaxPerDay=snapshot.daily_limit,MaxBanked=snapshot.bank_limit,CooldownHours=snapshot.cooldown_seconds/3600,
                 SecondsUntilNextBox=Countdown(snapshot.server_time,snapshot.next_box_at,bank.Count>=snapshot.bank_limit||snapshot.earned_today>=snapshot.daily_limit),
                 Connection=connection,Busy=busy,CanOpen=bank.Count>0,Odds=odds,Message=message??(reportBlocked
-                    ?"Steps sync from your other phone. You can still open your saved boxes here.":null)});
+                    ?"Steps sync from your other phone. You can still open your saved boxes here.":null)};
+            hud.SetWalkingBoxes(notificationView);
         }
         internal static double? Countdown(string serverTime,string nextBoxAt,bool paused)
         {

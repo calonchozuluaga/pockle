@@ -4,7 +4,10 @@
   "references": [
     "Pockle.Core",
     "UnityEngine.UI",
-    "revenuecat.purchases-unity"
+    "revenuecat.purchases-unity",
+    "Unity.Notifications.Unified",
+    "Unity.Notifications.Android",
+    "Unity.Notifications.iOS"
   ],
   "autoReferenced": true
 }

@@ -11,7 +11,8 @@
     "com.unity.modules.ui": "1.0.0",
     "com.unity.modules.uielements": "1.0.0",
     "com.unity.modules.unitywebrequest": "1.0.0",
-    "com.revenuecat.purchases-unity": "10.0.0"
+    "com.revenuecat.purchases-unity": "10.0.0",
+    "com.unity.mobile.notifications": "2.5.0"
   },
   "scopedRegistries": [
     {

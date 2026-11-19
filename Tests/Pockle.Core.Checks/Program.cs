@@ -54,6 +54,7 @@ MaterialTouchChecks.Run();
             PaidDeliveryChecks.Run();
             WalkingDeliveryChecks.Run();
             MomentAudioChecks.Run();
+            BoxNotificationChecks.Run();
             AvatarChecks.Run();
             return 0;
         }
