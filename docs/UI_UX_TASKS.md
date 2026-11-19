@@ -349,3 +349,5 @@ November 18 UX-053 step 1, the Jelly glass kit (built, local on `claude/ui-audit
 
 
 November 19 UX-027: local box-notification runtime prepared on codex/box-notifications with owner-approved Mobile Notifications 2.5.0. Server-confirmed earning alerts, eligibility reminders, preference/account cancellation and persistent daily limits implemented; portable/source and platform-symbol compilation checks pass. Native Unity licensing blocks execution; OS/device tests and Claude's permission-state Settings row remain pending. UX-027 stays open.
+
+November 19 UX-027 follow-up: licensing IPC repaired without license/security changes; explicit notification Settings controls and reserved-identifier glass shader correction approved by owner. Affected native PlayMode68/68, EditMode17/17, final policy/backend7/7 and portable/source checks pass. Build1.0(15) signed, uploaded and processing at Apple for owner internal TestFlight. OS permission/delivery/tap phone acceptance remains pending; UX-027 stays open.

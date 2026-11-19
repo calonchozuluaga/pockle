@@ -22,5 +22,11 @@
   "focusedPlayMode": "68/68",
   "finalPolicy": "7/7",
   "deviceAcceptance": "pending",
-  "upload": "blocked pending explicit owner authorization"
+  "upload": "succeeded; processing complete; Missing Compliance",
+  "uploadedAt": "2026-11-19T13:19:19-07:00",
+  "uploadWarning": "UnityRuntime.framework vendor dSYM absent for UUID B5BCB31B-E424-3C81-A0EE-2EF2ADFA93D7; upload succeeded. UnityFramework app dSYM matches archive.",
+  "testflightGroup": "Pockle owner internal only; assignment pending compliance",
+  "appleBuildId": "f949763d-7931-47fd-882c-fdf2919cee5d",
+  "testNotes": "saved and UI verified",
+  "compliance": "owner declaration requested; form open with no answers selected"
 }
