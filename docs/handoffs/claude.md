@@ -60,6 +60,26 @@ For Codex: nothing is asked of you by this step. The nine icons add about 0.2 MB
 
 **Verified:** Unity 6000.6.5f1 on this Mac. EditMode 17/17. PlayMode 264 of 279; the 15 failures are the same inherited ones listed under "one main sound per pockle" below, with the same messages, and none is a UI test. The rewritten navigation test passes. Three full capture runs of 87 shots, every sheet looked at; final set in `docs/ui-audit/03-glass-kit/screens/`, with `before-after-1.jpg` and `-2.jpg`. No duplicate GUIDs; `git diff --check` clean. **Not verified:** a phone, so the shader on real Android and iOS graphics chips, frame rate while scrolling and the look of the blur on a real screen are all unseen. `dotnet` is not installed on this Mac, so the portable Core checks and source checks did not run here (Core is untouched; CI runs them). Android size was not measured.
 
+## November 19: request for Codex, box notifications (UX-027, owner asked)
+
+The owner asked: "Have we built in push notifications? It'd be great to know when a new box is available, or when you've walked 1000 steps." The answer is no. What exists: the four Settings switches (`NotificationPrefs`, `pockle.notifications.v1.*`: Box ready, Trade offers, Friend requests, New collections) and your `NotificationGate`, which is tested. No notification package is installed, nothing asks for permission, nothing schedules or shows a notification on either platform, and the server sends no push. He said "Yes, write it up", so this is the request. It is your lane (runtime, Android plugin, packages). Please claim it in `codex.md` before starting.
+
+**Owner approval still needed before you start:** adding `com.unity.mobile.notifications` (or a native equivalent) changes `Packages/manifest.json`. Ask him in your note and say which package and version you'd use.
+
+**First slice: local notifications only, no push server.**
+1. **"Your box is ready."** Each time a `WalkingBoxView` snapshot arrives with a `SecondsUntilNextBox`, schedule one local notification for that moment, replacing any earlier one, so it fires with the app closed. Cancel it when the box is opened, when the bank is full or the day is done (no countdown then), on sign-out or account deletion, and when the owner turns "Box ready" off (`NotificationGate` already calls your cancel callback). Use the server's seconds, never the phone's clock, the same rule the UI follows. Suggested wording: "A new box is ready" / "Open it in Pockle". Final words are mine to tune, so leave them in one place.
+2. **"You've walked 1,000 steps."** When the step credit reaches `StepsPerBox` while Pockle is open or only just backgrounded, show a local notification: "You earned a box!" / "1,000 steps. Come see who's inside." Only once per earned box. During a long walk, fold several earned boxes into one notification. If the app is in the foreground, skip it; the Home card already shows the box.
+3. **Permission timing (owner decision, October 21):** ask for notification permission at the same moment as the motion/step permission, when the player taps "Enable walking", never at sign-up. On Android 13+ that is `POST_NOTIFICATIONS`. If the player says no, don't ask again on every launch. Settings should still show the switches, plus a line pointing to the phone's settings. Tell me what state you expose and I'll draw that line.
+4. **Limits (owner decision, October 21):** at most one or two notifications a day by default. Each type can be turned off. Tapping a notification opens Home.
+
+**Not in the first slice; needs the owner's call:**
+- **Step alerts while Pockle is fully closed.** Today steps only count while Pockle is open ("Keep Pockle open on your walk"). On Android this would need a foreground service with the step sensor, which shows a permanent notification. On iOS, apps cannot watch steps live in the background; the realistic options are counting with CMPedometer history when the app next opens, or HealthKit background delivery, which is not timely. Please write up what each would cost so he can choose.
+- **Real push** (APNs and FCM through Supabase) for trade offers, friend requests and new collections. That needs the provider keys from the owner, a device-token table and a sender function. It only matters once trading and friends exist.
+
+**My side, once your API exists:** the permission step in the "Enable walking" flow, the "turned off in your phone's settings" line in Settings › Notifications, and any notification wording. Nothing for me to build until then.
+
+**Verified:** I read the code on `claude/ui-audit` and the Codex branches: `NotificationGate`, `NotificationPrefs`, the Android plugins, `Packages/manifest.json`, the Supabase functions. I found no notification sender, package or permission request. **Not verified:** anything on a phone; no code was written for this.
+
 ## November 17: surprise box picture on the walking cards (UX-003 / UX-052)
 
 Owner report after testing TestFlight 12 / Play 10: "the surprise box on the walking section on the homepage is still the one with no art". Cause: before the server assigns a collection, Home and Shop drew `MysteryCartonGraphic` (three flat quads, the wordmark and a "?"). The richer box from your November 9 concept was never imported.
