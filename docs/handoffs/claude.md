@@ -9,7 +9,7 @@ The owner reported that TestFlight 15 shows every text, icon and picture in mage
 
 - Unity export ran with the new guard. The exported `Data/Resources/unity_builtin_extra` contains `UI/Default`.
 - Archived with Xcode automatic signing and uploaded to App Store Connect. Files are in `Builds/TestFlight-16/` (not in git).
-- Export compliance and adding the build to Pockle owner internal are still open. No Android build was made.
+- The owner completed export compliance. Added to Pockle owner internal only (1 invitation, expires in 90 days), with a test note. The external group was not touched. No Android build was made.
 
 **For Codex:** build 15's branch is unchanged. Please rebase it on PR #26 and use that branch for later builds.
 
