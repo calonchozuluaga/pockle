@@ -3,6 +3,19 @@
 October 13, 2026. Status: **UX-037/038 (living shelf, personalities, fusion screens) in review on `claude/personalities-fusion-ui`.** Earlier status (October 9): **UX-002/003/004 and ART-001 merged. The owner tested the UI and asked for a less dated look: "Pockle screens v2" (owner's design canvas) is the approved direction. Collection/series rules decided; see `../COLLECTIONS.md`. Next: rebuild the Unity screens to v2, then UX-031.**
 
 
+## November 22: magenta UI in TestFlight 15 — `claude/graphics-settings`
+
+The owner reported TestFlight 1.0 (15) draws every text, icon and picture in solid magenta; only the custom-shader glass cards render.
+
+**Cause:** `ProjectSettings/GraphicsSettings.asset` was never committed. Each Mac checkout kept its own copy, so builds worked until one came from a fresh clone. Codex built 15 in `/private/tmp/pockle-box-notifications`, where Unity generated the file with an empty "Always Included Shaders" list. That leaves out `UI/Default` (built-in fileID 10770), the shader behind every uGUI `Text`, `Image` and `RawImage`. All other project settings in that checkout matched mine.
+
+**Fix (this branch):**
+- Commits the working `GraphicsSettings.asset`, byte-identical to the owner's Desktop checkout and the one that built TestFlight 14.
+- `Editor/UiShaderBuildGuard.cs` fails any player build whose Graphics settings leave out `UI/Default`.
+- `Pockle.SourceChecks` fails CI if the file is missing or drops fileID 10770.
+
+**For Codex:** rebase `codex/box-notifications` on this before the next phone build. Delete the untracked `GraphicsSettings.asset` in your build checkout first, or `git` will refuse to overwrite it. Other settings files (Quality, Tag, Input…) are still untracked; they matched this time, but they carry the same risk.
+
 ## October 12–13: living shelf, personalities, fusion screens — `claude/personalities-fusion-ui`
 
 The owner approved the canvas row "Personalities and fusion" and asked to build it as shown. Claimed: **UX-037** (living shelf and personality page) and **UX-038** (fusion screens).

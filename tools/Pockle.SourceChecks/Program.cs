@@ -78,6 +78,11 @@ foreach (string file in Directory.GetFiles(assets, "*", SearchOption.AllDirector
         if (match.Groups[1].Value != "0000000000000000f000000000000000" && !guids.Contains(match.Groups[1].Value)) { Console.Error.WriteLine("Unresolved asset GUID in " + file); failures++; }
 }
 using (JsonDocument.Parse(File.ReadAllText(Path.Combine(root, "Packages", "manifest.json")))) { }
+// A fresh checkout without this file gets an empty "Always Included Shaders" list and every
+// uGUI element renders magenta on device. 10770 is the built-in UI/Default shader.
+string graphics = Path.Combine(root, "ProjectSettings", "GraphicsSettings.asset");
+if (!File.Exists(graphics) || !Regex.IsMatch(File.ReadAllText(graphics), @"m_AlwaysIncludedShaders:(\r?\n  - .*)*\r?\n  - \{fileID: 10770, guid: 0000000000000000f000000000000000"))
+{ Console.Error.WriteLine("ProjectSettings/GraphicsSettings.asset must exist and always include UI/Default (fileID 10770)."); failures++; }
 Console.WriteLine($"C# syntax checked: {sources.Length} files across {profiles.Length} symbol profiles (default, Editor, Android). Assembly definitions checked: {assemblies.Length}. Asset GUIDs checked: {guids.Count}. Failures: {failures}.");
 Console.WriteLine("This validates syntax, project namespace dependencies, and asset references, not Unity API compilation, shader rendering, scene import, or device behavior.");
 return failures == 0 ? 0 : 1;
