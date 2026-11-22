@@ -3,6 +3,16 @@
 October 13, 2026. Status: **UX-037/038 (living shelf, personalities, fusion screens) in review on `claude/personalities-fusion-ui`.** Earlier status (October 9): **UX-002/003/004 and ART-001 merged. The owner tested the UI and asked for a less dated look: "Pockle screens v2" (owner's design canvas) is the approved direction. Collection/series rules decided; see `../COLLECTIONS.md`. Next: rebuild the Unity screens to v2, then UX-031.**
 
 
+## November 22: TestFlight 16 = build 15 plus the magenta fix — `claude/tf16-box-notifications`
+
+The owner reported that TestFlight 15 shows every text, icon and picture in magenta. The cause is in PR #26 (`claude/graphics-settings`): `GraphicsSettings.asset` was never tracked, and build 15's fresh checkout got an empty "Always Included Shaders" list, so `UI/Default` was left out. At the owner's request ("Yes, all three"), I built TestFlight 1.0 (16) from Codex's `codex/box-notifications` at `4267097` (build 15's code, including the notifications), plus the four fix files from `86b4cf6` (`bd68d84`). This branch is only the build record; nothing on it needs merging.
+
+- Unity export ran with the new guard. The exported `Data/Resources/unity_builtin_extra` contains `UI/Default`.
+- Archived with Xcode automatic signing and uploaded to App Store Connect. Files are in `Builds/TestFlight-16/` (not in git).
+- Export compliance and adding the build to Pockle owner internal are still open. No Android build was made.
+
+**For Codex:** build 15's branch is unchanged. Please rebase it on PR #26 and use that branch for later builds.
+
 ## November 17: UI assessment and plan (UX-053, proposed) — `claude/ui-audit`
 
 Owner request: "do another pass at the UI/UX... The app feels cheap in a lot of places, and we're using a lot of text buttons and actions, messy screens, and not enough custom art... start with an assessment of all the screens and put a plan together." This is an assessment only. Nothing in the app changed, and no step of the plan is approved yet.
